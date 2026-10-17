@@ -11,7 +11,9 @@
 set -euo pipefail
 cd "$SLURM_SUBMIT_DIR"
 export PYTHONPATH=$PWD  # this checkout's code, also with the env shared with v3
-export HF_HOME=${HF_HOME:-$HOME/.cache/huggingface}  # the logged-in token for the model upload
+# V4's own Hugging Face login (XXXpilar), apart from V3's in ~/.cache/huggingface:
+#   HF_HOME=$HOME/.cache/huggingface-v4 hf auth login
+export HF_HOME=${FASTFILL_HF_HOME:-$HOME/.cache/huggingface-v4}; unset HF_TOKEN
 dir=$1; config=$2; shift 2
 exec env/bin/python -m fastfill.v2.autorun --repo "$PWD" --data-root "$PWD/data" --autorun-dir "$dir" \
   --gpus "${CUDA_VISIBLE_DEVICES:-0,1,2,3}" --start-config "$config" --current-data data/v4fixed \

@@ -12,7 +12,10 @@
 #SBATCH --output=runs/isambard/%x-%j.out
 set -euo pipefail
 cd "$SLURM_SUBMIT_DIR"
-export PIP_NO_CACHE_DIR=1 HF_HOME=${HF_HOME:-$HOME/.cache/huggingface} PYTHONPATH=$PWD
+export PIP_NO_CACHE_DIR=1 PYTHONPATH=$PWD
+# V4's own Hugging Face login (XXXpilar), apart from V3's in ~/.cache/huggingface:
+#   HF_HOME=$HOME/.cache/huggingface-v4 hf auth login
+export HF_HOME=${FASTFILL_HF_HOME:-$HOME/.cache/huggingface-v4}; unset HF_TOKEN
 OLD=${FASTFILL_OLD:-$PWD/../fastfill}
 SHARED_ENV=${FASTFILL_ENV:-$OLD/env}
 rm -f runs/isambard/v4-setup.ok
@@ -36,6 +39,7 @@ env/bin/python -c "import fastfill, os, sys; f = os.path.realpath(fastfill.__fil
 env/bin/python -c "import platform, torch, transformers, peft, accelerate; assert torch.cuda.is_available(); print(platform.machine(), torch.__version__, transformers.__version__, peft.__version__, accelerate.__version__, torch.cuda.get_device_name(0), torch.cuda.is_bf16_supported())"
 
 H=env/bin/hf
+$H auth whoami  # must be XXXpilar (the private dataset); fails here when V4 has no login
 if [ ! -e models/Qwen3-8B ]; then
   if [ -f "$OLD/models/Qwen3-8B/model.safetensors.index.json" ]; then
     cp -rL "$OLD/models/Qwen3-8B" models/.copy-Qwen3-8B && mv models/.copy-Qwen3-8B models/Qwen3-8B && echo "copied $OLD/models/Qwen3-8B"
@@ -45,7 +49,7 @@ if [ ! -e models/Qwen3-8B ]; then
 fi
 echo "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30  models/Qwen3-8B/config.json" | sha256sum -c
 
-D=data/v4fixed  # private dataset: needs `hf auth login` on the login node first (same HF_HOME)
+D=data/v4fixed  # private dataset: needs V4's login above
 if [ ! -f $D/train.jsonl ]; then
   $H download XXXpilar/fastfill-v4-v2-fixed --repo-type dataset --local-dir data/.download-v4fixed
   mv data/.download-v4fixed $D

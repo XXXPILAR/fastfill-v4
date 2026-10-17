@@ -7,7 +7,7 @@
 登录节点没有 GPU，所有 GPU 工作都通过 `sbatch` 交给计算节点。在 `$PROJECTDIR` 下 clone（和旧的 `fastfill` 并列），然后：
 
 ```bash
-hf auth login                                   # 私有数据集和模型上传要用（XXXpilar 的 token）
+HF_HOME=$HOME/.cache/huggingface-v4 ../fastfill/env/bin/hf auth login   # V4 自己的登录（XXXpilar，Write），不碰 V3 的 ~/.cache/huggingface
 sbatch fastfill/v2/ops/isambard_v4_setup.sbatch  # 1 卡、≤3 h：环境、Qwen3-8B、数据、测试、E 配置的 GPU 冒烟
 # 日志 runs/isambard/ff4-setup-<job>.out 最后一行是 SETUP OK 后：
 bash fastfill/v2/ops/isambard_v4_submit.sh       # base / D / E 三组，各占一个节点（4 卡），各带一个续训作业
