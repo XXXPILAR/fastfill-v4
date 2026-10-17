@@ -2,14 +2,18 @@
 
 这个仓库就是完整代码，不需要再打补丁。仓库根目录对应原来的 `fastfill-main`，`code_v4/` 是数据构建器。
 
-## 下载代码
+## 下载代码和数据
 
 ```bash
-git clone --recursive https://github.com/XXXPILAR/fastfill-v4.git
+git clone https://github.com/XXXPILAR/fastfill-v4.git      # 私有仓库：需要先 gh auth login 或配置 token
 cd fastfill-v4
-# 已经 clone 过但没带子模块：git submodule update --init RoomGenBench
+git submodule update --init RoomGenBench                   # 只拉这一层，不要加 --recursive
 python -m pytest -q fastfill/v2/tests/test_masked_layout.py fastfill/v2/tests/test_remask.py fastfill/v2/tests/test_support.py
+huggingface-cli download XXXpilar/fastfill-v4-v2-fixed --repo-type dataset --local-dir ../data_v4_v2_fixed   # 私有数据集：需要 huggingface-cli login
 ```
+
+不要用 `git clone --recursive`：RoomGenBench 里还嵌套着 infinigen、TRELLIS、Hunyuan3D 等大型仓库，会下载几十 GB，FastFill 用不到。
+数据集里还有 `smoke/`（3,657 / 400 个房间），可以先拿它做一次快速测试。
 
 RoomGenBench 子模块固定在提交 `30f2e059`。V-DETR 和 MinkowskiEngine 没有登记，训练和评测都用不到。
 下面命令里的 `../data_v4_v2_fixed` 指和仓库目录并列的数据目录，按你服务器上的实际路径改。
