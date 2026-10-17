@@ -47,6 +47,11 @@ from fastfill.scene import canonical, messages
 from fastfill.split import assign_splits
 
 SPLIT_NAMES = {"train": "train", "dev": "validation", "test": "test"}
+# RoomGenBench benchmark rooms (SAGE layouts): must equal fastfill.v2.io.ROOMGENBENCH_HOLDOUT_GROUPS, whose training
+# reader refuses them; dropped from train and validation here (rejections.jsonl), kept in test
+ROOMGENBENCH_HOLDOUT_GROUPS = ("sage:layout_61ebde9f", "sage:layout_6b049b06", "sage:layout_fef15043",
+                               "sage:layout_60ee2ae3", "sage:layout_46cdcce3")
+HOLDOUT_REASON = "roomgenbench_benchmark_room"
 SHARED = ("scene.py", "anchors.py", "validate.py", "split.py")   # must equal fastfill-main's: the bridge imports them
 REJECT_FLAGS = ("oob_objects", "fixed_collision", "overlapping_furniture")   # = fastfill.v2.legacy_build
 OPENING_MAX_WALL_DIST_M = 0.5
@@ -329,6 +334,12 @@ def main():
                     rejected[reason] += 1
                     rej.write(json.dumps({"uid": raw["uid"], "source": raw["source"], "split": SPLIT_NAMES[split],
                                           "reason": str(e)}, ensure_ascii=False) + "\n")
+                    continue
+                if row["provenance"]["split"] != "test" and row["provenance"].get("group") in ROOMGENBENCH_HOLDOUT_GROUPS:
+                    st["roomgenbench_holdout_dropped"] += 1  # the downstream benchmark's own rooms never train or select
+                    rejected[HOLDOUT_REASON] += 1
+                    rej.write(json.dumps({"uid": raw["uid"], "source": raw["source"], "split": row["provenance"]["split"],
+                                          "reason": HOLDOUT_REASON}, ensure_ascii=False) + "\n")
                     continue
                 sp, v, cond = row["provenance"]["split"], row["validity"], row["condition"]
                 st[sp] += 1

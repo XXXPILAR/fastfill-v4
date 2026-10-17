@@ -1,5 +1,5 @@
 """One Markdown page from the v4 ablation outputs: every arm x decoding mode on the validation sample, the same on
-the 20 rooms GPT-5.6 answered (with GPT-5.6's own layouts), the support head's accuracy and the anchor probe.
+the 300 test rooms and the first 20 rooms GPT-5.6 answered (with GPT-5.6's own layouts), the support head's accuracy and the anchor probe.
 Whatever is missing (an arm that did not finish) is left out, not an error.
 
     python fastfill/v2/ops/v4_report.py runs/ablation-v4      # writes runs/ablation-v4/REPORT.md
@@ -48,6 +48,13 @@ def main(root):
     rows = ablation_rows(root)
     if rows:
         out += ["## 验证集抽样（同一批房间）\n", table(rows), ""]
+    for prefix, title in (("test300_", "测试集 300 个房间（按来源分层抽样），和 GPT-5.6 同一批房间、同一评测代码"),):
+        held = ablation_rows(root, prefix)
+        gpt = root / f"{prefix}gpt56" / "report.json"
+        if gpt.is_file():
+            held.append(("GPT-5.6", "单次调用", summarize(json.loads(gpt.read_text()))))
+        if held:
+            out += [f"## {title}\n", table(held), ""]
     probe = ablation_rows(root, "probe20_")
     gpt = root / "probe20_gpt56" / "report.json"
     if gpt.is_file():

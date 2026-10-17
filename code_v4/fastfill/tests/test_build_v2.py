@@ -107,3 +107,16 @@ def test_bridge_row_has_no_bbox_in_its_condition():
     assert all(set(o) <= {"id", "category", "description", "support_parent"} for o in row["condition"]["objects"])
     validate_layout(row["target"], row["condition"])
     assert row["provenance"]["split"] == "test"
+
+
+def test_holdout_groups_match_the_training_reader():
+    # the builder drops exactly the rooms fastfill.v2.io.read_samples refuses to train on
+    import ast
+    from fastfill.build_v2 import ROOMGENBENCH_HOLDOUT_GROUPS
+    io = (V2_ROOT / "fastfill" / "v2" / "io.py")
+    if not io.is_file():
+        pytest.skip("fastfill-main checkout not present")
+    tree = ast.parse(io.read_text())
+    value = next(ast.literal_eval(node.value) for node in tree.body if isinstance(node, ast.Assign)
+                 and any(getattr(t, "id", None) == "ROOMGENBENCH_HOLDOUT_GROUPS" for t in node.targets))
+    assert tuple(value) == ROOMGENBENCH_HOLDOUT_GROUPS

@@ -47,7 +47,9 @@ RoomGenBench 子模块固定在提交 `30f2e059`。V-DETR 和 MinkowskiEngine �
 cd code_v4 && python -m fastfill.build_v2 --like <data_v4>/step2/MANIFEST.json --v2-root .. --out ../data_v4_v2_fixed
 ```
 
-本地重建的结果：train 125,792 / validation 8,225 / test 8,700 个房间，和旧数据一一对应；保留 20,362 个固定障碍物，删除 15,988 个无标注盒子。
+本地重建的结果：train 125,787 / validation 8,225 / test 8,700 个房间；保留 20,362 个固定障碍物，删除 15,988 个无标注盒子。
+RoomGenBench 自己的 5 个评测房间（SAGE layout，`fastfill.v2.io.ROOMGENBENCH_HOLDOUT_GROUPS`）不进 train / validation：
+训练器会拒绝含有它们的数据。2026-10-17 已从 train 删除（原来 125,792），构建器现在也自动排除。
 
 ## 训练
 

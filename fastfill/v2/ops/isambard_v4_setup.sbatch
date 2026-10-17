@@ -55,7 +55,7 @@ if [ ! -f $D/train.jsonl ]; then
   mv data/.download-v4fixed $D
 fi
 (cd $D && sha256sum -c) <<EOF
-30bc34b54d17c310dcbd2ca9d37fe07bbe9d9a044583c1cdf25f0c98c2a64d4c  train.jsonl
+11d978325d91cd59a19e2a7a02f78b1afc923b96c40344eeaff413373498e60e  train.jsonl
 ba8c26010f7cfe2b424821a977afff4e22c44b2b514b827ef80c1f4ed891eca3  validation.jsonl
 bfaef332e40226660fd6663e9ad05b3454035e825d22236ed821aae3409e865b  test.jsonl
 EOF
