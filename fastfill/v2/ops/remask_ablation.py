@@ -17,7 +17,7 @@ against declarations the decoded condition does not show (a shown one is copied,
 floor / wall / object parents; None without a support head.
 
     python -m fastfill.v2.ops.remask_ablation --checkpoint RUN/model --data rows.jsonl --output DIR \\
-        --modes argmax spread remask1L remask4 remask4L remask4LX [--max-samples N] [--strip-support]
+        --modes argmax spread remask1L remask4 remask4L remask4LX [--max-samples N] [--strip-support] [--device cuda]
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ import torch
 
 from fastfill.v2.batch import collate_samples, load_tokenizer
 from fastfill.v2.evaluate import serialize_predictions
-from fastfill.v2.io import load_checkpoint_config
+from fastfill.v2.io import load_checkpoint_config, to_device
 from fastfill.v2.model import load_model, model_inputs
 from fastfill.v2.remask import remask_predictions
 from fastfill.v2.schema import migrate_legacy_row
@@ -112,9 +112,10 @@ def main(argv=None):
     p.add_argument("--modes", nargs="+", default=["argmax", "spread", "remask1L", "remask4", "remask4L", "remask4LX"])
     p.add_argument("--max-samples", type=int)
     p.add_argument("--strip-support", action="store_true", help="decode without any support declaration")
+    p.add_argument("--device", default="cpu")
     a = p.parse_args(argv)
     a.output.mkdir(parents=True, exist_ok=True)
-    model = load_model(a.checkpoint).eval()
+    model = load_model(a.checkpoint, device=a.device).eval()
     tokenizer = load_tokenizer("tiny" if model.config.backbone == "tiny" else str(a.checkpoint.parent / "tokenizer"),
                                local_files_only=True)
     max_length = load_checkpoint_config(a.checkpoint)["max_length"] or 4096
@@ -125,8 +126,8 @@ def main(argv=None):
     shown = [support_labels(migrate_legacy_row(json.loads(l))) for l in lines]  # what the decoded condition declares
     rows = a.output / "rows.jsonl"
     rows.write_text("\n".join(lines) + "\n")
-    batches = [collate_samples([migrate_legacy_row(json.loads(l))], tokenizer, max_length=max_length,
-                               max_objects=model.config.max_objects) for l in lines]
+    batches = [to_device(collate_samples([migrate_legacy_row(json.loads(l))], tokenizer, max_length=max_length,
+                                         max_objects=model.config.max_objects), a.device) for l in lines]
     table = {}
     for mode in a.modes:
         predictions, seconds = [], []

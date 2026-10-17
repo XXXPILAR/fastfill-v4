@@ -2,6 +2,23 @@
 
 这个仓库就是完整代码，不需要再打补丁。仓库根目录对应原来的 `fastfill-main`，`code_v4/` 是数据构建器。
 
+## Isambard-AI（Slurm）：一键提交
+
+登录节点没有 GPU，所有 GPU 工作都通过 `sbatch` 交给计算节点。在 `$PROJECTDIR` 下 clone（和旧的 `fastfill` 并列），然后：
+
+```bash
+hf auth login                                   # 私有数据集和模型上传要用（XXXpilar 的 token）
+sbatch fastfill/v2/ops/isambard_v4_setup.sbatch  # 1 卡、≤3 h：环境、Qwen3-8B、数据、测试、E 配置的 GPU 冒烟
+# 日志 runs/isambard/ff4-setup-<job>.out 最后一行是 SETUP OK 后：
+bash fastfill/v2/ops/isambard_v4_submit.sh       # base / D / E 三组，各占一个节点（4 卡），各带一个续训作业
+# 三组都 done 后：
+sbatch fastfill/v2/ops/isambard_v4_ablation.sbatch
+```
+
+- 旧 checkout（默认 `../fastfill`，可用 `FASTFILL_OLD=...` 指定）里有 `env/` 和 `models/Qwen3-8B` 时直接软链接复用，不重装、不重下。
+- 进度看 `runs/autorun-v4-{base,D,E}/STATUS.json` 和 `runs/isambard/ff4-*.out`；最好的模型以私有方式上传到 `XXXpilar/fastfill-v4-models`（用 `FASTFILL_MODEL_REPO` 改）。
+- 消融结果在 `runs/ablation-v4/`（验证集里按种子抽 1000 个房间，`ROWS=...` 可改）。
+
 ## 下载代码和数据
 
 ```bash

@@ -194,7 +194,7 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
                 xy = decode_grid_position(cell_logits[None], pred["position_cell_residuals"][row, i][None].float(), grid)[0]
                 if legal:
                     lo, sc = origin[row, :2].numpy(), scale[row, :2].numpy()
-                    world = _snap(rasters[row], candidates[row][int(cell_logits.argmax())], xy.double().cpu().numpy() * sc + lo,
+                    world = _snap(rasters[row], candidates[row][int(cell_logits.argmax())], xy.cpu().double().numpy() * sc + lo,
                                   size[i], float(yaw_row[i]), blocks[i], z_range[i], options)
                     xy = torch.from_numpy((world - lo) / sc).to(xy)
                 position = torch.cat((xy.to(pred["position_normalized"].dtype), pred["position_normalized"][row, i, 2:]))
