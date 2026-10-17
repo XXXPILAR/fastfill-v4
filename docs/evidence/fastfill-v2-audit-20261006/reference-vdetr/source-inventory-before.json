@@ -1,0 +1,272 @@
+{
+  "head": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+  "files": 53,
+  "lines": 10488,
+  "sources": [
+    {
+      "path": "V-DETR/criterion.py",
+      "lines": 739,
+      "sha256": "dcb7c3a53e9254ad91c6ce4a157d5a77dec672f5ce717d8b116581343a209784"
+    },
+    {
+      "path": "V-DETR/datasets/__init__.py",
+      "lines": 38,
+      "sha256": "eb3eaa531db8102ac9b5decab368c85bb3a64edc27a8deb4cdf8adb26f482044"
+    },
+    {
+      "path": "V-DETR/datasets/scannet.py",
+      "lines": 685,
+      "sha256": "6bdb424b2a55663eae582865cbc81bcb0cc7a159aa22ed6de2d6ae368a3faac2"
+    },
+    {
+      "path": "V-DETR/engine.py",
+      "lines": 193,
+      "sha256": "b49c0131ceace3f9d0cab36acb3aaa591db898650be8dc30b6df486752209464"
+    },
+    {
+      "path": "V-DETR/main.py",
+      "lines": 603,
+      "sha256": "f0d160f545a23c17690083b3071065cde47625f649e71edff8bdd19c27423513"
+    },
+    {
+      "path": "V-DETR/models/__init__.py",
+      "lines": 10,
+      "sha256": "c39cd3e7895bba774263af7aaeeaf1fcf752e78d0558bde2b5e1b99c5f51a12f"
+    },
+    {
+      "path": "V-DETR/models/helpers.py",
+      "lines": 145,
+      "sha256": "2c4f5e129823bc08e03887c5647a410c6b015c080242b7e4383375cb8bb0526e"
+    },
+    {
+      "path": "V-DETR/models/mink_resnet.py",
+      "lines": 102,
+      "sha256": "c05fd4d7a8d28b9b3ce0c059867524c2d6c2d231d3c22eb7292e5e57183c62a6"
+    },
+    {
+      "path": "V-DETR/models/model_vdetr.py",
+      "lines": 474,
+      "sha256": "91a9469a84cdec1b31c287acab33b6668c9fdf23113073abcf7191d7327e7732"
+    },
+    {
+      "path": "V-DETR/models/modules/__init__.py",
+      "lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "V-DETR/models/modules/common.py",
+      "lines": 259,
+      "sha256": "d97234069952468b26ca95b5a776c2ee0eaf1634bcf26ef622ef1b843074b4bf"
+    },
+    {
+      "path": "V-DETR/models/modules/resnet_block.py",
+      "lines": 150,
+      "sha256": "f43f9b9dd5a0550097471933b5adf074a72ebdc79fb20d77ccf747dc216d5a76"
+    },
+    {
+      "path": "V-DETR/models/position_embedding.py",
+      "lines": 148,
+      "sha256": "1dd04d4b2892404163948b9c45c9ca74f444bc9b3e9309ec835c8f9d978f3b8d"
+    },
+    {
+      "path": "V-DETR/models/vdetr_transformer.py",
+      "lines": 787,
+      "sha256": "f75bad193a7f0fd49562ba4cb922e4e00f34e49c68277f7c8efdcdb39c9ce7d9"
+    },
+    {
+      "path": "V-DETR/optimizer.py",
+      "lines": 26,
+      "sha256": "f0ae173c55b97178e58b529083ee6f6b9d932ffb67fd2b6eed5e5e65785cdd7c"
+    },
+    {
+      "path": "V-DETR/scannet/batch_load_scannet_data.py",
+      "lines": 73,
+      "sha256": "6b61c36e497ae2214359557a6c5a1bd084edba5bbfc9ddc076dca71e24bbfc08"
+    },
+    {
+      "path": "V-DETR/scannet/data_viz.py",
+      "lines": 38,
+      "sha256": "e0aaa57ad13c2c4ffd8b4f70d3ef43a6aa743e3916b11ebce2f3052da81112a7"
+    },
+    {
+      "path": "V-DETR/scannet/download-scannet.py",
+      "lines": 249,
+      "sha256": "cf0fa4b10f0905b6f8bf66bbc5513810e72e284bd39ba1404909e2370c9c64d2"
+    },
+    {
+      "path": "V-DETR/scannet/load_scannet_data.py",
+      "lines": 146,
+      "sha256": "085391d9dc4d1d64ce0479b206744ac86d9d1c520f1b6330e238aa504f2b346e"
+    },
+    {
+      "path": "V-DETR/scannet/model_util_scannet.py",
+      "lines": 91,
+      "sha256": "5788193e49b75138b363a9ebeb72e5127e42c9b966c89e03f6a03c9d773d6ded"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/ball_query.h",
+      "lines": 7,
+      "sha256": "5ff1a6e82824df7d9723030028dce66dabb8375a0276b7e9a2d03a51e74c35b0"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/cuda_utils.h",
+      "lines": 43,
+      "sha256": "ebc0f18843cff0e140924357fca46c3f976647b233c3bef88b586e9872fa7b83"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/group_points.h",
+      "lines": 8,
+      "sha256": "34db9aa8078032b38b337067cf11f19348f0f1a3f8b336f353c945795136a9ca"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/interpolate.h",
+      "lines": 12,
+      "sha256": "a70fee34b6ac759a7ccfc3041d16a36e07162fd269b892f4126d763814ec16a2"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/sampling.h",
+      "lines": 9,
+      "sha256": "517bdeeff6356ac1ba8254f0bb6862bd1e64d2a6442afbc9127bf5f375b6265c"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/include/utils.h",
+      "lines": 28,
+      "sha256": "e77c1f692af0bf87b6ec272413de09e586bacae3071e89d90f05ad95af3a2430"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/ball_query.cpp",
+      "lines": 35,
+      "sha256": "f2550d452808a91ad144afffd97b18492d6be9fd155eab0e6b4c606b98eb489a"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/ball_query_gpu.cu",
+      "lines": 57,
+      "sha256": "6e9e1466b77f1153561ecb14d61ab2cdba99908ee117c4457d0a42c42d7fffa3"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/bindings.cpp",
+      "lines": 22,
+      "sha256": "fbe0294a0efde4ec5356b56e4f0f6061118fd54533edac203f2f8b6fa0a9e87f"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/group_points.cpp",
+      "lines": 63,
+      "sha256": "41e05d97ee4c6f962ba3cbdf7e9f1070e4e84cd81ceee7a9c51a9a30e927e03b"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/group_points_gpu.cu",
+      "lines": 78,
+      "sha256": "5c4c251eb41308cc4dfba52742494282a8c9d79c858c7ec1c870c6af48b0b7f8"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/interpolate.cpp",
+      "lines": 101,
+      "sha256": "3631dff2c41f3d1795526cacdf079a63248e5d7ef96307354056ac27cd433465"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/interpolate_gpu.cu",
+      "lines": 157,
+      "sha256": "b754fdc7a68a61470a6941bdf0c39def59fd9982af1eb24d18985ec48bac449d"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/sampling.cpp",
+      "lines": 88,
+      "sha256": "5c3cdd4d7c682d3e5a2ceac374a2861fd6f3945668f36bfc0fb68ca471bb0530"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/_ext_src/src/sampling_gpu.cu",
+      "lines": 232,
+      "sha256": "03a5edcfb5bf68e72d20a8251f29be1ba35ffbafa96c558a4e49cde1aa657407"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/pointnet2_modules.py",
+      "lines": 514,
+      "sha256": "a83c0fb9c8a270bf1bed996392efb3c80f3b2d6eb7016d6fcc25520445203b62"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/pointnet2_test.py",
+      "lines": 30,
+      "sha256": "0a810b8b850d04bf7669d7c5e4f79d8d4dfb569205e76cb165cc119934eaf188"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/pointnet2_utils.py",
+      "lines": 422,
+      "sha256": "d83807f4101bf41ee3fcc288b53c2dfb34cac48156334b385438a69a9f5763af"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/pytorch_utils.py",
+      "lines": 295,
+      "sha256": "38558f9e1220c0c896602d790077484987c199ab9a23b5ae1393f9e384e8dd0a"
+    },
+    {
+      "path": "V-DETR/third_party/pointnet2/setup.py",
+      "lines": 35,
+      "sha256": "f5864b1229461a6d407be11d6113795672b40411a21818b7d0d5339ffe4ad9a7"
+    },
+    {
+      "path": "V-DETR/utils/__init__.py",
+      "lines": 2,
+      "sha256": "f5213ff8a5048c695820c630d85605f6ffa6035e9c1b4bdcac0dcc82049743dc"
+    },
+    {
+      "path": "V-DETR/utils/ap_calculator.py",
+      "lines": 529,
+      "sha256": "538892b86d107b63ee2293d8275460c7b36f7b73763a9f8bcac496d9f3381f15"
+    },
+    {
+      "path": "V-DETR/utils/box_ops3d.py",
+      "lines": 767,
+      "sha256": "a9650fc13226b39028ad7b1d9d9162c3c3289191f421aa0c785be1668fb5c75d"
+    },
+    {
+      "path": "V-DETR/utils/box_util.py",
+      "lines": 743,
+      "sha256": "5a4fd405f3c64a92990118fd9996f0f5126fa3c4ed97083a177f588664cfb33f"
+    },
+    {
+      "path": "V-DETR/utils/cython_compile.py",
+      "lines": 23,
+      "sha256": "e1e68dd84fc6f879c9832a499a2cb28363917f437b3bf5405281bf283bdaee14"
+    },
+    {
+      "path": "V-DETR/utils/dist.py",
+      "lines": 187,
+      "sha256": "d4590ec2dc1db64d395ca562ba35ed9e388867ff5530ad8e8ade8a37f3abd18a"
+    },
+    {
+      "path": "V-DETR/utils/eval_det.py",
+      "lines": 302,
+      "sha256": "95fc4490b655c962d50f07846f3bcc9fcc0109e002ace27b2585234a0cc9a233"
+    },
+    {
+      "path": "V-DETR/utils/io.py",
+      "lines": 58,
+      "sha256": "9d26269309f6cac64658c0533a638422c1d2050af158ad211e592b5cf5da0441"
+    },
+    {
+      "path": "V-DETR/utils/logger.py",
+      "lines": 31,
+      "sha256": "f67c0c686cd256e54882f604b7a11d2cb97c42c8682df404ec66d1b26158b706"
+    },
+    {
+      "path": "V-DETR/utils/misc.py",
+      "lines": 100,
+      "sha256": "f92444af7a4cf14c0cfb325181acc386a5e1ad713c75c669c1a891e2316fcca4"
+    },
+    {
+      "path": "V-DETR/utils/nms.py",
+      "lines": 162,
+      "sha256": "00865f02e4e412de651cafcd89103bf6d9f480277caf52221c993297fd89795d"
+    },
+    {
+      "path": "V-DETR/utils/pc_util.py",
+      "lines": 294,
+      "sha256": "f8f1b00b5e178dffafa6dc07dd886a826abec935f20f2d45aa6f37cdad92c4a2"
+    },
+    {
+      "path": "V-DETR/utils/random_cuboid.py",
+      "lines": 98,
+      "sha256": "ddf9272e1bd1554512b44462fc5098dc3bec4c9d53fe5be742fc215a2f71243f"
+    }
+  ]
+}

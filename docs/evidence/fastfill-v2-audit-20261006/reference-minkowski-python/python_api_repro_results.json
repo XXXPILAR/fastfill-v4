@@ -1,0 +1,231 @@
+{
+  "scope": "exact upstream AST Python nodes, real CPU torch, mocked coordinate/native containers; no MinkowskiEngine native import/build/GPU/train",
+  "repo": "/Users/slian/Desktop/3D/Worldedge/OptiScene/MinkowskiEngine",
+  "python": "3.13.1 (v3.13.1:06714517797, Dec  3 2024, 14:00:22) [Clang 15.0.0 (clang-1500.3.9.4)]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "torch": "2.6.0",
+  "numpy": "2.4.6",
+  "sources": {
+    "MinkowskiEngine/MinkowskiNormalization.py": {
+      "sha256": "f8d434fc8ac45bc3473d6988c93ae6c47d39bb2651afb35ee0b760cb6d90c551",
+      "nodes": [
+        "MinkowskiBatchNorm",
+        "MinkowskiStableInstanceNorm.forward",
+        "MinkowskiSyncBatchNorm"
+      ]
+    },
+    "MinkowskiEngine/MinkowskiTensorField.py": {
+      "sha256": "a3906459039d397543ea2bc7b3157fb9fcda9e82a0fc5f698ed621e15579e1d8",
+      "nodes": [
+        "TensorField._binary_functor",
+        "TensorField._is_same_key"
+      ]
+    },
+    "MinkowskiEngine/MinkowskiOps.py": {
+      "sha256": "8c1f699ab66fe4c59b8772686dc10024eea2c2f2096a2919be29f978664655f8",
+      "nodes": [
+        "MinkowskiToSparseTensor"
+      ]
+    },
+    "MinkowskiEngine/MinkowskiCommon.py": {
+      "sha256": "a8dea1a5ba414c355a01c89a76217be6c4a65e1c7394d4576932af94dcf44a6d",
+      "nodes": [
+        "convert_to_int_list"
+      ]
+    },
+    "MinkowskiEngine/MinkowskiKernelGenerator.py": {
+      "sha256": "b88856cd681ba33986c537d29ca0aab9ad7703d95db6ced7e1305421ea25d8e7",
+      "nodes": [
+        "KernelGenerator",
+        "convert_region_type",
+        "get_kernel_volume"
+      ]
+    },
+    "MinkowskiEngine/MinkowskiSparseTensor.py": {
+      "sha256": "dbeb6a2b24496e0dd81e0c31c54420195f880ef4f55c954b4164a80439935ea9",
+      "nodes": [
+        "SparseTensor.cat_slice",
+        "SparseTensor.sparse"
+      ]
+    },
+    "MinkowskiEngine/utils/collation.py": {
+      "sha256": "bb13b02a790c9e6b112b1671fa9a8cd1d079056d07272cb41af581564920da23",
+      "nodes": [
+        "sparse_collate"
+      ]
+    },
+    "MinkowskiEngine/utils/gradcheck.py": {
+      "sha256": "94dcd0e18da1ef1436b4d1049806f18c70716d98e7645d667f9c4cbd34b39e4c",
+      "nodes": [
+        "gradcheck"
+      ]
+    },
+    "MinkowskiEngine/modules/resnet_block.py": {
+      "sha256": "013414323d4059feb8c19d08768329fcf22133fef14980bc44362f9d4e37c69c",
+      "nodes": [
+        "BasicBlock",
+        "Bottleneck"
+      ]
+    },
+    "MinkowskiEngine/modules/senet_block.py": {
+      "sha256": "b1e2095eafdd982a5376bb88fe81076ae1d88a0092673e17a9b98ca44177ecbc",
+      "nodes": [
+        "SEBasicBlock",
+        "SEBottleneck"
+      ]
+    },
+    "examples/common.py": {
+      "sha256": "8ea84b7a359ef1c3aa76fdb972efb5b34c588046bb43c5e54861a180430a977d",
+      "nodes": [
+        "Timer"
+      ]
+    }
+  },
+  "results": {
+    "sync_batchnorm_conversion": {
+      "outer_type": "MinkowskiSyncBatchNorm",
+      "inner_type": "BatchNorm1d",
+      "inner_is_sync_batchnorm": false,
+      "same_original_inner_object": true
+    },
+    "tensor_field_plus_field": {
+      "exception_type": "AttributeError",
+      "message": "'Field' object has no attribute 'coordinate_map_key'"
+    },
+    "tensor_field_plus_torch": {
+      "exception_type": "AttributeError",
+      "message": "'Field' object has no attribute 'coordinate_map_key'"
+    },
+    "dense_to_sparse_default": {
+      "returned": {
+        "route": "to_sparse_all",
+        "coordinates_supplied": false
+      }
+    },
+    "dense_to_sparse_custom_coords": {
+      "returned": {
+        "route": "to_sparse",
+        "coordinates_supplied": false
+      }
+    },
+    "custom_kernel_constructor": {
+      "exception_type": "RuntimeError",
+      "message": "Boolean value of Tensor with more than one value is ambiguous"
+    },
+    "cross_kernel_get": {
+      "exception_type": "TypeError",
+      "message": "unsupported operand type(s) for %: 'list' and 'int'"
+    },
+    "transpose_kernel_get": {
+      "exception_type": "AttributeError",
+      "message": "'KernelGenerator' object has no attribute 'stride'"
+    },
+    "custom_region_convert": {
+      "exception_type": "AssertionError",
+      "message": "region_offset must be a torch.IntTensor."
+    },
+    "sparse_conversion_mutates_coordinates": {
+      "before": [
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "after": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "returned_minimum": [
+        [
+          5
+        ]
+      ],
+      "changed": true
+    },
+    "sparse_max_without_min": {
+      "exception_type": "AttributeError",
+      "message": "'NoneType' object has no attribute 'numel'"
+    },
+    "cat_slice_sparse_input": {
+      "exception_type": "TypeError",
+      "message": "'Tensor' object is not callable"
+    },
+    "collate_per_sample_mismatch": {
+      "input_coordinate_lengths": [
+        1,
+        2
+      ],
+      "input_feature_lengths": [
+        2,
+        1
+      ],
+      "accepted": true,
+      "coordinate_feature_pairs": [
+        [
+          [
+            0,
+            10
+          ],
+          [
+            100.0
+          ]
+        ],
+        [
+          [
+            1,
+            20
+          ],
+          [
+            101.0
+          ]
+        ],
+        [
+          [
+            1,
+            21
+          ],
+          [
+            200.0
+          ]
+        ]
+      ]
+    },
+    "modern_torch_gradcheck": {
+      "exception_type": "TypeError",
+      "message": "gradcheck() got an unexpected keyword argument 'check_sparse_nnz'"
+    },
+    "modern_torch_gradcheck_signature": "(func: Callable[..., Union[torch.Tensor, Sequence[torch.Tensor]]], inputs: Union[torch.Tensor, Sequence[torch.Tensor]], *, eps: float = 1e-06, atol: float = 1e-05, rtol: float = 0.001, raise_exception: bool = True, nondet_tol: float = 0.0, check_undefined_grad: bool = True, check_grad_dtypes: bool = False, check_batched_grad: bool = False, check_batched_forward_grad: bool = False, check_forward_ad: bool = False, check_backward_ad: bool = True, fast_mode: bool = False, masked: Optional[bool] = None) -> bool",
+    "stable_instance_norm_current_sparse": {
+      "exception_type": "AttributeError",
+      "message": "'Sparse' object has no attribute 'coords_key'"
+    },
+    "se_basic_block_constructor": {
+      "exception_type": "TypeError",
+      "message": "BasicBlock.__init__() got an unexpected keyword argument 'D'"
+    },
+    "se_bottleneck_constructor": {
+      "exception_type": "TypeError",
+      "message": "Bottleneck.__init__() got an unexpected keyword argument 'D'"
+    },
+    "example_training_iterator_next": {
+      "exception_type": "AttributeError",
+      "message": "'_SingleProcessDataLoaderIter' object has no attribute 'next'"
+    },
+    "example_timer_numpy": {
+      "exception_type": "AttributeError",
+      "message": "`np.Inf` was removed in the NumPy 2.0 release. Use `np.inf` instead."
+    }
+  },
+  "expected_exception_cases_passed": 13,
+  "native_integration_executed": false
+}

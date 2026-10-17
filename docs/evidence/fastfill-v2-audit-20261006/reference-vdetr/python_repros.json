@@ -1,0 +1,116 @@
+{
+  "source_head": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+  "scope": "Exact AST-selected definitions / expressions executed on CPU; no MMCV, MinkowskiEngine, PointNet2 native imports; no original training/eval/compile or assets",
+  "torch_version": "2.6.0",
+  "fresh_parser": {
+    "use_color": false,
+    "random_fps_declared": false,
+    "iou_type": "giou",
+    "share_selfattn": false,
+    "repeat_num": 5,
+    "matching_angle_weights": [
+      0,
+      0
+    ]
+  },
+  "constructor_missing_random_fps": {
+    "type": "AttributeError",
+    "message": "'Namespace' object has no attribute 'random_fps'"
+  },
+  "run_encoder_no_color": {
+    "type": "UnboundLocalError",
+    "message": "cannot access local variable 'xyz' where it is not associated with a value"
+  },
+  "share_selfattn_value_layout": {
+    "actual_first_query_by_batch": [
+      [
+        36.666666666666664,
+        36.666666666666664
+      ],
+      [
+        83.33333333333333,
+        83.33333333333333
+      ]
+    ],
+    "expected_first_query_by_batch": [
+      [
+        10.0,
+        10.0
+      ],
+      [
+        110.0,
+        110.0
+      ]
+    ],
+    "max_absolute_error": 26.66666666666667,
+    "scope": "Optional --share_selfattn; B>1. Default disabled and README batch/GPU1 does not expose cross-batch corruption"
+  },
+  "all_gather_dict_nontensor": {
+    "actual_point_clouds_type": "Tensor",
+    "actual_point_clouds": [
+      7
+    ],
+    "list_first_error": {
+      "type": "UnboundLocalError",
+      "message": "cannot access local variable 'gathered_tensor' where it is not associated with a value"
+    },
+    "scope": "Default evaluate currently remove_empty_box=False so this corrupt field is unused by default AP path"
+  },
+  "superpoint_choices": {
+    "status": "AST-selected Dataset __getitem__ executed with tiny fixture",
+    "error": {
+      "type": "UnboundLocalError",
+      "message": "cannot access local variable 'choices' where it is not associated with a value"
+    },
+    "first_read_line": 496,
+    "scope": "Validation augment=False leaves choices unassigned; separate engine evaluate also omits superpoint input"
+  },
+  "celoss_background_anchor": {
+    "error": {
+      "type": "IndexError",
+      "message": "index 18 is out of bounds for dimension 0 with size 18"
+    },
+    "scope": "AST-selected model forward with deterministic upstream shaped point logits; CE has background class18 but mean-size table only18rows; focal default avoids this"
+  },
+  "diou_penalty_previously_confirmed": [
+    {
+      "case": "z_only",
+      "actual_r2": 0.0,
+      "expected_xyz_r2": 4.0
+    },
+    {
+      "case": "width_only",
+      "actual_r2": 4.0,
+      "expected_xyz_r2": 0.0
+    }
+  ],
+  "rotated_giou_flag": {
+    "expression": "torch.any(targets['gt_box_angles'] > 0).item()",
+    "negative_only_example_flag": false,
+    "scope": "Static and predicate execution; ScanNet gt_box_angles all0"
+  },
+  "sunrgbd": {
+    "parser_accepts": "sunrgbd",
+    "implemented_dataset_keys": [
+      "scannet"
+    ]
+  },
+  "chromatic_constant_channel": {
+    "all_finite": false,
+    "default_probability": 0.0
+  },
+  "missing_readme_build_files": [
+    "scannet/scannet_utils.py",
+    "scannet/meta_data",
+    "utils/box_intersection.pyx"
+  ],
+  "sources_sha256": {
+    "main.py": "f0d160f545a23c17690083b3071065cde47625f649e71edff8bdd19c27423513",
+    "models/model_vdetr.py": "91a9469a84cdec1b31c287acab33b6668c9fdf23113073abcf7191d7327e7732",
+    "models/vdetr_transformer.py": "f75bad193a7f0fd49562ba4cb922e4e00f34e49c68277f7c8efdcdb39c9ce7d9",
+    "utils/dist.py": "d4590ec2dc1db64d395ca562ba35ed9e388867ff5530ad8e8ade8a37f3abd18a",
+    "criterion.py": "dcb7c3a53e9254ad91c6ce4a157d5a77dec672f5ce717d8b116581343a209784",
+    "datasets/scannet.py": "6bdb424b2a55663eae582865cbc81bcb0cc7a159aa22ed6de2d6ae368a3faac2",
+    "datasets/__init__.py": "eb3eaa531db8102ac9b5decab368c85bb3a64edc27a8deb4cdf8adb26f482044"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "repo_id": "liantian/fastfill-v2",
+  "parent_commit": "4d001698a987987595153364173fa6f306f49603",
+  "commit": "ba1c3bf018c49bc841b696c25f8c2e1d1ff61a88",
+  "commit_url": "https://huggingface.co/datasets/liantian/fastfill-v2/commit/ba1c3bf018c49bc841b696c25f8c2e1d1ff61a88",
+  "data_publication_revision": "4d001698a987987595153364173fa6f306f49603",
+  "code_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "private_required": true,
+  "updated_paths": [
+    {
+      "path": "README.md",
+      "bytes": 7511,
+      "sha256": "2c052267ddac097f4b8e6eae6acbc5bc27fa63904a2041e623692f32005c0fba"
+    },
+    {
+      "path": "multisource-20261006/PUBLICATION_MANIFEST.json",
+      "bytes": 23053,
+      "sha256": "307c8443fa7246a7ad2c381dbc0d8584b60a91613c0020d2c14cfd94e650839e"
+    },
+    {
+      "path": "multisource-20261006/SHA256SUMS",
+      "bytes": 5606,
+      "sha256": "ab15d9f13c71af59839e0b64ba18dc2ca72ebd2409f618201a1af64720756ec6"
+    }
+  ],
+  "completed_utc": "2026-10-06T14:08:28.146584+00:00"
+}

@@ -1,0 +1,225 @@
+{
+  "date": "2026-10-06",
+  "scope": "36 current v2 production Python modules; original v1 not freshly full audited",
+  "implementation_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "files_read": 36,
+  "lines_read": 7542,
+  "files": [
+    {
+      "path": "fastfill/v2/__init__.py",
+      "lines": 3,
+      "sha256": "fa67d3676eafd0076d102f2b16c4f49f40cedbe56c68fb414bc469b2e79c6050",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/adapters.py",
+      "lines": 164,
+      "sha256": "f998610a8ba040ae3c255c71a56e5bd47356ff8a464f0a637ab3246237d17d87",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/audit.py",
+      "lines": 247,
+      "sha256": "6d6cababd3fbec6d1ede58981561aa27b968c9d115ad07738bf5b269059e520b",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/batch.py",
+      "lines": 243,
+      "sha256": "cf2c77953c486c9064e7b7b0ced80c685560ba5516b3a1795f4cfb1f5e4f28aa",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/bbox_visualization.py",
+      "lines": 127,
+      "sha256": "65fb0898b1f65f22fa6e9ab4b95b6c0b9369efc22349bf5f267dce1cc5026a09",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/boxes.py",
+      "lines": 123,
+      "sha256": "ef0c763fd6584f5b44a2ad8d1976a3f3568b1abf57b8fdcfab562e9c0f384284",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/cohort.py",
+      "lines": 159,
+      "sha256": "6e645d46eb13372f7979ace2529947a2192d8524f9df6f9a47bef8702ee78419",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/data.py",
+      "lines": 118,
+      "sha256": "02294503f23dafbc998b246c35fc41e4f87b0f68f5e8f5cfd75f718b759a809b",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/direct_layout.py",
+      "lines": 236,
+      "sha256": "9dfc2b8485883c974bcded0ed137e820bbbcca6cc82de48a5f8444a4ec5adb78",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/evaluate.py",
+      "lines": 299,
+      "sha256": "52a6cc73d6b90f64cca05847a664ae4b13505a230021a071558071ebfd570e5b",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/geometry.py",
+      "lines": 51,
+      "sha256": "493e8b12dba1ea9b0c31150c70be50c3b4d77aaeb42788a563a0a8d2c73d8fd9",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/io.py",
+      "lines": 93,
+      "sha256": "f143697f77f7ac08a19b87cd716acc61ed227f1adc83648768a9bb5ec16f91cb",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/legacy_bridge.py",
+      "lines": 181,
+      "sha256": "6341c21d6d46f6243ebe793acca1f6808c01e0b83b45af9e55b18865be817375",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/legacy_build.py",
+      "lines": 196,
+      "sha256": "f61199f7454e31342894c0b6148bfdb348855e5745f139a740b4b287f823e703",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/legacy_evidence.py",
+      "lines": 157,
+      "sha256": "a81e5700b356e5723e591dd95c4721cc28a2ad35786e24730cf8c9e6c0326a85",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/legacy_verify.py",
+      "lines": 445,
+      "sha256": "f810f94aecc343f4f70794722ef096c16b4eab7c65a8f3ce1856f92e05f034cf",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/losses.py",
+      "lines": 133,
+      "sha256": "52df596f960f319954f348e84fab14cbe5c36087397c7d5ee92ffae8a3bd2eaa",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/matching.py",
+      "lines": 117,
+      "sha256": "4d265552d36a06e8936ce32ef704797b8d185f0af81e6f37c7b8f2e72ebcf07c",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/minimal_data.py",
+      "lines": 313,
+      "sha256": "bbaa70f46e948167040c3215c29bb2c14a65247e3a75dd1000ee78c85116b975",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/model.py",
+      "lines": 244,
+      "sha256": "a358e4c558be6ef6d5d0e64317baa9d0f2ed5a7fe73c8ad764b9d02a30084db2",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/multisource_data.py",
+      "lines": 492,
+      "sha256": "cf10e1460462ce73c9fd8f7f3432fdf62373c46c5bc7806739a450e6355eaace",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/multisource_verify.py",
+      "lines": 553,
+      "sha256": "3e09dd3947b075d1110fa64786434b19186c692dc4debce32109173f0f6bdea2",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/objective.py",
+      "lines": 61,
+      "sha256": "54bde4b67469af4551f59b69354a18a065b0ea5f7800d567043019db6401e595",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/predict.py",
+      "lines": 100,
+      "sha256": "36aa199e649f37badccb55d1ffe91cc967fe5b98b59c145338d372c47d2a9e16",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/qualified_data.py",
+      "lines": 178,
+      "sha256": "010203a08211aa3b13759f8f56895dab50b483212a3127d68fa411bf227d6e5d",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/regularizers.py",
+      "lines": 98,
+      "sha256": "b450309e43457ffc9341541dfa1c65006d67fd1e83c5e7c296c90584e0a8c624",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/review_data.py",
+      "lines": 319,
+      "sha256": "6891d40cb33e88b1479dfc8c21c18a9d1367ee2d7ac22fffecc4f341acc598fa",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/roomgenbench.py",
+      "lines": 231,
+      "sha256": "2e150ab1dd03357a4bfceb1952fbd5a149adba15a003518318d8b0d382c325c3",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/runtime.py",
+      "lines": 448,
+      "sha256": "e9d69efa135b772904abe450fa43de40e9c11a881649803c3cf6f46e443d4d95",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/schema.py",
+      "lines": 298,
+      "sha256": "d989614f748d1861d029291e096af48335de5fa108df50d8c881daf8b14ca124",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/serve.py",
+      "lines": 87,
+      "sha256": "66839f204f4f0a5f12fc794a91e0ea151a9e988f8bf39efa9c046eeccb8bb0b3",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/size_range.py",
+      "lines": 38,
+      "sha256": "0ad2e26ea419068f0e92349dd0718ee3c733028711cae2822432d0f4d5b48165",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/text_sft.py",
+      "lines": 241,
+      "sha256": "a81d51eab1dec09edec99499dd65b1e21762e03438b19d0b8f0e682871308338",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/train.py",
+      "lines": 293,
+      "sha256": "2d5ad87978a3204f1f382e2bdd28d33ea15730f5806d05dc2d0089bb0f061994",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/validation.py",
+      "lines": 380,
+      "sha256": "7b9affefbaaa6fe1670afa382ef74150bc47c8939155ac5236464a740dcaf6fa",
+      "read_status": "full"
+    },
+    {
+      "path": "fastfill/v2/verify_bundle.py",
+      "lines": 76,
+      "sha256": "812c66c8544567157a3b01e75c84491d6b9886ab75d9826c3a010d97cf30f47a",
+      "read_status": "full"
+    }
+  ]
+}

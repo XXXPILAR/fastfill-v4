@@ -1,0 +1,55 @@
+{
+  "created_at": "2026-10-06T14:16:00.869526+00:00",
+  "device_policy": "CUDA_VISIBLE_DEVICES empty; no formal GPU training or runtime; existing occupiers untouched",
+  "environment_receipt": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/audit/server-environment-current-435d4e6532bdbc24d130df5edc11c5aa002a0460.json",
+  "failures": 0,
+  "full_combined": {
+    "command": "python -m coverage run --source=fastfill --omit=fastfill/tests/*,fastfill/v2/tests/* -m pytest fastfill/tests fastfill/v2/tests -q",
+    "coverage": {
+      "covered": 7294,
+      "missing": 2215,
+      "percent": 76.70627826269849,
+      "statements": 9509
+    },
+    "coverage_json": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/audit/server-full-coverage-current-435d4e6532bdbc24d130df5edc11c5aa002a0460.json",
+    "duration_seconds": 83.84,
+    "log": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/audit/server-full-tests-current-435d4e6532bdbc24d130df5edc11c5aa002a0460.log",
+    "passed": 897,
+    "skipped": 6,
+    "subtests_passed": 114,
+    "warnings": 8
+  },
+  "git_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "interpretation": "Combined legacy+v2 coverage is below 80%; current changed v2 production scope exceeds 80%. Tests do not establish model quality, mesh/physics legality, or full-training success.",
+  "roomgenbench_reference": {
+    "assembler_sha256": "3bb3b1a280c7074d0902a7ca0210ed433f5fc386da1bac735dc37f076763035f",
+    "resolved": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/downstream/RoomGenBench-source",
+    "tests_exercised_real_upstream_helper": true
+  },
+  "schema": "fastfill.server-test-receipt.v1",
+  "skip_reasons": {
+    "Metal_device": 6,
+    "detail": [
+      "test_model_review_fixes.py:111 (3)",
+      "test_model_review_fixes.py:130 (1)",
+      "test_regularizer_support_review.py:83 (2)"
+    ]
+  },
+  "snapshot": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/project-current-audit-20261006",
+  "v2_gate": {
+    "command": "python -m coverage run --source=fastfill.v2 --omit=fastfill/v2/tests/* -m pytest fastfill/v2/tests -q -rs",
+    "coverage": {
+      "covered": 4689,
+      "missing": 657,
+      "percent": 87.71043771043772,
+      "statements": 5346
+    },
+    "coverage_json": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/audit/server-v2-coverage-current-435d4e6532bdbc24d130df5edc11c5aa002a0460.json",
+    "duration_seconds": 73.52,
+    "log": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/audit/server-v2-tests-coverage-current-435d4e6532bdbc24d130df5edc11c5aa002a0460.log",
+    "passed": 759,
+    "skipped": 6,
+    "subtests_passed": 24,
+    "warnings": 8
+  }
+}

@@ -1,0 +1,357 @@
+{
+  "upstream_commit": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+  "versions": {
+    "python": "3.12.9 | packaged by conda-forge | (main, Mar  4 2025, 22:44:42) [Clang 18.1.8 ]",
+    "torch": "2.13.0",
+    "numpy": "1.26.4"
+  },
+  "scope": "CPU only; no upstream changes; no CUDA build or execution",
+  "initialization_bypass": "utils.__init__ skipped to avoid local missing optional plyfile; original box_util and misc functions imported unchanged",
+  "geometry": {
+    "rotated_self_cases": [
+      {
+        "angle_rad": 0.0,
+        "reference_self_intersection_volume": 2.0,
+        "float32_self_intersection_volume": 2.0,
+        "float64_self_intersection_volume": 2.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 1.0
+        },
+        "numpy_warnings": []
+      },
+      {
+        "angle_rad": 0.3,
+        "reference_self_intersection_volume": 1.9999999999999996,
+        "float32_self_intersection_volume": 1.955336570739746,
+        "float64_self_intersection_volume": 2.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 1.0000000000000004
+        },
+        "numpy_warnings": []
+      },
+      {
+        "angle_rad": 0.7853981633974483,
+        "reference_self_intersection_volume": 2.0,
+        "float32_self_intersection_volume": 0.0,
+        "float64_self_intersection_volume": 0.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 0.0
+        },
+        "numpy_warnings": [
+          "divide by zero encountered in scalar divide",
+          "invalid value encountered in scalar multiply",
+          "invalid value encountered in scalar multiply"
+        ]
+      },
+      {
+        "angle_rad": 1.5707963267948966,
+        "reference_self_intersection_volume": 2.0,
+        "float32_self_intersection_volume": 0.0,
+        "float64_self_intersection_volume": 0.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 1.0
+        },
+        "numpy_warnings": []
+      },
+      {
+        "angle_rad": 3.141592653589793,
+        "reference_self_intersection_volume": 2.0,
+        "float32_self_intersection_volume": 0.0,
+        "float64_self_intersection_volume": 0.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 0.0
+        },
+        "numpy_warnings": [
+          "divide by zero encountered in scalar divide",
+          "invalid value encountered in scalar multiply",
+          "invalid value encountered in scalar multiply"
+        ]
+      },
+      {
+        "angle_rad": -1.5707963267948966,
+        "reference_self_intersection_volume": 2.0,
+        "float32_self_intersection_volume": 0.0,
+        "float64_self_intersection_volume": 0.0,
+        "numpy_self_iou": {
+          "completed": true,
+          "value": 1.0
+        },
+        "numpy_warnings": []
+      }
+    ],
+    "axis_aligned_controls": {
+      "pairs": 200,
+      "max_giou_absolute_error": 1.4418837346319435e-07,
+      "all_gradients_finite": true,
+      "sizes_each_axis_m": [
+        0.1,
+        4.0
+      ],
+      "seed": 20261006
+    },
+    "zero_volume": {
+      "all_finite": false,
+      "value_repr": "[[[nan]]]"
+    },
+    "rotated_nums_k2_none": {
+      "completed": false,
+      "exception": "RuntimeError",
+      "message": "The following operation failed in the TorchScript interpreter.\nTraceback of TorchScript (most recent call last):\n  File \"/Users/slian/Desktop/3D/Worldedge/OptiScene/V-DETR/utils/box_util.py\", line 569, in generalized_box3d_iou_tensor\n    if nums_k2 is not None:\n        for b in range(B):\n            non_rot_inter_areas[b, :, nums_k2[b] :] = 0\n                                      ~~~~~~~~~~ <--- HERE\n\n    enclosing_vols = enclosing_box3d_vol(corners1, corners2)\nRuntimeError: Expected a proper Tensor but got None (or an undefined Tensor in C++) for argument #0 'self'\n"
+    },
+    "criterion_negative_only": {
+      "angles": [
+        [
+          -0.30000001192092896
+        ]
+      ],
+      "predicate_result": false,
+      "expected_self_intersection_volume": 2.0,
+      "chosen_branch_intersection_volume": 2.4976348876953125,
+      "chosen_branch_giou": 1.1028376817703247
+    },
+    "sub_millimeter_axis_cases": [
+      {
+        "size_m": [
+          2.0,
+          0.001,
+          1.0
+        ],
+        "reference_self_volume": 0.002,
+        "camera_xyz_min": [
+          [
+            [
+              -1.0,
+              -0.5,
+              -0.0005000000237487257
+            ]
+          ]
+        ],
+        "camera_xyz_max": [
+          [
+            [
+              1.0,
+              0.5,
+              0.0005000000237487257
+            ]
+          ]
+        ],
+        "production_box3d_vol_tensor": 0.0020000000949949026,
+        "production_intersection": 0.0020000000949949026,
+        "production_enclosure": 0.0020000000949949026,
+        "production_union": 0.0020000000949949026,
+        "computed_iou": 1.0,
+        "computed_giou_second_term": -0.0,
+        "production_self_giou": 1.0,
+        "expected_self_giou": 1.0
+      },
+      {
+        "size_m": [
+          2.0,
+          0.0001,
+          1.0
+        ],
+        "reference_self_volume": 0.0002,
+        "camera_xyz_min": [
+          [
+            [
+              -1.0,
+              -0.5,
+              -4.999999873689376e-05
+            ]
+          ]
+        ],
+        "camera_xyz_max": [
+          [
+            [
+              1.0,
+              0.5,
+              4.999999873689376e-05
+            ]
+          ]
+        ],
+        "production_box3d_vol_tensor": 0.0020000000949949026,
+        "production_intersection": 0.00019999999494757503,
+        "production_enclosure": 0.00019999999494757503,
+        "production_union": 0.00380000019504223,
+        "computed_iou": 0.05263157491636718,
+        "computed_giou_second_term": 18.00000145519156,
+        "production_self_giou": 18.05263328552246,
+        "expected_self_giou": 1.0
+      },
+      {
+        "size_m": [
+          2.0,
+          1e-05,
+          1.0
+        ],
+        "reference_self_volume": 2e-05,
+        "camera_xyz_min": [
+          [
+            [
+              -1.0,
+              -0.5,
+              -4.999999873689376e-06
+            ]
+          ]
+        ],
+        "camera_xyz_max": [
+          [
+            [
+              1.0,
+              0.5,
+              4.999999873689376e-06
+            ]
+          ]
+        ],
+        "production_box3d_vol_tensor": 0.0020000000949949026,
+        "production_intersection": 1.9999999494757503e-05,
+        "production_enclosure": 1.9999999494757503e-05,
+        "production_union": 0.003980000190495048,
+        "computed_iou": 0.005025125260677394,
+        "computed_giou_second_term": 198.0000145519156,
+        "production_self_giou": 198.00502014160156,
+        "expected_self_giou": 1.0
+      }
+    ]
+  },
+  "coordinate_convention": {
+    "size_m": [
+      4.0,
+      2.0,
+      1.0
+    ],
+    "canonical_bottom_center_m": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "geometric_center_m": [
+      1.0,
+      2.0,
+      3.5
+    ],
+    "camera_center_m": [
+      1.0,
+      -3.5,
+      2.0
+    ],
+    "camera_box_angle_positive_pi_over_two": 1.5707963267948966,
+    "depth_world_direction_of_positive_local_x": [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    "canonical_positive_yaw_point_seven": 0.7,
+    "corner_set_max_nearest_point_error_m": {
+      "box_angle_equal_yaw": 1.770933374662572,
+      "box_angle_negative_yaw": 0.0
+    },
+    "note": "At ±π/2 cuboid corner sets alone have π symmetry; local +X direction disambiguates sign. Non-axis yaw 0.7 corner sets test the actual sign conversion."
+  },
+  "box_ops3d_import": {
+    "completed": false,
+    "exception": "NameError",
+    "message": "name 'autojit' is not defined"
+  },
+  "python_pointnet": {
+    "GroupAll_ret_grouped_xyz_False": {
+      "completed": false,
+      "exception": "AttributeError",
+      "message": "'GroupAll' object has no attribute 'ret_grouped_xyz'"
+    },
+    "GroupAll_ret_grouped_xyz_True": {
+      "completed": false,
+      "exception": "AttributeError",
+      "message": "'GroupAll' object has no attribute 'ret_grouped_xyz'"
+    },
+    "RandomDropout_forward": {
+      "completed": false,
+      "exception": "AttributeError",
+      "message": "module 'pytorch_utils' has no attribute 'feature_dropout_no_scaling'"
+    },
+    "caller_mlp_spec_mutation": {
+      "original": [
+        [
+          0,
+          8
+        ]
+      ],
+      "after_first": [
+        [
+          3,
+          8
+        ]
+      ],
+      "after_second": [
+        [
+          6,
+          8
+        ]
+      ]
+    },
+    "extension_execution": "none; import sentinel only"
+  },
+  "ancillary_random_cuboid_negative_coordinate_case": {
+    "randomness": "controlled crop size 0.5 and first point center; original production function",
+    "target_box_sum": -24.0,
+    "cropped_cloud": [
+      [
+        -10.0,
+        -10.0,
+        -10.0
+      ],
+      [
+        -9.9,
+        -9.9,
+        -9.9
+      ]
+    ],
+    "returned_boxes": [
+      [
+        -9.0,
+        -9.0,
+        -9.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "returned_box_center_inside_cropped_cloud": [
+      false
+    ]
+  },
+  "native_fps_origin_policy_illustration": {
+    "cuda_execution": false,
+    "points": [
+      [
+        0.01,
+        0.0,
+        0.0
+      ],
+      [
+        0.015,
+        0.0,
+        0.0
+      ],
+      [
+        0.025,
+        0.0,
+        0.0
+      ]
+    ],
+    "indices_original": [
+      0,
+      0
+    ],
+    "indices_translated_one_meter": [
+      0,
+      2
+    ],
+    "line_evidence": "sampling_gpu.cu:103-104"
+  }
+}

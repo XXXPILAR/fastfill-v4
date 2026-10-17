@@ -1,0 +1,85 @@
+{
+  "verified_exported_receipt_entries": 1772,
+  "repositories": {
+    "V-DETR": {
+      "pinned_commit": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+      "upstream_url": "https://github.com/V-DETR/V-DETR.git",
+      "upstream_tracked_entries_in_manifest": 75,
+      "upstream_tracked_blob_files_in_manifest": 75,
+      "server_exported_files_verified": 63,
+      "server_source_code_files": 53,
+      "server_source_code_lines": 10488,
+      "source_directory": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/source/V-DETR",
+      "exclusions": {
+        "illustration_or_data_binary": 8,
+        "prebuilt_or_generated_binary": 4
+      },
+      "nested_gitlinks_not_initialized": 0
+    },
+    "MinkowskiEngine": {
+      "pinned_commit": "02fc608bea4c0549b0a7b00ca1bf15dee4a0b228",
+      "upstream_url": "https://github.com/NVIDIA/MinkowskiEngine.git",
+      "upstream_tracked_entries_in_manifest": 244,
+      "upstream_tracked_blob_files_in_manifest": 244,
+      "server_exported_files_verified": 232,
+      "server_source_code_files": 190,
+      "server_source_code_lines": 49543,
+      "source_directory": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/source/MinkowskiEngine",
+      "exclusions": {
+        "illustration_or_data_binary": 12
+      },
+      "nested_gitlinks_not_initialized": 0
+    },
+    "RoomGenBench": {
+      "pinned_commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+      "upstream_url": "https://github.com/RunyiYang/RoomGenBench.git",
+      "upstream_tracked_entries_in_manifest": 1605,
+      "upstream_tracked_blob_files_in_manifest": 1598,
+      "server_exported_files_verified": 1460,
+      "server_source_code_files": 65,
+      "server_source_code_lines": 10744,
+      "source_directory": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/source/RoomGenBench",
+      "exclusions": {
+        "illustration_or_data_binary": 98,
+        "large_tracked_text_data": 40
+      },
+      "nested_gitlinks_not_initialized": 7
+    }
+  },
+  "papers": [
+    {
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/papers/vDETR_details_v2.pdf",
+      "bytes": 222102,
+      "sha256": "9d1a916166d7ee20951ae743ebb480cad9b5014b0e6063c864a092d35f21df42",
+      "provenance": "user-specified repository schematic",
+      "official_url": null
+    },
+    {
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/papers/V-DETR_arxiv_2308.04409v1.pdf",
+      "bytes": 8181146,
+      "sha256": "e6d7cbdfaf77fb804775b5e85fb182f792bca28833c23e6de03793a5b289d3c2",
+      "provenance": "official arXiv v1",
+      "official_url": "https://arxiv.org/pdf/2308.04409v1"
+    },
+    {
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006/papers/MinkowskiEngine_CVPR2019_official.pdf",
+      "bytes": 1390942,
+      "sha256": "82d7972bf7bb4637ba4ee1f676d28224c954d2c6dc5717676a95f1c80e359434",
+      "provenance": "official CVF",
+      "official_url": "https://openaccess.thecvf.com/content_CVPR_2019/papers/Choy_4D_Spatio-Temporal_ConvNets_Minkowski_Convolutional_Neural_Networks_CVPR_2019_paper.pdf"
+    }
+  ],
+  "manifest_sha256": "bc5ade75914164a6ac5f146aa0c55cde3a99fe7c75638509704343adc1aa9324",
+  "root_git_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "verified_at_utc": "2026-10-06T14:20:03.758734+00:00",
+  "publication": "source/papers verified in isolated stage, then directory atomically renamed",
+  "references_directory": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/references-20261006",
+  "archive_sha256": "afeb94892e5be8516860057ce101f219b8d0598645e64a1961d4d079347206e3",
+  "paper_transfer_receipt": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/.references-sync-papers-20261006/verified/ASSEMBLY_RECEIPT.json",
+  "previous_http_attempt_receipt": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/.references-sync-papers-20261006/download-receipt.json",
+  "native_build_or_execution": false,
+  "training_launched": false,
+  "local_upstream_sources_modified": false,
+  "reading_scope": "Reading receipts are in evidence/; export/source counts are not full-read claims.",
+  "preserved_previous_empty_directory": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/.references-20261006-unverified-preserved-20261006T142003Z"
+}

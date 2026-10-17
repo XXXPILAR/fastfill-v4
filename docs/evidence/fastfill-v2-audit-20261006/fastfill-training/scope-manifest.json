@@ -1,0 +1,39 @@
+{
+  "scope": "current FastFill v2 training/model/loss/matching/batch/geometry/evaluation read-and-targeted-execution audit",
+  "date": "2026-10-06",
+  "source_root_modified_by_audit": true,
+  "authorized_source_changes": [
+    "fastfill/v2/train.py",
+    "fastfill/v2/evaluate.py",
+    "fastfill/v2/tests/test_accumulation_tail.py",
+    "fastfill/v2/tests/test_runtime_evaluation.py"
+  ],
+  "files": [
+    {"path": "fastfill/v2/train.py", "lines": 293, "sha256": "2d5ad87978a3204f1f382e2bdd28d33ea15730f5806d05dc2d0089bb0f061994", "targeted_statement_coverage": "174/214 (81%)"},
+    {"path": "fastfill/v2/model.py", "lines": 244, "sha256": "a358e4c558be6ef6d5d0e64317baa9d0f2ed5a7fe73c8ad764b9d02a30084db2", "targeted_statement_coverage": "167/179 (93%)"},
+    {"path": "fastfill/v2/losses.py", "lines": 133, "sha256": "52df596f960f319954f348e84fab14cbe5c36087397c7d5ee92ffae8a3bd2eaa", "targeted_statement_coverage": "103/109 (94%)"},
+    {"path": "fastfill/v2/matching.py", "lines": 117, "sha256": "4d265552d36a06e8936ce32ef704797b8d185f0af81e6f37c7b8f2e72ebcf07c", "targeted_statement_coverage": "80/89 (90%)"},
+    {"path": "fastfill/v2/batch.py", "lines": 243, "sha256": "cf2c77953c486c9064e7b7b0ced80c685560ba5516b3a1795f4cfb1f5e4f28aa", "targeted_statement_coverage": "164/186 (88%)"},
+    {"path": "fastfill/v2/geometry.py", "lines": 51, "sha256": "493e8b12dba1ea9b0c31150c70be50c3b4d77aaeb42788a563a0a8d2c73d8fd9", "targeted_statement_coverage": "32/35 (91%)"},
+    {"path": "fastfill/v2/boxes.py", "lines": 123, "sha256": "ef0c763fd6584f5b44a2ad8d1976a3f3568b1abf57b8fdcfab562e9c0f384284", "targeted_statement_coverage": "75/80 (94%)"},
+    {"path": "fastfill/v2/regularizers.py", "lines": 98, "sha256": "b450309e43457ffc9341541dfa1c65006d67fd1e83c5e7c296c90584e0a8c624", "targeted_statement_coverage": "57/64 (89%)"},
+    {"path": "fastfill/v2/text_sft.py", "lines": 241, "sha256": "a81d51eab1dec09edec99499dd65b1e21762e03438b19d0b8f0e682871308338", "targeted_statement_coverage": "157/186 (84%)"},
+    {"path": "fastfill/v2/predict.py", "lines": 100, "sha256": "36aa199e649f37badccb55d1ffe91cc967fe5b98b59c145338d372c47d2a9e16", "targeted_statement_coverage": "65/80 (81%)"},
+    {"path": "fastfill/v2/evaluate.py", "lines": 299, "sha256": "52a6cc73d6b90f64cca05847a664ae4b13505a230021a071558071ebfd570e5b", "targeted_statement_coverage": "174/207 (84%)"},
+    {"path": "fastfill/v2/qualified_data.py", "lines": 178, "sha256": "010203a08211aa3b13759f8f56895dab50b483212a3127d68fa411bf227d6e5d", "targeted_statement_coverage": "97/119 (82%)"},
+    {"path": "fastfill/v2/objective.py", "lines": 61, "sha256": "54bde4b67469af4551f59b69354a18a065b0ea5f7800d567043019db6401e595", "targeted_statement_coverage": "37/39 (95%)"},
+    {"path": "fastfill/v2/size_range.py", "lines": 38, "sha256": "0ad2e26ea419068f0e92349dd0718ee3c733028711cae2822432d0f4d5b48165", "targeted_statement_coverage": "22/22 (100%)"},
+    {"path": "fastfill/v2/bbox_visualization.py", "lines": 127, "sha256": "65fb0898b1f65f22fa6e9ab4b95b6c0b9369efc22349bf5f267dce1cc5026a09", "targeted_statement_coverage": "89/90 (99%)"}
+  ],
+  "targeted_tests": {
+    "training_model_loss_matching_evaluation": "277 passed in 34.06s",
+    "bbox_handoff_visualization": "60 passed in 2.74s",
+    "combined_statement_coverage_for_listed_files": "1493/1699 (88%)",
+    "coverage_file": "targeted-coverage.json"
+  },
+  "not_executed": [
+    "formal Qwen training",
+    "server GPU training",
+    "real assets/mesh/physics/Solver/WorldEdge Host"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "path": "audit.md",
+      "bytes": 15514,
+      "sha256": "81c1e24c51bfa28a41efa7aa24d2e9bc27abdf2e25ea50b5ca804d6ff6133159"
+    },
+    {
+      "path": "native-coverage.json",
+      "bytes": 23215,
+      "sha256": "8a34630f03c59b00dc6a9a645b1c350e4d78ff0adcd29eed7ce39ba3f6179ba2"
+    },
+    {
+      "path": "reproduce.py",
+      "bytes": 13033,
+      "sha256": "58a88c89a55c0f0987ce03f0872435a7fee91effede707105ec20a21b68f964e"
+    },
+    {
+      "path": "reproduction-results.json",
+      "bytes": 9622,
+      "sha256": "213a3a1e5a66b0544fab97693173ed43e85cce41bebbc9a1876fb5f1b2c4a776"
+    },
+    {
+      "path": "reproduction-stdout.txt",
+      "bytes": 9776,
+      "sha256": "2f38a2e9359703c872cd080d3c0ba7c1dea3d6302731f9004515492028a62cff"
+    },
+    {
+      "path": "source-read-copy.txt",
+      "bytes": 179311,
+      "sha256": "ed465c7373c746a4d1191c364159afa141b6668603d15d0915aacffabd039bbd"
+    }
+  ],
+  "upstream_head": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+  "final_upstream_status": "?? .DS_Store"
+}

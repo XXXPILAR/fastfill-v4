@@ -1,0 +1,75 @@
+{
+  "official_url": "https://openaccess.thecvf.com/content_CVPR_2019/papers/Choy_4D_Spatio-Temporal_ConvNets_Minkowski_Convolutional_Neural_Networks_CVPR_2019_paper.pdf",
+  "retrieved_date": "2026-10-06",
+  "paper": "4D Spatio-Temporal ConvNets: Minkowski Convolutional Neural Networks",
+  "authors": [
+    "Christopher Choy",
+    "JunYoung Gwak",
+    "Silvio Savarese"
+  ],
+  "venue": "CVPR 2019",
+  "full_pages_read": 10,
+  "extraction": "pypdf per-page text, all 10 pages read including references",
+  "files": [
+    {
+      "path": "paper/Choy_CVPR2019_official.pdf",
+      "bytes": 1390942,
+      "sha256": "82d7972bf7bb4637ba4ee1f676d28224c954d2c6dc5717676a95f1c80e359434"
+    },
+    {
+      "path": "paper/full-text.txt",
+      "bytes": 43725,
+      "sha256": "d4425a2776925f403a7ad81e7db7a2205078f6d8554f8cc5b0288b0c9b453655"
+    },
+    {
+      "path": "paper/page-01.txt",
+      "bytes": 3989,
+      "sha256": "e0c0b87bc801023d4ac9a82f96467a22fea9875bc8e674553b83cd1b5801eba2"
+    },
+    {
+      "path": "paper/page-02.txt",
+      "bytes": 5821,
+      "sha256": "43730d9509c6259d88e4529d46ada325c471f772d3e9558b292b75a47bb32983"
+    },
+    {
+      "path": "paper/page-03.txt",
+      "bytes": 5112,
+      "sha256": "cff1209fa1ff542ba5419cfc8a38bc1c0cd1d5bc3bb4f7b4ac45f60deb640492"
+    },
+    {
+      "path": "paper/page-04.txt",
+      "bytes": 5011,
+      "sha256": "caa3922615ce5a149a1de9a56f7947a961f589991e253c698716fc6ac8192010"
+    },
+    {
+      "path": "paper/page-05.txt",
+      "bytes": 5139,
+      "sha256": "7932fda8b46bcd2771cf7938c50e5d0a35f593841e715eb9f42b526af0718e77"
+    },
+    {
+      "path": "paper/page-06.txt",
+      "bytes": 4552,
+      "sha256": "6229f9a9c957d60fa7e5dbbafff027d25ccea4d43eb59407d01671ae4a46cc2d"
+    },
+    {
+      "path": "paper/page-07.txt",
+      "bytes": 3575,
+      "sha256": "5f7f9b0626732f0a3d8b7570475516ced893c5239d6b951dc607af742902445c"
+    },
+    {
+      "path": "paper/page-08.txt",
+      "bytes": 3356,
+      "sha256": "2f77cf3c43edb76051b712a811c8230c47239e032b0be6c30dc6751904213fec"
+    },
+    {
+      "path": "paper/page-09.txt",
+      "bytes": 5896,
+      "sha256": "e1dba795600a757ee61b407ffc17230dae93253e8aa62a2a89fb47fca51af511"
+    },
+    {
+      "path": "paper/page-10.txt",
+      "bytes": 1265,
+      "sha256": "3f9d193cb864b1e309843a9ecfdc774057973dfa2ff1f9a52563ca89c48ca8d1"
+    }
+  ]
+}

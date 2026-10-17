@@ -1,0 +1,9 @@
+[submodule "V-DETR"]
+	path = V-DETR
+	url = https://github.com/V-DETR/V-DETR.git
+[submodule "MinkowskiEngine"]
+	path = MinkowskiEngine
+	url = https://github.com/NVIDIA/MinkowskiEngine.git
+[submodule "RoomGenBench"]
+	path = RoomGenBench
+	url = https://github.com/RunyiYang/RoomGenBench.git

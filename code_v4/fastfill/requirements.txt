@@ -1,0 +1,12 @@
+# FastFill v1. Tested: transformers 4.57.6 (the node03 stack in ../fastfill/requirements.txt, vLLM 0.19.0),
+# 5.14.1 and 5.17.0; peft 0.14-0.21 (4.57.6 + peft 0.21.0 ran the full pipeline). Install torch for the server CUDA first, then: pip install -r fastfill/requirements.txt
+# Train, merge and serve in ONE environment.
+transformers>=4.56
+peft>=0.14
+accelerate>=1.1
+huggingface_hub
+numpy
+shapely>=2.0
+ijson
+# optional, faster evaluation: vllm
+# optional, multi-GPU full fine-tuning: deepspeed

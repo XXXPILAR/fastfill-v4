@@ -1,0 +1,10 @@
+{
+  "room_type": "living room",
+  "room_size_m": [5.0, 4.0],
+  "furniture_list": [
+    "sofa",
+    "coffee table",
+    {"category": "chair", "count": 2},
+    "bookshelf"
+  ]
+}

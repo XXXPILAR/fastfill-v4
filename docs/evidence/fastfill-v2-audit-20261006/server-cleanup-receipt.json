@@ -1,0 +1,287 @@
+{
+  "authorized_scope": "verified obsolete dataset copies and transfer intermediates only",
+  "created_at": "2026-10-06T13:53:33.042913+00:00",
+  "deleted": [
+    {
+      "before": {
+        "allocated_bytes_du": 4413343232,
+        "allocated_bytes_stat_blocks": 1471092224,
+        "logical_bytes": 1471089503,
+        "regular_files": 9
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "directory",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_20261006_server/FastFill_v2_20261006_review3/data",
+      "reason": "fully manifest-verified extracted historical data duplicate",
+      "recovery": "retained frozen tar FastFill_v2_training_20261006_review3.tar.gz sha256 973ef1743a62bdce94150643d1df2049934edfe8a1bef5c1947e5066b07fb04c"
+    },
+    {
+      "before": {
+        "allocated_bytes_du": 144317952,
+        "allocated_bytes_stat_blocks": 72154624,
+        "logical_bytes": 72153067,
+        "regular_files": 5
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "directory",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_direct_bbox_20261006/data",
+      "reason": "fully manifest-verified extracted historical direct-bbox data duplicate",
+      "recovery": "retained frozen tar FastFill_v2_direct_bbox_20261006.tar.gz sha256 810383e9319e636637bfa938c764b4a6947e419adeb7816ecca61c3254bfe3f0"
+    },
+    {
+      "before": {
+        "allocated_bytes_du": 323397120,
+        "allocated_bytes_stat_blocks": 161695232,
+        "logical_bytes": 161694994,
+        "regular_files": 20
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "directory",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_20261006_server/outputs/transfer-parts",
+      "reason": "transfer intermediates whose concatenation exactly matches retained review3 tar",
+      "recovery": "retained review3 frozen tar"
+    },
+    {
+      "before": {
+        "allocated_bytes_du": 9184768,
+        "allocated_bytes_stat_blocks": 4589056,
+        "logical_bytes": 4588833,
+        "regular_files": 5
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "directory",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_direct_bbox_20261006/transfer-parts",
+      "reason": "transfer intermediates whose concatenation exactly matches retained direct-bbox tar",
+      "recovery": "retained direct-bbox frozen tar"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 1048576,
+        "logical_bytes": 1048576,
+        "regular_files": 1,
+        "sha256": "cb6f0d17c72c68cb346435a9334ff613ae00008704f82599fe8e90d230598ef1"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_20261006_server/outputs/remote-write-probe.bin",
+      "reason": "temporary transfer probe",
+      "recovery": "no recovery needed; recorded sha256"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 1048576,
+        "logical_bytes": 1048576,
+        "regular_files": 1,
+        "sha256": "faaae87d22e264e0b11ac3e4f8a508cb6cdefc16f4f682296d77c706f66e5b33"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_20261006_server/outputs/transfer-probe2.bin",
+      "reason": "temporary transfer probe",
+      "recovery": "no recovery needed; recorded sha256"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 1048576,
+        "logical_bytes": 1048576,
+        "regular_files": 1,
+        "sha256": "cb6f0d17c72c68cb346435a9334ff613ae00008704f82599fe8e90d230598ef1"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_20261006_server/transfer-probe.bin",
+      "reason": "temporary transfer probe",
+      "recovery": "no recovery needed; recorded sha256"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 3145728,
+        "logical_bytes": 3145728,
+        "regular_files": 1,
+        "sha256": "ecc3c21eb07e6dc35888d6a3e35eef9639d008e26f4a1a70520e09b253f23873"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/server-main-data.tar.gz.INCOMPLETE-UPLOAD",
+      "reason": "explicit incomplete upload artifact",
+      "recovery": "canonical main data/ and preflight-main/ retained"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 241664,
+        "logical_bytes": 241642,
+        "regular_files": 1,
+        "sha256": "2f627a4de7db102c74ff49cbc407e65de0548fc9c3cc1f114bbb6d477bbc45c4"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/RoomGenBench-source.tar.gz",
+      "reason": "one-time transfer archive; all 96 regular members match extracted downstream replacement",
+      "recovery": "downstream/RoomGenBench-source retained"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 479232,
+        "logical_bytes": 478810,
+        "regular_files": 1,
+        "sha256": "9374c1aa568a22cd1e1f1df8989f9bc5ca0003eb9ca40c2ffeedfd074372d889"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/server-code-final.tar.gz",
+      "reason": "one-time transfer archive; all 163 regular members match extracted replacement",
+      "recovery": "project/ and server helper files retained"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 501248,
+        "logical_bytes": 501045,
+        "regular_files": 1,
+        "sha256": "cfe6e177effcc1464d70ef9c1a80c723cc402c176c0cfc53ccc5f83f94e4905b"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/sync-current-code.tar.gz",
+      "reason": "one-time transfer archive; all 169 regular members match extracted replacement",
+      "recovery": "project-current-20261006 and associated manifests retained"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 163328,
+        "logical_bytes": 163161,
+        "regular_files": 1,
+        "sha256": "ea802e39c28155f6e94040b6efb8787bb2cb460cbc332154ab5929b74c0fffd2"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/sync-supporting.tar.gz",
+      "reason": "one-time transfer archive; all 15 regular members match extracted replacement",
+      "recovery": "audit/evidence/reference-vdetr files retained"
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 903549952,
+        "logical_bytes": 903549443,
+        "regular_files": 1,
+        "sha256": "9d3179510626a0742a66044fa6d78f33420df2fb22c2372498c825cb57be21c2"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "exists_final": true,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_train.jsonl",
+      "reason": "optional metadata-only projection not used by formal B1/K16 preflight/pilot",
+      "recovery": "identical local and /Volumes/harddisk copies retained; sha256 9d3179510626a0742a66044fa6d78f33420df2fb22c2372498c825cb57be21c2",
+      "restored_after_cleanup": true
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 54985728,
+        "logical_bytes": 54985544,
+        "regular_files": 1,
+        "sha256": "a706bd305fbaaf2fd7d9886f57cf6d4cd42c74b113994a7e7b07df9acb3dc739"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "exists_final": true,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_validation.jsonl",
+      "reason": "optional metadata-only projection not used by formal B1/K16 preflight/pilot",
+      "recovery": "identical local and /Volumes/harddisk copies retained; sha256 a706bd305fbaaf2fd7d9886f57cf6d4cd42c74b113994a7e7b07df9acb3dc739",
+      "restored_after_cleanup": true
+    },
+    {
+      "before": {
+        "allocated_bytes_stat_blocks": 60506624,
+        "logical_bytes": 60506277,
+        "regular_files": 1,
+        "sha256": "6f9923d528907ce21b1d7fd716dd1506b4701d17f4e408620a08279a47200f26"
+      },
+      "deletion_performed": true,
+      "exists_after": false,
+      "exists_final": true,
+      "kind": "file",
+      "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_test.jsonl",
+      "reason": "optional metadata-only projection not used by formal B1/K16 preflight/pilot",
+      "recovery": "identical local and /Volumes/harddisk copies retained; sha256 6f9923d528907ce21b1d7fd716dd1506b4701d17f4e408620a08279a47200f26",
+      "restored_after_cleanup": true
+    }
+  ],
+  "host": "coder-workspace-vwm-node-2",
+  "restoration": {
+    "created_at": "2026-10-06T14:01:24.050839+00:00",
+    "directive": "retain for canonical publisher; no further deletion performed",
+    "files": [
+      {
+        "bytes": 903549443,
+        "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_train.jsonl",
+        "reason": "HF publisher canonical 24-file set still requires this view",
+        "restoration": "deterministically filtered original raw JSONL lines from retained split using audited _strict_rectangle predicate; atomic publish",
+        "sha256": "9d3179510626a0742a66044fa6d78f33420df2fb22c2372498c825cb57be21c2",
+        "verified_exact": true
+      },
+      {
+        "bytes": 54985544,
+        "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_validation.jsonl",
+        "reason": "HF publisher canonical 24-file set still requires this view",
+        "restoration": "deterministically filtered original raw JSONL lines from retained split using audited _strict_rectangle predicate; atomic publish",
+        "sha256": "a706bd305fbaaf2fd7d9886f57cf6d4cd42c74b113994a7e7b07df9acb3dc739",
+        "verified_exact": true
+      },
+      {
+        "bytes": 60506277,
+        "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data-minimal-reference/strict_rectangle_test.jsonl",
+        "reason": "HF publisher canonical 24-file set still requires this view",
+        "restoration": "deterministically filtered original raw JSONL lines from retained split using audited _strict_rectangle predicate; atomic publish",
+        "sha256": "6f9923d528907ce21b1d7fd716dd1506b4701d17f4e408620a08279a47200f26",
+        "verified_exact": true
+      }
+    ]
+  },
+  "retained": [
+    "/home/jovyan/shanliantian/FastFill_v2_20261006_server/env",
+    "/home/jovyan/shanliantian/FastFill_v2_20261006_server/FastFill_v2_training_20261006_review3.tar.gz",
+    "/home/jovyan/shanliantian/FastFill_v2_direct_bbox_20261006/FastFill_v2_direct_bbox_20261006.tar.gz",
+    "/home/jovyan/shanliantian/FastFill_v2_direct_bbox_20261006/FastFill_v2_direct_bbox_project_final_20261006.tar.gz",
+    "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/data",
+    "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/preflight-main",
+    "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/constrained-evaluation",
+    "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/project",
+    "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/project-current-20261006",
+    "all checkpoints/model weights/raw original assets/GPU and gpu_idle_occupier processes"
+  ],
+  "schema": "fastfill.server-cleanup.v1",
+  "totals": {
+    "filesystem_free_delta_at_initial_delete": 0,
+    "filesystem_free_metric_note": "JuiceFS shared free count did not change synchronously; net allocated value uses pre-delete du minus restored stat blocks",
+    "final_absent_targets": 12,
+    "gross_allocated_bytes_predelete": 5916962304,
+    "gross_delete_events": 15,
+    "gross_logical_bytes_deleted": 2736243775,
+    "net_allocated_bytes_removed_estimate": 4897920000,
+    "net_logical_bytes_removed": 1717202511,
+    "restored_allocated_bytes": 1019042304,
+    "restored_files": 3,
+    "restored_logical_bytes": 1019041264
+  },
+  "verification_summary": {
+    "direct_bbox_bundle_manifest": "152/152 files present with matching bytes and SHA256; data 5/5",
+    "direct_bbox_transfer_parts": "concatenated SHA256 equals retained direct-bbox tar",
+    "one_time_archives": "all regular members matched extracted replacements: 96 + 163 + 169 + 15",
+    "review3_bundle_manifest": "279/279 files present with matching bytes and SHA256; data 9/9",
+    "review3_transfer_parts": "concatenated SHA256 equals retained review3 tar",
+    "strict_rectangle": "server files match historical manifest and byte-identical local plus external-drive copies; absent from formal B1/K16 preflight/pilot receipts"
+  }
+}

@@ -1,0 +1,294 @@
+{
+  "repo_id": "liantian/fastfill-v2",
+  "parent_commit": "35f5272330d37771eea2d11925c42aeec9d917d4",
+  "commit": "4d001698a987987595153364173fa6f306f49603",
+  "commit_url": "https://huggingface.co/datasets/liantian/fastfill-v2/commit/4d001698a987987595153364173fa6f306f49603",
+  "elapsed_seconds": 205.67203230876476,
+  "private_required": true,
+  "completed_utc": "2026-10-06T14:07:54.844465+00:00",
+  "canonical_server_sources_verified": [
+    {
+      "path_in_repo": "multisource-20261006/data/changes.jsonl",
+      "sha256": "0e926ffdbbf6364ac5b9b543529fa761bb652514fc4f78b116e2ddcae0a40b12",
+      "bytes": 76554,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/manifest.json",
+      "sha256": "9eb3a9314f9a8537ff75c1b6d8758c01400a67fddd1c814d7a500a6e19411871",
+      "bytes": 14903,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/rejections.jsonl",
+      "sha256": "02925d15b20a613807ada2f8741c851c24c1b036720feaa8b1c0fadc8317f95a",
+      "bytes": 60585,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/test.jsonl",
+      "sha256": "59809f7629bb89e54b863b9b90323619a66b82d7bf011e0376e855dc870a2f2f",
+      "bytes": 89465789,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/train.jsonl",
+      "sha256": "39e9ef5a0a3e79a394b1f9f1bd40416eda9527e191fa350a1759b3e2177f1e55",
+      "bytes": 1308459837,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/validation.jsonl",
+      "sha256": "9cfaa187af7fbcc3ed4d4ad79c4db53ff7dbed9ef188698348ccd953e9dd04f3",
+      "bytes": 85352053,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/test.jsonl",
+      "sha256": "0fbf49ba4c3185f06d23e4d9a8f3bcb541776d23fd7e62d7d4b788ea107eeafb",
+      "bytes": 88139374,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/train.jsonl",
+      "sha256": "0e8b032cbb81aadfbcba62cc7516064568a096bcf3a155176eeaa364738e8be6",
+      "bytes": 1286706861,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/validation.jsonl",
+      "sha256": "24ea2697fbbcf1c30589d1ab08b84f59d6c593209ca7d4cfc25d6df8f76b8264",
+      "bytes": 84156723,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/changes.jsonl",
+      "sha256": "8e1c33dd7356e722f5661cec2cd7796e0bc544f717c4cc4a4cfa9e48955d531c",
+      "bytes": 49886779,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/exclusions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/manifest.json",
+      "sha256": "89d3bbd1f2c30c2631ddf74a32d65dcab5e6865f31b5e96942cf0968aaa35118",
+      "bytes": 83680,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_test.jsonl",
+      "sha256": "6f9923d528907ce21b1d7fd716dd1506b4701d17f4e408620a08279a47200f26",
+      "bytes": 60506277,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_train.jsonl",
+      "sha256": "9d3179510626a0742a66044fa6d78f33420df2fb22c2372498c825cb57be21c2",
+      "bytes": 903549443,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_validation.jsonl",
+      "sha256": "a706bd305fbaaf2fd7d9886f57cf6d4cd42c74b113994a7e7b07df9acb3dc739",
+      "bytes": 54985544,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/test.jsonl",
+      "sha256": "36f8c86e83b362778ba729f32120aefd3d7fc6f890147fa9db964a04142ae918",
+      "bytes": 124560067,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/train.jsonl",
+      "sha256": "4e474a0abe30c689be70fc6a6de98f2e6b43b600f17065bc8f01809a91745abd",
+      "bytes": 1813011786,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/validation.jsonl",
+      "sha256": "7b9c57051cfb10dd36fa216de10efc428bf522ff06647cd324ed40246636fc4f",
+      "bytes": 118324111,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/README.md",
+      "sha256": "2ef7edb47ab2358fb4ffe14fab26129b53a5a7284fb6cb02dfd0029ea80ca929",
+      "bytes": 2119,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/manifest.json",
+      "sha256": "e3b57b5e6f590b69374a8460f69912468356428b85ac456372e7603da779cae7",
+      "bytes": 7927,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/rejections.jsonl",
+      "sha256": "7b19b2f508db87d05a3b4bae039bbac53741567ec8a2d071e7e44566abcad116",
+      "bytes": 868854,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/relations.jsonl",
+      "sha256": "2fc31a7f0b1d6eb5bbb563dcb5ca8c7c9b7dbfd9ca2fd83ff1bf24ee1598e035",
+      "bytes": 25779109,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/test.jsonl",
+      "sha256": "cf24b47fb530a51e531215122500e01663f871a8cc99d2c8fbbfc583438a96a0",
+      "bytes": 93990812,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/validation.jsonl",
+      "sha256": "f27245eba56be4045ed84b5072051aa8b540e56e64d8c2998c82c52a5789c522",
+      "bytes": 89497037,
+      "source": "canonical_server_file"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/verification-main-final.json",
+      "sha256": "0ee7c036f72c91bba59187e4b2fd74fb122c01938ace1ff650a0a06817520846",
+      "bytes": 21379,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/verification-minimal-final.json",
+      "sha256": "a0d3610924034913212eb59b84f14334ba84661ba34fa59c9652772009136a8b",
+      "bytes": 23596,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/lineage-counts.json",
+      "sha256": "e3d1c0d8e16e5a95428a2a600539e74119d90f4f9ba27fbfaf74f45a27646407",
+      "bytes": 3243093,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/replica-manifest.json",
+      "sha256": "7d0efe9aba0a809db00cdfadd7d7ec0abddf327fcbd8afc91a5443542f94d509",
+      "bytes": 114788,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/pilot-fixed-sample-comparison.json",
+      "sha256": "c3a6fa50b0d4a3de5c0217dccbd02346a1b4f80641193196f05d96997faf5b14",
+      "bytes": 20152,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/world7-pilots-receipt.json",
+      "sha256": "5ee39b23394699cb0e1ddc7694746f896e0ff5bc804b04029762e19d45cd2308",
+      "bytes": 15892,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/independent-verification-final.json",
+      "sha256": "aaf4b43e0a85fea6fa27572c7c8bc8051ebc2c1716259da82f3624f8df4e6b32",
+      "bytes": 8390,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/independent-verification-optimized-final.json",
+      "sha256": "6f49ad9ae90ff62fa0f7729d67e340e382173c15dc7d4032ccba6dd5fa0aae69",
+      "bytes": 8390,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/verifier-final-summary.json",
+      "sha256": "03c6ff1366ae4a0101b9582ca07c6e63054d792a321a2afe0cc5a8cf92fb05df",
+      "bytes": 2037,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/README.md",
+      "sha256": "4128e7e6affe40a36f409adb7fe8ceeeefd3511aeb626db6b6af1cf823414ed5",
+      "bytes": 5960,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/training-3epochs-world7-B1K16.json",
+      "sha256": "834654b3895a703e75213db2a692b3e385a5d79b54767802e1c6387599b7dbcd",
+      "bytes": 1282,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/readiness7-B1K16.json",
+      "sha256": "cbfdd8708ec65a3862d0b6562d31b5ff5cd17a0917f4ae6fee53bc8e295e6113",
+      "bytes": 23749,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/readiness7-B1K16-independent-verification.json",
+      "sha256": "4b05ce84e116daa5e327646e40c804c4e3babdc92a78453a7f37d421027b4539",
+      "bytes": 264,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/README.md",
+      "sha256": "353b91df1cd64d475568be4757395cf58f906cade7d71022728de5226fe11ff5",
+      "bytes": 5180,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/qwen-preflight-summary.json",
+      "sha256": "8687fde45b078327d899fe8a1985a85015b186381cf1fb36d91b4cb6066ab325",
+      "bytes": 25520,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/preflight-training-3epochs.json",
+      "sha256": "bf56f61e7d07462dc415e26263b46a40ab015edfc93c469e04c34cf25ac11abc",
+      "bytes": 1282,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/server-tests-coverage-receipt.json",
+      "sha256": "a13190896c8acb8c54b2671dced9392678879d4aea7a633d414c0a1ac3872076",
+      "bytes": 232,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/qwen-four-update-pilot-summary.json",
+      "sha256": "0830e3292d7c4c83a0d448c604f7af0485ce8240902695fbd313f0a509891903",
+      "bytes": 8361,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/rejected-eligibility.jsonl",
+      "sha256": "cf373e95630c90a549b7fabef8e887420095cab00aa186b22a27f925150451cf",
+      "bytes": 95418,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/HISTORICAL_HEAD_REMOVALS.json",
+      "sha256": "6240ba6e68b29cd0d30a7de8d2e96a8e6fd3b3d13acb3e3026111fe8facfc91c",
+      "bytes": 7473,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/PUBLICATION_MANIFEST.json",
+      "sha256": "249ce4a3c9766354ad9aa94f3a239ed686a723cc4bfe3e3e61ebd487e980bfee",
+      "bytes": 22902,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "multisource-20261006/SHA256SUMS",
+      "sha256": "1da1756517667b07ebc1dd8d086acb0f99d1f74c0a09b63d7bdd26badbab1067",
+      "bytes": 5417,
+      "source": "local_selected_evidence_bytes"
+    },
+    {
+      "path_in_repo": "README.md",
+      "sha256": "0a96d59b251b448c4cfe676458f34595a992baee818dcb9d1ac72c07c767a3dc",
+      "bytes": 7497,
+      "source": "local_selected_evidence_bytes"
+    }
+  ],
+  "credential_policy": "only process stdin/memory, no file or log output"
+}

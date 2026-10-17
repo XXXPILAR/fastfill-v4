@@ -1,0 +1,51 @@
+{
+  "scope": "synthetic_dynamic_mesh_integration_fixture_only",
+  "trained_model": false,
+  "real_asset_generation": false,
+  "actual_upstream_helpers_executed": [
+    "load_glb_parts",
+    "fit_asset",
+    "place_matrix",
+    "colored_box"
+  ],
+  "upstream_source_modified": false,
+  "proxy_counts": {
+    "box": 2
+  },
+  "fixture_mesh_counts": {
+    "ok": 2
+  },
+  "missing_asset_counts": {
+    "missing": 2
+  },
+  "fixed_bbox_proxies": 1,
+  "tests_command": [
+    "python",
+    "-m",
+    "pytest",
+    "fastfill/v2/tests/test_roomgenbench.py",
+    "fastfill/v2/tests/test_direct_layout.py",
+    "fastfill/v2/tests/test_reference_extent.py",
+    "-q"
+  ],
+  "tests_exit_code": 0,
+  "source_sha256": {
+    "fastfill/v2/roomgenbench.py": "2e150ab1dd03357a4bfceb1952fbd5a149adba15a003518318d8b0d382c325c3",
+    "fastfill/v2/direct_layout.py": "9dfc2b8485883c974bcded0ed137e820bbbcca6cc82de48a5f8444a4ec5adb78",
+    "fastfill/v2/tests/test_roomgenbench.py": "da6b27ad3a31d161dd0b6d86f6ed5473dca67d9d87ac3abfc3929e13d2666f4c",
+    "RoomGenBench/bench/assemble.py": "3bb3b1a280c7074d0902a7ca0210ed433f5fc386da1bac735dc37f076763035f"
+  },
+  "red_before_implementation": "15 failed: missing condition.json, support omitted, placement registry merge, absent adapter",
+  "red_during_self_review": "3 failed: missing metadata compatibility, output reference overlap, thin-axis fit silently successful",
+  "not_executed": [
+    "learned asset generation",
+    "Blender",
+    "mesh collision validation",
+    "physics",
+    "Solver",
+    "persistent Host"
+  ],
+  "optional_requirement_sha256": "941b59b9401a3372df1d8860fd25ce8d0406e31bf555e8ca48c4544b87da6a9f",
+  "red_sidecar_validation": "1 failed before explicit status string type validation; bad list status now invalid_sidecar placeholder",
+  "green_test_count": 95
+}

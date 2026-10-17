@@ -1,0 +1,740 @@
+{
+  "upstream_head": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+  "created_utc": "2026-10-06T13:36:20.917008+00:00",
+  "scope": "ALL PointNet2 tracked files plus six assigned geometry utility files; includes generated metadata/binary inventory but binary hash does not imply code reading",
+  "summary": {
+    "core_pointnet_source_files": 20,
+    "core_geometry_files": 2,
+    "additional_geometry_files_read": 4,
+    "full_source_files": 26,
+    "full_source_lines": 4323,
+    "full_generated_text_files": 6,
+    "full_text_files": 32,
+    "full_text_lines": 4395,
+    "binary_files_hash_only": 3,
+    "archive_text_members_read": 7
+  },
+  "text_files": [
+    {
+      "path": "third_party/pointnet2/_ext_src/include/ball_query.h",
+      "bytes": 216,
+      "sha256": "5ff1a6e82824df7d9723030028dce66dabb8375a0276b7e9a2d03a51e74c35b0",
+      "kind": "source",
+      "line_count": 7,
+      "actual_read_ranges": [
+        [
+          1,
+          7
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/include/cuda_utils.h",
+      "bytes": 1356,
+      "sha256": "ebc0f18843cff0e140924357fca46c3f976647b233c3bef88b586e9872fa7b83",
+      "kind": "source",
+      "line_count": 43,
+      "actual_read_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/include/group_points.h",
+      "bytes": 237,
+      "sha256": "34db9aa8078032b38b337067cf11f19348f0f1a3f8b336f353c945795136a9ca",
+      "kind": "source",
+      "line_count": 8,
+      "actual_read_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/include/interpolate.h",
+      "bytes": 439,
+      "sha256": "a70fee34b6ac759a7ccfc3041d16a36e07162fd269b892f4126d763814ec16a2",
+      "kind": "source",
+      "line_count": 12,
+      "actual_read_ranges": [
+        [
+          1,
+          12
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/include/sampling.h",
+      "bytes": 314,
+      "sha256": "517bdeeff6356ac1ba8254f0bb6862bd1e64d2a6442afbc9127bf5f375b6265c",
+      "kind": "source",
+      "line_count": 9,
+      "actual_read_ranges": [
+        [
+          1,
+          9
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/include/utils.h",
+      "bytes": 1041,
+      "sha256": "e77c1f692af0bf87b6ec272413de09e586bacae3071e89d90f05ad95af3a2430",
+      "kind": "source",
+      "line_count": 28,
+      "actual_read_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/ball_query.cpp",
+      "bytes": 1079,
+      "sha256": "f2550d452808a91ad144afffd97b18492d6be9fd155eab0e6b4c606b98eb489a",
+      "kind": "source",
+      "line_count": 35,
+      "actual_read_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/ball_query_gpu.cu",
+      "bytes": 1838,
+      "sha256": "6e9e1466b77f1153561ecb14d61ab2cdba99908ee117c4457d0a42c42d7fffa3",
+      "kind": "source",
+      "line_count": 57,
+      "actual_read_ranges": [
+        [
+          1,
+          57
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/bindings.cpp",
+      "bytes": 624,
+      "sha256": "fbe0294a0efde4ec5356b56e4f0f6061118fd54533edac203f2f8b6fa0a9e87f",
+      "kind": "source",
+      "line_count": 22,
+      "actual_read_ranges": [
+        [
+          1,
+          22
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/group_points.cpp",
+      "bytes": 1942,
+      "sha256": "41e05d97ee4c6f962ba3cbdf7e9f1070e4e84cd81ceee7a9c51a9a30e927e03b",
+      "kind": "source",
+      "line_count": 63,
+      "actual_read_ranges": [
+        [
+          1,
+          63
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/group_points_gpu.cu",
+      "bytes": 2939,
+      "sha256": "5c4c251eb41308cc4dfba52742494282a8c9d79c858c7ec1c870c6af48b0b7f8",
+      "kind": "source",
+      "line_count": 78,
+      "actual_read_ranges": [
+        [
+          1,
+          78
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/interpolate.cpp",
+      "bytes": 3309,
+      "sha256": "3631dff2c41f3d1795526cacdf079a63248e5d7ef96307354056ac27cd433465",
+      "kind": "source",
+      "line_count": 101,
+      "actual_read_ranges": [
+        [
+          1,
+          101
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/interpolate_gpu.cu",
+      "bytes": 5195,
+      "sha256": "b754fdc7a68a61470a6941bdf0c39def59fd9982af1eb24d18985ec48bac449d",
+      "kind": "source",
+      "line_count": 157,
+      "actual_read_ranges": [
+        [
+          1,
+          157
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/sampling.cpp",
+      "bytes": 2873,
+      "sha256": "5c3cdd4d7c682d3e5a2ceac374a2861fd6f3945668f36bfc0fb68ca471bb0530",
+      "kind": "source",
+      "line_count": 88,
+      "actual_read_ranges": [
+        [
+          1,
+          88
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/_ext_src/src/sampling_gpu.cu",
+      "bytes": 7073,
+      "sha256": "03a5edcfb5bf68e72d20a8251f29be1ba35ffbafa96c558a4e49cde1aa657407",
+      "kind": "source",
+      "line_count": 232,
+      "actual_read_ranges": [
+        [
+          1,
+          232
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/build/temp.linux-x86_64-3.8/.ninja_log",
+      "bytes": 1533,
+      "sha256": "0be19a87e94300453fdcee1c9593bd3bccd1f8a2335ae65dc06359e1aae85357",
+      "kind": "generated_text_metadata",
+      "line_count": 10,
+      "actual_read_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/build/temp.linux-x86_64-3.8/build.ninja",
+      "bytes": 4184,
+      "sha256": "75035281cc2daf3741416800ecb59dfeaeb8ced642ac6644b6cef293c18952c7",
+      "kind": "generated_text_metadata",
+      "line_count": 36,
+      "actual_read_ranges": [
+        [
+          1,
+          36
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2.egg-info/PKG-INFO",
+      "bytes": 134,
+      "sha256": "f8420dd0d810da3147eff29235a3851f89d2c668dddb9910e1f18252314e1340",
+      "kind": "generated_text_metadata",
+      "line_count": 10,
+      "actual_read_ranges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2.egg-info/SOURCES.txt",
+      "bytes": 404,
+      "sha256": "eafbf7c06a870b9247b31dc6fe3c687b95b7deb812d868fbcc590634e100ae31",
+      "kind": "generated_text_metadata",
+      "line_count": 14,
+      "actual_read_ranges": [
+        [
+          1,
+          14
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2.egg-info/dependency_links.txt",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "kind": "generated_text_metadata",
+      "line_count": 1,
+      "actual_read_ranges": [
+        [
+          1,
+          1
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2.egg-info/top_level.txt",
+      "bytes": 10,
+      "sha256": "e2a40e564bcab45d3d8b37462fbd166274267aec9971da81c79bd885c8f700a5",
+      "kind": "generated_text_metadata",
+      "line_count": 1,
+      "actual_read_ranges": [
+        [
+          1,
+          1
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": false,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2_modules.py",
+      "bytes": 17481,
+      "sha256": "a83c0fb9c8a270bf1bed996392efb3c80f3b2d6eb7016d6fcc25520445203b62",
+      "kind": "source",
+      "line_count": 514,
+      "actual_read_ranges": [
+        [
+          1,
+          514
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2_test.py",
+      "bytes": 884,
+      "sha256": "0a810b8b850d04bf7669d7c5e4f79d8d4dfb569205e76cb165cc119934eaf188",
+      "kind": "source",
+      "line_count": 30,
+      "actual_read_ranges": [
+        [
+          1,
+          30
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pointnet2_utils.py",
+      "bytes": 12080,
+      "sha256": "d83807f4101bf41ee3fcc288b53c2dfb34cac48156334b385438a69a9f5763af",
+      "kind": "source",
+      "line_count": 422,
+      "actual_read_ranges": [
+        [
+          1,
+          422
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/pytorch_utils.py",
+      "bytes": 7379,
+      "sha256": "38558f9e1220c0c896602d790077484987c199ab9a23b5ae1393f9e384e8dd0a",
+      "kind": "source",
+      "line_count": 295,
+      "actual_read_ranges": [
+        [
+          1,
+          295
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "third_party/pointnet2/setup.py",
+      "bytes": 1070,
+      "sha256": "f5864b1229461a6d407be11d6113795672b40411a21818b7d0d5339ffe4ad9a7",
+      "kind": "source",
+      "line_count": 35,
+      "actual_read_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/box_ops3d.py",
+      "bytes": 29623,
+      "sha256": "a9650fc13226b39028ad7b1d9d9162c3c3289191f421aa0c785be1668fb5c75d",
+      "kind": "source",
+      "line_count": 767,
+      "actual_read_ranges": [
+        [
+          1,
+          767
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/box_util.py",
+      "bytes": 25547,
+      "sha256": "5a4fd405f3c64a92990118fd9996f0f5126fa3c4ed97083a177f588664cfb33f",
+      "kind": "source",
+      "line_count": 743,
+      "actual_read_ranges": [
+        [
+          1,
+          743
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/pc_util.py",
+      "bytes": 9538,
+      "sha256": "f8f1b00b5e178dffafa6dc07dd886a826abec935f20f2d45aa6f37cdad92c4a2",
+      "kind": "source",
+      "line_count": 294,
+      "actual_read_ranges": [
+        [
+          1,
+          294
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/nms.py",
+      "bytes": 4416,
+      "sha256": "00865f02e4e412de651cafcd89103bf6d9f480277caf52221c993297fd89795d",
+      "kind": "source",
+      "line_count": 162,
+      "actual_read_ranges": [
+        [
+          1,
+          162
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/random_cuboid.py",
+      "bytes": 3716,
+      "sha256": "ddf9272e1bd1554512b44462fc5098dc3bec4c9d53fe5be742fc215a2f71243f",
+      "kind": "source",
+      "line_count": 98,
+      "actual_read_ranges": [
+        [
+          1,
+          98
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    },
+    {
+      "path": "utils/cython_compile.py",
+      "bytes": 548,
+      "sha256": "e1e68dd84fc6f879c9832a499a2cb28363917f437b3bf5405281bf283bdaee14",
+      "kind": "source",
+      "line_count": 23,
+      "actual_read_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "full_text_read": true,
+      "source_full_read": true,
+      "reading_method": "Entire line-numbered text displayed by exec_command and statically read in this audit; not inferred from hashing"
+    }
+  ],
+  "binary_files": [
+    {
+      "path": "third_party/pointnet2/build/lib.linux-x86_64-3.8/pointnet2/_ext.cpython-38-x86_64-linux-gnu.so",
+      "bytes": 16869416,
+      "sha256": "8ee3bb48d600e85672aac75cbaf2425e085ebabda9746178ed98d24c45a1d7cf",
+      "kind": "generated_binary",
+      "line_count": null,
+      "source_full_read": false,
+      "status": "hash_and_metadata_only; not decompiled or executed"
+    },
+    {
+      "path": "third_party/pointnet2/build/temp.linux-x86_64-3.8/.ninja_deps",
+      "bytes": 473152,
+      "sha256": "0d698ea2582a8f34525fc580800baeded1a7238be44e90ee8f004ba1c20e76eb",
+      "kind": "generated_binary",
+      "line_count": null,
+      "source_full_read": false,
+      "status": "hash_and_metadata_only; not decompiled or executed"
+    },
+    {
+      "path": "third_party/pointnet2/dist/pointnet2-0.0.0-py3.8-linux-x86_64.egg",
+      "bytes": 5807245,
+      "sha256": "80bf0b253b5224909780e6d46e24adce2c614f054a0e1217916622b762530f90",
+      "kind": "generated_binary",
+      "line_count": null,
+      "source_full_read": false,
+      "status": "hash_and_metadata_only; not decompiled or executed"
+    }
+  ],
+  "archive_members": [
+    {
+      "archive_member": "EGG-INFO/PKG-INFO",
+      "bytes": 134,
+      "sha256": "f8420dd0d810da3147eff29235a3851f89d2c668dddb9910e1f18252314e1340",
+      "line_count": 10,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "EGG-INFO/SOURCES.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "line_count": 0,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "EGG-INFO/dependency_links.txt",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "line_count": 1,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "EGG-INFO/native_libs.txt",
+      "bytes": 46,
+      "sha256": "0cd7e840c9f7be75e26fc5e21d8695056930eca6cc3cdc137aa18543c22df7cd",
+      "line_count": 1,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "EGG-INFO/not-zip-safe",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "line_count": 1,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "EGG-INFO/top_level.txt",
+      "bytes": 10,
+      "sha256": "e2a40e564bcab45d3d8b37462fbd166274267aec9971da81c79bd885c8f700a5",
+      "line_count": 1,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "pointnet2/_ext.cpython-38-x86_64-linux-gnu.so",
+      "bytes": 16869416,
+      "sha256": "8ee3bb48d600e85672aac75cbaf2425e085ebabda9746178ed98d24c45a1d7cf",
+      "line_count": null,
+      "full_text_read": false,
+      "status": "binary hash only"
+    },
+    {
+      "archive_member": "pointnet2/_ext.py",
+      "bytes": 429,
+      "sha256": "49a3989bd1e70466dcf54643faa07a8696669bcc042d448ee6b2335ded29ce9a",
+      "line_count": 9,
+      "full_text_read": true,
+      "status": "Entire text displayed and read via zipfile; no archive extraction"
+    },
+    {
+      "archive_member": "pointnet2/__pycache__/_ext.cpython-38.pyc",
+      "bytes": 572,
+      "sha256": "33c8f5d4d2edaf087ee7c58c48d13a695b579ac31c46ce7dc34ea187c1b35b9a",
+      "line_count": null,
+      "full_text_read": false,
+      "status": "binary hash only"
+    }
+  ],
+  "ancillary_partial_reads": [
+    {
+      "path": "criterion.py",
+      "ranges": [
+        [
+          622,
+          647
+        ]
+      ],
+      "purpose": "active geometry caller and rotated flag; full review belongs to parent"
+    },
+    {
+      "path": "datasets/scannet.py",
+      "ranges": [
+        [
+          35,
+          45
+        ],
+        [
+          135,
+          176
+        ],
+        [
+          466,
+          476
+        ],
+        [
+          616,
+          628
+        ]
+      ],
+      "purpose": "zero angle and camera convention; full review belongs to parent"
+    },
+    {
+      "path": "models/model_vdetr.py",
+      "ranges": [
+        [
+          15,
+          200
+        ],
+        [
+          248,
+          333
+        ],
+        [
+          386,
+          445
+        ]
+      ],
+      "purpose": "cross-review parent random_fps and no-color counterexamples; not full source read"
+    },
+    {
+      "path": "models/vdetr_transformer.py",
+      "ranges": [
+        [
+          1,
+          180
+        ],
+        [
+          609,
+          673
+        ]
+      ],
+      "purpose": "cross-review parent ShareSelfAttention and yaw conversion; not full source read"
+    },
+    {
+      "path": "main.py",
+      "ranges": [
+        [
+          285,
+          305
+        ],
+        [
+          385,
+          440
+        ],
+        [
+          554,
+          603
+        ]
+      ],
+      "purpose": "cross-review parser/entry-path assertions; not full source read"
+    },
+    {
+      "path": "README.md",
+      "ranges": [
+        [
+          92,
+          109
+        ]
+      ],
+      "purpose": "README training invocation and local batch size; not full text read"
+    }
+  ],
+  "execution_coverage": "reproduction-results.json is CPU geometry/Python-helper evidence; no CUDA compile, import of generated native binary, or GPU execution; no claim every branch executed",
+  "source_unchanged_check": "?? .DS_Store",
+  "other_artifacts_reviewed": [
+    {
+      "path": "../python_repros.py",
+      "status": "read entire script"
+    },
+    {
+      "path": "../python_repros.json",
+      "status": "read entire result"
+    }
+  ]
+}

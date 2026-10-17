@@ -1,0 +1,47 @@
+{
+  "scope": "real CPU PyTorch dtype conversion preserves noncontiguous int32 tensor; native pointer walk shown from raw storage, no native ME invocation",
+  "base": [
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      2,
+      0
+    ]
+  ],
+  "logical_coords": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "shape": [
+    2,
+    2
+  ],
+  "stride": [
+    3,
+    2
+  ],
+  "int_returns_same_object": true,
+  "contiguous": false,
+  "dense_native_read_rows": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "expected_unique_count": 1,
+  "dense_native_read_unique_count": 2
+}

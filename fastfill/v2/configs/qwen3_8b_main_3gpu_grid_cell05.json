@@ -1,0 +1,90 @@
+{
+  "model": {
+    "backbone": "/home/jovyan/shanliantian/models/Qwen3-8B",
+    "decoder_dim": 128,
+    "decoder_heads": 4,
+    "decoder_layers": 2,
+    "decoder_ffn_multiplier": 4,
+    "dropout": 0.0,
+    "yaw_bins": 12,
+    "max_objects": 128,
+    "size_reference": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "size_log_limit": 10.0,
+    "residual_mode": "tanh",
+    "position_head": "grid_residual",
+    "position_grid": 16,
+    "train_backbone": false,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ],
+    "backbone_dtype": "bfloat16",
+    "local_files_only": true,
+    "tiny_hidden_size": 64,
+    "tiny_layers": 1
+  },
+  "loss": {
+    "position": 1.0,
+    "size": 0.6,
+    "yaw_cls": 0.08,
+    "yaw_reg": 2.0,
+    "box": 0.0,
+    "box_operator": "bev_oriented_giou_convex_hull",
+    "hungarian": true,
+    "alpha_position": 1.0,
+    "alpha_size": 1.0,
+    "collision": 0.0,
+    "boundary": 0.0,
+    "position_type": "l1",
+    "size_type": "l1",
+    "smooth_l1_beta": 1.0,
+    "position_cell": 0.5,
+    "position_residual": 0.4
+  },
+  "training": {
+    "steps": 3887,
+    "batch_size": 1,
+    "learning_rate": 0.0001,
+    "gradient_accumulation_steps": 32,
+    "max_length": 8192,
+    "seed": 42,
+    "clip_grad_norm": 1.0,
+    "mixed_precision": "bf16",
+    "cpu": false,
+    "cpu_threads": 1,
+    "checkpoint_every": 500,
+    "validate_every": 500,
+    "resume": null,
+    "export_model_every_checkpoint": true
+  },
+  "optimizer": {
+    "warmup_steps": 117,
+    "schedule": "cosine",
+    "decoder_lr": 0.0001
+  },
+  "augmentation": {
+    "rotate90": true,
+    "mirror": false,
+    "shuffle_objects": true,
+    "drop_constraints_p": 0.3,
+    "drop_support_p": 0.2,
+    "category_only_description_p": 0.5,
+    "minimal_form_p": 0.5
+  },
+  "validation": {
+    "exclude_flags": [
+      "oob_objects",
+      "fixed_collision",
+      "overlapping_furniture"
+    ]
+  }
+}

@@ -1,0 +1,318 @@
+{
+  "audit_date": "2026-10-06",
+  "auditor": "/root/audit_snapshot/compare_review",
+  "scope": "All native .h/.hpp/.cuh/.cpp/.cu in MinkowskiEngine/src/3rdparty plus src/primitives/small_vector.hpp",
+  "method": "entire source read through bounded tool outputs; no compilation or runtime execution",
+  "files": [
+    {
+      "path": "MinkowskiEngine/src/3rdparty/concurrent_unordered_map.cuh",
+      "repo_relative_path": "src/3rdparty/concurrent_unordered_map.cuh",
+      "lines": 599,
+      "bytes": 21970,
+      "sha256": "1e4f6adeca27cc6ac0c869a1c2b741369eedf59088dcea4a932911b93e53df35",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 320,
+          "tool_chunk_id": "38dac1",
+          "observed_complete": true
+        },
+        {
+          "start_line": 321,
+          "end_line": 599,
+          "tool_chunk_id": "cf481b",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/nvtx/nvtx3.hpp",
+      "repo_relative_path": "src/3rdparty/cudf/detail/nvtx/nvtx3.hpp",
+      "lines": 1945,
+      "bytes": 67379,
+      "sha256": "3fbbdc5f93b6e3a6e4f02b9eb9f2417758217c01c1205fe6a99ef5a294d3c179",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 400,
+          "tool_chunk_id": "1762e3",
+          "observed_complete": true
+        },
+        {
+          "start_line": 401,
+          "end_line": 800,
+          "tool_chunk_id": "689642",
+          "observed_complete": true
+        },
+        {
+          "start_line": 801,
+          "end_line": 1200,
+          "tool_chunk_id": "aa9c3e",
+          "observed_complete": true
+        },
+        {
+          "start_line": 1201,
+          "end_line": 1600,
+          "tool_chunk_id": "5eb1da",
+          "observed_complete": true
+        },
+        {
+          "start_line": 1601,
+          "end_line": 1945,
+          "tool_chunk_id": "6b5686",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/nvtx/ranges.hpp",
+      "repo_relative_path": "src/3rdparty/cudf/detail/nvtx/ranges.hpp",
+      "lines": 54,
+      "bytes": 1379,
+      "sha256": "7778dc2d4c6cf0379d527705dd68e642ee8ad7346fc3df366645c4770596a6a6",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 54,
+          "tool_chunk_id": "512a7c",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/device_atomics.cuh",
+      "repo_relative_path": "src/3rdparty/cudf/detail/utilities/device_atomics.cuh",
+      "lines": 634,
+      "bytes": 23923,
+      "sha256": "6c70116206f5bcf924d1e25fef0e45de8976da5cec8da5fe463d2c71b0fba081",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 320,
+          "tool_chunk_id": "1f6ae8",
+          "observed_complete": true
+        },
+        {
+          "start_line": 321,
+          "end_line": 634,
+          "tool_chunk_id": "265822",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/device_operators.cuh",
+      "repo_relative_path": "src/3rdparty/cudf/detail/utilities/device_operators.cuh",
+      "lines": 147,
+      "bytes": 3695,
+      "sha256": "f69037f3dc4362f482abc6624337b61992ec3ac65b2c9337a1592277cab6f487",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 147,
+          "tool_chunk_id": "ac60fa",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/hash_functions.cuh",
+      "repo_relative_path": "src/3rdparty/cudf/detail/utilities/hash_functions.cuh",
+      "lines": 235,
+      "bytes": 7439,
+      "sha256": "9af3eebb438008b6f535f104c11f52052ac5f9b6980e1675d281f983cb710331",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 235,
+          "tool_chunk_id": "184aed",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/types.h",
+      "repo_relative_path": "src/3rdparty/cudf/types.h",
+      "lines": 232,
+      "bytes": 10642,
+      "sha256": "f8dd0c7368c8f317da841e6719a73551a4d62ebe1d8787410c247c5d2f37888a",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 232,
+          "tool_chunk_id": "08ee3d",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/types.hpp",
+      "repo_relative_path": "src/3rdparty/cudf/types.hpp",
+      "lines": 252,
+      "bytes": 7112,
+      "sha256": "e7863f8c158d849f3ea3156b792dd4e7caac4f7300a390624ba42707f4d45ead",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 252,
+          "tool_chunk_id": "c851be",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/utilities/error.hpp",
+      "repo_relative_path": "src/3rdparty/cudf/utilities/error.hpp",
+      "lines": 134,
+      "bytes": 4705,
+      "sha256": "922d8d9468c6208277fc26c090d7e19e2f3733554f1d01d04413168de141dcc1",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 134,
+          "tool_chunk_id": "eb7b2c",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/utilities/legacy/wrapper_types.hpp",
+      "repo_relative_path": "src/3rdparty/cudf/utilities/legacy/wrapper_types.hpp",
+      "lines": 515,
+      "bytes": 17127,
+      "sha256": "e3c5d12cefd2a816b9ee6c6c2b11e0b5fe1fcac18a33592835be414f6fa30c6d",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 515,
+          "tool_chunk_id": "119122",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/hash_allocator.cuh",
+      "repo_relative_path": "src/3rdparty/hash/hash_allocator.cuh",
+      "lines": 108,
+      "bytes": 3007,
+      "sha256": "b32d9df4f9db03fbf3ff8dce8caad70317b43885c7d2ca9165dbfc309a724985",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 108,
+          "tool_chunk_id": "db8ba3",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/helper_functions.cuh",
+      "repo_relative_path": "src/3rdparty/hash/helper_functions.cuh",
+      "lines": 249,
+      "bytes": 7984,
+      "sha256": "198e666fd1e58bf201e5306de4e4f9cdab39780169da714705e11cf649bb9287",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 249,
+          "tool_chunk_id": "a9bce0",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/managed.cuh",
+      "repo_relative_path": "src/3rdparty/hash/managed.cuh",
+      "lines": 48,
+      "bytes": 1301,
+      "sha256": "1276ae19c741c8e97f940969d3e9146cf80ed5f798f9c0acea917094a87646be",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 48,
+          "tool_chunk_id": "c96d5c",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/robin_hood.h",
+      "repo_relative_path": "src/3rdparty/robin_hood.h",
+      "lines": 2265,
+      "bytes": 83052,
+      "sha256": "821c576a56e65ac88f7dcfcd640f217376fe2693c39431795916418ec9802627",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 400,
+          "tool_chunk_id": "1aedfb",
+          "observed_complete": true
+        },
+        {
+          "start_line": 401,
+          "end_line": 800,
+          "tool_chunk_id": "8b1b02",
+          "observed_complete": true
+        },
+        {
+          "start_line": 801,
+          "end_line": 1200,
+          "tool_chunk_id": "98aa33",
+          "observed_complete": true
+        },
+        {
+          "start_line": 1201,
+          "end_line": 1600,
+          "tool_chunk_id": "f3c84a",
+          "observed_complete": true
+        },
+        {
+          "start_line": 1601,
+          "end_line": 1940,
+          "tool_chunk_id": "97b3d1",
+          "observed_complete": true
+        },
+        {
+          "start_line": 1941,
+          "end_line": 2265,
+          "tool_chunk_id": "a13c34",
+          "observed_complete": true
+        }
+      ]
+    },
+    {
+      "path": "MinkowskiEngine/src/primitives/small_vector.hpp",
+      "repo_relative_path": "src/primitives/small_vector.hpp",
+      "lines": 337,
+      "bytes": 10843,
+      "sha256": "8148eee4082c52611942c6af5ee8fa88b0c0daad6d3ee2b0a1d8f8cbfe5b90a1",
+      "full_read": true,
+      "read_segments": [
+        {
+          "start_line": 1,
+          "end_line": 337,
+          "tool_chunk_id": "9a72f2",
+          "observed_complete": true
+        }
+      ]
+    }
+  ],
+  "total_files": 15,
+  "total_lines": 7754,
+  "coverage": "15/15 entire files; 7754/7754 lines read",
+  "output_truncation_note": "An aggregate tool output for device_atomics/wrapper_types exceeded its combined budget. device_atomics 321-634 and the entire wrapper_types were subsequently read again as single bounded outputs; final segment receipts above are complete."
+}

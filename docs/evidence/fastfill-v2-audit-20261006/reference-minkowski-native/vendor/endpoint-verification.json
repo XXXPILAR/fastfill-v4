@@ -1,0 +1,83 @@
+{
+  "audit_date": "2026-10-06",
+  "all_source_files_unchanged": true,
+  "files": [
+    {
+      "path": "MinkowskiEngine/src/3rdparty/concurrent_unordered_map.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/nvtx/nvtx3.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/nvtx/ranges.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/device_atomics.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/device_operators.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/detail/utilities/hash_functions.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/types.h",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/types.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/utilities/error.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/cudf/utilities/legacy/wrapper_types.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/hash_allocator.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/helper_functions.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/hash/managed.cuh",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/3rdparty/robin_hood.h",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    },
+    {
+      "path": "MinkowskiEngine/src/primitives/small_vector.hpp",
+      "sha256_unchanged": true,
+      "lines_unchanged": true
+    }
+  ],
+  "source_mutation": "none",
+  "compile_or_runtime": "not_attempted"
+}

@@ -1,0 +1,6 @@
+[run]
+source = fastfill.v2
+omit = */fastfill/v2/tests/*
+
+[report]
+fail_under = 80

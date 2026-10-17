@@ -1,0 +1,253 @@
+{
+  "repo_id": "liantian/fastfill-v2",
+  "revision": "ba1c3bf018c49bc841b696c25f8c2e1d1ff61a88",
+  "private": true,
+  "actual_downloaded_files_verified": 47,
+  "actual_downloaded_bytes": 6281154832,
+  "sha256sums_entries_passed": 46,
+  "sha256sum_command": "sha256sum -c multisource-20261006/SHA256SUMS",
+  "sha256sum_exit_code": 0,
+  "sha256sum_stdout": "multisource-20261006/data/changes.jsonl: OK\nmultisource-20261006/data/manifest.json: OK\nmultisource-20261006/data/rejections.jsonl: OK\nmultisource-20261006/data/test.jsonl: OK\nmultisource-20261006/data/train.jsonl: OK\nmultisource-20261006/data/validation.jsonl: OK\nmultisource-20261006/eligible/test.jsonl: OK\nmultisource-20261006/eligible/train.jsonl: OK\nmultisource-20261006/eligible/validation.jsonl: OK\nmultisource-20261006/data-minimal-reference/changes.jsonl: OK\nmultisource-20261006/data-minimal-reference/exclusions.jsonl: OK\nmultisource-20261006/data-minimal-reference/manifest.json: OK\nmultisource-20261006/data-minimal-reference/strict_rectangle_test.jsonl: OK\nmultisource-20261006/data-minimal-reference/strict_rectangle_train.jsonl: OK\nmultisource-20261006/data-minimal-reference/strict_rectangle_validation.jsonl: OK\nmultisource-20261006/data-minimal-reference/test.jsonl: OK\nmultisource-20261006/data-minimal-reference/train.jsonl: OK\nmultisource-20261006/data-minimal-reference/validation.jsonl: OK\nmultisource-20261006/constrained-evaluation/README.md: OK\nmultisource-20261006/constrained-evaluation/manifest.json: OK\nmultisource-20261006/constrained-evaluation/rejections.jsonl: OK\nmultisource-20261006/constrained-evaluation/relations.jsonl: OK\nmultisource-20261006/constrained-evaluation/test.jsonl: OK\nmultisource-20261006/constrained-evaluation/validation.jsonl: OK\nmultisource-20261006/audit/verification-main-final.json: OK\nmultisource-20261006/audit/verification-minimal-final.json: OK\nmultisource-20261006/audit/lineage-counts.json: OK\nmultisource-20261006/eligible/replica-manifest.json: OK\nmultisource-20261006/audit/pilot-fixed-sample-comparison.json: OK\nmultisource-20261006/audit/world7-pilots-receipt.json: OK\nmultisource-20261006/audit/constraint-view/independent-verification-final.json: OK\nmultisource-20261006/audit/constraint-view/independent-verification-optimized-final.json: OK\nmultisource-20261006/audit/constraint-view/verifier-final-summary.json: OK\nmultisource-20261006/audit/constraint-view/README.md: OK\nmultisource-20261006/training-config/training-3epochs-world7-B1K16.json: OK\nmultisource-20261006/audit/readiness7-B1K16.json: OK\nmultisource-20261006/audit/readiness7-B1K16-independent-verification.json: OK\nmultisource-20261006/training-config/README.md: OK\nmultisource-20261006/audit/qwen-preflight-summary.json: OK\nmultisource-20261006/training-config/preflight-training-3epochs.json: OK\nmultisource-20261006/audit/server-tests-coverage-receipt.json: OK\nmultisource-20261006/audit/qwen-four-update-pilot-summary.json: OK\nmultisource-20261006/eligible/rejected-eligibility.jsonl: OK\nmultisource-20261006/HISTORICAL_HEAD_REMOVALS.json: OK\nREADME.md: OK\nmultisource-20261006/PUBLICATION_MANIFEST.json: OK\n",
+  "code_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "files": [
+    {
+      "path_in_repo": "multisource-20261006/data/changes.jsonl",
+      "bytes": 76554,
+      "sha256": "0e926ffdbbf6364ac5b9b543529fa761bb652514fc4f78b116e2ddcae0a40b12"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/manifest.json",
+      "bytes": 14903,
+      "sha256": "9eb3a9314f9a8537ff75c1b6d8758c01400a67fddd1c814d7a500a6e19411871"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/rejections.jsonl",
+      "bytes": 60585,
+      "sha256": "02925d15b20a613807ada2f8741c851c24c1b036720feaa8b1c0fadc8317f95a"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/test.jsonl",
+      "bytes": 89465789,
+      "sha256": "59809f7629bb89e54b863b9b90323619a66b82d7bf011e0376e855dc870a2f2f"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/train.jsonl",
+      "bytes": 1308459837,
+      "sha256": "39e9ef5a0a3e79a394b1f9f1bd40416eda9527e191fa350a1759b3e2177f1e55"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data/validation.jsonl",
+      "bytes": 85352053,
+      "sha256": "9cfaa187af7fbcc3ed4d4ad79c4db53ff7dbed9ef188698348ccd953e9dd04f3"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/test.jsonl",
+      "bytes": 88139374,
+      "sha256": "0fbf49ba4c3185f06d23e4d9a8f3bcb541776d23fd7e62d7d4b788ea107eeafb"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/train.jsonl",
+      "bytes": 1286706861,
+      "sha256": "0e8b032cbb81aadfbcba62cc7516064568a096bcf3a155176eeaa364738e8be6"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/validation.jsonl",
+      "bytes": 84156723,
+      "sha256": "24ea2697fbbcf1c30589d1ab08b84f59d6c593209ca7d4cfc25d6df8f76b8264"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/changes.jsonl",
+      "bytes": 49886779,
+      "sha256": "8e1c33dd7356e722f5661cec2cd7796e0bc544f717c4cc4a4cfa9e48955d531c"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/exclusions.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/manifest.json",
+      "bytes": 83680,
+      "sha256": "89d3bbd1f2c30c2631ddf74a32d65dcab5e6865f31b5e96942cf0968aaa35118"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_test.jsonl",
+      "bytes": 60506277,
+      "sha256": "6f9923d528907ce21b1d7fd716dd1506b4701d17f4e408620a08279a47200f26"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_train.jsonl",
+      "bytes": 903549443,
+      "sha256": "9d3179510626a0742a66044fa6d78f33420df2fb22c2372498c825cb57be21c2"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/strict_rectangle_validation.jsonl",
+      "bytes": 54985544,
+      "sha256": "a706bd305fbaaf2fd7d9886f57cf6d4cd42c74b113994a7e7b07df9acb3dc739"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/test.jsonl",
+      "bytes": 124560067,
+      "sha256": "36f8c86e83b362778ba729f32120aefd3d7fc6f890147fa9db964a04142ae918"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/train.jsonl",
+      "bytes": 1813011786,
+      "sha256": "4e474a0abe30c689be70fc6a6de98f2e6b43b600f17065bc8f01809a91745abd"
+    },
+    {
+      "path_in_repo": "multisource-20261006/data-minimal-reference/validation.jsonl",
+      "bytes": 118324111,
+      "sha256": "7b9c57051cfb10dd36fa216de10efc428bf522ff06647cd324ed40246636fc4f"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/README.md",
+      "bytes": 2119,
+      "sha256": "2ef7edb47ab2358fb4ffe14fab26129b53a5a7284fb6cb02dfd0029ea80ca929"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/manifest.json",
+      "bytes": 7927,
+      "sha256": "e3b57b5e6f590b69374a8460f69912468356428b85ac456372e7603da779cae7"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/rejections.jsonl",
+      "bytes": 868854,
+      "sha256": "7b19b2f508db87d05a3b4bae039bbac53741567ec8a2d071e7e44566abcad116"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/relations.jsonl",
+      "bytes": 25779109,
+      "sha256": "2fc31a7f0b1d6eb5bbb563dcb5ca8c7c9b7dbfd9ca2fd83ff1bf24ee1598e035"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/test.jsonl",
+      "bytes": 93990812,
+      "sha256": "cf24b47fb530a51e531215122500e01663f871a8cc99d2c8fbbfc583438a96a0"
+    },
+    {
+      "path_in_repo": "multisource-20261006/constrained-evaluation/validation.jsonl",
+      "bytes": 89497037,
+      "sha256": "f27245eba56be4045ed84b5072051aa8b540e56e64d8c2998c82c52a5789c522"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/verification-main-final.json",
+      "bytes": 21379,
+      "sha256": "0ee7c036f72c91bba59187e4b2fd74fb122c01938ace1ff650a0a06817520846"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/verification-minimal-final.json",
+      "bytes": 23596,
+      "sha256": "a0d3610924034913212eb59b84f14334ba84661ba34fa59c9652772009136a8b"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/lineage-counts.json",
+      "bytes": 3243093,
+      "sha256": "e3d1c0d8e16e5a95428a2a600539e74119d90f4f9ba27fbfaf74f45a27646407"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/replica-manifest.json",
+      "bytes": 114788,
+      "sha256": "7d0efe9aba0a809db00cdfadd7d7ec0abddf327fcbd8afc91a5443542f94d509"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/pilot-fixed-sample-comparison.json",
+      "bytes": 20152,
+      "sha256": "c3a6fa50b0d4a3de5c0217dccbd02346a1b4f80641193196f05d96997faf5b14"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/world7-pilots-receipt.json",
+      "bytes": 15892,
+      "sha256": "5ee39b23394699cb0e1ddc7694746f896e0ff5bc804b04029762e19d45cd2308"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/independent-verification-final.json",
+      "bytes": 8390,
+      "sha256": "aaf4b43e0a85fea6fa27572c7c8bc8051ebc2c1716259da82f3624f8df4e6b32"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/independent-verification-optimized-final.json",
+      "bytes": 8390,
+      "sha256": "6f49ad9ae90ff62fa0f7729d67e340e382173c15dc7d4032ccba6dd5fa0aae69"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/verifier-final-summary.json",
+      "bytes": 2037,
+      "sha256": "03c6ff1366ae4a0101b9582ca07c6e63054d792a321a2afe0cc5a8cf92fb05df"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/constraint-view/README.md",
+      "bytes": 5960,
+      "sha256": "4128e7e6affe40a36f409adb7fe8ceeeefd3511aeb626db6b6af1cf823414ed5"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/training-3epochs-world7-B1K16.json",
+      "bytes": 1282,
+      "sha256": "834654b3895a703e75213db2a692b3e385a5d79b54767802e1c6387599b7dbcd"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/readiness7-B1K16.json",
+      "bytes": 23749,
+      "sha256": "cbfdd8708ec65a3862d0b6562d31b5ff5cd17a0917f4ae6fee53bc8e295e6113"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/readiness7-B1K16-independent-verification.json",
+      "bytes": 264,
+      "sha256": "4b05ce84e116daa5e327646e40c804c4e3babdc92a78453a7f37d421027b4539"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/README.md",
+      "bytes": 5180,
+      "sha256": "353b91df1cd64d475568be4757395cf58f906cade7d71022728de5226fe11ff5"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/qwen-preflight-summary.json",
+      "bytes": 25520,
+      "sha256": "8687fde45b078327d899fe8a1985a85015b186381cf1fb36d91b4cb6066ab325"
+    },
+    {
+      "path_in_repo": "multisource-20261006/training-config/preflight-training-3epochs.json",
+      "bytes": 1282,
+      "sha256": "bf56f61e7d07462dc415e26263b46a40ab015edfc93c469e04c34cf25ac11abc"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/server-tests-coverage-receipt.json",
+      "bytes": 232,
+      "sha256": "a13190896c8acb8c54b2671dced9392678879d4aea7a633d414c0a1ac3872076"
+    },
+    {
+      "path_in_repo": "multisource-20261006/audit/qwen-four-update-pilot-summary.json",
+      "bytes": 8361,
+      "sha256": "0830e3292d7c4c83a0d448c604f7af0485ce8240902695fbd313f0a509891903"
+    },
+    {
+      "path_in_repo": "multisource-20261006/eligible/rejected-eligibility.jsonl",
+      "bytes": 95418,
+      "sha256": "cf373e95630c90a549b7fabef8e887420095cab00aa186b22a27f925150451cf"
+    },
+    {
+      "path_in_repo": "multisource-20261006/HISTORICAL_HEAD_REMOVALS.json",
+      "bytes": 7473,
+      "sha256": "6240ba6e68b29cd0d30a7de8d2e96a8e6fd3b3d13acb3e3026111fe8facfc91c"
+    },
+    {
+      "path_in_repo": "multisource-20261006/PUBLICATION_MANIFEST.json",
+      "bytes": 23053,
+      "sha256": "307c8443fa7246a7ad2c381dbc0d8584b60a91613c0020d2c14cfd94e650839e"
+    },
+    {
+      "path_in_repo": "multisource-20261006/SHA256SUMS",
+      "bytes": 5606,
+      "sha256": "ab15d9f13c71af59839e0b64ba18dc2ca72ebd2409f618201a1af64720756ec6"
+    },
+    {
+      "path_in_repo": "README.md",
+      "bytes": 7511,
+      "sha256": "2c052267ddac097f4b8e6eae6acbc5bc27fa63904a2041e623692f32005c0fba"
+    }
+  ],
+  "elapsed_seconds": 71.54741441551596,
+  "verification": "download actual immutable-revision bytes and recompute SHA256; check all checksum entries",
+  "temporary_download_removed": true,
+  "completed_utc": "2026-10-06T14:10:05.456678+00:00"
+}

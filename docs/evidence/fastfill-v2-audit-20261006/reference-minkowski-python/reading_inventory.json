@@ -1,0 +1,2062 @@
+{
+  "repo": "/Users/slian/Desktop/3D/Worldedge/OptiScene/MinkowskiEngine",
+  "head": "02fc608bea4c0549b0a7b00ca1bf15dee4a0b228",
+  "tracked_files": 244,
+  "full_text_read_files": 141,
+  "full_text_read_lines": 23316,
+  "summary": {
+    "python_package": {
+      "files": 31,
+      "lines": 8316
+    },
+    "docs": {
+      "files": 35,
+      "lines": 2662
+    },
+    "examples": {
+      "files": 21,
+      "lines": 5043
+    },
+    "tests": {
+      "files": 43,
+      "lines": 5896
+    },
+    "root_build": {
+      "files": 11,
+      "lines": 1399
+    }
+  },
+  "scope_note": "All accessible git-tracked non-native textual files read in full; native/CUDA/pybind text assigned to other owner; illustration binaries hash inventoried only. Reading does not prove execution, test success, GPU compile compatibility, or scientific correctness. Truncated combined tool outputs were reread where needed.",
+  "files": [
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "bytes": 1668,
+      "sha256": "a488c87c2b9f010a19d3a60e03d4846d9840ecedbaad2f4340b758d63ac92050",
+      "lines": 49,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "bytes": 595,
+      "sha256": "1f48c52f209a971b8e7eae4120144d28fcf8ee38a7778a7b4d8cf1ab356617d2",
+      "lines": 20,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 85,
+      "sha256": "bb5cc15b34df210b252bbc3f6a4ff1d74eb67ad7fb38d6af38bfcaf14e65e3c1",
+      "lines": 11,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 12961,
+      "sha256": "8e6f97e1163a00c69f56b07ce64619a5e1e421bce5c5061cadb9bb71a20503ef",
+      "lines": 319,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1300,
+      "sha256": "b86cbd537380cccc7914c37cc1600798bc27e49863b7cfba500eafb00120a621",
+      "lines": 26,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "MANIFEST.in",
+      "bytes": 103,
+      "sha256": "7ff07b67b2b32397ca34244bad09aab05a48ba5eb042b18c9d3a7f6e27ca9f30",
+      "lines": 3,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "Makefile",
+      "bytes": 5587,
+      "sha256": "6f5b857656b5e5e7a196238eefd8534f4b42fb721796b567a70e6f0b598dcd17",
+      "lines": 178,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiBroadcast.py",
+      "bytes": 9070,
+      "sha256": "cf63b9f7daa7c728b95af88c6813cd2f1e81a1c86a10ae63e2871095647156c6",
+      "lines": 253,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiChannelwiseConvolution.py",
+      "bytes": 8198,
+      "sha256": "7afcd8fc7308ac49f799e35f4f0dd4788b1748ca8aaaf7d72965c265fea58d9f",
+      "lines": 215,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiCommon.py",
+      "bytes": 4132,
+      "sha256": "a8dea1a5ba414c355a01c89a76217be6c4a65e1c7394d4576932af94dcf44a6d",
+      "lines": 120,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiConvolution.py",
+      "bytes": 22705,
+      "sha256": "e70f7f92655e0406ab5bb6bf9ff45c7ec120f0c9e174d69fabd9f3bfda26bbac",
+      "lines": 634,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiCoordinateManager.py",
+      "bytes": 19453,
+      "sha256": "2967e35b9e24c305e39033ed80e7ebb865b9cda20f639794bd92b50b33213246",
+      "lines": 498,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiFunctional.py",
+      "bytes": 7092,
+      "sha256": "a2c6cd83692f635fefd509dd9c1de874a040581b3f493080ecb0faeac78dc4ae",
+      "lines": 232,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiInterpolation.py",
+      "bytes": 4813,
+      "sha256": "ede7b5cc55016c27cba28936a0c69a6b599ddb6168d2c68bc685f2532a734539",
+      "lines": 131,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiKernelGenerator.py",
+      "bytes": 14806,
+      "sha256": "b88856cd681ba33986c537d29ca0aab9ad7703d95db6ced7e1305421ea25d8e7",
+      "lines": 395,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiNetwork.py",
+      "bytes": 2196,
+      "sha256": "8ba14c9f06a8597709cf13f9048b885bd078e675b039f5dfa1b8ffa947ff4454",
+      "lines": 57,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiNonlinearity.py",
+      "bytes": 5842,
+      "sha256": "62cdcbf816a348bfb0550018e76b0c607aecea19619e51223ae8961218bf80f7",
+      "lines": 200,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiNormalization.py",
+      "bytes": 13548,
+      "sha256": "f8d434fc8ac45bc3473d6988c93ae6c47d39bb2651afb35ee0b760cb6d90c551",
+      "lines": 399,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiOps.py",
+      "bytes": 18592,
+      "sha256": "8c1f699ab66fe4c59b8772686dc10024eea2c2f2096a2919be29f978664655f8",
+      "lines": 497,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiPooling.py",
+      "bytes": 28591,
+      "sha256": "0c0a119ab10a0e9a4b5ca6c4d0a3ad9bdd8c92693606511f7798d47180dbe9e0",
+      "lines": 780,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiPruning.py",
+      "bytes": 4424,
+      "sha256": "dcf552b5a1101c58b201ce9621470f07e4522e1c73403fb102360cce58151823",
+      "lines": 121,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiSparseTensor.py",
+      "bytes": 33002,
+      "sha256": "dbeb6a2b24496e0dd81e0c31c54420195f880ef4f55c954b4164a80439935ea9",
+      "lines": 783,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiTensor.py",
+      "bytes": 23604,
+      "sha256": "58d9c4bef3687e38190d1c1d528bd5d57da599f3040fdbaee04b504bf3c1eec7",
+      "lines": 604,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiTensorField.py",
+      "bytes": 20171,
+      "sha256": "a3906459039d397543ea2bc7b3157fb9fcda9e82a0fc5f698ed621e15579e1d8",
+      "lines": 506,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/MinkowskiUnion.py",
+      "bytes": 6116,
+      "sha256": "c689c89c4f7b624674fa7c582a930e0b4d1c4ba3653b4a9998f7af46d85c2201",
+      "lines": 156,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/__init__.py",
+      "bytes": 6203,
+      "sha256": "e500bead720ef2ea8363b20ed21bf5d6b8ee5b2d2b386860612badd502a6d7a3",
+      "lines": 228,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/diagnostics.py",
+      "bytes": 2002,
+      "sha256": "7ad265a401f2d301222723057bd59be373251e6bb98f750696270a1c6fc9355e",
+      "lines": 70,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/modules/__init__.py",
+      "bytes": 1281,
+      "sha256": "d0a248facd8581dede1cf0929bc13cc0cdfae7c21fbbc65e890def9d3c44217a",
+      "lines": 23,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/modules/resnet_block.py",
+      "bytes": 4077,
+      "sha256": "013414323d4059feb8c19d08768329fcf22133fef14980bc44362f9d4e37c69c",
+      "lines": 121,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/modules/senet_block.py",
+      "bytes": 3940,
+      "sha256": "b1e2095eafdd982a5376bb88fe81076ae1d88a0092673e17a9b98ca44177ecbc",
+      "lines": 129,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/sparse_matrix_functions.py",
+      "bytes": 6486,
+      "sha256": "04059f5527091aa1ea9fd40032f9be2de529a504c4faa0c32387b0e869d4caa6",
+      "lines": 213,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/__init__.py",
+      "bytes": 1573,
+      "sha256": "027966d5a651bf28e42fd14b82e28abefcda43a1f2ab644f48e368f65554e02d",
+      "lines": 28,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/collation.py",
+      "bytes": 9316,
+      "sha256": "bb13b02a790c9e6b112b1671fa9a8cd1d079056d07272cb41af581564920da23",
+      "lines": 263,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/coords.py",
+      "bytes": 2598,
+      "sha256": "d23e7305ceb36017074fb9f87f5204e987b8348f52fd28696ca45495eb73ce11",
+      "lines": 63,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/gradcheck.py",
+      "bytes": 2256,
+      "sha256": "94dcd0e18da1ef1436b4d1049806f18c70716d98e7645d667f9c4cbd34b39e4c",
+      "lines": 57,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/init.py",
+      "bytes": 1274,
+      "sha256": "99216db01412b86a240aacaa195a11b99378fbe88b34293cda4110f44ee08a90",
+      "lines": 41,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/quantization.py",
+      "bytes": 14029,
+      "sha256": "f70f60f2f38c6dc45af2ccd8030cf4b7d7cfebcd72997c3d5661b216d848bd15",
+      "lines": 363,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "MinkowskiEngine/utils/summary.py",
+      "bytes": 5307,
+      "sha256": "bcd63083611fe621c8929864bad8811b99b72cac575005acb495c204b28fc78f",
+      "lines": 136,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "python_package"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19943,
+      "sha256": "75ab02e4a6b3e677cdee39b6e4f15c2c76a62324e124213e7f8e0917e61408ad",
+      "lines": 396,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "docker/Dockerfile",
+      "bytes": 959,
+      "sha256": "e3620cfbb4275474424a161bb9af713c0c125a133551e3c3eb2126df1216fc7a",
+      "lines": 30,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "docs/.gitignore",
+      "bytes": 22,
+      "sha256": "71593c594c1608ef4d0845c74c4b01e61e023c3a373f6df5a44c897c337804ab",
+      "lines": 3,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/Makefile",
+      "bytes": 580,
+      "sha256": "119280cf4eb03a1b93c4a914270423e53c1308d4a9553d96021cce565b3fa853",
+      "lines": 19,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 766,
+      "sha256": "fcac62eec1adae75e6a4a131c9972eb8396d626cc15b2603dab9f524cd9ab9ae",
+      "lines": 18,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/_templates/layout.html",
+      "bytes": 620,
+      "sha256": "be5cf8e87ef2b2c6e26c606115c6921920511fd4b335caea824c53f385a2db17",
+      "lines": 17,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/benchmark.md",
+      "bytes": 3180,
+      "sha256": "1f5116e04827d67d278a1d30f16f06f819d66e129da4fb590a619913b8460f0a",
+      "lines": 87,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/broadcast.rst",
+      "bytes": 882,
+      "sha256": "1756630d16a8efa684e1d4ae936757c071d6fc74cedce34f281cee5ca087bd09",
+      "lines": 45,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/common.rst",
+      "bytes": 292,
+      "sha256": "ee239c75f823bee18f92878a063fc0367772a10d7939cf2ea5a2b37c51db3e13",
+      "lines": 19,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/conf.py",
+      "bytes": 5745,
+      "sha256": "427989be57a8daae1862fda05e0affdcd6770f336f32010a3d126937e79e8885",
+      "lines": 187,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/convolution.rst",
+      "bytes": 1223,
+      "sha256": "9d42558c8e941ea8302f34e8e910cbac1b10a7d829889a24571fc814f22ed6b8",
+      "lines": 44,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/coords.rst",
+      "bytes": 572,
+      "sha256": "7008cafd48682b5d82e12ce353294f00143743f634ddf2ec2fa80bdf716f48e6",
+      "lines": 32,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/interop.rst",
+      "bytes": 2543,
+      "sha256": "279317ae6a73abe965fc54e6bf08ae9e86de23a225cd9b668902b2ed1c186b30",
+      "lines": 81,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/modelnet40_classification.rst",
+      "bytes": 6728,
+      "sha256": "f8c745266fa4d995aa973d737182d7e423e6f3eed7342a8d54bcfaab3cec28ca",
+      "lines": 200,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/multigpu.md",
+      "bytes": 6440,
+      "sha256": "d3bec908c2c401b3eaef4b8d46778f55515d4cf0099f1aa297dacfbe3f8ac116",
+      "lines": 186,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/pointnet.md",
+      "bytes": 972,
+      "sha256": "a87071d54c744aa75b262ad3506ef29162d8bea0ae8f6c060cc3cba5105ebd3b",
+      "lines": 23,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/segmentation.rst",
+      "bytes": 2496,
+      "sha256": "1c78b8a6e5b0af18b1fac2b827fd73de3a39430e6e1635f8e13457a36f083c1a",
+      "lines": 68,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/sparse_tensor_reconstruction.rst",
+      "bytes": 2734,
+      "sha256": "44543dda7225c1ebff0da7110be04edb7b36dc0542dfb07002f7f769ccbde74d",
+      "lines": 66,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/demo/training.rst",
+      "bytes": 8661,
+      "sha256": "6d11c51af2c27ec701e3a9a6d4879dd6d7d076bf8f2b753ccc13e450093a283a",
+      "lines": 266,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/guides.md",
+      "bytes": 2959,
+      "sha256": "57a33e233f7b3c430133e9c2aea76aae5c2acdf2428a2981adfa1ecf55cffc88",
+      "lines": 52,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/index.rst",
+      "bytes": 1004,
+      "sha256": "e733a8f0bf475fb6d30182ee78ca23309a7be5b4f95e0482d21fe4e74830ca7d",
+      "lines": 68,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/interp.rst",
+      "bytes": 257,
+      "sha256": "2f49363a950e553e2cdbf68744b570f61fe23e03266a1b0afbf1f41f6930172e",
+      "lines": 12,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/issues.md",
+      "bytes": 4780,
+      "sha256": "38e8cb5e61679c63daac7df3fc96e4ed4692e2b595fa8f35e53abd580e967dbd",
+      "lines": 143,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/migration_05.md",
+      "bytes": 2392,
+      "sha256": "b41aac9ab2988f247a733df92515b95c8ed81e2c27b1388f2f4fd1de5357e1a1",
+      "lines": 94,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/misc.rst",
+      "bytes": 1345,
+      "sha256": "1fd1d09945a2dd929fe5ea7df2eb15973ea5f0bf6840edee7c37ad17ae4a440e",
+      "lines": 42,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/nonlinearity.rst",
+      "bytes": 1794,
+      "sha256": "14495ea35c5897d834ca5515b8a5af711aaefb4d87c8ccd8780aeac22a7e9a5f",
+      "lines": 112,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/normalization.rst",
+      "bytes": 731,
+      "sha256": "40f4a9974d4922eba741201aa5f0509bac284fd252fa14f71cafdf59fe79de1f",
+      "lines": 36,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/pooling.rst",
+      "bytes": 1673,
+      "sha256": "63f70b9a040fb1ae50351509a50411739a1049a12c4c049abf469d95062f11b7",
+      "lines": 78,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/pruning.rst",
+      "bytes": 182,
+      "sha256": "afbefebc91f37f4363b97fbc69a2d4ac58ce46d8e6700ea74851d27e7304d665",
+      "lines": 11,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/quick_start.md",
+      "bytes": 1968,
+      "sha256": "8870bb3715126b782f1666510ed89d23258e8a421a2de490fc340c95a4ef1031",
+      "lines": 68,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/sparse_tensor.rst",
+      "bytes": 1373,
+      "sha256": "ef6fee00f41c002d970deb1b4a25bfcaa95bf88340a1687d3ca35265d23fe206",
+      "lines": 59,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/sparse_tensor_network.rst",
+      "bytes": 9980,
+      "sha256": "076478f98ed8ffb2f30a98577ce92e82c26198e65fd57296aa2fac1c697a903e",
+      "lines": 142,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/terminology.rst",
+      "bytes": 7421,
+      "sha256": "281316b3ae36f6092a8dd28e7936a8fa5794cbc1cfec2331ee4f1b1fa7cea6e7",
+      "lines": 87,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/tutorial/convolution_basic.rst",
+      "bytes": 193,
+      "sha256": "e00705d20d94479dce4264fb8d5ac1934f45a77af9b58527fa308ad636a8733f",
+      "lines": 8,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/tutorial/sparse_tensor_basic.rst",
+      "bytes": 6894,
+      "sha256": "cf0e2acef74b7e5605e248e2e51fe0e22bcdd001063b69110b5e8523dc07d46e",
+      "lines": 160,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/union.rst",
+      "bytes": 180,
+      "sha256": "2babb93e306d3ab4ea532e4d177dc9161a71ac822b7a5777c6637e663a8fc656",
+      "lines": 11,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "docs/utils.rst",
+      "bytes": 1828,
+      "sha256": "9a6b500ae570ecb4512f0d5f1db8bf8ff369fbe3d75cc62541c6108391a0bf99",
+      "lines": 118,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "docs"
+    },
+    {
+      "path": "examples/README.md",
+      "bytes": 528,
+      "sha256": "f987536b47315478ff886c587ec3f66fc85a6e0cbb2c80ea72aa78889110aab8",
+      "lines": 20,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/classification_modelnet40.py",
+      "bytes": 13583,
+      "sha256": "e8e9d1a3d52afaf8cf08229c3c576e510ffa5b2b5f2178e412259788c63edd32",
+      "lines": 441,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/common.py",
+      "bytes": 3297,
+      "sha256": "8ea84b7a359ef1c3aa76fdb972efb5b34c588046bb43c5e54861a180430a977d",
+      "lines": 103,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/completion.py",
+      "bytes": 22060,
+      "sha256": "5bc41794f0006843e559ebcba5160ed265433caa370c237a991927b8e2fc6350",
+      "lines": 670,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/convolution.py",
+      "bytes": 4706,
+      "sha256": "8b63477fce900897a7fc81896d2fb7d27e905449e20cd16f820f47b89a613bc1",
+      "lines": 141,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/download_modelnet40.sh",
+      "bytes": 393,
+      "sha256": "6eeffcbf5083b757e7a6dd00741056b85f7e878017d3ba81fc7c13f6f76efd83",
+      "lines": 12,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/example.py",
+      "bytes": 3226,
+      "sha256": "118d0e8e9f89bdb4b2a5f4e3be42601d67e03ed44dbaf04dcaa6af9fa2a2c323",
+      "lines": 92,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/indoor.py",
+      "bytes": 6082,
+      "sha256": "1a48f7f4a068bcb6a675d051cd413b721deab1be119899bbd18056e0606d114a",
+      "lines": 171,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/minkunet.py",
+      "bytes": 9259,
+      "sha256": "1bbe4431248d34fcc43a2e2c5cea75d92a9cccaad1dc6545110f5ec9dd50df8d",
+      "lines": 282,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/multigpu.py",
+      "bytes": 5374,
+      "sha256": "980eb5ddd006661f12b7336267c53f112dcd6611155a3756968e5cfb2b908489",
+      "lines": 147,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/multigpu_ddp.py",
+      "bytes": 4099,
+      "sha256": "62179a93c952f645259e80a28872bc1f2cadebf6c7c87a9c8dbaf7d52ed233f0",
+      "lines": 131,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/multigpu_lightning.py",
+      "bytes": 7173,
+      "sha256": "4656967a5c364d2cd1a38a166a6916d04765e8c7efdb24b42e3344a4cbac7d58",
+      "lines": 204,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/pointnet.py",
+      "bytes": 10134,
+      "sha256": "07065b0c7d278708d33d910f6be0da20e4b9bac3277598c1b75921d9d40beefb",
+      "lines": 282,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/reconstruction.py",
+      "bytes": 23053,
+      "sha256": "8da29f027a37a97c8e8c5a08b29bc546a8bac6a0514f64779582f8718ff4e30c",
+      "lines": 710,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/resnet.py",
+      "bytes": 8801,
+      "sha256": "d53662734072027a82b6e5d1776073c18be2d7646b2822e1972a8654c7b25a00",
+      "lines": 282,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/sparse_tensor_basic.py",
+      "bytes": 5477,
+      "sha256": "927b447784f46db42110745ac03c14ac11a046303c338fe990bd150403e4798c",
+      "lines": 163,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/stack_unet.py",
+      "bytes": 3841,
+      "sha256": "11b59786e75846509c33d15cd23df1d3bf5bdf3edc2c265c12f431a9c7799d42",
+      "lines": 100,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/training.py",
+      "bytes": 7903,
+      "sha256": "51140c8f663ba30e85e33646e1b5ab13bee56ed26bfa26f7043ed110a274f07e",
+      "lines": 225,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/unet.py",
+      "bytes": 3949,
+      "sha256": "764d8758e41f5faa448d0b3c7114481732bb1b14fd69123f29a0691c2700e02b",
+      "lines": 121,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "examples/vae.py",
+      "bytes": 24627,
+      "sha256": "dd838378bf5e34db67d081c27ae369ae439bbb3dc699f9b171ec2df4b6c7e94e",
+      "lines": 746,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "examples"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 22,
+      "sha256": "525ec11a5d7c70e5355478c0a9f9127f313f89214adfaad44bf9bd3522f93604",
+      "lines": 2,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "setup.py",
+      "bytes": 11988,
+      "sha256": "085bdcfe217bc4f8dc97c0745d43ef92737361576eec91abe21fa9c2c783bcf1",
+      "lines": 365,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "root_build"
+    },
+    {
+      "path": "tests/cpp/README.md",
+      "bytes": 292,
+      "sha256": "6a556efb95aed879efbae1ef03eda079506c4e5cf106124ae429872d74d649b7",
+      "lines": 20,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/convolution_cpu.py",
+      "bytes": 1362,
+      "sha256": "b75bcdb24d70aef2255da8d52498d53beb43b7c4a1c24d9765f3455e404fb317",
+      "lines": 35,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/convolution_cpu_test.py",
+      "bytes": 6086,
+      "sha256": "86feac0cd7ca6a6a4d658ca8d4b9ef274c805d688b6a720aab8b98b5a1dfcd55",
+      "lines": 181,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/convolution_gpu_test.py",
+      "bytes": 6169,
+      "sha256": "2d21c402294c3feaa2b4a373accc99f2db679c0e998e39d02e9c3a6d5efcfb8a",
+      "lines": 182,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_cpu_test.py",
+      "bytes": 4908,
+      "sha256": "a8a788ffe67195734409c3e4240b8a2bfa0f33392aa08f046feeb10ae17b1a66",
+      "lines": 125,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_gpu_test.py",
+      "bytes": 5249,
+      "sha256": "17c25228eaea4d4c03298aab6bbe04e467bd10a1d237184babb833409b568cd0",
+      "lines": 135,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_key_test.py",
+      "bytes": 919,
+      "sha256": "65b8f020d79b2c10a010332a4e59c63baee0792ae81a54609ce0b096b5026e3a",
+      "lines": 23,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_manager_cpu_test.py",
+      "bytes": 1479,
+      "sha256": "bd45dc68ace62d9edcfec0ac8ce8ffb53ebe7fe34cab998c8ecf7335014b9b19",
+      "lines": 39,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_manager_gpu_test.py",
+      "bytes": 2048,
+      "sha256": "2309dc42385e67de3539f985587bac8e9509089b3431db8aa791e53583e77fb4",
+      "lines": 54,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/coordinate_test.py",
+      "bytes": 621,
+      "sha256": "bb28e355d16fecbfd3f26d47b34b252c649e3c04a34f625a8353c3e350ca297a",
+      "lines": 18,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/kernel_region_cpu_test.py",
+      "bytes": 4847,
+      "sha256": "39b5121bb53db56a5e47c5666895471abb724e2da160fee95babcda540ae4edf",
+      "lines": 133,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/kernel_region_gpu_test.py",
+      "bytes": 4746,
+      "sha256": "00e1fc9246eeeaddcd52a828948915b9599a459f84c8ec8648402b465934c929",
+      "lines": 124,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/setup.py",
+      "bytes": 4348,
+      "sha256": "ecab4b03e96c3d1bcbabab1361421814373e1c1f263862643289cfaa4e50344d",
+      "lines": 154,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/test_all.sh",
+      "bytes": 533,
+      "sha256": "4f6ea201625ddd33ee8b8a5e1b84ccec31d9609c56d8dfc5daf53ba5332a5a88",
+      "lines": 16,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/type_test.py",
+      "bytes": 197,
+      "sha256": "44f55baec4c0fa290bf3b194310902a76aa5868e8a0a9bdc3b2793a8e1cccd05",
+      "lines": 10,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/cpp/utils.py",
+      "bytes": 3924,
+      "sha256": "b44f9fff711b36d2fa822363806d9c5e1585d4798a2574362583b688e305b89f",
+      "lines": 112,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/__init__.py",
+      "bytes": 1281,
+      "sha256": "d0a248facd8581dede1cf0929bc13cc0cdfae7c21fbbc65e890def9d3c44217a",
+      "lines": 23,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/broadcast.py",
+      "bytes": 5766,
+      "sha256": "96510814ca24e95a4d7cb51877e7016643bcb51caf7a7231c3081be06ae08e58",
+      "lines": 163,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/chwise_conv.py",
+      "bytes": 3580,
+      "sha256": "1cc566d2825546f7f08e5843bb15e836f402bd9dd4f1647005a19436afb62dc5",
+      "lines": 102,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/common.py",
+      "bytes": 2628,
+      "sha256": "3bd25dd89764d9bac79e6e9b33560fcccf1eb14065cd573cc9daeb16e577d17f",
+      "lines": 78,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/conv_on_coords.py",
+      "bytes": 4249,
+      "sha256": "e7239ffc9b6a64e99e48c08b194e8a593b979dc69623c915070e216eed386fe8",
+      "lines": 118,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/convolution.py",
+      "bytes": 24488,
+      "sha256": "7665aa1293e56467be4faa2b5a0c5d2f791817858598207773043bf0b7633332",
+      "lines": 713,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/coordinate_manager.py",
+      "bytes": 8980,
+      "sha256": "0e276d91c5d94d09575cf7333b576b043f37e2923bbbade0f67948cdcf3ce7fe",
+      "lines": 258,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/dense.py",
+      "bytes": 5312,
+      "sha256": "bb46b336f42ddfc29ee3f4b51ae51b99d7654ead21952f3cccb5317016d2cbcd",
+      "lines": 146,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/direct_pool.py",
+      "bytes": 3514,
+      "sha256": "53cb5556ac229f55dc8555b03d4b9d3c70e94df0f1d499141a7ef48d3ae97540",
+      "lines": 106,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/global.py",
+      "bytes": 4256,
+      "sha256": "21828774d652dc9f910a69bbcc2af76489972b4f37971f99a1cdfeca4197a312",
+      "lines": 113,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/interpolation.py",
+      "bytes": 5774,
+      "sha256": "47c41af529f44b8dc9b40b9b104d0af09b3613d391290f2cac8b96c43e05bf8f",
+      "lines": 174,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/kernel_map.py",
+      "bytes": 3911,
+      "sha256": "07d1d6dd5af62c82123166b39be72fb0fc182d899d49ea64532c13b2f70f9987",
+      "lines": 109,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/network_speed.py",
+      "bytes": 5456,
+      "sha256": "8da8a50e1d3e3373ec6bc1b655f5457a27541d1ac4e870b3c2560819810c6516",
+      "lines": 148,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/norm.py",
+      "bytes": 2808,
+      "sha256": "fa9bd47c8803e9fed7a066f18e98fdf04a2ed3ab0dc64703e864bcfad7809876",
+      "lines": 79,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/pool.py",
+      "bytes": 17210,
+      "sha256": "7f1fb3740116a4219d8596568e16508ecddf6f0497b4376f25ec6711f7b7ac56",
+      "lines": 576,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/pruning.py",
+      "bytes": 7123,
+      "sha256": "2d13fc8817ffb373f540f9168c71e6faa92e83fa034004890333d8a7657c3c41",
+      "lines": 219,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/quantization.py",
+      "bytes": 4712,
+      "sha256": "bd4a0f99a4ee4d576d52d1f7941a942d3695b368f4793539aee67bc928b88628",
+      "lines": 125,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/sparse_tensor.py",
+      "bytes": 12977,
+      "sha256": "3a78208795890f58b4da477314573f2ec50d7e129a6063c8222ba77b1b62cb11",
+      "lines": 333,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/spmm.py",
+      "bytes": 4986,
+      "sha256": "be527605c0eb5d472157b32376d996f2eac292a3789bca88345468683c8163a4",
+      "lines": 144,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/stack.py",
+      "bytes": 4879,
+      "sha256": "db2553bcaa738b0665b3cab5f7eaef26c6d9af2a8ca2cb8e70a7d1fd50784a51",
+      "lines": 138,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/strided_conv.py",
+      "bytes": 5562,
+      "sha256": "f282d6c85fb779bd1383e98f5df480a943a6d5b997057d35f67888f5350c9a48",
+      "lines": 152,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/summary.py",
+      "bytes": 4470,
+      "sha256": "5deb4762c4a3847b4787a18c8f9597086b7ad0fadbc7fcfca1a772327f365889",
+      "lines": 116,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/tensor_field.py",
+      "bytes": 10299,
+      "sha256": "1bc6f541a9da046c91f4ae2ad817e50522eb1541f7bb77cb7d4376848f72fa51",
+      "lines": 271,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/union.py",
+      "bytes": 3391,
+      "sha256": "ff17abd5de527dce49155c124c0dd192815b03c1a34faac24849ca6809bb5647",
+      "lines": 90,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/python/utility_functions.py",
+      "bytes": 1644,
+      "sha256": "28e29b1ea75ef1c782aed0d417241e2d6d91729e4eea3ecc461b1b73d76fd721",
+      "lines": 36,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    },
+    {
+      "path": "tests/run_test.py",
+      "bytes": 65,
+      "sha256": "8ebfaa87ecdfb1dd53dc4957a7d7008f38b437e64e15be1a806441bc5e8bb435",
+      "lines": 5,
+      "full_text_read": true,
+      "reader": "/root/multisource_plan",
+      "executed_as_original_module": false,
+      "scope": "tests"
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "docs/images/classification_3d_net.png",
+      "bytes": 172471,
+      "sha256": "b8a1c845c4571eae404a1bc979b89cbc17affb59a4c77c78a47d66ada4ffcfea",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/conv_dense.gif",
+      "bytes": 176780,
+      "sha256": "d0933f9f351f7571b487801a58b96cbb29a6d6b147367bde8cb39d92391e1457",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/conv_generalized.gif",
+      "bytes": 133025,
+      "sha256": "f979afdd5f959b52573755faf8ede254d6c8728e00f6ba908ee6b33c10b8d043",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/conv_sparse.gif",
+      "bytes": 135305,
+      "sha256": "651f69b814b629d13fde81dde7c25968666136da1d1a6955279259a62e3df4f0",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/conv_sparse_conv.gif",
+      "bytes": 129467,
+      "sha256": "0e2f17e1c59cc63ac16daf4a195575aaf6c8bf1bd91087f8e634fb5303993b94",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/demo_reconstruction.png",
+      "bytes": 32716,
+      "sha256": "dbe3c1c9944ef5769fa34e4e0018915b46665e04874d7f99f6b91641c63bde71",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/detection_3d_net.png",
+      "bytes": 193464,
+      "sha256": "8a13f7ec069c0304014cc5215ccdb72d3f168be08a92ccee85ed90b0f593e489",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/generative_3d_net.png",
+      "bytes": 27323,
+      "sha256": "2d3856b57ec633fe8bcf89d1915a0a68166abcdac3a89189b413349648510cfb",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/generative_3d_results.gif",
+      "bytes": 3468592,
+      "sha256": "b51cb868842cd98f08c17bb90752a2c566949627a826d4b097311c3db3454fa8",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/kernel_map.gif",
+      "bytes": 170772,
+      "sha256": "a51b9f03f81f767589e27b6585eef8848336e1a4b8fd90aa519aec83ae608741",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/segmentation.png",
+      "bytes": 207588,
+      "sha256": "723b6784b637a274ebdc02fbe3f77ad29156b8d630026269cd19b1bb91abab42",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "docs/images/segmentation_3d_net.png",
+      "bytes": 604929,
+      "sha256": "ffebdfbcd89bf2baf7eca2703676fee4752497a1e6889f4d6df3cbd570ad3667",
+      "reason": "binary illustration; not textual scope"
+    },
+    {
+      "path": "pybind/extern.hpp",
+      "bytes": 39374,
+      "sha256": "1f6f1ef3b6ae0c1b74f0899ebf180de2f63fc2dd0ba4c7e473ff4b6a13133e2f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "pybind/minkowski.cpp",
+      "bytes": 2510,
+      "sha256": "804c0ccee33cd2f73beace1d5676ae2a08bc93bcfda30abea504ab7b0afa4305",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "pybind/minkowski.cu",
+      "bytes": 2510,
+      "sha256": "01bcba414c73e0a1439cb5522e254fe5f98d6b81557e2553a2cecbe93bb68e27",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/concurrent_unordered_map.cuh",
+      "bytes": 21970,
+      "sha256": "1e4f6adeca27cc6ac0c869a1c2b741369eedf59088dcea4a932911b93e53df35",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/detail/nvtx/nvtx3.hpp",
+      "bytes": 67379,
+      "sha256": "3fbbdc5f93b6e3a6e4f02b9eb9f2417758217c01c1205fe6a99ef5a294d3c179",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/detail/nvtx/ranges.hpp",
+      "bytes": 1379,
+      "sha256": "7778dc2d4c6cf0379d527705dd68e642ee8ad7346fc3df366645c4770596a6a6",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/detail/utilities/device_atomics.cuh",
+      "bytes": 23923,
+      "sha256": "6c70116206f5bcf924d1e25fef0e45de8976da5cec8da5fe463d2c71b0fba081",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/detail/utilities/device_operators.cuh",
+      "bytes": 3695,
+      "sha256": "f69037f3dc4362f482abc6624337b61992ec3ac65b2c9337a1592277cab6f487",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/detail/utilities/hash_functions.cuh",
+      "bytes": 7439,
+      "sha256": "9af3eebb438008b6f535f104c11f52052ac5f9b6980e1675d281f983cb710331",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/types.h",
+      "bytes": 10642,
+      "sha256": "f8dd0c7368c8f317da841e6719a73551a4d62ebe1d8787410c247c5d2f37888a",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/types.hpp",
+      "bytes": 7112,
+      "sha256": "e7863f8c158d849f3ea3156b792dd4e7caac4f7300a390624ba42707f4d45ead",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/utilities/error.hpp",
+      "bytes": 4705,
+      "sha256": "922d8d9468c6208277fc26c090d7e19e2f3733554f1d01d04413168de141dcc1",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/cudf/utilities/legacy/wrapper_types.hpp",
+      "bytes": 17127,
+      "sha256": "e3c5d12cefd2a816b9ee6c6c2b11e0b5fe1fcac18a33592835be414f6fa30c6d",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/hash/hash_allocator.cuh",
+      "bytes": 3007,
+      "sha256": "b32d9df4f9db03fbf3ff8dce8caad70317b43885c7d2ca9165dbfc309a724985",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/hash/helper_functions.cuh",
+      "bytes": 7984,
+      "sha256": "198e666fd1e58bf201e5306de4e4f9cdab39780169da714705e11cf649bb9287",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/hash/managed.cuh",
+      "bytes": 1301,
+      "sha256": "1276ae19c741c8e97f940969d3e9146cf80ed5f798f9c0acea917094a87646be",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/3rdparty/robin_hood.h",
+      "bytes": 83052,
+      "sha256": "821c576a56e65ac88f7dcfcd640f217376fe2693c39431795916418ec9802627",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/allocators.cuh",
+      "bytes": 6425,
+      "sha256": "f2128c92b1d374a1485f1fb3b1696d6a528d4c034f35923159117b5e6f80a0d9",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/broadcast_cpu.cpp",
+      "bytes": 7785,
+      "sha256": "f9e5834a0a56319d4a276a8d02e0557536c321217d6c120bae151f732a146c01",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/broadcast_gpu.cu",
+      "bytes": 9367,
+      "sha256": "7d4c495089d0e14e0500d34d0098811949fe43d1c6770d2cce0c7f8749e1dd07",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/broadcast_kernel.cu",
+      "bytes": 21596,
+      "sha256": "dec68cbda878b783fbc6b7688476f06e5b5fc4c022a15ef953de628c8c6df82b",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/broadcast_kernel.cuh",
+      "bytes": 2403,
+      "sha256": "512a44913d29914d9c0bf178b350cb6525a01eb16471fef1b1ea413ecb0456ea",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/broadcast_kernel.hpp",
+      "bytes": 6796,
+      "sha256": "2fc579b814dab40e351ab9a99fe00ff3d4493f201efab17c061e9ec282ba382c",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/common.hpp",
+      "bytes": 1854,
+      "sha256": "ec2011e784a9bc0e82584ebe035aad63d3dbc6ca070a2e7e15de227a3e3507a6",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_cpu.cpp",
+      "bytes": 10599,
+      "sha256": "a3878e54b9be7fc89bcfe103f43c38e109aec03ee3eb0d5446defc005f063333",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_gpu.cu",
+      "bytes": 14605,
+      "sha256": "23b48f0aa8fb61b2270babaf0f0cea2662c5def5be9af8f74352bdc0afc90179",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_kernel.cu",
+      "bytes": 32881,
+      "sha256": "8b3cd9511484c4f6e90e23d84c740ac07befda8e114b5bb5ff6b0c35b15d9b44",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_kernel.cuh",
+      "bytes": 3127,
+      "sha256": "45533fc7bb159d1c503cd38ddde25f32bb51315f5c44cf6acbf31ff41d8e3438",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_kernel.hpp",
+      "bytes": 6602,
+      "sha256": "12f644f403d60b91efd88e1463e8369ad086b302e19a05d356cc2a522942095d",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_transpose_cpu.cpp",
+      "bytes": 10098,
+      "sha256": "65efcb6d2f4a3c47e35e5f9cabba119445abfae57d17b7571b21c8f79290b43b",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/convolution_transpose_gpu.cu",
+      "bytes": 14443,
+      "sha256": "34ebc9d3279ad7847b8ed281a5cbf468c037bd0d3ffde3cb4b5620a65fccf235",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate.hpp",
+      "bytes": 11594,
+      "sha256": "24bc1f79b2026cb62a940d0e8abf84207feea06a6c2d918399e61b1cb99e8a36",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map.hpp",
+      "bytes": 7825,
+      "sha256": "8621691ecd63256306c99398104e7c69411847d82521d302345cdb72e7c56ce1",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_cpu.hpp",
+      "bytes": 44970,
+      "sha256": "2791ae0f3c6b9d4adfd72de867dc857942fad1a7abb499a97e9dc1fe5b1474ae",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_functors.cuh",
+      "bytes": 7492,
+      "sha256": "298c25950cbc08e6a1d045da768ce4056980ec7cba80b227d6630015de1d28b1",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_gpu.cu",
+      "bytes": 101866,
+      "sha256": "59cec5a635a155fbd3b816832df3a95a7cbc6f75ce0b909b175ba32aac51f9b3",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_gpu.cuh",
+      "bytes": 13327,
+      "sha256": "646ea5195afb7c19ae3729845fea4930f9386ed86b5c30b07f020f9543246021",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_key.hpp",
+      "bytes": 5786,
+      "sha256": "5270130cbe627e4726d7470109d9f92a5a6771427402316b7721623823150082",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_manager.cpp",
+      "bytes": 61915,
+      "sha256": "601bdad7dde0c1b7c072ebe23f9f74f1359e2ee9de686a3b799dcbdc307e2e0f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_manager.cu",
+      "bytes": 16930,
+      "sha256": "e92888f69bbad222ca1e34ba1a42c4158cd8788fb541c54166ce210288db43d6",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/coordinate_map_manager.hpp",
+      "bytes": 26164,
+      "sha256": "eacacb727ca7c688711ef06c75172ff1470564b22f1f2ba9863b28355342a2a3",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/direct_max_pool.cpp",
+      "bytes": 8848,
+      "sha256": "84e9a47d954da416216fec0d63419417aec45177cf7933437afdf896c630f808",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/dispatcher.hpp",
+      "bytes": 1916,
+      "sha256": "b85d8289bbd581f441f552afcdc827e53dd920a2d9271bda9776f907c71605d3",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/errors.hpp",
+      "bytes": 1638,
+      "sha256": "c5cacdbd7f2b92bd264c5500a94f09eb7ed82d598de29bcfb56059dda843fb6d",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/global_pooling_cpu.cpp",
+      "bytes": 15801,
+      "sha256": "a315333f626cd76ba5146b9f307533301b2fda4d124965f13da8988a72177bae",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/global_pooling_gpu.cu",
+      "bytes": 17337,
+      "sha256": "aea37068a6cbef6422d1ba017b9d084a4451adf7be0e23fd31e2ec52386b07d1",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/gpu.cu",
+      "bytes": 4166,
+      "sha256": "51c7a0582a26b494140a5cfcbae7f65b5bea5042e93a410b7ce3911015ec91ce",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/gpu.cuh",
+      "bytes": 9168,
+      "sha256": "86e2740cff3e60c3f8b2b5803e5494b59cc5716f024a1f6da1c580dd77c50bda",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/interpolation_cpu.cpp",
+      "bytes": 6005,
+      "sha256": "15726fcf4507c0a289601811e7f1ea5d6e9d78484b11fd59e2d66cf694249afb",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/interpolation_gpu.cu",
+      "bytes": 6055,
+      "sha256": "38a41ae503f342a5edc061aab677cc3fe35edbd719a98b58cd4d73b2781026b8",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/interpolation_kernel.hpp",
+      "bytes": 5497,
+      "sha256": "7902b182c4e16e4f823e63abb6d51309673ce4de8c97d2331a83d6fcca5f5129",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/kernel_map.cuh",
+      "bytes": 16299,
+      "sha256": "d35b4a2f3e5a84f6d356712be526bc3215a789de4f87675681f7494573d74f44",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/kernel_map.hpp",
+      "bytes": 4099,
+      "sha256": "21be054fa146df8617ac1e837240b8780f1cfb0ff2714262d8ec60f19d94c5d7",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/kernel_region.hpp",
+      "bytes": 16360,
+      "sha256": "a4189046e5634b66e323224df2b65e4e8c32183cc194a8a491f9ede461f93c8f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/local_pooling_cpu.cpp",
+      "bytes": 11735,
+      "sha256": "1c3640682c8d540bbdaee7e625b09e1241e460b2949dcd5e89a654568dc69a94",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/local_pooling_gpu.cu",
+      "bytes": 12072,
+      "sha256": "34c332cbee4a97263a3de35d9a3ad17c492aaa2fdba6d7ffe10c2b7fbd17375b",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/local_pooling_transpose_cpu.cpp",
+      "bytes": 8737,
+      "sha256": "e4f3bfe5f5cd3964321dff378f9a826d1619dbdb0b213f35ffc7c2c5e955fd4b",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/local_pooling_transpose_gpu.cu",
+      "bytes": 11434,
+      "sha256": "0613aa4c338f96511280df1f77d03e20b43a097b55521d71de357bbdba48b37e",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/math_functions.cuh",
+      "bytes": 6455,
+      "sha256": "d7a371ed91fc3a6b395d843717a05c6d2be27f68bd9ebdf27aa708d0a8ea22b6",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/math_functions.hpp",
+      "bytes": 2192,
+      "sha256": "7ef9830652ecd55fb57f9f6fd16ae1c26c1aa018df603e6abe60e0ae4ae4ffcb",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/math_functions_cpu.cpp",
+      "bytes": 3743,
+      "sha256": "5d2e3eeeef9e1bc34b105179dff950a050fccf46a1c61242b6a87ceab83c1a2e",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/math_functions_gpu.cu",
+      "bytes": 8567,
+      "sha256": "10fd0b70f95ecb7264898b6725a42e45bb14c49a5e4d2acf843209af203dfb83",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/mkl_alternate.hpp",
+      "bytes": 2345,
+      "sha256": "1f3ac37bd869f3f0ac41b9c994ba58847962066a5a9cefb0a0e61c9545973fe7",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_avg_kernel.cu",
+      "bytes": 20998,
+      "sha256": "563d7a81c6ae555d51633f15f08fcb853c4efc0502c686418072ed970ce2f8ec",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_avg_kernel.cuh",
+      "bytes": 2791,
+      "sha256": "4cb799a6f9538a6cc5f7e3d03ec5ad7eae8aa544b94116a23e8654398cea9fb8",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_avg_kernel.hpp",
+      "bytes": 6780,
+      "sha256": "27f286db3c528713dd5fd92fab3aac5963b792c0771b9b98a7049365c3164123",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_max_kernel.cu",
+      "bytes": 16190,
+      "sha256": "9d950ac473b3101c7e750cbc869b824e093d1fa8e5ee5ac5c494c9240ea6bf2c",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_max_kernel.cuh",
+      "bytes": 2749,
+      "sha256": "ff700b96fb3d815cdbb1818dfebaf94c4838aa066ee3685bf4813e77fade3f41",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pooling_max_kernel.hpp",
+      "bytes": 4635,
+      "sha256": "d1d9b9ed4bf1717a9de9c56b0921bbc4807024ccbeed299e35f63c217d20ba7f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/primitives/small_vector.hpp",
+      "bytes": 10843,
+      "sha256": "8148eee4082c52611942c6af5ee8fa88b0c0daad6d3ee2b0a1d8f8cbfe5b90a1",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pruning.hpp",
+      "bytes": 2850,
+      "sha256": "09f1d1a562a44e320765338a302107763fc3aca1df04ac0df7dd21c063743c6f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pruning_cpu.cpp",
+      "bytes": 6154,
+      "sha256": "a76d6a74127296b152ca71fc9ecbbea9a9d6516fec2518c7676fa34f2425c68f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/pruning_gpu.cu",
+      "bytes": 8929,
+      "sha256": "3c54f2ad7a1905a57cc4254a6260ccbdbdb63c699846f4b733fc28e44ea1b14e",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/quantization.cpp",
+      "bytes": 16958,
+      "sha256": "76711ecb144e4e8e54356cf96b02d8980dd30efc29b8a3d3d75a198db6ba8330",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/sharedmem.cuh",
+      "bytes": 3841,
+      "sha256": "58cdd2389729f46049f71861e94b4221dcb7051be7416c09fee109426cf00007",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/spmm.cu",
+      "bytes": 24589,
+      "sha256": "2f4392d4ef28cd602c6a7836383376bbcc8557b42d1290382030f38a430113cc",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/spmm.cuh",
+      "bytes": 2243,
+      "sha256": "d29e02c8bcb882f7f8621f0ec102388b59dd52a3a31c2c780a8595a43eca5432",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/storage.cuh",
+      "bytes": 6828,
+      "sha256": "570abec8e136d1dc9f0b3fb297f5e286999e7ac2c783f06ac6f65cb6e095bd8f",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/types.hpp",
+      "bytes": 7518,
+      "sha256": "82151bdfa83ef8a3da86540e68bac7b145c8d4ca19fa5054d4eca8b22496a6b9",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "src/utils.hpp",
+      "bytes": 9314,
+      "sha256": "cde57071b46945c33c70e1589f5ba3be600f0403ad2c4d17cb4786b7bcb5f951",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/convolution_test.cpp",
+      "bytes": 6265,
+      "sha256": "ab20e340cb061726b97d4186e7d6eda758e4ac3ffc4dc512c157f1930e57a4a3",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/convolution_test.cu",
+      "bytes": 6119,
+      "sha256": "95cd95198766baa1a267ab1d6f5ea95e9c7712da871eb5b413861f6621443564",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_cpu_test.cpp",
+      "bytes": 7782,
+      "sha256": "e1a5a5c6bb7d6f1688602c00edd26e86df8bca7f3fa993e69f491e847dcaa419",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_gpu_test.cu",
+      "bytes": 10238,
+      "sha256": "1b504233452a682bc17c77a999b7240fd4ca87de6a96f57338be79669a9400fa",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_key_test.cpp",
+      "bytes": 3263,
+      "sha256": "f821cc63629ab5c957eebc5f5fc454c7d296e425a7cf9e4a812d608c99d8c190",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_manager_cpu_test.cpp",
+      "bytes": 7728,
+      "sha256": "e76d30c1489ffaaf94281c4911629c50fc7832ffae9bfc863d6914961ae278d6",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_map_manager_gpu_test.cu",
+      "bytes": 7706,
+      "sha256": "e22b882dca9fe57e4c7b0cc8b9bf6ccadbd487b7c6f6bb343ddd874e774edee0",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/coordinate_test.cpp",
+      "bytes": 2934,
+      "sha256": "59bbcba12a7aaba253cb33c75992be1a6bd0d9f8e0369e1cab71d96b70815270",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/kernel_region_cpu_test.cpp",
+      "bytes": 6980,
+      "sha256": "2ec8c4a6a8675df24a22a7bba4bacbd41347d0df95c73d6c9a2a799588c9674c",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/kernel_region_gpu_test.cu",
+      "bytes": 10406,
+      "sha256": "1de00ea2f4efafed51c4e46f4cfee284b1493e4e76d9a0c18361400a31c0b7e0",
+      "reason": "native owner /root/multisource_verify"
+    },
+    {
+      "path": "tests/cpp/type_test.cpp",
+      "bytes": 1914,
+      "sha256": "d9d21a4ae96b77cb8435aa054c58e3f53997836b76a8e323a046b0c70215ffb4",
+      "reason": "native owner /root/multisource_verify"
+    }
+  ]
+}

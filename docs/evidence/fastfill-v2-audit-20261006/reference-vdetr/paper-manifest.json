@@ -1,0 +1,36 @@
+[
+  {
+    "name": "paper-arxiv-v1",
+    "path": "outputs/fastfill_v2/review-20261005/papers/vdetr-2308.04409v1.pdf",
+    "sha256": "e6d7cbdfaf77fb804775b5e85fb182f792bca28833c23e6de03793a5b289d3c2",
+    "pages": 15,
+    "chars_by_page": [
+      3928,
+      5414,
+      5265,
+      2767,
+      3885,
+      4549,
+      3738,
+      3026,
+      5722,
+      929,
+      4112,
+      600,
+      188,
+      188,
+      659
+    ],
+    "text_path": "outputs/fastfill_v2/audit-four-20261006/reference-vdetr/paper-arxiv-v1.txt"
+  },
+  {
+    "name": "repo-details-v2",
+    "path": "V-DETR/readme_files/vDETR_details_v2.pdf",
+    "sha256": "9d1a916166d7ee20951ae743ebb480cad9b5014b0e6063c864a092d35f21df42",
+    "pages": 1,
+    "chars_by_page": [
+      15
+    ],
+    "text_path": "outputs/fastfill_v2/audit-four-20261006/reference-vdetr/repo-details-v2.txt"
+  }
+]

@@ -1,0 +1,6 @@
+# Optional CPU mesh assembly; no learned generation, Blender or sparse-conv stack.
+# RoomGenBench/bench/assemble.py imports all four packages below at module load.
+numpy>=1.24
+scipy>=1.11
+trimesh>=4.12.2
+Pillow>=12.1.1

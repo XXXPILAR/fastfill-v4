@@ -1,0 +1,88 @@
+{
+  "schema_version": "fastfill.final-code-review.v1",
+  "reviewed_at_utc": "2026-10-06T14:19:12.550304+00:00",
+  "reviewer": "reference_interface",
+  "commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "scope": "Read-only final review of the current multi-source/qualification/training/evaluation/predict/RoomGenBench publication changes; earlier module review followed by a fresh full read of the final RoomGenBench source and changed tests.",
+  "files": {
+    "fastfill/v2/multisource_data.py": {
+      "sha256": "cf10e1460462ce73c9fd8f7f3432fdf62373c46c5bc7806739a450e6355eaace",
+      "lines": 492,
+      "matches_commit": true
+    },
+    "fastfill/v2/multisource_verify.py": {
+      "sha256": "3e09dd3947b075d1110fa64786434b19186c692dc4debce32109173f0f6bdea2",
+      "lines": 553,
+      "matches_commit": true
+    },
+    "fastfill/v2/qualified_data.py": {
+      "sha256": "010203a08211aa3b13759f8f56895dab50b483212a3127d68fa411bf227d6e5d",
+      "lines": 178,
+      "matches_commit": true
+    },
+    "fastfill/v2/direct_layout.py": {
+      "sha256": "9dfc2b8485883c974bcded0ed137e820bbbcca6cc82de48a5f8444a4ec5adb78",
+      "lines": 236,
+      "matches_commit": true
+    },
+    "fastfill/v2/predict.py": {
+      "sha256": "36aa199e649f37badccb55d1ffe91cc967fe5b98b59c145338d372c47d2a9e16",
+      "lines": 100,
+      "matches_commit": true
+    },
+    "fastfill/v2/train.py": {
+      "sha256": "2d5ad87978a3204f1f382e2bdd28d33ea15730f5806d05dc2d0089bb0f061994",
+      "lines": 293,
+      "matches_commit": true
+    },
+    "fastfill/v2/evaluate.py": {
+      "sha256": "52a6cc73d6b90f64cca05847a664ae4b13505a230021a071558071ebfd570e5b",
+      "lines": 299,
+      "matches_commit": true
+    },
+    "fastfill/v2/roomgenbench.py": {
+      "sha256": "2e150ab1dd03357a4bfceb1952fbd5a149adba15a003518318d8b0d382c325c3",
+      "lines": 231,
+      "matches_commit": true
+    },
+    "fastfill/v2/tests/test_roomgenbench.py": {
+      "sha256": "da6b27ad3a31d161dd0b6d86f6ed5473dca67d9d87ac3abfc3929e13d2666f4c",
+      "lines": 257,
+      "matches_commit": true
+    },
+    "fastfill/v2/configs/qwen3_8b_main_world7.json": {
+      "sha256": "834654b3895a703e75213db2a692b3e385a5d79b54767802e1c6387599b7dbcd",
+      "lines": 60,
+      "matches_commit": true
+    }
+  },
+  "known_blocking_findings": [],
+  "conclusion": "No confirmed P1/P2 blocker found in the inspected changes.",
+  "final_delta_checks": [
+    "Sidecar status must be a string before membership testing; malformed list status becomes invalid_sidecar and requested instances remain present.",
+    "Fitted extent mismatch is reported as fit_mismatch and excluded from generated_mesh_success.",
+    "Output is a new directory independent of handoff, assets and reference repository.",
+    "Canonical handoff equality binds generated asset keys to validated condition/layout.",
+    "Explicit and hard-on support metadata and fixed bbox proxies are preserved; unsupported physical acceptance remains not_checked/not_attempted.",
+    "Failed/fallback/missing/fit_mismatch objects remain in the requested denominator; generated failure CLI returns 2."
+  ],
+  "prior_security_review": {
+    "publication_text_files_scanned": 84,
+    "matched_secret_patterns": 0,
+    "pip_audit_evidence": "docs/evidence/fastfill-v2-audit-20261006/security-pip-audit-current.json",
+    "pip_audit_dependencies": 53,
+    "pip_audit_vulnerable_dependencies": 0
+  },
+  "test_results_reported_by_parent_not_rerun_by_this_reviewer": {
+    "targeted_passed": 95,
+    "local_full_passed": 903,
+    "local_full_subtests_passed": 114,
+    "server_passed": 897,
+    "server_environment_skips": 6
+  },
+  "limitations": [
+    "This review did not rerun GPU/training/native compilation/real generation methods or the completed upstream reference audits.",
+    "No claim of complete branch coverage, all labels being physical truth, training quality, real mesh/physics/Solver or persistent Host acceptance.",
+    "Documentation refresh and final test/server receipts are owned by the root task."
+  ]
+}

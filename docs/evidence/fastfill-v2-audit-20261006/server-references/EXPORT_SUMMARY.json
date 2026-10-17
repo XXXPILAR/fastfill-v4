@@ -1,0 +1,46 @@
+{
+  "V-DETR": {
+    "commit": "9062d75fe2c91e5d4a771b5325483fc330a3e827",
+    "upstream_url": "https://github.com/V-DETR/V-DETR.git",
+    "tracked_entries": 75,
+    "tracked_blob_files": 75,
+    "all_tracked_blob_hashes_checked": true,
+    "exported_files": 63,
+    "exported_bytes": 399966,
+    "source_files_exported": 53,
+    "source_lines_exported": 10488,
+    "exclusions_by_category": {
+      "illustration_or_data_binary": 8,
+      "prebuilt_or_generated_binary": 4
+    }
+  },
+  "MinkowskiEngine": {
+    "commit": "02fc608bea4c0549b0a7b00ca1bf15dee4a0b228",
+    "upstream_url": "https://github.com/NVIDIA/MinkowskiEngine.git",
+    "tracked_entries": 244,
+    "tracked_blob_files": 244,
+    "all_tracked_blob_hashes_checked": true,
+    "exported_files": 232,
+    "exported_bytes": 1985505,
+    "source_files_exported": 190,
+    "source_lines_exported": 49543,
+    "exclusions_by_category": {
+      "illustration_or_data_binary": 12
+    }
+  },
+  "RoomGenBench": {
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "upstream_url": "https://github.com/RunyiYang/RoomGenBench.git",
+    "tracked_entries": 1605,
+    "tracked_blob_files": 1598,
+    "all_tracked_blob_hashes_checked": true,
+    "exported_files": 1460,
+    "exported_bytes": 6606410,
+    "source_files_exported": 65,
+    "source_lines_exported": 10744,
+    "exclusions_by_category": {
+      "illustration_or_data_binary": 98,
+      "large_tracked_text_data": 40
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-06",
+  "local_final": {
+    "interpreter": "/Users/slian/miniforge3/bin/python",
+    "tests": "903 passed, 114 subtests passed",
+    "elapsed_seconds": 51.74,
+    "command": "python -m pytest fastfill/tests fastfill/v2/tests --disable-warnings -q"
+  },
+  "local_coverage_run": {
+    "interpreter": "Python3.13.1 global",
+    "v2_statement_coverage": 88.26,
+    "warning": "global Transformers lacks Qwen3Config; earlier combined suite had one v1 merge import failure; final supported interpreter suite passed all903 including finaladapter additions"
+  },
+  "security_advisory": {
+    "public_dependencies_checked": 53,
+    "known_vulnerabilities": 0,
+    "exclusions": "NVIDIA distributions excluded; local torch build tag removed for public advisory lookup; not native/source security proof"
+  },
+  "formal_training_started": false,
+  "local_v2_final_coverage": {
+    "tests": "765 passed",
+    "v2_statement_coverage": 88.35,
+    "covered_statements": 4725,
+    "total_statements": 5348,
+    "elapsed_seconds": 72.43,
+    "interpreter": "Python3.13.1; v2 tests do not require v1 Qwen3 merge"
+  },
+  "server_final": {
+    "tests": "897 passed, 114 subtests passed, 6 skipped",
+    "elapsed_seconds": 83.84,
+    "code_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+    "optional_mesh_dependencies": {
+      "trimesh": "5.1.1",
+      "Pillow": "12.3.0"
+    },
+    "v2_coverage": {
+      "percent": 87.71043771043772,
+      "covered_statements": 4689,
+      "total_statements": 5346,
+      "tests": "759 passed, 6 skipped, 24 subtests passed",
+      "elapsed_seconds": 73.52
+    },
+    "combined_fastfill_v1_v2_coverage": {
+      "percent": 76.70627826269849,
+      "covered_statements": 7294,
+      "total_statements": 9509
+    }
+  },
+  "security_advisory_final": {
+    "public_dependencies_checked": 55,
+    "known_vulnerabilities": 0,
+    "native_nvidia_distributions_excluded": true,
+    "torch_local_tag_removed_for_public_lookup": true
+  }
+}

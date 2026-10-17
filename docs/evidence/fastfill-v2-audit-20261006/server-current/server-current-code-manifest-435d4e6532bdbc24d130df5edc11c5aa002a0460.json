@@ -1,0 +1,1070 @@
+{
+  "authoritative_symlink": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/project-authoritative",
+  "created_at": "2026-10-06T14:16:00.396621+00:00",
+  "files": [
+    {
+      "bytes": 288,
+      "path": ".gitmodules",
+      "sha256": "a684c6a1d6de569ae305f13581a41f571b1e79e3bb1e7cee3969630004caf2c5"
+    },
+    {
+      "bytes": 11634,
+      "path": "README.md",
+      "sha256": "354c7b4673f44238024d1faae91706bba7491ae152558891f807cb4df22598be"
+    },
+    {
+      "bytes": 26339,
+      "path": "docs/audit-2026-09-28.md",
+      "sha256": "ba04056511082b76864b1d2945788dc1ee778328407adc5e50e1316eb20307f3"
+    },
+    {
+      "bytes": 6835,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/artifact-manifest.json",
+      "sha256": "bdf5983f5da0be768e4004290271ca2e621754658f064c648914fe7a21f82d67"
+    },
+    {
+      "bytes": 6912,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/fastfill-current-read-coverage.json",
+      "sha256": "731ea8e187909ba57e8107995e46f43c5a420cf42b94c3ba5e8c8d4714642ced"
+    },
+    {
+      "bytes": 9248,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/fastfill-training/README.md",
+      "sha256": "c43ac4070f947566cd8d354ccb2f42ea333f53e1edcbbc5bc0be9beec850b8ef"
+    },
+    {
+      "bytes": 3514,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/fastfill-training/scope-manifest.json",
+      "sha256": "9d5c9f8fb0f6fad1b7b56a9eab4316acd1e62f93b7c40b798a020a7b764d893a"
+    },
+    {
+      "bytes": 6724,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/mechanism_repros.py",
+      "sha256": "4261693c704514238f63571bb888b20c323e93ea36da6b3fcb0c1622113cc1fb"
+    },
+    {
+      "bytes": 4862,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/mechanism_results.json",
+      "sha256": "b6958110a789d9282c8598e6c9dc7c59e3421d5ca37e51e812252e96cd0da7a9"
+    },
+    {
+      "bytes": 33221,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/native-coverage.json",
+      "sha256": "f4d78d122338013ed84355b90d0afa59a17a6b3b10ae6f2bdb482d90045200df"
+    },
+    {
+      "bytes": 226,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/native-integrity-result.json",
+      "sha256": "ca531cb585475cb35f18db7f6f7d9a91818cc35b73cc8c36bade7fa9f8ce5f1a"
+    },
+    {
+      "bytes": 16023,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/report.md",
+      "sha256": "55f5be04979c540cca31c3ebc31c43388d094d6cb7e6b196b83b09a8f7aa111b"
+    },
+    {
+      "bytes": 13247,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/vendor/REPORT.md",
+      "sha256": "b862bace925f9e01cb969b9e835c3840c698a69fb43a4f19395f62c3a7ee72b4"
+    },
+    {
+      "bytes": 2374,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/vendor/endpoint-verification.json",
+      "sha256": "4e6f9bff80555d81bd7f5e4cf67d07dfde4564d529df2697185804f4dc49e1c1"
+    },
+    {
+      "bytes": 9654,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-native/vendor/full-read-inventory.json",
+      "sha256": "8c51a2eaf98062bbc4a0884b4420493bc6dfbfc5d2ca131c0ef2c549839e8d8c"
+    },
+    {
+      "bytes": 16588,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/READING_CHECKLIST.md",
+      "sha256": "6edc477613b5093509e26b8eafc0bea301885679a992bfde1a56249da6278b59"
+    },
+    {
+      "bytes": 16714,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/REPORT.md",
+      "sha256": "a50f5a66cd92819db2bb13e8820a56c93693085a22d2302f585eefe5b0439621"
+    },
+    {
+      "bytes": 2401,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/environment_presence.json",
+      "sha256": "3a953337d761f0b97b8d11dd63a64763a33c8ea008371a5b05100dcee6b44555"
+    },
+    {
+      "bytes": 228,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/final_receipt.json",
+      "sha256": "49d0f0afd8e6193b28932bf1ac94c216e326bd5d10cd5fa6848d0df56dc7b8cf"
+    },
+    {
+      "bytes": 2366,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/paper/receipt.json",
+      "sha256": "7084a762d0eb82cc9af180b0d11055ef9f2738e7f2ab7538a4a0bd9d231dbdf9"
+    },
+    {
+      "bytes": 7025,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/python_api_repro_results.json",
+      "sha256": "4e90984876a5ebab5d0008651e0b7515151c93b0dc1fc130e3f5c4737460af5a"
+    },
+    {
+      "bytes": 11663,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/python_api_repros.py",
+      "sha256": "b35799efce1b5fefb0d51c145ea870b02e6e4cc6679e886cb9edd416bca89ebd"
+    },
+    {
+      "bytes": 621,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/quantize_stride_receipt.json",
+      "sha256": "f1a5082c2915c0b60a10c59affc02a3e385be262aea70fe2290523c8994cead1"
+    },
+    {
+      "bytes": 69106,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-minkowski-python/reading_inventory.json",
+      "sha256": "9bc83d94766185f24eb50eaed1c21688c63af2f9db3b5f9b5aa574aaddb5ea9e"
+    },
+    {
+      "bytes": 6727,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/artifact-manifest.json",
+      "sha256": "e6fad082e217bb8ff4f471d98ea2861023ba009d885a1a69ca5376522a86e303"
+    },
+    {
+      "bytes": 19134,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/audit.md",
+      "sha256": "697b2e9d8db5d3c9313c688382a419d89e924b954906343986070bac140a1416"
+    },
+    {
+      "bytes": 1049,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/native-geometry/artifact-manifest.json",
+      "sha256": "6c0561708603e5af304666d24e056dfb5c7777f134795f4ca7102cb4ad5e062a"
+    },
+    {
+      "bytes": 15514,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/native-geometry/audit.md",
+      "sha256": "81c1e24c51bfa28a41efa7aa24d2e9bc27abdf2e25ea50b5ca804d6ff6133159"
+    },
+    {
+      "bytes": 23215,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/native-geometry/native-coverage.json",
+      "sha256": "8a34630f03c59b00dc6a9a645b1c350e4d78ff0adcd29eed7ce39ba3f6179ba2"
+    },
+    {
+      "bytes": 13033,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/native-geometry/reproduce.py",
+      "sha256": "58a88c89a55c0f0987ce03f0872435a7fee91effede707105ec20a21b68f964e"
+    },
+    {
+      "bytes": 9622,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/native-geometry/reproduction-results.json",
+      "sha256": "213a3a1e5a66b0544fab97693173ed43e85cce41bebbc9a1876fb5f1b2c4a776"
+    },
+    {
+      "bytes": 848,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/paper-manifest.json",
+      "sha256": "971ecb397bd4c62af8c0bc31ada818bfbe4a11064b95f6c85cd08d8ab2f1bf5c"
+    },
+    {
+      "bytes": 3916,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/python_repros.json",
+      "sha256": "79efefad7f31509abdc82575de5e543ee8d59dea7e48f82910b29d5b8741bacd"
+    },
+    {
+      "bytes": 11770,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/python_repros.py",
+      "sha256": "edabfa7266bd59218e6eefc4c89d4b660d44b05696bdbedbcd6347795ce0db57"
+    },
+    {
+      "bytes": 9139,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/source-inventory-before.json",
+      "sha256": "d503e1330ba44ad4da0f95990e288ff775874f51739dc17f46782cba20dbfdea"
+    },
+    {
+      "bytes": 28895,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/source-read-coverage.json",
+      "sha256": "4a4a20e7a04dcb5e540be1c21bb2e849e86953886d80a3c3b7c4cfe7059160ad"
+    },
+    {
+      "bytes": 28,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/tiny-superpoint-fixture/scans/scene0000_00/scene0000_00_vh_clean_2.0.010000.segs.json",
+      "sha256": "2c5a1aff4beb416b4757bc3173694cf40a9f457cbc2c95290cf87fbb481a9a3f"
+    },
+    {
+      "bytes": 4771,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/reference-vdetr/verify_audit.py",
+      "sha256": "9a0f76e092248a85099c6f567e1b258e2599bfcd424674f3834b3b7fce910462"
+    },
+    {
+      "bytes": 1813,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/roomgenbench-dynamic/report.json",
+      "sha256": "310654bd81908d9e916281d4c9ceb047527cc8cf2e3858e017d65e9762827994"
+    },
+    {
+      "bytes": 3878,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/roomgenbench-dynamic/smoke.py",
+      "sha256": "128272942711de5044ac79cdb935c650d468e3fa3464e04fb137c17140d80c01"
+    },
+    {
+      "bytes": 2970,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/security-pip-audit-current.json",
+      "sha256": "a0e5807217cfd4ecf89a5768f679e4f2f191cfbae296e70afdda1661625d2010"
+    },
+    {
+      "bytes": 871,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/security-server-current-pins.txt",
+      "sha256": "4d3eb841f22a27eb70ba25a28fe4590b49813524cde6a2a63a8a8cf434be4577"
+    },
+    {
+      "bytes": 1121,
+      "path": "docs/evidence/fastfill-v2-audit-20261006/test-security-receipt.json",
+      "sha256": "fa071f3db600a9301c0aee71cf52560abb075a3d645ed0ce2e3e7ba988f472aa"
+    },
+    {
+      "bytes": 15043,
+      "path": "docs/fastfill-v2-data-audit.md",
+      "sha256": "ea45a24bf4a6d15e78c887ebf3d45a03be823fdd2514948606cfea8a536408b1"
+    },
+    {
+      "bytes": 11897,
+      "path": "docs/fastfill-v2-dataset-release.md",
+      "sha256": "bc7d8a56395ce85ba6230098d1207b24cf265979a54ef7593e8d055bbb0706c3"
+    },
+    {
+      "bytes": 9510,
+      "path": "docs/fastfill-v2-design-audit-20261006.md",
+      "sha256": "6221eeabe76d15dd5766265f71497aa15d54647237779a78791c9e6750a3dff5"
+    },
+    {
+      "bytes": 8515,
+      "path": "docs/fastfill-v2-direct-bbox.md",
+      "sha256": "e2f05d697ea3d00b736e3a77a5c5c960eac41f89285b044b4af381649d10abc1"
+    },
+    {
+      "bytes": 4488,
+      "path": "docs/fastfill-v2-full-review-followup.md",
+      "sha256": "abd93eb6dc99dc70b71ac9271afd2615b94bd8966e0cd4b4005ee18e2fbcfe2f"
+    },
+    {
+      "bytes": 12846,
+      "path": "docs/fastfill-v2-multisource-20261006.md",
+      "sha256": "7ffc0957145fb072b49622cf6c2106de82807e06bc7e547630e2aa176d1ddce1"
+    },
+    {
+      "bytes": 5553,
+      "path": "docs/fastfill-v2-reference-code-audit-20261006.md",
+      "sha256": "5e98611e4d0b91d7e9360de252764a45268068caa4c56bdad4a5f34324147404"
+    },
+    {
+      "bytes": 28502,
+      "path": "docs/fastfill-v2-review-20261005.md",
+      "sha256": "7f353a0f8d6d32aeebef69867ebdc46c11cf23a608920b68f5ee794d26ffe106"
+    },
+    {
+      "bytes": 7480,
+      "path": "docs/fastfill-v2-review-20261006.md",
+      "sha256": "833ec029f71381698ec829e55024fa753d70102cfa067f360ed9ee3bca47c206"
+    },
+    {
+      "bytes": 4315,
+      "path": "docs/fastfill-v2-review3-objective.md",
+      "sha256": "2bed1d15a82b1cc8014ece01590276503caf234511a74c46481b45dd94389148"
+    },
+    {
+      "bytes": 14086,
+      "path": "docs/fastfill-v2-roomgenbench-interface-20261006.md",
+      "sha256": "51347a895e18b87dda864916c727ac67a2f188099b9e6f5c85b53b4dfb8ac127"
+    },
+    {
+      "bytes": 20877,
+      "path": "docs/fastfill-v2-runbook.md",
+      "sha256": "962526dd1e37dc0dc5f432d67c8d99dfd0d66a12c72bc505212564ce6a2b9f4e"
+    },
+    {
+      "bytes": 18384,
+      "path": "docs/fastfill-v2-server-start.md",
+      "sha256": "162df07791cf85f3ed7dbdda6cd601ad28e68027a6bbcf61856c5a27a8c9d7af"
+    },
+    {
+      "bytes": 19528,
+      "path": "docs/fastfill-v2-training-pipeline.md",
+      "sha256": "d7e9b36e04448030e53a70ed8a6ce374c49f5655039d5988153d7856b8cfc1e6"
+    },
+    {
+      "bytes": 5652,
+      "path": "docs/known-issues.md",
+      "sha256": "aba11d82a61b005c4e0a673f4df88cb88757ca034b9660028b77e8367d4c5595"
+    },
+    {
+      "bytes": 2533,
+      "path": "docs/versions.md",
+      "sha256": "84821025708c73d25c54a534004533289527c6ad7cd53bff5ef58d4809c979a8"
+    },
+    {
+      "bytes": 42348,
+      "path": "fastfill/README.md",
+      "sha256": "77fb37d7a69293c4d16f92b2a586cc6b1199d3de03ac4308c8c3810eaa4ebf7b"
+    },
+    {
+      "bytes": 6763,
+      "path": "fastfill/RELEASE_v3.2.md",
+      "sha256": "9a9f938010837049085c8b2199635c8f24715e41a6266098f2e7e4538474a5b1"
+    },
+    {
+      "bytes": 0,
+      "path": "fastfill/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2033,
+      "path": "fastfill/adapters/__init__.py",
+      "sha256": "d415f5df39339acfcbc34b9a4ea94b0ece9c0b43c17019db469e1d1b54bb4b0f"
+    },
+    {
+      "bytes": 43,
+      "path": "fastfill/adapters/__main__.py",
+      "sha256": "168423f684e6ea52f57958cd85c310a14975d6f478b6794fa419d63d054c81ea"
+    },
+    {
+      "bytes": 2511,
+      "path": "fastfill/adapters/ase.py",
+      "sha256": "2e2289cd0a5b14dd6e27f2f00a44f3f18a3fc7d15d9978b284de2194bcd6eaef"
+    },
+    {
+      "bytes": 28793,
+      "path": "fastfill/adapters/hssd200.py",
+      "sha256": "1c755e3a198ab82c22f31e9dcea01c5f9b820fad542590603eaa6f647db20264"
+    },
+    {
+      "bytes": 26474,
+      "path": "fastfill/adapters/il3d_3dfront.py",
+      "sha256": "b2eb88d7c2d6b97c27d8551d8ca80dd1d4aa64f6b8fa75b1bd93a1b7cacf779a"
+    },
+    {
+      "bytes": 11847,
+      "path": "fastfill/adapters/il3d_synthetic.py",
+      "sha256": "0ac05b521162d364178495273c15cf6e3e4814e2d94150cc409d561864c8d506"
+    },
+    {
+      "bytes": 24303,
+      "path": "fastfill/adapters/interiorgs.py",
+      "sha256": "93103b3bb0f894976a1a2d0088dc20043564cc578f5255ad3afa6a022325a5cf"
+    },
+    {
+      "bytes": 10426,
+      "path": "fastfill/adapters/internscenes.py",
+      "sha256": "4350a77e704fbbb7968abcd4ff4c543b4f07c2d3ae8146568b6718fce17230ac"
+    },
+    {
+      "bytes": 628,
+      "path": "fastfill/adapters/internscenes_3rscan.py",
+      "sha256": "01b27df136a8ed837572912773365370f950827c7c6f98f5d62064f507ab7224"
+    },
+    {
+      "bytes": 786,
+      "path": "fastfill/adapters/internscenes_arkit.py",
+      "sha256": "799aabad732651e18bf0488bc7c50e08a39ca0eea889a0b24c4908348a3246e1"
+    },
+    {
+      "bytes": 1251,
+      "path": "fastfill/adapters/internscenes_mp3d.py",
+      "sha256": "c09dbffaa8b976292df07c4e019b14662757b8ae097a918c87ad08a51a0e3e06"
+    },
+    {
+      "bytes": 433,
+      "path": "fastfill/adapters/internscenes_scannet.py",
+      "sha256": "09551179b4bb936da3507478121b014e84b96c50d5d648029b37259ddb356659"
+    },
+    {
+      "bytes": 3069,
+      "path": "fastfill/adapters/m3dlayout_infinigen.py",
+      "sha256": "0c80fd506306a30ee7cd391a3297b07a1f650c781637578df25dc8fd22736ba4"
+    },
+    {
+      "bytes": 16013,
+      "path": "fastfill/adapters/mansionworld.py",
+      "sha256": "30d04a4524fb406735150e5607802adf3691243faa3a54c44d58c54ba07084da"
+    },
+    {
+      "bytes": 7808,
+      "path": "fastfill/adapters/multiscan.py",
+      "sha256": "b09cb470d3a81c940b89189536b21a52e6d5d74e4c40ddf91c86304f1d6bc9a1"
+    },
+    {
+      "bytes": 2700,
+      "path": "fastfill/adapters/optiscene_holodeck.py",
+      "sha256": "64a61204c688da7500fadbbc10be06e4863e53388918f5c1c4d725d6405f406c"
+    },
+    {
+      "bytes": 18024,
+      "path": "fastfill/adapters/sage10k.py",
+      "sha256": "eb390cd62c9e58e03e4a4484c34eb5e7de344a456ba56cbcb947b3ed8524bf32"
+    },
+    {
+      "bytes": 5735,
+      "path": "fastfill/adapters/scan2cad.py",
+      "sha256": "eb82a6a602c4e6689d9871a4baa443b69502b376b6b751c4fd3e869271b7ac04"
+    },
+    {
+      "bytes": 2743,
+      "path": "fastfill/adapters/scannetpp.py",
+      "sha256": "ce0e3a47807b4bf731600653579a877bd8db017ba6cfaebc68c0b09c46e753a5"
+    },
+    {
+      "bytes": 8537,
+      "path": "fastfill/adapters/scenesmith.py",
+      "sha256": "00465a214c8c678953107e41124ce45ffbcd17ffe805d0fdb8cb157e54186847"
+    },
+    {
+      "bytes": 910,
+      "path": "fastfill/adapters/spatialgen.py",
+      "sha256": "b9344dd58586de328ab25a3d9c66f8da7c75b22d3c7c1714674b38de8a139995"
+    },
+    {
+      "bytes": 13193,
+      "path": "fastfill/adapters/spatiallm.py",
+      "sha256": "b2bd68bd525f059c4b81adea471a6db84d133b10b1485b673e67df99c3d3ecd8"
+    },
+    {
+      "bytes": 8556,
+      "path": "fastfill/adapters/structured3d.py",
+      "sha256": "99f3d27fa229ace9730c1681713d7f090949dfe20fa1b8df365432d53c95b03c"
+    },
+    {
+      "bytes": 5643,
+      "path": "fastfill/adapters/unified.py",
+      "sha256": "6d35be8a709047b291be41a33124febdbd4feb7090396a77d2b6d274a8a475d7"
+    },
+    {
+      "bytes": 17733,
+      "path": "fastfill/anchors.py",
+      "sha256": "44a3b3275ebca87d5eb126e221fcd005e4c8e1b7cd36061bcd76c73e620a8780"
+    },
+    {
+      "bytes": 35292,
+      "path": "fastfill/build.py",
+      "sha256": "fbd36a4f841f4606ab0475e097077c4ea906046caa71aecba0295640c831939f"
+    },
+    {
+      "bytes": 5651,
+      "path": "fastfill/download.py",
+      "sha256": "327f0e063583de0e4aed3b0211822662db7cd4c61d11232f21efb50d8114aac6"
+    },
+    {
+      "bytes": 1666,
+      "path": "fastfill/download_full.sh",
+      "sha256": "728c3412248901d4eff3c4efca18913eac5a959a3fec405930f93872b5bcbf03"
+    },
+    {
+      "bytes": 13856,
+      "path": "fastfill/evaluate.py",
+      "sha256": "9ab6f0b2711ca3ecafbc101e30a98d4fad0059c7399bb831b9bfc9956e5d3646"
+    },
+    {
+      "bytes": 4025,
+      "path": "fastfill/inspect_ir.py",
+      "sha256": "b21472bc1d6d6e40691c63ba5c2679260f36a321d3cfdf03f43166b49018aab8"
+    },
+    {
+      "bytes": 48155,
+      "path": "fastfill/interface.py",
+      "sha256": "64f851dfc5836fa11eadd7d2e75cdfd55b33fd1898018a9abb529ca4e8e639e2"
+    },
+    {
+      "bytes": 3222,
+      "path": "fastfill/merge_lora.py",
+      "sha256": "036371f13039a27ec668b46e2c1a9fa62533117dc3d17459b631eba8fe2b9d4f"
+    },
+    {
+      "bytes": 483,
+      "path": "fastfill/requirements.txt",
+      "sha256": "d79656a13dbaab6143a79e0ba78be72c104a6562cc67d1c257a3f43fdec8a8fe"
+    },
+    {
+      "bytes": 21001,
+      "path": "fastfill/scene.py",
+      "sha256": "91712134b9fce57a0893af25374cc8d62b0855f9374dc8f81800b43ceb00ce60"
+    },
+    {
+      "bytes": 11625,
+      "path": "fastfill/serve.py",
+      "sha256": "24fc9fdc3abacf6d910519ae9cf021126a90cc1bdb326a27e092083d9c4791dd"
+    },
+    {
+      "bytes": 5289,
+      "path": "fastfill/split.py",
+      "sha256": "35bbfe4a2ba7b364454093de4a157a2aa2e1600d5316d03c1fa19a1ce4ed3a2f"
+    },
+    {
+      "bytes": 24463,
+      "path": "fastfill/tests/test_adapter_repairs.py",
+      "sha256": "2306c3044e1b0960fdd0af9cbc6317463d190817c6964769a1cb58cc07d64791"
+    },
+    {
+      "bytes": 8989,
+      "path": "fastfill/tests/test_build_repairs.py",
+      "sha256": "39e0447b31310a52b77fd843e571078c3e9a01937a775c71c46cff5aa533b7b0"
+    },
+    {
+      "bytes": 686,
+      "path": "fastfill/tests/test_embedded_contracts.py",
+      "sha256": "0f2c6ed37414799f3c64adeaf25bccfdf14563ef6ac6d54596097e7399ca4f0d"
+    },
+    {
+      "bytes": 24336,
+      "path": "fastfill/tests/test_qa_repairs.py",
+      "sha256": "e833fe783bd12fca3ad7c4b54959760f70f1cd4a6f6d0cfd4675026be49d040a"
+    },
+    {
+      "bytes": 20544,
+      "path": "fastfill/tests/test_runtime_repairs.py",
+      "sha256": "1a4547235a4a0f8969f06e7f96cc1a338169d5810ba5d5d4c694f95bab506aa0"
+    },
+    {
+      "bytes": 12721,
+      "path": "fastfill/tests/test_training_repairs.py",
+      "sha256": "643484f19de960c6854e7658b41fa998e30769a2d1ded5228676f3b377db1cd9"
+    },
+    {
+      "bytes": 0,
+      "path": "fastfill/tools/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2350,
+      "path": "fastfill/tools/ablation_check.py",
+      "sha256": "3a67938d6b4173f77617feb2172d83c651c50618f19342fc2fb5bbcda741c705"
+    },
+    {
+      "bytes": 19906,
+      "path": "fastfill/tools/qa_report.py",
+      "sha256": "c14defb82209c375257b93a121f9ce780610a027636c977ba9d3622f56b75045"
+    },
+    {
+      "bytes": 5732,
+      "path": "fastfill/tools/visualize.py",
+      "sha256": "df8d0f0c3c419f7b057c88ab63a53c862b5524ae6f13dd804baf6621e40ec763"
+    },
+    {
+      "bytes": 17848,
+      "path": "fastfill/train.py",
+      "sha256": "a208244735cbe2ad3297914b888df793d3319405136b763eb3eec7d3d2d2aa74"
+    },
+    {
+      "bytes": 82,
+      "path": "fastfill/v2/.coveragerc",
+      "sha256": "165cd2d15cb9e2577d6ef5f6284d179bfea1820a960083e1e88bbb2b8691e8e4"
+    },
+    {
+      "bytes": 30693,
+      "path": "fastfill/v2/README.md",
+      "sha256": "41d2082b7269aeaaf5301a7fdc49c35097884be5c02edf9b18a738d9f3e61158"
+    },
+    {
+      "bytes": 120,
+      "path": "fastfill/v2/__init__.py",
+      "sha256": "fa67d3676eafd0076d102f2b16c4f49f40cedbe56c68fb414bc469b2e79c6050"
+    },
+    {
+      "bytes": 8669,
+      "path": "fastfill/v2/adapters.py",
+      "sha256": "f998610a8ba040ae3c255c71a56e5bd47356ff8a464f0a637ab3246237d17d87"
+    },
+    {
+      "bytes": 21299,
+      "path": "fastfill/v2/audit.py",
+      "sha256": "6d6cababd3fbec6d1ede58981561aa27b968c9d115ad07738bf5b269059e520b"
+    },
+    {
+      "bytes": 13018,
+      "path": "fastfill/v2/batch.py",
+      "sha256": "cf2c77953c486c9064e7b7b0ced80c685560ba5516b3a1795f4cfb1f5e4f28aa"
+    },
+    {
+      "bytes": 7416,
+      "path": "fastfill/v2/bbox_visualization.py",
+      "sha256": "65fb0898b1f65f22fa6e9ab4b95b6c0b9369efc22349bf5f267dce1cc5026a09"
+    },
+    {
+      "bytes": 5541,
+      "path": "fastfill/v2/boxes.py",
+      "sha256": "ef0c763fd6584f5b44a2ad8d1976a3f3568b1abf57b8fdcfab562e9c0f384284"
+    },
+    {
+      "bytes": 7787,
+      "path": "fastfill/v2/cohort.py",
+      "sha256": "6e645d46eb13372f7979ace2529947a2192d8524f9df6f9a47bef8702ee78419"
+    },
+    {
+      "bytes": 176,
+      "path": "fastfill/v2/configs/direct_request.json",
+      "sha256": "ac60d02fd13fc77e9ca78013ba23cb8b2503254172c94202e4edf4c086a8f874"
+    },
+    {
+      "bytes": 773,
+      "path": "fastfill/v2/configs/qwen3_8b_bbox_full_fixed.json",
+      "sha256": "db7f68ac1ba0c70fe7be7753d907290abd7b965a512f8bba41a05fe8d57efb2b"
+    },
+    {
+      "bytes": 770,
+      "path": "fastfill/v2/configs/qwen3_8b_bbox_pilot.json",
+      "sha256": "215d2a44b4e7f4618c7c1e8e1c5748074838b2cadc7f0a1c4ab10397c50d632d"
+    },
+    {
+      "bytes": 1282,
+      "path": "fastfill/v2/configs/qwen3_8b_main_world7.json",
+      "sha256": "834654b3895a703e75213db2a692b3e385a5d79b54767802e1c6387599b7dbcd"
+    },
+    {
+      "bytes": 770,
+      "path": "fastfill/v2/configs/qwen3_8b_pilot.json",
+      "sha256": "5390b76f8fe331391484d8afb4abe6812ece6721298fcf85ade532df6426ba1d"
+    },
+    {
+      "bytes": 383,
+      "path": "fastfill/v2/configs/smoke.json",
+      "sha256": "3e3333855a5e33f19eff0932ffeddfe2013621fc15e80c78216a6f9b51748363"
+    },
+    {
+      "bytes": 719,
+      "path": "fastfill/v2/configs/structured.json",
+      "sha256": "8db1817c128987aed20fe12c06a0a34b43228cdafaab2cdf98ddcaa03a639c19"
+    },
+    {
+      "bytes": 820,
+      "path": "fastfill/v2/configs/structured_bev_box.json",
+      "sha256": "38309567463532b539af9e9ce9f9a7eba3041f4e443c7aa726c058d4531d686f"
+    },
+    {
+      "bytes": 768,
+      "path": "fastfill/v2/configs/structured_fixed.json",
+      "sha256": "f5e2e007b65c37ec956e10e3c69af87795e5430dbc83d43fde04d320935d081f"
+    },
+    {
+      "bytes": 6400,
+      "path": "fastfill/v2/data.py",
+      "sha256": "02294503f23dafbc998b246c35fc41e4f87b0f68f5e8f5cfd75f718b759a809b"
+    },
+    {
+      "bytes": 13953,
+      "path": "fastfill/v2/direct_layout.py",
+      "sha256": "9dfc2b8485883c974bcded0ed137e820bbbcca6cc82de48a5f8444a4ec5adb78"
+    },
+    {
+      "bytes": 19757,
+      "path": "fastfill/v2/evaluate.py",
+      "sha256": "52a6cc73d6b90f64cca05847a664ae4b13505a230021a071558071ebfd570e5b"
+    },
+    {
+      "bytes": 2121,
+      "path": "fastfill/v2/geometry.py",
+      "sha256": "493e8b12dba1ea9b0c31150c70be50c3b4d77aaeb42788a563a0a8d2c73d8fd9"
+    },
+    {
+      "bytes": 3927,
+      "path": "fastfill/v2/io.py",
+      "sha256": "f143697f77f7ac08a19b87cd716acc61ed227f1adc83648768a9bb5ec16f91cb"
+    },
+    {
+      "bytes": 10134,
+      "path": "fastfill/v2/legacy_bridge.py",
+      "sha256": "6341c21d6d46f6243ebe793acca1f6808c01e0b83b45af9e55b18865be817375"
+    },
+    {
+      "bytes": 11246,
+      "path": "fastfill/v2/legacy_build.py",
+      "sha256": "f61199f7454e31342894c0b6148bfdb348855e5745f139a740b4b287f823e703"
+    },
+    {
+      "bytes": 7825,
+      "path": "fastfill/v2/legacy_evidence.py",
+      "sha256": "a81e5700b356e5723e591dd95c4721cc28a2ad35786e24730cf8c9e6c0326a85"
+    },
+    {
+      "bytes": 25678,
+      "path": "fastfill/v2/legacy_verify.py",
+      "sha256": "f810f94aecc343f4f70794722ef096c16b4eab7c65a8f3ce1856f92e05f034cf"
+    },
+    {
+      "bytes": 7025,
+      "path": "fastfill/v2/losses.py",
+      "sha256": "52df596f960f319954f348e84fab14cbe5c36087397c7d5ee92ffae8a3bd2eaa"
+    },
+    {
+      "bytes": 6633,
+      "path": "fastfill/v2/matching.py",
+      "sha256": "4d265552d36a06e8936ce32ef704797b8d185f0af81e6f37c7b8f2e72ebcf07c"
+    },
+    {
+      "bytes": 18193,
+      "path": "fastfill/v2/minimal_data.py",
+      "sha256": "bbaa70f46e948167040c3215c29bb2c14a65247e3a75dd1000ee78c85116b975"
+    },
+    {
+      "bytes": 14176,
+      "path": "fastfill/v2/model.py",
+      "sha256": "a358e4c558be6ef6d5d0e64317baa9d0f2ed5a7fe73c8ad764b9d02a30084db2"
+    },
+    {
+      "bytes": 27866,
+      "path": "fastfill/v2/multisource_data.py",
+      "sha256": "cf10e1460462ce73c9fd8f7f3432fdf62373c46c5bc7806739a450e6355eaace"
+    },
+    {
+      "bytes": 33995,
+      "path": "fastfill/v2/multisource_verify.py",
+      "sha256": "3e09dd3947b075d1110fa64786434b19186c692dc4debce32109173f0f6bdea2"
+    },
+    {
+      "bytes": 2679,
+      "path": "fastfill/v2/objective.py",
+      "sha256": "54bde4b67469af4551f59b69354a18a065b0ea5f7800d567043019db6401e595"
+    },
+    {
+      "bytes": 5700,
+      "path": "fastfill/v2/predict.py",
+      "sha256": "36aa199e649f37badccb55d1ffe91cc967fe5b98b59c145338d372c47d2a9e16"
+    },
+    {
+      "bytes": 11566,
+      "path": "fastfill/v2/qualified_data.py",
+      "sha256": "010203a08211aa3b13759f8f56895dab50b483212a3127d68fa411bf227d6e5d"
+    },
+    {
+      "bytes": 5178,
+      "path": "fastfill/v2/regularizers.py",
+      "sha256": "b450309e43457ffc9341541dfa1c65006d67fd1e83c5e7c296c90584e0a8c624"
+    },
+    {
+      "bytes": 219,
+      "path": "fastfill/v2/requirements-roomgenbench.txt",
+      "sha256": "941b59b9401a3372df1d8860fd25ce8d0406e31bf555e8ca48c4544b87da6a9f"
+    },
+    {
+      "bytes": 288,
+      "path": "fastfill/v2/requirements.txt",
+      "sha256": "7a729381f5418b8fd60180006e90ff1f4ed28d452b05d47b1eecbf5af77ed1a7"
+    },
+    {
+      "bytes": 15890,
+      "path": "fastfill/v2/review_data.py",
+      "sha256": "6891d40cb33e88b1479dfc8c21c18a9d1367ee2d7ac22fffecc4f341acc598fa"
+    },
+    {
+      "bytes": 12763,
+      "path": "fastfill/v2/roomgenbench.py",
+      "sha256": "2e150ab1dd03357a4bfceb1952fbd5a149adba15a003518318d8b0d382c325c3"
+    },
+    {
+      "bytes": 25993,
+      "path": "fastfill/v2/runtime.py",
+      "sha256": "e9d69efa135b772904abe450fa43de40e9c11a881649803c3cf6f46e443d4d95"
+    },
+    {
+      "bytes": 14896,
+      "path": "fastfill/v2/schema.py",
+      "sha256": "d989614f748d1861d029291e096af48335de5fa108df50d8c881daf8b14ca124"
+    },
+    {
+      "bytes": 4409,
+      "path": "fastfill/v2/serve.py",
+      "sha256": "66839f204f4f0a5f12fc794a91e0ea151a9e988f8bf39efa9c046eeccb8bb0b3"
+    },
+    {
+      "bytes": 1691,
+      "path": "fastfill/v2/size_range.py",
+      "sha256": "0ad2e26ea419068f0e92349dd0718ee3c733028711cae2822432d0f4d5b48165"
+    },
+    {
+      "bytes": 10206,
+      "path": "fastfill/v2/tests/test_accumulation_tail.py",
+      "sha256": "8f136979b1dd6b8faeecfa93826ed1b91d41112fddf02edc004d2edf36f43a61"
+    },
+    {
+      "bytes": 5435,
+      "path": "fastfill/v2/tests/test_active_objective_distributed.py",
+      "sha256": "4fa10251d78353e37e62eb04aa8106f9010a9376652f004b6c6cfce94d3ef589"
+    },
+    {
+      "bytes": 9246,
+      "path": "fastfill/v2/tests/test_active_objective_training.py",
+      "sha256": "7ac4e5bb49251c1cee89c8be663411c563251906c7370c350721948de3fa4a1f"
+    },
+    {
+      "bytes": 5135,
+      "path": "fastfill/v2/tests/test_asset_attribute_contract.py",
+      "sha256": "266589152c8c6c9ba3a468190f8c060b9b6ac218894eab6d07070ac2c667f88a"
+    },
+    {
+      "bytes": 4551,
+      "path": "fastfill/v2/tests/test_batch.py",
+      "sha256": "4bfd87258e77adeaee8b955a7c6be63633287949552a0a2f8cf835e6c419f9c8"
+    },
+    {
+      "bytes": 709,
+      "path": "fastfill/v2/tests/test_bounded_io.py",
+      "sha256": "8e5e3cf560af60214a7b6f631037d9ed9915dabc17231babfb2957b0ce5bb1a7"
+    },
+    {
+      "bytes": 8554,
+      "path": "fastfill/v2/tests/test_complete_cohort.py",
+      "sha256": "759e8b4371f86e16b808c7dfe9d9f68172a8e2245455fb4ab01e8ae49ce84b70"
+    },
+    {
+      "bytes": 1328,
+      "path": "fastfill/v2/tests/test_constraint_schema.py",
+      "sha256": "f343f639e321dd0b0ecc2f03ba8231400d6f5b3dbb48cb41c366fbcf05e61230"
+    },
+    {
+      "bytes": 11063,
+      "path": "fastfill/v2/tests/test_data.py",
+      "sha256": "f5cc6579fecd7764960c6f1c443fb1289d18a266c322236c558a95feb75fd8bc"
+    },
+    {
+      "bytes": 23491,
+      "path": "fastfill/v2/tests/test_direct_layout.py",
+      "sha256": "226289b3b04aa606def6af4451323edde7b42b505ab63c266a463b2a4e10766a"
+    },
+    {
+      "bytes": 3086,
+      "path": "fastfill/v2/tests/test_evaluation_failure_latency.py",
+      "sha256": "96d1304717f2499489140d53c42c5f200a51c2785796148dd764754fb92bed3b"
+    },
+    {
+      "bytes": 6177,
+      "path": "fastfill/v2/tests/test_execution.py",
+      "sha256": "65f46de0054eecda1ae652ee079e00959f93a5222214b8dd09b2642ff41cce3f"
+    },
+    {
+      "bytes": 3588,
+      "path": "fastfill/v2/tests/test_fixed_capability_review.py",
+      "sha256": "791d88a1ba956be37e27f0840c437574325b790e4669b9f0b5241b0c520b7c45"
+    },
+    {
+      "bytes": 2380,
+      "path": "fastfill/v2/tests/test_geometry_core.py",
+      "sha256": "02a0045211b9981308802b9a2c33e84b39cb81cc2c1b4b6a7fa74d3dd39f8028"
+    },
+    {
+      "bytes": 4996,
+      "path": "fastfill/v2/tests/test_legacy_bridge.py",
+      "sha256": "ebb6d95629c0e8acde1efb7233e18fa5e221c3e9f5adac18adde1c1698b2b1e3"
+    },
+    {
+      "bytes": 9449,
+      "path": "fastfill/v2/tests/test_legacy_bridge_geometry.py",
+      "sha256": "180e39ab77a1ef37fc76679fd510301fc3ebe66d76841afae0747753a6e90c21"
+    },
+    {
+      "bytes": 11703,
+      "path": "fastfill/v2/tests/test_legacy_build.py",
+      "sha256": "92d9e1e15bf462cfb454f10c3f04877921f26259707cdeff11678241b9f9de19"
+    },
+    {
+      "bytes": 5274,
+      "path": "fastfill/v2/tests/test_legacy_evidence.py",
+      "sha256": "1e41608654f3d4e925fe38498375a70d2522ab290ab8528d8260f55ebdb29842"
+    },
+    {
+      "bytes": 11316,
+      "path": "fastfill/v2/tests/test_legacy_verify.py",
+      "sha256": "f9d9aeed2670f41f29bf9e57521c7eaf5418bbc5f70636e4a4906877fbcdea85"
+    },
+    {
+      "bytes": 2708,
+      "path": "fastfill/v2/tests/test_legacy_workers.py",
+      "sha256": "03e7fd8d5e382ad937ad6bde6934d711566a29d87bd8bd571c5aadc24c18d38f"
+    },
+    {
+      "bytes": 2422,
+      "path": "fastfill/v2/tests/test_loss_config_review.py",
+      "sha256": "099603ffd92e2a031b9b7ccd3f33433c84ddee801d38f391749feaf0cbb7911f"
+    },
+    {
+      "bytes": 5539,
+      "path": "fastfill/v2/tests/test_matching.py",
+      "sha256": "a9e2c1c4b031fb9f385af5324d82f942a8f482578846c9527206be60f1516885"
+    },
+    {
+      "bytes": 12717,
+      "path": "fastfill/v2/tests/test_minimal_data.py",
+      "sha256": "675acab4e21d3b4597360c3ba31ae520caa4fbae7a95be1c3ff1b7421dac7236"
+    },
+    {
+      "bytes": 6724,
+      "path": "fastfill/v2/tests/test_model.py",
+      "sha256": "13324e88996821541e77babe6f5e62e49b099ec014ce23f3a8ea06906090e758"
+    },
+    {
+      "bytes": 7798,
+      "path": "fastfill/v2/tests/test_model_review_fixes.py",
+      "sha256": "03f99b95daab953fd34277f9a8a33ba488b8ba962f4872c3f9ee5135e4bf8c0a"
+    },
+    {
+      "bytes": 11851,
+      "path": "fastfill/v2/tests/test_multisource_data.py",
+      "sha256": "2f2e32db6c70a4e547991592df6bbdace18b7f7d96ae790c6976a174da8763ec"
+    },
+    {
+      "bytes": 20651,
+      "path": "fastfill/v2/tests/test_multisource_verify.py",
+      "sha256": "8647ff1172388679e70ad21fc1b696b0705c0a80a917402d931a9365bb922cef"
+    },
+    {
+      "bytes": 3316,
+      "path": "fastfill/v2/tests/test_predict.py",
+      "sha256": "7fcf8d9d0975b03b73592b314533b3749e6ada12fb37bc5cf01d7ff580f345f5"
+    },
+    {
+      "bytes": 5848,
+      "path": "fastfill/v2/tests/test_qualified_data.py",
+      "sha256": "8ab37286fe52f98ca74fc4516a25750ccf1fcde90709973e48f9b0afb30d0631"
+    },
+    {
+      "bytes": 8515,
+      "path": "fastfill/v2/tests/test_reference_extent.py",
+      "sha256": "83186d292c2f568e622acd75ecb2d5a1b6ec9628ed28fac6d6c707c364d14eeb"
+    },
+    {
+      "bytes": 5373,
+      "path": "fastfill/v2/tests/test_regularizer_support_review.py",
+      "sha256": "139e67e3ded4479f01e85384c02bd25bfa2e8ebb699b242439d32f5e7fd372e5"
+    },
+    {
+      "bytes": 12158,
+      "path": "fastfill/v2/tests/test_review_data.py",
+      "sha256": "b74926553c2c6777652fb331cea228461c4d507a66e233615fb4c0cc6baa0522"
+    },
+    {
+      "bytes": 14728,
+      "path": "fastfill/v2/tests/test_roomgenbench.py",
+      "sha256": "da6b27ad3a31d161dd0b6d86f6ed5473dca67d9d87ac3abfc3929e13d2666f4c"
+    },
+    {
+      "bytes": 13225,
+      "path": "fastfill/v2/tests/test_runtime.py",
+      "sha256": "02347d2482a06fc2a7216dd62af5abcfc07f7214843dc207f321c946150fc657"
+    },
+    {
+      "bytes": 4193,
+      "path": "fastfill/v2/tests/test_runtime_cli.py",
+      "sha256": "a0603b9dbf10274e1c963e2165f67fd86531eca2c249ee5238364dea2303c5c6"
+    },
+    {
+      "bytes": 8805,
+      "path": "fastfill/v2/tests/test_runtime_evaluation.py",
+      "sha256": "96e3a0d59c05e97e31d749443f4d5f5c1da706558cad895006672926f9cb91a5"
+    },
+    {
+      "bytes": 645,
+      "path": "fastfill/v2/tests/test_runtime_preflight.py",
+      "sha256": "83d709adfaf41ab285cccf9a85175d32193f16dd32031e8b16eeb1981b4fd451"
+    },
+    {
+      "bytes": 10758,
+      "path": "fastfill/v2/tests/test_runtime_support_contract.py",
+      "sha256": "bef3776c0f6b0ca64f445d098439fac277bd37df7cc07bcbec268185cea5c20d"
+    },
+    {
+      "bytes": 3547,
+      "path": "fastfill/v2/tests/test_schema_review.py",
+      "sha256": "3e39974e02667fdbd44edf507c88f8a66d9c2fbf8fb355a7217115dc88f28e2d"
+    },
+    {
+      "bytes": 3023,
+      "path": "fastfill/v2/tests/test_size_range.py",
+      "sha256": "0164559ee9bbd9e029182bf211df876682d6d5a3f3792e717891afac9e740ae5"
+    },
+    {
+      "bytes": 1846,
+      "path": "fastfill/v2/tests/test_slot_pooling_review.py",
+      "sha256": "d42d8882aee7e3e38647bf5b8945f229ad05d5774d33b10500fdf9e6ee9269d9"
+    },
+    {
+      "bytes": 7596,
+      "path": "fastfill/v2/tests/test_supervision.py",
+      "sha256": "013fc6108a2b22d9d56a6d7ebb8f1c529fb615f81090430d340cc6c25e5288b4"
+    },
+    {
+      "bytes": 3516,
+      "path": "fastfill/v2/tests/test_text_record_review.py",
+      "sha256": "931dc5804053cf087de362bc67ac7fb413b4fedce8b105b6aa6dc0d46e39451d"
+    },
+    {
+      "bytes": 3776,
+      "path": "fastfill/v2/tests/test_text_sft.py",
+      "sha256": "ad0c6f575b34b659b033d28cd7b7054f0d8b310001af2819bf800ca068e9a5db"
+    },
+    {
+      "bytes": 8633,
+      "path": "fastfill/v2/tests/test_training_record_review.py",
+      "sha256": "301cb7aefb5861a69e1865cb83cbcbd41727e7beece161925811877524c6a0ba"
+    },
+    {
+      "bytes": 4861,
+      "path": "fastfill/v2/tests/test_validation.py",
+      "sha256": "b364749623670715e5bff6ae002daa08a9cea9f86caa6799af9fbe58fce7b1a3"
+    },
+    {
+      "bytes": 5520,
+      "path": "fastfill/v2/tests/test_validation_floor_front_review.py",
+      "sha256": "be77947b508730eee9b599666479aa4981db57abedbba5035890f272b45712e7"
+    },
+    {
+      "bytes": 2250,
+      "path": "fastfill/v2/tests/test_verify_bundle.py",
+      "sha256": "4fe758935f7b5a38bb35247aa209fd0763b286bdef2c1fdc229467a1c30eb698"
+    },
+    {
+      "bytes": 12079,
+      "path": "fastfill/v2/text_sft.py",
+      "sha256": "a81d51eab1dec09edec99499dd65b1e21762e03438b19d0b8f0e682871308338"
+    },
+    {
+      "bytes": 16861,
+      "path": "fastfill/v2/train.py",
+      "sha256": "2d5ad87978a3204f1f382e2bdd28d33ea15730f5806d05dc2d0089bb0f061994"
+    },
+    {
+      "bytes": 20734,
+      "path": "fastfill/v2/validation.py",
+      "sha256": "7b9affefbaaa6fe1670afa382ef74150bc47c8939155ac5236464a740dcaf6fa"
+    },
+    {
+      "bytes": 3367,
+      "path": "fastfill/v2/verify_bundle.py",
+      "sha256": "812c66c8544567157a3b01e75c84491d6b9886ab75d9826c3a010d97cf30f47a"
+    },
+    {
+      "bytes": 11838,
+      "path": "fastfill/validate.py",
+      "sha256": "ddaff1e5f6dedd949c61267780b92d2a18981926d55939ed038e1e3cdbe17158"
+    },
+    {
+      "bytes": 10,
+      "path": "requirements-dev.txt",
+      "sha256": "2b2dd8832894d04e9a90066c50d3a008b01b2916b9b5683d335865e7d402a613"
+    },
+    {
+      "bytes": 29,
+      "path": "requirements.txt",
+      "sha256": "c91703e3fc3dab43ce94cd69e9f95905c468e1bf60ebe88343f81cfc8807df71"
+    }
+  ],
+  "git_commit": "435d4e6532bdbc24d130df5edc11c5aa002a0460",
+  "old_snapshots_overwritten": false,
+  "path": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/project-current-audit-20261006",
+  "schema": "fastfill.server-code-snapshot.v1",
+  "source_archive": {
+    "compressed_bytes": 596996,
+    "scope": "README.md requirements.txt requirements-dev.txt fastfill docs .gitmodules",
+    "sha256": "2f113179dec36bb812a51851b1e5d5f47f0097f5854d232ce1bbac8fd6723412",
+    "tracked_files": 209,
+    "transfer": "server hash verified before extraction; upload removed"
+  },
+  "symlinks": [
+    {
+      "path": "RoomGenBench",
+      "resolved": "/home/jovyan/shanliantian/FastFill_v2_multisource_20261006/downstream/RoomGenBench-source",
+      "target": "../downstream/RoomGenBench-source"
+    }
+  ],
+  "working_tree_changes_included": false
+}

@@ -1,0 +1,238 @@
+{
+  "repo_id": "liantian/fastfill-v2",
+  "private": true,
+  "history_revision_retained": "35f5272330d37771eea2d11925c42aeec9d917d4",
+  "scope": "delete only these old directories at the new HEAD; historical immutable commits/local/external frozen snapshots remain; no fastfill-v3 repo action",
+  "delete_files": [
+    {
+      "rfilename": "direct-bbox-20261006/PUBLICATION_MANIFEST.json",
+      "size": 4947,
+      "blob_id": "f5401a01b545043684c34ce406a2105bfe77c659",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/README.md",
+      "size": 6767,
+      "blob_id": "6313d7d2ca41ee0c0705c83f8efa62c064086c6c",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/SHA256SUMS",
+      "size": 1691,
+      "blob_id": "3e8483ee4d5202e4fc36785240a050c238a1cb88",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/REPORT.md",
+      "size": 8720,
+      "blob_id": "de6ab1e69e266bf4220e991d6046191c36c34c30",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/derived-cardinality.json",
+      "size": 3448,
+      "blob_id": "a64b25831dc9add7cae4c942a6a552b94c17a28b",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/derived-output-verification-xy.json",
+      "size": 865,
+      "blob_id": "76f6a19f0f6536f2a6618e7daf503e0be58911c9",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/full-suite-coverage.json",
+      "size": 193597,
+      "blob_id": "e00800a32af42b30e279707c7a0d8fdd5bd707cb",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/full-suite-pytest.log",
+      "size": 4996,
+      "blob_id": "24483fb66456d03dfb01b21e230c4e13b48131bf",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/independent-data-verification.json",
+      "size": 1783,
+      "blob_id": "e3d1c490484cb0482d56d8885f9ebdcf64f4c27b",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/independent-xy-final-verification.json",
+      "size": 670,
+      "blob_id": "9d727a537ded15135712c1f4619cf2d5a8256b56",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/minimal-data-coverage.json",
+      "size": 9112,
+      "blob_id": "03b9c59110a82c51d10d8dd1311d8b22ca904e9d",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/release-readiness.json",
+      "size": 540,
+      "blob_id": "31a67e77e4eda4928dca543f98a03250c9211975",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/spatiallm-geometry-yaw.json",
+      "size": 2969,
+      "blob_id": "ade03c4afe6b65ac5bbd1f5d29e3694ea998f9db",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/audit/spatiallm-raw-control-corners.json",
+      "size": 247,
+      "blob_id": "1077a30d2b90aad46fdc22ac11d4adebd37e83be",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/data/exclusions.jsonl",
+      "size": 20437220,
+      "blob_id": "160cd6f93c0d8c834c54954212811d3d0ce6a249",
+      "lfs": {
+        "size": 20437220,
+        "sha256": "a909a9e63032d36bbdc9f873ad7697a2c879b776ca5a1d5178a674d00e11a38f",
+        "pointer_size": 133
+      }
+    },
+    {
+      "rfilename": "direct-bbox-20261006/data/manifest.json",
+      "size": 3380,
+      "blob_id": "8d44a859d679ba4d4d2c682410d449f32d22753c",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/data/test.jsonl",
+      "size": 2934060,
+      "blob_id": "8e1f48504dec4bc1989d5ae90585f5924f2f79bf",
+      "lfs": null
+    },
+    {
+      "rfilename": "direct-bbox-20261006/data/train.jsonl",
+      "size": 46214657,
+      "blob_id": "e6c0ca7117611e26c4103b3f0a576c19157369a4",
+      "lfs": {
+        "size": 46214657,
+        "sha256": "91b1cddfac16d95ee5e268dbb740f4c9bce10b36271af4ec5ec580bf9ebf02f1",
+        "pointer_size": 133
+      }
+    },
+    {
+      "rfilename": "direct-bbox-20261006/data/validation.jsonl",
+      "size": 2563750,
+      "blob_id": "e4e0adcb32cba1c1f3600c36c187788bc36ee511",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/DATASET_MANIFEST.json",
+      "size": 7629,
+      "blob_id": "bf8736a30b7d5baffbc48074e368dd4910455607",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/README.md",
+      "size": 9224,
+      "blob_id": "fb74b0bf0a22a93e825e14d3493b28bf19209d71",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/SHA256SUMS",
+      "size": 1500,
+      "blob_id": "92fc9064d9fa9b21e60ccb0b07cd9a60bc1bd6ed",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/audit/our-v3_2-migration-notes.md",
+      "size": 7726,
+      "blob_id": "0c603a9cf82c4a12c01d87957b4db9b5932dfbbd",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/audit/reviewed-cohort-verification.json",
+      "size": 359,
+      "blob_id": "fc4dc4d9910e5c454c8408f062a4c089b76e2963",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/audit/reviewed-data-verification.json",
+      "size": 2989,
+      "blob_id": "5d199105cb0ad716fa1b97feb0ecd73b11326077",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/audit/selected-full-verification.json",
+      "size": 41682,
+      "blob_id": "c02a990dc98d630ea7982a2901a2a111ac51d812",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/complete-label-cohort/manifest.json",
+      "size": 2101,
+      "blob_id": "d463f53b25cc5c0f502850b2529964c9bde4bb27",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/complete-label-cohort/test.jsonl",
+      "size": 41699,
+      "blob_id": "fa8de17c45dcf72b310339f73b2c6dab35b29a43",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/complete-label-cohort/train.jsonl",
+      "size": 461073,
+      "blob_id": "6f7efc68d81aa2a2cb7d5805ac1bd0238057d830",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/complete-label-cohort/validation.jsonl",
+      "size": 16630,
+      "blob_id": "ac9755128c6a6b8810a2a9f3bfd30578d908958d",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/selected-v3.2/manifest.json",
+      "size": 4328,
+      "blob_id": "1d3f71674375f1fdbbf4104a9416fde2c911df4e",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/selected-v3.2/rejections.jsonl",
+      "size": 60585,
+      "blob_id": "bc220cd6dcdea4ed3aa95a68aab762c1c8f39b73",
+      "lfs": null
+    },
+    {
+      "rfilename": "review3-20261006/data/selected-v3.2/test.jsonl",
+      "size": 88687295,
+      "blob_id": "914ec15758c07df7f3e586bf9502eb83d7eeecbe",
+      "lfs": {
+        "size": 88687295,
+        "sha256": "efc393bd36f1110ca3e037d89ddc70c60e7b6cd676bdc1c47b2f7f81e9648ea9",
+        "pointer_size": 133
+      }
+    },
+    {
+      "rfilename": "review3-20261006/data/selected-v3.2/train.jsonl",
+      "size": 1297196327,
+      "blob_id": "47b8c448be0a78e9ae93f983d87306213bc796c3",
+      "lfs": {
+        "size": 1297196327,
+        "sha256": "ad885654907242e9cb7b222653c9da5f9a5237c5586215e7ced94ed74c830c92",
+        "pointer_size": 135
+      }
+    },
+    {
+      "rfilename": "review3-20261006/data/selected-v3.2/validation.jsonl",
+      "size": 84619465,
+      "blob_id": "ea9b0dd9b8ded4f329a9cb1e8b10626c8a1c292d",
+      "lfs": {
+        "size": 84619465,
+        "sha256": "5a0a45d6b2d82f8fcbf3a1f2d7f908ce9531e484efdac870b869dd9164a5b773",
+        "pointer_size": 133
+      }
+    }
+  ]
+}
