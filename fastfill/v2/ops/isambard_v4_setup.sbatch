@@ -1,6 +1,7 @@
 #!/bin/bash
 # FastFill v4, one-time Isambard-AI setup on a compute node (the login nodes have no GPU), from the v4 checkout root:
-# conda env and Qwen3-8B (linked from the earlier checkout FASTFILL_OLD when it has them, else made / downloaded), the
+# kept apart from the v3 checkout: only the conda env is shared (linked from FASTFILL_ENV, default the earlier checkout's
+# env/; made here when missing); Qwen3-8B is copied from that checkout when it has it, else downloaded; the
 # fixed-object data from Hugging Face (sha256-pinned), RoomGenBench requests, the CPU test suite, then a GPU smoke of the
 # E configuration (pose conditioning + support head, max_objects 256): train, resume, evaluate, remasking decode.
 # Writes runs/isambard/v4-setup.ok on success. Rerunning skips what is already in place.
@@ -11,16 +12,17 @@
 #SBATCH --output=runs/isambard/%x-%j.out
 set -euo pipefail
 cd "$SLURM_SUBMIT_DIR"
-export PIP_NO_CACHE_DIR=1 HF_HOME=${HF_HOME:-$HOME/.cache/huggingface}
+export PIP_NO_CACHE_DIR=1 HF_HOME=${HF_HOME:-$HOME/.cache/huggingface} PYTHONPATH=$PWD
 OLD=${FASTFILL_OLD:-$PWD/../fastfill}
+SHARED_ENV=${FASTFILL_ENV:-$OLD/env}
 rm -f runs/isambard/v4-setup.ok
 uname -m; nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv
 git submodule update --init RoomGenBench
 mkdir -p models data runs/isambard
 
 if [ ! -e env ]; then
-  if [ -x "$OLD/env/bin/python" ]; then
-    ln -s "$OLD/env" env && echo "env -> $OLD/env"
+  if [ -x "$SHARED_ENV/bin/python" ]; then
+    ln -s "$SHARED_ENV" env && echo "env -> $SHARED_ENV"
   else
     ~/miniforge3/bin/conda create -y -p "$PWD/env" python=3.12 pip
     env/bin/pip install 'torch==2.13.0+cu126' --index-url https://download.pytorch.org/whl/cu126 --extra-index-url https://pypi.org/simple
@@ -29,12 +31,14 @@ if [ ! -e env ]; then
   fi
 fi
 env/bin/pip freeze > runs/isambard/v4-env-freeze.txt
+# the shared env must run this checkout's code, never the v3 checkout's (e.g. an editable install of it)
+env/bin/python -c "import fastfill, os, sys; f = os.path.realpath(fastfill.__file__); print('fastfill from', f); sys.exit(not f.startswith(os.path.realpath(os.getcwd()) + '/'))"
 env/bin/python -c "import platform, torch, transformers, peft, accelerate; assert torch.cuda.is_available(); print(platform.machine(), torch.__version__, transformers.__version__, peft.__version__, accelerate.__version__, torch.cuda.get_device_name(0), torch.cuda.is_bf16_supported())"
 
 H=env/bin/hf
 if [ ! -e models/Qwen3-8B ]; then
   if [ -f "$OLD/models/Qwen3-8B/model.safetensors.index.json" ]; then
-    ln -s "$OLD/models/Qwen3-8B" models/Qwen3-8B && echo "models/Qwen3-8B -> $OLD/models/Qwen3-8B"
+    cp -rL "$OLD/models/Qwen3-8B" models/.copy-Qwen3-8B && mv models/.copy-Qwen3-8B models/Qwen3-8B && echo "copied $OLD/models/Qwen3-8B"
   else
     $H download Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 --local-dir models/Qwen3-8B
   fi

@@ -13,6 +13,7 @@
 #SBATCH --output=runs/isambard/%x-%j.out
 set -euo pipefail
 cd "$SLURM_SUBMIT_DIR"
+export PYTHONPATH=$PWD  # this checkout's code, also with the env shared with v3
 export PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=8 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 O=runs/ablation-v4; mkdir -p $O
 P=env/bin/python

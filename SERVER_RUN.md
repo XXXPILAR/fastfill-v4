@@ -15,7 +15,9 @@ bash fastfill/v2/ops/isambard_v4_submit.sh       # base / D / E 三组，各占�
 sbatch fastfill/v2/ops/isambard_v4_ablation.sbatch
 ```
 
-- 旧 checkout（默认 `../fastfill`，可用 `FASTFILL_OLD=...` 指定）里有 `env/` 和 `models/Qwen3-8B` 时直接软链接复用，不重装、不重下。
+- 和 V3 分开：代码、数据（`data/v4fixed`）、模型权重、runs、日志、上传的模型仓库都在这个 checkout 里，V3 的目录一个文件也不改。
+  只共用 conda 环境：软链接到 `FASTFILL_ENV`（默认 `../fastfill/env`），setup 只读它、不往里装包，并检查它跑的是本 checkout 的代码（所有作业都设 `PYTHONPATH=$PWD`）。
+  Qwen3-8B 从 `../fastfill/models/Qwen3-8B` 复制一份（`FASTFILL_OLD=...` 改来源），没有就重新下载。
 - 进度看 `runs/autorun-v4-{base,D,E}/STATUS.json` 和 `runs/isambard/ff4-*.out`；最好的模型以私有方式上传到 `XXXpilar/fastfill-v4-models`（用 `FASTFILL_MODEL_REPO` 改）。
 - 消融结果在 `runs/ablation-v4/`（验证集里按种子抽 1000 个房间，`ROWS=...` 可改）。
 
