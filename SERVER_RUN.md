@@ -19,7 +19,8 @@ sbatch fastfill/v2/ops/isambard_v4_ablation.sbatch
   只共用 conda 环境：软链接到 `FASTFILL_ENV`（默认 `../fastfill/env`），setup 只读它、不往里装包，并检查它跑的是本 checkout 的代码（所有作业都设 `PYTHONPATH=$PWD`）。
   Qwen3-8B 从 `../fastfill/models/Qwen3-8B` 复制一份（`FASTFILL_OLD=...` 改来源），没有就重新下载。
 - 进度看 `runs/autorun-v4-{base,D,E}/STATUS.json` 和 `runs/isambard/ff4-*.out`；最好的模型以私有方式上传到 `XXXpilar/fastfill-v4-models`（用 `FASTFILL_MODEL_REPO` 改）。
-- 消融结果在 `runs/ablation-v4/`（验证集里按种子抽 1000 个房间，`ROWS=...` 可改）。
+- 消融结果在 `runs/ablation-v4/`（验证集里按种子抽 1000 个房间，`ROWS=...` 可改），另在 GPT-5.6 回答过的 20 个房间（`fastfill/v2/ops/probe20/`）上对比；
+  汇总表 `runs/ablation-v4/REPORT.md`。哪组没跑完就用它最新导出的 model-step，没有的组跳过，不会让整个消融失败。
 
 ## 下载代码和数据
 
