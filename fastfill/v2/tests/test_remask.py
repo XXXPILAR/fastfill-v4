@@ -8,7 +8,7 @@ from fastfill.v2.batch import TinyTokenizer, augment_sample, collate_samples
 from fastfill.v2.cell_costs import cell_cost_maps
 from fastfill.v2.evaluate import serialize_predictions
 from fastfill.v2.model import ModelConfig, build_model, model_inputs
-from fastfill.v2.remask import open_after, remask_predictions
+from fastfill.v2.remask import INNER_M, open_after, remask_predictions
 from fastfill.v2.schema import validate_condition
 from fastfill.v2.tests.test_cell_costs import DOOR, L_ROOM, SQUARE, cell, room
 from fastfill.v2.tests.test_masked_layout import ONLY_GIVEN, TINY, given_sample
@@ -206,6 +206,49 @@ def test_only_objects_sharing_a_height_interval_block_each_other():
     model.decode = stacked
     cells = chosen_cells(remask_predictions(model, b, rounds=1, legal=True), 3)
     assert cells == [cell(8, 8), cell(8, 8), cell(2, 2)]
+
+
+def lamp_on_bed(z, prefer_far=False):
+    """bed_0 (1 x 1 x 0.5 m) wants cell (8, 8); bed_1, a 0.4 m tall lamp declared on bed_0 with its bottom at ``z``,
+    wants the same cell (or, with ``prefer_far``, cell (2, 2)) then cell (2, 2) / (13, 13)."""
+    b = collate_samples([floor_sample(room(SQUARE), 2)], TinyTokenizer())
+    b["conditions"][0]["objects"][1]["support_parent"] = "bed_0"
+    first = cell(2, 2) if prefer_far else cell(8, 8)
+    model = model_with_logits(lambda i: peaked(cell(8, 8), cell(2, 2)) if i == 0 else peaked(first, cell(13, 13)))
+    decode = model.decode
+    height = b["scale"][0, 2]
+
+    def lamp(encoded, **kwargs):
+        out = decode(encoded, **kwargs)
+        out["position_normalized"][0, 1, 2] = z / height
+        out["size"][0, 1, 2] = .4
+        return out
+    model.decode = lamp
+    return model, b
+
+
+@pytest.mark.parametrize("rounds", (1, 2))
+@pytest.mark.parametrize("prefer_far", (False, True))
+def test_a_declared_child_ends_on_its_parent_even_when_their_heights_overlap(rounds, prefer_far):
+    # the lamp's predicted bottom (0.47 m) is inside the bed's height interval (0-0.5 m): as an obstacle the bed used
+    # to push it to another cell; now it is placed on the bed's top, inside the bed's footprint
+    model, b = lamp_on_bed(.47, prefer_far)
+    stats = {}
+    layout = serialize_predictions(remask_predictions(model, b, rounds=rounds, legal=True, stats=stats), b, grid_decode="argmax")[0]
+    bed, lamp = layout["objects"]
+    assert stats["attached"] >= 1
+    assert abs(lamp["bottom_center_m"][2] - (bed["bottom_center_m"][2] + .5)) < 1e-6
+    assert all(abs(lamp["bottom_center_m"][k] - bed["bottom_center_m"][k]) <= .5 + 1e-6 for k in (0, 1))
+
+
+def test_a_child_well_below_its_parents_top_stays_inside_it():
+    # a book predicted 0.2 m above the bottom of a 0.5 m bookcase (more than INNER_M below its top): it keeps its
+    # height inside the parent, like evaluate.spread_grid_xy, and only its centre is pulled into the footprint
+    assert .5 - .2 > INNER_M
+    model, b = lamp_on_bed(.2, prefer_far=True)
+    bed, book = serialize_predictions(remask_predictions(model, b, rounds=1, legal=True), b, grid_decode="argmax")[0]["objects"]
+    assert abs(book["bottom_center_m"][2] - .2) < 1e-6
+    assert all(abs(book["bottom_center_m"][k] - bed["bottom_center_m"][k]) <= .5 + 1e-6 for k in (0, 1))
 
 
 def test_fixed_objects_block_floor_slots_under_their_height_only():

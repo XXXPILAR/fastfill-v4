@@ -23,6 +23,15 @@ MaskGIT / SceneNAT confidence-first iterative decoding at the object level, for 
 5. A ``support_head`` model's support prediction (floor or not) stands in for an undeclared ``support_parent``
    in deciding which objects block doors, and its ``support_logits`` ride along with the committed rows.
 
+6. Supports: an object standing on another one (its declared ``support_parent``, a hard ``on`` constraint, or, for a
+   ``support_head`` model, its predicted parent) takes its cell without the legality filter and blocks nothing while
+   the rounds run (its parent's footprint is no obstacle to it); after the last round ``attach_supports`` puts it on
+   its parent like ``evaluate.spread_grid_xy`` does: bottom on the parent's top (or kept inside the parent, between
+   its bottom and ``INNER_M`` below its top: a book on a shelf), centre inside the parent's footprint (the nearest
+   point of it, in the parent's frame, when the decoded one is outside), parents before their children. One declared
+   (or predicted) on the floor stands on it. Without this the rounds treated a lamp's own nightstand as an occupied
+   cell and committed the lamp elsewhere in the room, and argmax serialization never put it back.
+
 The result is a predictions dict like the model's: every slot carries the rows (cell logits restricted to its
 legal cells, residuals, z, size, yaw logits and residuals) of the round that committed it, so
 ``evaluate.serialize_predictions(..., grid_decode="argmax")`` writes exactly the committed poses. ``rounds=1``
@@ -42,8 +51,11 @@ from fastfill.v2.cell_costs import (THIN_HEIGHT_M, RoomRaster, box_corners, cell
                                    footprint_offsets, vertical_extent)
 from fastfill.v2.geometry import decode_grid_position, decode_yaw
 from fastfill.v2.masked_layout import pose_features
+from fastfill.v2.support import decode_support_parents
+from fastfill.v2.validation import effective_support_requests
 
 FLOOR_PREDICTION_TOLERANCE_M = .15  # a predicted bottom this close to the floor stands on it
+INNER_M = .05  # a child more than this below its parent's top (and not below its bottom) stays inside the parent
 ILLEGAL_LOGIT = -1e4
 ROW_KEYS = ("position_normalized", "size", "yaw_logits", "yaw_residuals", "position_cell_logits", "position_cell_residuals")
 
@@ -90,6 +102,64 @@ def _blocks(condition_object: dict, z_world: float, floor_z, height: float, pred
     return on_floor and height > THIN_HEIGHT_M
 
 
+def support_parents(condition: dict, support_logits=None) -> list:
+    """One parent per request (slot order): the declared one (``support_parent`` or a hard ``on``), else the support
+    head's prediction when ``support_logits`` (n x classes) is given, else None."""
+    requests = effective_support_requests(condition)
+    if support_logits is None:
+        return [r.get("support_parent") for r in requests]
+    return decode_support_parents(support_logits[:len(requests)].detach().cpu(), requests)
+
+
+def attach_supports(out: dict, batch: dict, parents: list) -> int:
+    """Put every slot whose parent is another request or a fixed object on that parent, and every slot whose parent is
+    "floor" on the floor, in ``out["position_normalized"]`` (in place, parents first); returns the slots moved.
+    ``parents``: per row, ``support_parents`` of its condition."""
+    origin, scale = batch["origin"].cpu().double(), batch["scale"].cpu().double()
+    yaw = decode_yaw(out["yaw_logits"].float(), out["yaw_residuals"].float()).cpu().double()
+    moved = 0
+    for row, condition in enumerate(batch["conditions"]):
+        ids = [o["id"] for o in condition["objects"]]
+        slot = {ident: i for i, ident in enumerate(ids)}
+        fixed = {f["id"]: f for f in condition["room"].get("fixed_objects", ())}
+        floor = condition["room"].get("floor_z_m")
+        world = (out["position_normalized"][row, :len(ids)].cpu().double() * scale[row] + origin[row]).numpy()
+        size = out["size"][row, :len(ids)].float().cpu().double().numpy()
+
+        def depth(i):
+            chain, seen = 0, set()
+            while parents[row][i] in slot and i not in seen:
+                seen.add(i)
+                i, chain = slot[parents[row][i]], chain + 1
+            return chain
+
+        for i in sorted(range(len(ids)), key=depth):
+            parent = parents[row][i]
+            before = world[i].copy()
+            if parent == "floor" and isinstance(floor, (int, float)):
+                world[i, 2] = floor
+            elif parent in slot or parent in fixed:
+                if parent in slot:
+                    j = slot[parent]
+                    centre, box, angle = world[j], size[j], float(yaw[row, j])
+                else:
+                    f = fixed[parent]
+                    centre, box, angle = np.asarray(f["bottom_center_m"], float), np.asarray(f["size_local_m"], float), f["yaw_rad"]
+                c, s = math.cos(angle), math.sin(angle)
+                d = world[i, :2] - centre[:2]
+                local = np.array((c * d[0] + s * d[1], c * d[1] - s * d[0]))
+                local = np.clip(local, -box[:2] / 2, box[:2] / 2)  # the nearest point of the parent's footprint
+                world[i, :2] = centre[:2] + np.array((c * local[0] - s * local[1], s * local[0] + c * local[1]))
+                top = centre[2] + box[2]
+                if not centre[2] <= world[i, 2] < top - INNER_M:  # else: inside the parent, e.g. on a shelf
+                    world[i, 2] = top
+            if not np.allclose(before, world[i]):
+                moved += 1
+        out["position_normalized"][row, :len(ids)] = torch.from_numpy((world - origin[row].numpy()) / scale[row].numpy()).to(
+            out["position_normalized"].dtype).to(out["position_normalized"].device)
+    return moved
+
+
 @torch.no_grad()
 def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = True, retract: bool = False,
                        door_depth_m: float = .8, stats: dict | None = None) -> dict:
@@ -123,7 +193,7 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
     swap = batch.get("size_axis_swap_allowed", torch.zeros((b, n), dtype=torch.bool)).to(device)
     total = (slot_mask & ~pinned).sum(1).tolist()
     score = [{} for _ in range(b)]  # committed slot -> its confidence when committed (SceneNAT keeps it)
-    log = {"decode_calls": 0, "commits_per_round": [], "retractions_per_round": []}
+    log = {"decode_calls": 0, "commits_per_round": [], "retractions_per_round": [], "attached": 0}
     for r in range(rounds):
         kwargs = dict(fixed)
         if model.config.pose_conditioning:
@@ -146,13 +216,15 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
             yaw_row = yaw[row].cpu().double().numpy()
             z_world = (pred["position_normalized"][row, :, 2].float().cpu().double() * scale[row, 2] + origin[row, 2]).numpy()
             predicted_floor = (support[row].argmax(-1) == 0).tolist() if support is not None else [None] * n
+            parents = support_parents(batch["conditions"][row], support[row] if support is not None else None)
+            on_object = {i for i, p in enumerate(parents) if p is not None and p not in ("floor", "wall")}
             blocks = {i: _blocks(objects[i], z_world[i], room.get("floor_z_m"), size[i, 2], predicted_floor[i])
                       for i in open_slots}
             z_range = {i: vertical_extent(z_world[i], size[i, 2], options) for i in open_slots}
             version = [0]  # bumped whenever the occupied footprints change
 
             def restricted(i):
-                if not legal:
+                if not legal or i in on_object:  # placed on its parent after the rounds (attach_supports)
                     return raw[row, i]
                 costs, _ = cell_cost_maps(room, [(size[i, :2].tolist(), float(yaw_row[i]), blocks[i], z_range[i])], options,
                                           raster=rasters[row])
@@ -192,7 +264,7 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
                     logits[i] = restricted(i)  # footprints committed (or retracted) since the logits were computed
                 cell_logits = logits[i]
                 xy = decode_grid_position(cell_logits[None], pred["position_cell_residuals"][row, i][None].float(), grid)[0]
-                if legal:
+                if legal and i not in on_object:
                     lo, sc = origin[row, :2].numpy(), scale[row, :2].numpy()
                     world = _snap(rasters[row], candidates[row][int(cell_logits.argmax())], xy.cpu().double().numpy() * sc + lo,
                                   size[i], float(yaw_row[i]), blocks[i], z_range[i], options)
@@ -208,7 +280,7 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
                 committed[row, i] = True
                 score[row][i] = confidence[i]
                 commits += 1
-                if legal:
+                if legal and i not in on_object:
                     world = position[:2].cpu().double().numpy() * scale[row, :2].numpy() + origin[row, :2].numpy()
                     rasters[row].block(box_corners(world, size[i, :2], float(yaw_row[i])), z_range[i])
                     footprints[row][i] = rasters[row].blockers[-1]
@@ -217,6 +289,8 @@ def remask_predictions(model, batch: dict, *, rounds: int = 4, legal: bool = Tru
         log["retractions_per_round"].append(retractions)
         if not (slot_mask & ~committed).any():
             break
+    log["attached"] = attach_supports(out, batch, [support_parents(c, out["support_logits"][row] if "support_logits" in out else None)
+                                                   for row, c in enumerate(batch["conditions"])])
     if stats is not None:
         stats.update(log)
     return out
