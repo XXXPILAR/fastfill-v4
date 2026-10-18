@@ -126,13 +126,23 @@ def main(argv=None):
     shown = [support_labels(migrate_legacy_row(json.loads(l))) for l in lines]  # what the decoded condition declares
     rows = a.output / "rows.jsonl"
     rows.write_text("\n".join(lines) + "\n")
-    batches = [to_device(collate_samples([migrate_legacy_row(json.loads(l))], tokenizer, max_length=max_length,
-                                         max_objects=model.config.max_objects), a.device) for l in lines]
+    batches = []
+    for l in lines:  # a room over the object or context budget is a failed request, as in evaluate, not a crash
+        try:
+            batches.append(to_device(collate_samples([migrate_legacy_row(json.loads(l))], tokenizer, max_length=max_length,
+                                                     max_objects=model.config.max_objects), a.device))
+        except ValueError as e:
+            batches.append(str(e))
+    print(f"{sum(isinstance(b, str) for b in batches)} of {len(lines)} rows over the model's budget (max_length "
+          f"{max_length}, max_objects {model.config.max_objects}): failed requests", flush=True)
     table = {}
     for mode in a.modes:
         predictions, seconds = [], []
         for batch in batches:
             start = time.perf_counter()
+            if isinstance(batch, str):
+                predictions.append({"layout": None, "error": batch, "latency_s": None})
+                continue
             try:
                 layout, error = decode(model, batch, mode), None
             except ValueError as e:
@@ -146,7 +156,7 @@ def main(argv=None):
                         "--output", str(scored)], check=True, stdout=subprocess.DEVNULL)
         report = json.loads((scored / "report.json").read_text())
         table[mode] = {**summarize(report),
-                       "decode_ms": 1000 * sum(seconds) / len(seconds), "failed": sum(r["layout"] is None for r in predictions),
+                       "decode_ms": 1000 * sum(seconds) / max(len(seconds), 1), "failed": sum(r["layout"] is None for r in predictions),
                        "support_accuracy": support_accuracy(predictions, labels, shown)}
         print(mode, json.dumps({k: round(v, 4) if isinstance(v, float) else v for k, v in table[mode].items()}), flush=True)
         table[mode]["by_constraints"] = {name: {"requests": cohort["requests"], **summarize(cohort)}
