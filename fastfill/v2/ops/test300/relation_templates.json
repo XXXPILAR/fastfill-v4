@@ -1,0 +1,478 @@
+{
+ "train": "../data_v4_v2_fixed/train.jsonl",
+ "rooms_sampled": 18986,
+ "seed": 0,
+ "fraction": 0.15,
+ "min_rooms": 150,
+ "templates": [
+  {
+   "a": "nightstand",
+   "b": "bed",
+   "kind": "near",
+   "max_gap_m": 0.023,
+   "rooms": 2305
+  },
+  {
+   "a": "bed",
+   "b": "nightstand",
+   "kind": "near",
+   "max_gap_m": 0.008,
+   "rooms": 2305
+  },
+  {
+   "a": "wardrobe",
+   "b": "bed",
+   "kind": "near",
+   "max_gap_m": 1.0,
+   "rooms": 1823
+  },
+  {
+   "a": "wardrobe",
+   "b": "bed",
+   "kind": "faces",
+   "share": 0.857,
+   "rooms": 1823
+  },
+  {
+   "a": "bed",
+   "b": "wardrobe",
+   "kind": "near",
+   "max_gap_m": 0.9,
+   "rooms": 1823
+  },
+  {
+   "a": "chair",
+   "b": "table",
+   "kind": "near",
+   "max_gap_m": 0.538,
+   "rooms": 1565
+  },
+  {
+   "a": "chair",
+   "b": "table",
+   "kind": "faces",
+   "share": 0.735,
+   "rooms": 1565
+  },
+  {
+   "a": "bed",
+   "b": "chair",
+   "kind": "near",
+   "max_gap_m": 0.954,
+   "rooms": 819
+  },
+  {
+   "a": "dining chair",
+   "b": "dining table",
+   "kind": "near",
+   "max_gap_m": 0.075,
+   "rooms": 795
+  },
+  {
+   "a": "dining chair",
+   "b": "dining table",
+   "kind": "faces",
+   "share": 0.85,
+   "rooms": 795
+  },
+  {
+   "a": "dining table",
+   "b": "dining chair",
+   "kind": "near",
+   "max_gap_m": 0.108,
+   "rooms": 795
+  },
+  {
+   "a": "coffee table",
+   "b": "sofa",
+   "kind": "near",
+   "max_gap_m": 0.397,
+   "rooms": 712
+  },
+  {
+   "a": "sofa",
+   "b": "coffee table",
+   "kind": "near",
+   "max_gap_m": 0.498,
+   "rooms": 712
+  },
+  {
+   "a": "sofa",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.901,
+   "rooms": 712
+  },
+  {
+   "a": "tv stand",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.95,
+   "rooms": 638
+  },
+  {
+   "a": "king size bed",
+   "b": "nightstand",
+   "kind": "near",
+   "max_gap_m": 0.063,
+   "rooms": 634
+  },
+  {
+   "a": "nightstand",
+   "b": "king size bed",
+   "kind": "near",
+   "max_gap_m": 0.081,
+   "rooms": 634
+  },
+  {
+   "a": "desk",
+   "b": "chair",
+   "kind": "near",
+   "max_gap_m": 0.208,
+   "rooms": 621
+  },
+  {
+   "a": "wardrobe",
+   "b": "king size bed",
+   "kind": "faces",
+   "share": 0.934,
+   "rooms": 578
+  },
+  {
+   "a": "king size bed",
+   "b": "wardrobe",
+   "kind": "near",
+   "max_gap_m": 0.973,
+   "rooms": 578
+  },
+  {
+   "a": "wardrobe",
+   "b": "desk",
+   "kind": "faces",
+   "share": 0.709,
+   "rooms": 424
+  },
+  {
+   "a": "tv stand",
+   "b": "side table",
+   "kind": "faces",
+   "share": 0.788,
+   "rooms": 414
+  },
+  {
+   "a": "armchair",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.823,
+   "rooms": 407
+  },
+  {
+   "a": "coffee table",
+   "b": "armchair",
+   "kind": "near",
+   "max_gap_m": 0.75,
+   "rooms": 407
+  },
+  {
+   "a": "sofa",
+   "b": "side table",
+   "kind": "near",
+   "max_gap_m": 0.944,
+   "rooms": 379
+  },
+  {
+   "a": "side table",
+   "b": "sofa",
+   "kind": "near",
+   "max_gap_m": 0.908,
+   "rooms": 379
+  },
+  {
+   "a": "tv stand",
+   "b": "armchair",
+   "kind": "faces",
+   "share": 0.751,
+   "rooms": 352
+  },
+  {
+   "a": "bed",
+   "b": "stool",
+   "kind": "near",
+   "max_gap_m": 0.932,
+   "rooms": 342
+  },
+  {
+   "a": "tv cabinet",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.946,
+   "rooms": 341
+  },
+  {
+   "a": "tv cabinet",
+   "b": "sofa",
+   "kind": "faces",
+   "share": 0.785,
+   "rooms": 334
+  },
+  {
+   "a": "sofa",
+   "b": "tv cabinet",
+   "kind": "faces",
+   "share": 0.755,
+   "rooms": 334
+  },
+  {
+   "a": "coffee table",
+   "b": "three seat sofa",
+   "kind": "near",
+   "max_gap_m": 0.575,
+   "rooms": 330
+  },
+  {
+   "a": "three seat sofa",
+   "b": "coffee table",
+   "kind": "near",
+   "max_gap_m": 0.585,
+   "rooms": 330
+  },
+  {
+   "a": "three seat sofa",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.908,
+   "rooms": 330
+  },
+  {
+   "a": "wardrobe",
+   "b": "chair",
+   "kind": "faces",
+   "share": 0.737,
+   "rooms": 316
+  },
+  {
+   "a": "wardrobe",
+   "b": "dressing table",
+   "kind": "faces",
+   "share": 0.745,
+   "rooms": 307
+  },
+  {
+   "a": "tv stand",
+   "b": "three seat sofa",
+   "kind": "faces",
+   "share": 0.95,
+   "rooms": 285
+  },
+  {
+   "a": "three seat sofa",
+   "b": "tv stand",
+   "kind": "faces",
+   "share": 0.941,
+   "rooms": 285
+  },
+  {
+   "a": "dressing table",
+   "b": "bed",
+   "kind": "near",
+   "max_gap_m": 0.758,
+   "rooms": 269
+  },
+  {
+   "a": "bed",
+   "b": "dressing table",
+   "kind": "near",
+   "max_gap_m": 0.764,
+   "rooms": 269
+  },
+  {
+   "a": "toilet",
+   "b": "shower room",
+   "kind": "near",
+   "max_gap_m": 0.366,
+   "rooms": 264
+  },
+  {
+   "a": "shower room",
+   "b": "toilet",
+   "kind": "near",
+   "max_gap_m": 0.364,
+   "rooms": 264
+  },
+  {
+   "a": "sectional sofa",
+   "b": "coffee table",
+   "kind": "near",
+   "max_gap_m": 0.27,
+   "rooms": 250
+  },
+  {
+   "a": "sectional sofa",
+   "b": "coffee table",
+   "kind": "faces",
+   "share": 0.952,
+   "rooms": 250
+  },
+  {
+   "a": "coffee table",
+   "b": "sectional sofa",
+   "kind": "near",
+   "max_gap_m": 0.274,
+   "rooms": 250
+  },
+  {
+   "a": "wine cabinet",
+   "b": "dining table combination",
+   "kind": "faces",
+   "share": 0.86,
+   "rooms": 223
+  },
+  {
+   "a": "tv stand",
+   "b": "nightstand",
+   "kind": "faces",
+   "share": 0.942,
+   "rooms": 222
+  },
+  {
+   "a": "nightstand",
+   "b": "tv stand",
+   "kind": "faces",
+   "share": 0.947,
+   "rooms": 222
+  },
+  {
+   "a": "sofa",
+   "b": "armchair",
+   "kind": "near",
+   "max_gap_m": 0.806,
+   "rooms": 219
+  },
+  {
+   "a": "three seat sofa",
+   "b": "side table",
+   "kind": "near",
+   "max_gap_m": 0.289,
+   "rooms": 200
+  },
+  {
+   "a": "side table",
+   "b": "three seat sofa",
+   "kind": "near",
+   "max_gap_m": 0.359,
+   "rooms": 200
+  },
+  {
+   "a": "bookcase",
+   "b": "desk",
+   "kind": "faces",
+   "share": 0.703,
+   "rooms": 197
+  },
+  {
+   "a": "tv cabinet",
+   "b": "side table",
+   "kind": "faces",
+   "share": 0.902,
+   "rooms": 189
+  },
+  {
+   "a": "king size bed",
+   "b": "tv stand",
+   "kind": "faces",
+   "share": 0.957,
+   "rooms": 186
+  },
+  {
+   "a": "tv stand",
+   "b": "king size bed",
+   "kind": "faces",
+   "share": 0.979,
+   "rooms": 186
+  },
+  {
+   "a": "wardrobe",
+   "b": "dining table combination",
+   "kind": "faces",
+   "share": 0.716,
+   "rooms": 182
+  },
+  {
+   "a": "seat",
+   "b": "table",
+   "kind": "near",
+   "max_gap_m": 0.493,
+   "rooms": 179
+  },
+  {
+   "a": "dining table combination",
+   "b": "bed",
+   "kind": "near",
+   "max_gap_m": 0.484,
+   "rooms": 168
+  },
+  {
+   "a": "bed",
+   "b": "dining table combination",
+   "kind": "near",
+   "max_gap_m": 0.488,
+   "rooms": 168
+  },
+  {
+   "a": "box",
+   "b": "bottle",
+   "kind": "near",
+   "max_gap_m": 0.443,
+   "rooms": 166
+  },
+  {
+   "a": "bottle",
+   "b": "box",
+   "kind": "near",
+   "max_gap_m": 0.752,
+   "rooms": 166
+  },
+  {
+   "a": "armchair",
+   "b": "three seat sofa",
+   "kind": "near",
+   "max_gap_m": 0.674,
+   "rooms": 159
+  },
+  {
+   "a": "three seat sofa",
+   "b": "armchair",
+   "kind": "near",
+   "max_gap_m": 0.53,
+   "rooms": 159
+  },
+  {
+   "a": "bed",
+   "b": "bedside table",
+   "kind": "near",
+   "max_gap_m": 0.153,
+   "rooms": 157
+  },
+  {
+   "a": "bedside table",
+   "b": "bed",
+   "kind": "near",
+   "max_gap_m": 0.19,
+   "rooms": 157
+  },
+  {
+   "a": "tv stand",
+   "b": "sectional sofa",
+   "kind": "faces",
+   "share": 0.987,
+   "rooms": 151
+  },
+  {
+   "a": "sectional sofa",
+   "b": "tv stand",
+   "kind": "faces",
+   "share": 0.967,
+   "rooms": 151
+  }
+ ]
+}
