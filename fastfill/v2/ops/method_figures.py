@@ -34,7 +34,7 @@ from fastfill.v2.ops.remask_ablation import summarize  # noqa: E402
 from fastfill.v2.schema import migrate_legacy_row  # noqa: E402
 
 HEADLINE = (("clean_room_rate", "Clean rooms (%) ↑", 100, "{:.1f}"), ("constraint_pass", "Constraints satisfied (%) ↑", 100, "{:.1f}"),
-            ("REL", "Relation plausibility (%) ↑", 100, "{:.1f}"), ("ACC", "Accessible objects (%) ↑", 100, "{:.1f}"),
+            ("REL", "Relation plausibility (%) ↑", 100, "{:.1f}"), ("SG", "Scene-graph recall (%) ↑", 100, "{:.1f}"), ("ACC", "Accessible objects (%) ↑", 100, "{:.1f}"),
             ("COL", "Objects in a collision (%) ↓", 100, "{:.1f}"), ("footprint_outside", "Objects outside the room (%) ↓", 100, "{:.1f}"),
             ("OPC", "Doors blocked (%) ↓", 100, "{:.1f}"), ("log_size", "Size error (log) ↓", 1, "{:.3f}"),
             ("success", "Rooms with a layout (%) ↑", 100, "{:.1f}"), ("seconds", "Seconds per room ↓", 1, "{:.3g}"),
@@ -140,7 +140,7 @@ def tradeoff(names, rows, shuffled, out, title):
 
 
 def bars(names, rows, out, title):
-    fig, axes = plt.subplots(3, 4, figsize=(21, 13.5))
+    fig, axes = plt.subplots(3, 4, figsize=(21, 13.5))  # 12 panels
     for ax, (k, label, scale, f) in zip(axes.flat, HEADLINE):
         values = [None if m.get(k) is None else m[k] * scale for m in rows]
         colors = ["#d5d8dc" if n == REFERENCE else COLORS[i % len(COLORS)] for i, n in enumerate(names)]

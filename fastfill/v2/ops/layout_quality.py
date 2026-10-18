@@ -10,6 +10,13 @@
        converted room, ``v3_metrics``; tucked seats under tables and declared supports are not collisions)
   OPC  SceneEval's opening clearance: the share of doors whose clearance zone (``evaluate.DOOR_ZONE_DEPTH_M`` deep) a
        floor-standing obstacle intersects (> 0.01 m2)
+  SG   scene-graph recall (InstructScene / SceneNAT's 11 relations and iRecall): every ordered pair of objects gets
+       one relation: "above" / "below" when one centre is higher than the other by more than half their summed heights
+       and one centre lies over the other's footprint; else "none" beyond 3 m between centres (ground plane), "closely
+       <dir>" within 1 m, "<dir>" between, <dir> from the angle atan2(ys - yo, xs - xo) in the room frame: right of
+       [-pi/4, pi/4), in front of [pi/4, 3pi/4), behind [-3pi/4, -pi/4), left of otherwise. The ground truth's
+       (subject category, relation, object category) triplets other than "none" are the reference; SG is the share of
+       them the layout also has (multiset, category level, so exchangeable objects may swap), pooled over rooms.
   REL  relation plausibility: the share of applicable mined relation templates a layout satisfies. ``mine`` reads a
        seeded sample of the TRAINING rows only and, for each ordered category pair (A, B) seen together in at least
        ``--min-rooms`` rooms, the gap from each A to its nearest B (footprint distance) and whether A faces it (front
@@ -232,6 +239,44 @@ def rel(bs, templates):
     return hits, total
 
 
+SG_FAR_M, SG_CLOSE_M = 3., 1.
+
+
+def scene_graph(bs):
+    """Counter of (subject category, relation, object category) over ordered pairs, "none" left out."""
+    from collections import Counter
+    graph = Counter()
+    for s in bs:
+        for o in bs:
+            if s is o:
+                continue
+            zs, zo = s["bottom"] + s["size"][2] / 2, o["bottom"] + o["size"][2] / 2
+            over = o["poly"].covers(shapely.Point(*s["centre"])) or s["poly"].covers(shapely.Point(*o["centre"]))
+            half = (s["size"][2] + o["size"][2]) / 2
+            if over and zs - zo > half:
+                rel = "above"
+            elif over and zo - zs > half:
+                rel = "below"
+            else:
+                d = s["centre"] - o["centre"]
+                distance = float(np.hypot(*d))
+                if distance > SG_FAR_M:
+                    continue
+                theta = math.atan2(d[1], d[0])
+                rel = ("right of" if -math.pi / 4 <= theta < math.pi / 4 else "in front of" if math.pi / 4 <= theta < 3 * math.pi / 4
+                       else "behind" if -3 * math.pi / 4 <= theta < -math.pi / 4 else "left of")
+                if distance <= SG_CLOSE_M:
+                    rel = "closely " + rel
+            graph[(s["cat"], rel, o["cat"])] += 1
+    return graph
+
+
+def sg(row, bs):
+    reference = scene_graph(boxes(row, row["target"]))
+    got = scene_graph(bs)
+    return sum(min(n, got[t]) for t, n in reference.items()), sum(reference.values())
+
+
 def shuffled(row, seed):
     """Every object takes another object's bottom centre and yaw (one random cycle), sizes kept."""
     objs = row["target"]["objects"]
@@ -251,12 +296,13 @@ def score_method(rows, layouts, templates):
             continue
         bs = boxes(row, layout)
         navs.append(nav(row, bs))
-        for key, (h, n) in (("acc", acc(row, bs)), ("opc", opc(row, bs)), ("col", col(row, layout)), ("rel", rel(bs, templates))):
+        for key, (h, n) in (("acc", acc(row, bs)), ("opc", opc(row, bs)), ("col", col(row, layout)), ("rel", rel(bs, templates)),
+                            ("sg", sg(row, bs))):
             t[key + "_hits"] += h
             t[key + "_n"] += n
     rate = lambda k: t[k + "_hits"] / t[k + "_n"] if t[k + "_n"] else None
     return {"rooms": len(navs), "NAV": float(np.mean(navs)) if navs else None, "ACC": rate("acc"), "COL": rate("col"),
-            "OPC": rate("opc"), "REL": rate("rel"), "acc_objects": int(t["acc_n"]), "doors": int(t["opc_n"]),
+            "OPC": rate("opc"), "REL": rate("rel"), "SG": rate("sg"), "acc_objects": int(t["acc_n"]), "doors": int(t["opc_n"]),
             "rel_checks": int(t["rel_n"])}
 
 
@@ -274,9 +320,9 @@ def score(a):
     Path(a.output).mkdir(parents=True, exist_ok=True)
     (Path(a.output) / "layout_quality.json").write_text(json.dumps({"templates": a.templates, "results": results}, indent=1) + "\n")
     f = lambda v: "–" if v is None else f"{100 * v:.1f}"
-    print("| Method | NAV ↑ | ACC ↑ | REL ↑ | COL ↓ | OPC ↓ | rooms |\n|---|---|---|---|---|---|---|")
+    print("| Method | NAV ↑ | ACC ↑ | REL ↑ | SG ↑ | COL ↓ | OPC ↓ | rooms |\n|---|---|---|---|---|---|---|---|")
     for name, r in results.items():
-        print(f"| {name} | {f(r['NAV'])} | {f(r['ACC'])} | {f(r['REL'])} | {f(r['COL'])} | {f(r['OPC'])} | {r['rooms']} |")
+        print(f"| {name} | {f(r['NAV'])} | {f(r['ACC'])} | {f(r['REL'])} | {f(r['SG'])} | {f(r['COL'])} | {f(r['OPC'])} | {r['rooms']} |")
 
 
 def main(argv=None):
