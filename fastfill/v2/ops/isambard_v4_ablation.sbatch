@@ -76,4 +76,8 @@ failed=0
 for j in "${pids[@]}"; do wait $j || failed=1; done
 tail -n 12 $O/*.log
 $P fastfill/v2/ops/v4_report.py $O && echo "report: $O/REPORT.md"
+# figures (training curves, metric bars vs GPT-5.6, per-source, rooms): optional, the env may lack matplotlib;
+# otherwise copy runs/main4-*/training_log.json and runs/ablation-v4 to a machine with it and run the same command
+$P -c "import matplotlib" 2>/dev/null && $P -m fastfill.v2.ops.v4_plots all --out $O/plots > $O/plots.log 2>&1 \
+  && echo "figures: $O/plots" || echo "figures skipped (see $O/plots.log, or no matplotlib)"
 exit $failed
