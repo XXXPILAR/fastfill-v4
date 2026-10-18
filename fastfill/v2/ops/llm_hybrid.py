@@ -103,10 +103,12 @@ def main(argv=None):
     p.add_argument("--repairs", type=int, default=2)
     p.add_argument("--workers", type=int, default=6)
     p.add_argument("--limit", type=int)
+    p.add_argument("--rpm", type=float, help="requests per minute for this process (default: FASTFILL_LLM_RPM or 30); "
+                   "split the budget when several runs share one key")
     a = p.parse_args(argv)
     env = load_env(a.env.expanduser())
     model = env["OPENAI_MODEL"]
-    limiter = RateLimiter(float(env.get("FASTFILL_LLM_RPM", 30)))
+    limiter = RateLimiter(a.rpm or float(env.get("FASTFILL_LLM_RPM", 30)))
     rows = [migrate_legacy_row(json.loads(l)) for l in a.rows.read_text().splitlines() if l.strip()][:a.limit]
     drafts = [json.loads(l).get("layout") for l in a.fastfill.read_text().splitlines() if l.strip()][:len(rows)]
     if len(drafts) != len(rows):
