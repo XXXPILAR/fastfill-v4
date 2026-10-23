@@ -9,6 +9,11 @@ from shapely.geometry import LineString, Polygon
 from fastfill.v2.validation import on_wall
 
 EPS = 1e-5
+# the evaluator's tolerance (fastfill.v2.validation.validate_scene tolerance_m): boundary and vertical bounds
+BOUNDARY_TOL = 1e-4
+# an object stands on another when its footprint centre lies on the parent's surface (within this margin) and its
+# bottom is at the surface height; its footprint may overhang (ground-truth shelves and tables show it)
+SUPPORT_CENTRE_MARGIN = .02
 
 
 def footprint(box: dict) -> Polygon:
@@ -73,7 +78,9 @@ class Issue:
 
 class Geometry:
     def __init__(self, condition: dict, parents: dict[str, str], relations: list[dict],
-                 *, allow_thin_overlap: bool = False):
+                 *, allow_thin_overlap: bool = False, hard_openings: bool = True):
+        """``hard_openings=False`` (the draft workflow) scores door and window clearance as soft issues: the
+        evaluator does not check openings, and ground-truth rooms often place furniture in those strips."""
         self.condition = condition
         self.room = condition["room"]
         self.floor = float(self.room["floor_z_m"])
@@ -84,6 +91,7 @@ class Geometry:
         self.fixed = {ident: as_box(obj) for ident, obj in self.fixed_raw.items()}
         self.parents = parents
         self.allow_thin_overlap = allow_thin_overlap
+        self.hard_openings = hard_openings
         self.explicit = condition["constraints"]
         self.soft = relations + [r for r in self.explicit if not r.get("hard", True)]
         self.hard = [r for r in self.explicit if r.get("hard", True)]
@@ -127,9 +135,9 @@ class Geometry:
         shape = footprint(box)
         z, height = box["bottom_center_m"][2], box["target_size_local_m"][2]
         issues = []
-        if not self.polygon.buffer(EPS).covers(shape):
+        if not self.polygon.buffer(BOUNDARY_TOL).covers(shape):
             issues.append(Issue("boundary", (ident,)))
-        if z < self.floor - EPS or z + height > self.ceiling + EPS:
+        if z < self.floor - BOUNDARY_TOL or z + height > self.ceiling + BOUNDARY_TOL:
             issues.append(Issue("vertical_bounds", (ident,)))
         parent_id = self.parents[ident]
         if parent_id == "floor":
@@ -145,9 +153,19 @@ class Geometry:
             else:
                 surface = self._support_polygon(box, parent_id, parent)
                 if (abs(z - self._support_height(box, parent_id, parent)) > EPS or
-                        not surface.buffer(EPS).covers(shape)):
+                        not surface.buffer(SUPPORT_CENTRE_MARGIN).covers(shape.centroid)):
                     issues.append(Issue("object_support", (ident, parent_id)))
 
+        if self.hard_openings:
+            issues.extend(self.opening_issues(box))
+        issues.extend(self._collisions_and_keepout(box, placed, shape, height))
+        return issues
+
+    def opening_issues(self, box: dict) -> list[Issue]:
+        ident, shape = box["id"], footprint(box)
+        z, height = box["bottom_center_m"][2], box["target_size_local_m"][2]
+        parent_id = self.parents.get(ident, "floor")
+        issues = []
         for zone, opening in self.doors:
             if height <= .05 and parent_id == "floor":
                 continue
@@ -161,6 +179,10 @@ class Geometry:
             if z < top - EPS and z + height > sill + EPS and shape.intersection(strip).area > EPS:
                 issues.append(Issue("window_clearance", (ident,)))
                 break
+        return issues
+
+    def _collisions_and_keepout(self, box: dict, placed: dict[str, dict], shape, height: float) -> list[Issue]:
+        ident, issues = box["id"], []
         for other in list(placed.values()) + list(self.fixed.values()):
             if other["id"] == ident:
                 continue
@@ -239,4 +261,6 @@ class Geometry:
     def soft_score(self, placed: dict[str, dict]) -> tuple[float, list[Issue]]:
         issues = [issue for relation in self.soft
                   if (issue := self.relation_issue(relation, placed)) is not None]
+        if not self.hard_openings:
+            issues += [issue for box in placed.values() for issue in self.opening_issues(box)]
         return -float(len(issues)), issues

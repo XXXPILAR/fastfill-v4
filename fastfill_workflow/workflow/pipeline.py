@@ -48,7 +48,7 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
         else:
             fixed_sizes[obj["id"]] = catalog.candidates(obj)[0][0]
             size_source["catalog"] += 1
-    geometry = Geometry(condition, plan.parents, plan.relations)
+    geometry = Geometry(condition, plan.parents, plan.relations, hard_openings=False)
     if llm:
         placed, draft = make_draft(condition, plan, fixed_sizes, geometry, model=model, base_url=base_url,
                                    api_key=api_key)
@@ -57,6 +57,8 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
         draft = {"calls": [], "dropped": {}, "missing": missing, "error": "llm disabled"}
     drafted = time.perf_counter()
     draft_issues = geometry.validate(placed)
+    draft_layout = {"schema_version": condition["schema_version"],
+                    "objects": [placed[obj["id"]] for obj in condition["objects"]]}
     draft_bad = sorted({ident for issue in draft_issues for ident in issue.ids if ident in geometry.requests})
     repair_info = {"result": "skipped"}
     if repair and draft_issues:
@@ -82,7 +84,8 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
                             "priority": plan.priority, "size_source": size_source, "size_error": size_error,
                             "sizes": fixed_sizes, "draft": draft,
                             "draft_hard_issues": [issue.as_dict() for issue in draft_issues],
-                            "draft_objects_with_issues": draft_bad, "repair": repair_info, "polish": polish_info,
+                            "draft_objects_with_issues": draft_bad, "draft_layout": draft_layout,
+                            "repair": repair_info, "polish": polish_info,
                             "hard_issues": [issue.as_dict() for issue in issues]},
             "timing_s": {"plan": round(planned - start, 3), "size": round(sized - planned, 3),
                          "draft": round(drafted - sized, 3),
