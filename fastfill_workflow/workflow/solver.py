@@ -18,7 +18,8 @@ def _wrap(yaw: float) -> float:
 def _pose(ident: str, size: list[float], x: float, y: float, z: float,
           yaw: float, parent: str) -> dict:
     return {"id": ident, "target_size_local_m": size,
-            "bottom_center_m": [round(x, 4), round(y, 4), round(z, 4)],
+            # z unrounded: it is a support height that the checks compare exactly (see geometry.SUPPORT_Z_TOL)
+            "bottom_center_m": [round(x, 4), round(y, 4), float(z)],
             "yaw_rad": _wrap(yaw), "support_parent": parent}
 
 

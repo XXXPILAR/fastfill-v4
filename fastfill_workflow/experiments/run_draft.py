@@ -97,8 +97,8 @@ def main() -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--per-bin", type=int, help="this many rooms per object-count bin (seed 0) instead of all")
     ap.add_argument("--catalog", type=Path, default=HERE / "size_catalog.json")
-    ap.add_argument("--yaw-mode", choices=("llm", "fastfill", "hybrid"), default="hybrid",
-                    help="hybrid: FastFill's yaw, the LLM's when only that fits (pipeline.run_draft_workflow)")
+    ap.add_argument("--yaw-mode", choices=("prompt", "llm", "fastfill", "hybrid"), default="prompt",
+                    help="prompt: FastFill's yaw goes to the LLM as a suggestion (pipeline.run_draft_workflow)")
     ap.add_argument("--workers", type=int, default=1, help="rooms in parallel processes (8 suits ~500 RPM)")
     ap.add_argument("--mp-start", default="spawn", help=argparse.SUPPRESS)  # tests use fork to keep their mocks
     ap.add_argument("--evaluate", action="store_true")

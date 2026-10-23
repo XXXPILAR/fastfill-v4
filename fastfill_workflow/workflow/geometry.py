@@ -14,6 +14,8 @@ BOUNDARY_TOL = 1e-4
 # an object stands on another when its footprint centre lies on the parent's surface (within this margin) and its
 # bottom is at the surface height; its footprint may overhang (ground-truth shelves and tables show it)
 SUPPORT_CENTRE_MARGIN = .02
+# bottom vs support height (and floor) agree within the evaluator's tolerance, not float noise
+SUPPORT_Z_TOL = 1e-4
 
 
 def footprint(box: dict) -> Polygon:
@@ -141,7 +143,7 @@ class Geometry:
             issues.append(Issue("vertical_bounds", (ident,)))
         parent_id = self.parents[ident]
         if parent_id == "floor":
-            if abs(z - self.floor) > EPS:
+            if abs(z - self.floor) > SUPPORT_Z_TOL:
                 issues.append(Issue("floor_support", (ident,)))
         elif parent_id == "wall":
             if not on_wall(box, self.room, tolerance=.1):
@@ -152,7 +154,7 @@ class Geometry:
                 issues.append(Issue("parent_not_placed", (ident, parent_id)))
             else:
                 surface = self._support_polygon(box, parent_id, parent)
-                if (abs(z - self._support_height(box, parent_id, parent)) > EPS or
+                if (abs(z - self._support_height(box, parent_id, parent)) > SUPPORT_Z_TOL or
                         not surface.buffer(SUPPORT_CENTRE_MARGIN).covers(shape.centroid)):
                     issues.append(Issue("object_support", (ident, parent_id)))
 

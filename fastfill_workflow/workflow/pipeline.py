@@ -19,7 +19,7 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
                        llm: bool = True, model: str | None = None, base_url: str | None = None,
                        api_key: str | None = None, repair: bool = True, polish: bool = True,
                        draft_weight: float = DRAFT_WEIGHT, beam_width: int = 24, candidate_limit: int = 48,
-                       sizer=None, yaws: dict[str, float] | None = None, yaw_mode: str = "hybrid") -> dict:
+                       sizer=None, yaws: dict[str, float] | None = None, yaw_mode: str = "prompt") -> dict:
     """Draft workflow, steps ①–④: ① LLM semantic plan, ② one size per object (``sizes``, or when it is None
     ``sizer(condition)``, a ``FastFillSizer`` run on the request as given; an id without one gets the train
     catalog's, and a room the sizer cannot take is recorded in ``size_error``), ③ LLM draft at those sizes, the hard checks, and ④ local
@@ -27,10 +27,13 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
     that snaps to walls and axes and tightens soft relations without new hard issues (``polish=False`` skips it). A layout is
     always returned; status is clean, best_effort (issues left after repair) or needs_repair (repair off).
 
-    ``yaw_mode`` (with FastFill yaws: ``yaws``, or the sizer's): "llm" keeps the draft's yaws; "fastfill" replaces
-    them with FastFill's; "hybrid" (default) starts from FastFill's and lets repair turn an object to the LLM's yaw
-    when it only fits that way (``solver.ALT_YAW_PENALTY_TURNS``). Without FastFill yaws every mode is "llm"."""
-    if yaw_mode not in ("llm", "fastfill", "hybrid"):
+    ``yaw_mode`` (with FastFill yaws: ``yaws``, or the sizer's): "prompt" (default) gives them to step ③ as
+    ``suggested_yaw_deg``, so the LLM picks each position for that facing and may depart from it where it cannot
+    work; "llm" gives no suggestion; "fastfill" swaps FastFill's yaws into the finished draft; "hybrid" swaps them
+    in and lets repair turn an object back to the LLM's yaw (``solver.ALT_YAW_PENALTY_TURNS``). The swap modes keep
+    the LLM's positions for another facing, which pushes objects through walls (49 of 50 test rooms got more issues),
+    so they are kept for comparison only. Without FastFill yaws every mode is "llm"."""
+    if yaw_mode not in ("prompt", "llm", "fastfill", "hybrid"):
         raise ValueError(f"unknown yaw_mode {yaw_mode!r}")
     start = time.perf_counter()
     validate_condition(condition)
@@ -58,13 +61,13 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
     geometry = Geometry(condition, plan.parents, plan.relations, hard_openings=False)
     if llm:
         placed, draft = make_draft(condition, plan, fixed_sizes, geometry, model=model, base_url=base_url,
-                                   api_key=api_key)
+                                   api_key=api_key, yaws=yaws if yaw_mode == "prompt" else None)
     else:  # offline tests: no poses, every object at its fallback
         placed, missing = assemble(geometry, plan, fixed_sizes, {})
         draft = {"calls": [], "dropped": {}, "missing": missing, "error": "llm disabled"}
     llm_yaws = {ident: box["yaw_rad"] for ident, box in placed.items()}
     swapped = 0
-    if yaws and yaw_mode != "llm":
+    if yaws and yaw_mode in ("fastfill", "hybrid"):
         for ident, box in placed.items():
             if ident in yaws and ident not in draft["missing"]:
                 placed[ident] = {**box, "yaw_rad": math.remainder(float(yaws[ident]), 2 * math.pi)}
@@ -100,8 +103,12 @@ def run_draft_workflow(condition: dict, sizes: dict[str, list[float]] | None, *,
                             "sizes": fixed_sizes, "draft": draft,
                             "draft_hard_issues": [issue.as_dict() for issue in draft_issues],
                             "draft_objects_with_issues": draft_bad, "draft_layout": draft_layout,
-                            "yaw": {"mode": yaw_mode if swapped else "llm", "fastfill_yaws_used": swapped,
-                                    "llm_yaws": llm_yaws},
+                            "yaw": {"mode": yaw_mode if (swapped or (yaw_mode == "prompt" and yaws)) else "llm",
+                                    "fastfill_yaws_used": swapped, "llm_yaws": llm_yaws,
+                                    "suggested": len(yaws or {}) if yaw_mode == "prompt" else 0,
+                                    "followed": sum(1 for k, v in llm_yaws.items() if yaw_mode == "prompt" and yaws
+                                                    and k in yaws and abs(math.remainder(v - yaws[k], 2 * math.pi))
+                                                    <= math.radians(10))},
                             "repair": repair_info, "polish": polish_info,
                             "hard_issues": [issue.as_dict() for issue in issues]},
             "timing_s": {"plan": round(planned - start, 3), "size": round(sized - planned, 3),

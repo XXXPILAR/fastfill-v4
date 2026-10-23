@@ -38,8 +38,16 @@ degrees from the world +x axis; the depth axis points along it.
 doors clear. Follow the plan's groups and relations where you can.
 - Wall-supported objects hang with their back against a wall, facing into the room."""
 
+# appended to DRAFT_INSTRUCTIONS when the objects carry a learned facing (``suggested_yaw_deg``)
+SUGGESTED_YAW_RULE = """
+- suggested_yaw_deg, when given, is the facing a model trained on real rooms predicts for the object (same convention \
+as yaw_deg). Use it as the object's yaw and choose the position to suit it (e.g. the wall its back goes against). \
+Depart from it only where it cannot work: it would push the object through a wall, block a door, or collide; then \
+choose a yaw that fits."""
 
-def request_text(condition: dict, plan: Plan, sizes: dict[str, list[float]]) -> str:
+
+def request_text(condition: dict, plan: Plan, sizes: dict[str, list[float]],
+                 yaws: dict[str, float] | None = None) -> str:
     objects = []
     for obj in condition["objects"]:
         ident = obj["id"]
@@ -49,6 +57,8 @@ def request_text(condition: dict, plan: Plan, sizes: dict[str, list[float]]) -> 
                  "size_m": {"width": round(width, 3), "depth": round(depth, 3), "height": round(height, 3)}}
         if ident in plan.priority:
             entry["priority"] = plan.priority[ident]
+        if yaws and ident in yaws:
+            entry["suggested_yaw_deg"] = round(math.degrees(math.remainder(float(yaws[ident]), 2 * math.pi)), 1)
         objects.append(entry)
     relations = [{k: v for k, v in r.items() if k not in ("origin", "hard")}
                  for r in plan.relations if r.get("origin") != "group"]
@@ -126,13 +136,16 @@ def assemble(geometry: Geometry, plan: Plan, sizes: dict[str, list[float]],
 
 
 def make_draft(condition: dict, plan: Plan, sizes: dict[str, list[float]], geometry: Geometry, *,
+               yaws: dict[str, float] | None = None,
                model: str | None = None, base_url: str | None = None,
                api_key: str | None = None) -> tuple[dict[str, dict], dict]:
-    """Returns (placed, info) with info = {calls, dropped, missing, error}."""
+    """Returns (placed, info) with info = {calls, dropped, missing, error}. ``yaws`` (rad, e.g. FastFill's) go to
+    the LLM as ``suggested_yaw_deg``: it decides each position for that facing instead of having it swapped in."""
     info: dict = {"calls": [], "dropped": {}, "missing": [], "error": None}
     poses: dict[str, dict] = {}
     try:
-        text, call = llm_client.ask(DRAFT_INSTRUCTIONS, request_text(condition, plan, sizes),
+        instructions = DRAFT_INSTRUCTIONS + (SUGGESTED_YAW_RULE if yaws else "")
+        text, call = llm_client.ask(instructions, request_text(condition, plan, sizes, yaws),
                                     model=model, base_url=base_url, api_key=api_key)
         info["calls"].append(call)
         poses, info["dropped"] = parse_poses(text, set(geometry.requests))
