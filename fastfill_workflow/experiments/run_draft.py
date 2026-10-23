@@ -5,17 +5,20 @@ Step ② either runs a FastFill checkpoint in this process (``--checkpoint``, GP
 predictions file aligned with the rows (``--sizes-file``, e.g. ``remask_ablation``'s output).
 
 Before anything is loaded a free preflight (GET /v1/models/<model>) checks network, key and model, so a node without
-internet access fails in seconds, not after the checkpoint load. One room at a time; resumable (rooms with a saved
-``room_XXX.json`` are skipped). Budget: every room's cost (official prices) goes to ``ledger.json``, and the run stops
-before a room when spent + ``--reserve-usd`` would pass ``--budget-usd``; a rejected key or exhausted quota stops it
-at once. At the end: ``rows.jsonl`` / ``predictions.jsonl`` (the rooms run, aligned, ``layout`` null for a failure)
+internet access fails in seconds, not after the checkpoint load. Step ② runs first for every room (the checkpoint on
+the GPU in this process); then ``--workers`` rooms run in parallel processes (LLM calls overlap, the CPU-bound
+repairs use separate cores); resumable (rooms with a saved ``room_XXX.json``
+are skipped). Budget: every room's cost (official prices) goes to ``ledger.json``, and the run stops
+before a room when spent + ``--reserve-usd`` per room in flight would pass ``--budget-usd``; a rejected key or
+exhausted quota starts no new room (those in flight finish). At the end: ``rows.jsonl`` / ``predictions.jsonl`` (the rooms run, aligned, ``layout`` null for a failure)
 for ``fastfill.v2.evaluate``, and ``summary.json``; ``--evaluate`` also runs the evaluator into ``eval/``.
 
     python fastfill_workflow/experiments/run_draft.py --rows fastfill/v2/ops/test300/rows.jsonl \\
         --checkpoint runs/main4-cell05-v4fixed-e5-base/model-step-6552 --device cuda \\
         --out runs/draft-workflow/test300 --budget-usd 55 --evaluate
 """
-import argparse, json, random, shutil, subprocess, sys, time, traceback, urllib.error, urllib.request
+import argparse, json, multiprocessing as mp, random, shutil, subprocess, sys, time, traceback, urllib.error, urllib.request
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
 from collections import Counter
 from pathlib import Path
 
@@ -39,6 +42,32 @@ def preflight(settings: dict) -> None:
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         raise SystemExit(f"preflight: cannot reach {settings['base_url']} from this node ({exc}); run where there is "
                          "internet access, or make sizes on a GPU node first and pass --sizes-file")
+
+
+def run_room(condition: dict, sizes: dict | None, size_error: str | None, catalog: str,
+             settings: dict) -> tuple[dict, float, dict, int]:
+    """One room in a worker process: steps ①, ③, ④ (the sizes of step ② are given)."""
+    start = time.perf_counter()
+    try:
+        result = run_draft_workflow(condition, sizes, catalog_path=catalog, polish=False, model=settings["model"],
+                                    base_url=settings["base_url"], api_key=settings["api_key"])
+    except FatalAPIError:
+        raise
+    except Exception as exc:
+        result = {"status": "error", "layout": None, "error": f"{type(exc).__name__}: {exc}"[:500],
+                  "traceback": traceback.format_exc()[-2000:]}
+    d = result.get("diagnostics") or {}
+    if size_error and d:
+        d["size_error"] = size_error
+    calls = d.get("plan_llm", {}).get("calls", []) + d.get("draft", {}).get("calls", [])
+    cost = sum(c.get("cost_usd") or 0 for c in calls)
+    usage = [c.get("usage") or {} for c in calls]
+    tokens = {"prompt_tokens": sum(u.get("prompt_tokens") or 0 for u in usage),
+              "completion_tokens": sum(u.get("completion_tokens") or 0 for u in usage),
+              "reasoning_tokens": sum((u.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0
+                                      for u in usage)}
+    result.update(wall_s=round(time.perf_counter() - start, 2), cost_usd=round(cost, 4), tokens=tokens)
+    return result, cost, tokens, len(calls)
 
 
 def pick(rows: list[dict], a) -> list[int]:
@@ -67,6 +96,8 @@ def main() -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--per-bin", type=int, help="this many rooms per object-count bin (seed 0) instead of all")
     ap.add_argument("--catalog", type=Path, default=HERE / "size_catalog.json")
+    ap.add_argument("--workers", type=int, default=1, help="rooms in parallel processes (8 suits ~500 RPM)")
+    ap.add_argument("--mp-start", default="spawn", help=argparse.SUPPRESS)  # tests use fork to keep their mocks
     ap.add_argument("--evaluate", action="store_true")
     a = ap.parse_args()
 
@@ -93,43 +124,58 @@ def main() -> None:
 
     ledger_path = a.out / "ledger.json"
     ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else {"rooms": {}, "spent_usd": 0.0}
-    for i in picked:
-        path = a.out / f"room_{i:03d}.json"
-        if path.exists():
-            continue
-        if ledger["spent_usd"] + a.reserve_usd > a.budget_usd:
-            print(f"budget stop: spent ${ledger['spent_usd']:.2f} of ${a.budget_usd:.2f}", flush=True)
-            break
-        sizes = None
-        if file_sizes is not None and file_sizes[i] is not None:
-            sizes = {b["id"]: b["target_size_local_m"] for b in file_sizes[i]["objects"]}
-        start = time.perf_counter()
-        try:
-            result = run_draft_workflow(rows[i]["condition"], sizes, catalog_path=str(a.catalog), polish=False,
-                                        model=settings["model"], base_url=settings["base_url"],
-                                        api_key=settings["api_key"], sizer=sizer)
-        except FatalAPIError as exc:
-            print(f"stopped: {exc}", flush=True)
-            break
-        except Exception as exc:
-            result = {"status": "error", "layout": None, "error": f"{type(exc).__name__}: {exc}"[:500],
-                      "traceback": traceback.format_exc()[-2000:]}
-        d = result.get("diagnostics") or {}
-        calls = d.get("plan_llm", {}).get("calls", []) + d.get("draft", {}).get("calls", [])
-        cost = sum(c.get("cost_usd") or 0 for c in calls)
-        usage = [c.get("usage") or {} for c in calls]
-        tokens = {"prompt_tokens": sum(u.get("prompt_tokens") or 0 for u in usage),
-                  "completion_tokens": sum(u.get("completion_tokens") or 0 for u in usage),
-                  "reasoning_tokens": sum((u.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0
-                                          for u in usage)}
-        result.update(room=i, wall_s=round(time.perf_counter() - start, 2), cost_usd=round(cost, 4), tokens=tokens)
-        path.write_text(json.dumps(result, ensure_ascii=False))
-        ledger["rooms"][str(i)] = {"cost_usd": round(cost, 4), **tokens, "calls": len(calls)}
-        ledger["spent_usd"] = round(ledger["spent_usd"] + cost, 4)
-        ledger_path.write_text(json.dumps(ledger, indent=1))
-        print(f"room {i:3d} objects {len(rows[i]['condition']['objects']):3d} {result['status']:12s} "
-              f"{result['wall_s']:6.1f}s ${cost:.3f} (total ${ledger['spent_usd']:.2f}) plan {d.get('plan_source')} "
-              f"sizes {d.get('size_source')} {d.get('size_error') or ''}", flush=True)
+    pending = [i for i in picked if not (a.out / f"room_{i:03d}.json").exists()]
+    # step ② for every pending room first, on the GPU in this process (well under a second a room); the rooms then
+    # run in worker processes, so the CPU-bound repair of several rooms runs on several cores
+    sizes, size_errors = {}, {}
+    for n, i in enumerate(pending):
+        if sizer is not None:
+            try:
+                sizes[i] = sizer(rows[i]["condition"])
+            except ValueError as exc:  # over the model's object or context budget: the catalog's sizes
+                sizes[i], size_errors[i] = None, f"{type(exc).__name__}: {exc}"[:300]
+        else:
+            layout = file_sizes[i]
+            sizes[i] = {b["id"]: b["target_size_local_m"] for b in layout["objects"]} if layout else None
+        if sizer is not None and (n + 1) % 50 == 0:
+            print(f"sizes: {n + 1}/{len(pending)}", flush=True)
+    if sizer is not None:
+        del sizer  # free the GPU before the workers start
+    running: dict = {}
+    stop = False
+    with ProcessPoolExecutor(max_workers=a.workers, mp_context=mp.get_context(a.mp_start)) as pool:
+        while pending or running:
+            # the budget holds a reserve for every room in flight, so parallel rooms cannot overshoot it
+            while pending and not stop and len(running) < a.workers:
+                if ledger["spent_usd"] + (len(running) + 1) * a.reserve_usd > a.budget_usd:
+                    print(f"budget stop: spent ${ledger['spent_usd']:.2f} of ${a.budget_usd:.2f} "
+                          f"({len(running)} rooms still finishing)", flush=True)
+                    stop = True
+                    break
+                i = pending.pop(0)
+                running[pool.submit(run_room, rows[i]["condition"], sizes[i], size_errors.get(i), str(a.catalog),
+                                    settings)] = i
+            if not running:
+                break
+            finished, _ = wait(running, return_when=FIRST_COMPLETED)
+            for future in finished:
+                i = running.pop(future)
+                try:
+                    result, cost, tokens, ncalls = future.result()
+                except FatalAPIError as exc:
+                    print(f"stopped: {exc} (no new rooms; {len(running)} still finishing)", flush=True)
+                    stop = True
+                    continue
+                result["room"] = i
+                d = result.get("diagnostics") or {}
+                (a.out / f"room_{i:03d}.json").write_text(json.dumps(result, ensure_ascii=False))
+                ledger["rooms"][str(i)] = {"cost_usd": round(cost, 4), **tokens, "calls": ncalls}
+                ledger["spent_usd"] = round(ledger["spent_usd"] + cost, 4)
+                ledger_path.write_text(json.dumps(ledger, indent=1))
+                print(f"room {i:3d} objects {len(rows[i]['condition']['objects']):3d} {result['status']:12s} "
+                      f"{result['wall_s']:6.1f}s ${cost:.3f} (total ${ledger['spent_usd']:.2f}) "
+                      f"plan {d.get('plan_source')} sizes {d.get('size_source')} {d.get('size_error') or ''}",
+                      flush=True)
 
     done = [i for i in picked if (a.out / f"room_{i:03d}.json").exists()]
     results = {i: json.loads((a.out / f"room_{i:03d}.json").read_text()) for i in done}

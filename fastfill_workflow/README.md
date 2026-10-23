@@ -100,6 +100,7 @@ In the v4 checkout this folder is `fastfill_workflow/`. From the checkout root:
 ```bash
 sbatch fastfill_workflow/experiments/isambard_draft.sbatch                       # test300, budget $55
 BUDGET_USD=8 EXTRA="--per-bin 6" sbatch fastfill_workflow/experiments/isambard_draft.sbatch   # 30-room sample
+WORKERS=16 sbatch fastfill_workflow/experiments/isambard_draft.sbatch     # rooms in parallel (default 8)
 ```
 
 Outputs in `runs/draft-workflow/test300/`: `room_XXX.json` (layout, diagnostics, timing, tokens, cost),

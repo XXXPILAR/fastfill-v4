@@ -11,7 +11,8 @@
 #              --sizes-file runs/draft-sizes/predictions_argmax.jsonl --out $OUT --budget-usd 55 --evaluate
 # Resumable: resubmit and finished rooms are skipped; the budget is shared through $OUT/ledger.json.
 # Usage: sbatch fastfill_workflow/experiments/isambard_draft.sbatch
-#   env: ROWS (default the test300 rows), OUT, BUDGET_USD (default 55), CKPT (default: base arm's selected checkpoint),
+#   env: ROWS (default the test300 rows), OUT, BUDGET_USD (default 55), WORKERS (rooms in parallel, default 8),
+#        CKPT (default: base arm's selected checkpoint),
 #        EXTRA (more run_draft.py flags, e.g. "--per-bin 6" or "--indices 8 13")
 #SBATCH --job-name=ff4-draft
 #SBATCH --nodes=1
@@ -41,7 +42,7 @@ ROWS=${ROWS:-fastfill/v2/ops/test300/rows.jsonl}
 OUT=${OUT:-runs/draft-workflow/test300}
 [ -n "$CKPT" ] || { echo "no base checkpoint found (set CKPT=RUN/model-step-N)"; exit 1; }
 mkdir -p "$OUT" runs/isambard
-echo "checkpoint $CKPT rows $ROWS out $OUT budget \$${BUDGET_USD:-55}"
+echo "checkpoint $CKPT rows $ROWS out $OUT budget \$${BUDGET_USD:-55} workers ${WORKERS:-8}"
 nvidia-smi --query-gpu=name,memory.total --format=csv
 $P fastfill_workflow/experiments/run_draft.py --rows "$ROWS" --checkpoint "$CKPT" --device cuda --out "$OUT" \
-  --budget-usd "${BUDGET_USD:-55}" --evaluate ${EXTRA:-}
+  --budget-usd "${BUDGET_USD:-55}" --workers "${WORKERS:-8}" --evaluate ${EXTRA:-}
