@@ -1,0 +1,4 @@
+# the official OpenAI key lives here; never commit or copy it
+.env
+__pycache__/
+.pytest_cache/
