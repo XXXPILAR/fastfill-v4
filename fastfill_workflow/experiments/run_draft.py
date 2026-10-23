@@ -44,13 +44,14 @@ def preflight(settings: dict) -> None:
                          "internet access, or make sizes on a GPU node first and pass --sizes-file")
 
 
-def run_room(condition: dict, sizes: dict | None, size_error: str | None, catalog: str,
-             settings: dict) -> tuple[dict, float, dict, int]:
-    """One room in a worker process: steps ①, ③, ④ (the sizes of step ② are given)."""
+def run_room(condition: dict, sizes: dict | None, yaws: dict | None, size_error: str | None, catalog: str,
+             settings: dict, yaw_mode: str) -> tuple[dict, float, dict, int]:
+    """One room in a worker process: steps ①, ③, ④ (step ②'s sizes and yaws are given)."""
     start = time.perf_counter()
     try:
         result = run_draft_workflow(condition, sizes, catalog_path=catalog, polish=False, model=settings["model"],
-                                    base_url=settings["base_url"], api_key=settings["api_key"])
+                                    base_url=settings["base_url"], api_key=settings["api_key"], yaws=yaws,
+                                    yaw_mode=yaw_mode)
     except FatalAPIError:
         raise
     except Exception as exc:
@@ -96,6 +97,8 @@ def main() -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--per-bin", type=int, help="this many rooms per object-count bin (seed 0) instead of all")
     ap.add_argument("--catalog", type=Path, default=HERE / "size_catalog.json")
+    ap.add_argument("--yaw-mode", choices=("llm", "fastfill", "hybrid"), default="hybrid",
+                    help="hybrid: FastFill's yaw, the LLM's when only that fits (pipeline.run_draft_workflow)")
     ap.add_argument("--workers", type=int, default=1, help="rooms in parallel processes (8 suits ~500 RPM)")
     ap.add_argument("--mp-start", default="spawn", help=argparse.SUPPRESS)  # tests use fork to keep their mocks
     ap.add_argument("--evaluate", action="store_true")
@@ -119,7 +122,8 @@ def main() -> None:
             raise SystemExit(f"--sizes-file has {len(file_sizes)} lines, --rows {len(rows)}")
     (a.out / "config.json").write_text(json.dumps({
         "rows": str(a.rows), "model": settings["model"], "base_url": settings["base_url"],
-        "sizes": sizer.describe() if sizer else {"file": str(a.sizes_file)}, "budget_usd": a.budget_usd,
+        "sizes": sizer.describe() if sizer else {"file": str(a.sizes_file)}, "yaw_mode": a.yaw_mode,
+        "budget_usd": a.budget_usd,
         "rooms": len(picked)}, indent=1))
 
     ledger_path = a.out / "ledger.json"
@@ -127,16 +131,17 @@ def main() -> None:
     pending = [i for i in picked if not (a.out / f"room_{i:03d}.json").exists()]
     # step ② for every pending room first, on the GPU in this process (well under a second a room); the rooms then
     # run in worker processes, so the CPU-bound repair of several rooms runs on several cores
-    sizes, size_errors = {}, {}
+    sizes, yaws, size_errors = {}, {}, {}
     for n, i in enumerate(pending):
         if sizer is not None:
             try:
-                sizes[i] = sizer(rows[i]["condition"])
+                sizes[i], yaws[i] = sizer.predict(rows[i]["condition"])
             except ValueError as exc:  # over the model's object or context budget: the catalog's sizes
-                sizes[i], size_errors[i] = None, f"{type(exc).__name__}: {exc}"[:300]
+                sizes[i], yaws[i], size_errors[i] = None, None, f"{type(exc).__name__}: {exc}"[:300]
         else:
             layout = file_sizes[i]
             sizes[i] = {b["id"]: b["target_size_local_m"] for b in layout["objects"]} if layout else None
+            yaws[i] = {b["id"]: b["yaw_rad"] for b in layout["objects"]} if layout else None
         if sizer is not None and (n + 1) % 50 == 0:
             print(f"sizes: {n + 1}/{len(pending)}", flush=True)
     if sizer is not None:
@@ -153,8 +158,8 @@ def main() -> None:
                     stop = True
                     break
                 i = pending.pop(0)
-                running[pool.submit(run_room, rows[i]["condition"], sizes[i], size_errors.get(i), str(a.catalog),
-                                    settings)] = i
+                running[pool.submit(run_room, rows[i]["condition"], sizes[i], yaws[i], size_errors.get(i),
+                                    str(a.catalog), settings, a.yaw_mode)] = i
             if not running:
                 break
             finished, _ = wait(running, return_when=FIRST_COMPLETED)

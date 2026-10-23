@@ -79,6 +79,9 @@ class State:
 
 
 LOCAL_RINGS_M = (.05, .10, .20, .40)  # local repair: offsets around the draft, nearest first
+# a draft may carry a second yaw (``alt_yaw_rad``: the hybrid's LLM yaw beside FastFill's): turning to it costs this
+# many quarter turns, so the solver keeps the first yaw unless the object only fits with the second
+ALT_YAW_PENALTY_TURNS = .25
 
 
 class CandidateGenerator:
@@ -108,6 +111,8 @@ class CandidateGenerator:
             return 0.
         x, y = box["bottom_center_m"][:2]
         turn = abs(_wrap(box["yaw_rad"] - draft["yaw_rad"])) / (math.pi / 2)
+        if draft.get("alt_yaw_rad") is not None:
+            turn = min(turn, abs(_wrap(box["yaw_rad"] - draft["alt_yaw_rad"])) / (math.pi / 2) + ALT_YAW_PENALTY_TURNS)
         return self.draft_weight * (math.hypot(x - draft["x"], y - draft["y"]) + turn)
 
     def _unary(self, box: dict, size_score: float, origin: str) -> float:
@@ -189,9 +194,13 @@ class CandidateGenerator:
                 offsets = ((0, 0), (.2, 0), (-.2, 0), (0, .2), (0, -.2)) if not self.local else \
                     ((0, 0), *((r * math.cos(k * math.pi / 4), r * math.sin(k * math.pi / 4))
                                for r in LOCAL_RINGS_M for k in range(8)))
+                yaws = [draft["yaw_rad"]]
+                if self.local and draft.get("alt_yaw_rad") is not None and \
+                        abs(_wrap(draft["alt_yaw_rad"] - draft["yaw_rad"])) > 1e-3:
+                    yaws.append(draft["alt_yaw_rad"])
                 for dx, dy in offsets:
-                    add(size, size_score, draft["x"] + dx, draft["y"] + dy,
-                        draft["yaw_rad"], z, "llm")
+                    for yaw in yaws:
+                        add(size, size_score, draft["x"] + dx, draft["y"] + dy, yaw, z, "llm")
         # Preserve spatial diversity, otherwise every top candidate can come from one wall.
         proposals.sort(key=lambda c: c.unary, reverse=True)
         selected, used = [], set()
