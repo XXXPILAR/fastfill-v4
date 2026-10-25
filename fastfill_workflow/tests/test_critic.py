@@ -8,7 +8,10 @@ from pathlib import Path
 
 from workflow.catalog import SizeCatalog
 from workflow.contract import check_request, fill_room_defaults
-from workflow.critic import Assessment, Critic, Violation
+import numpy as np
+from shapely.geometry import Polygon
+
+from workflow.critic import (Assessment, Critic, Violation, facing_error, unreachable, wall_back_error, walls)
 from workflow.geometry import Geometry
 from workflow.local_repair import FixedSizes
 from workflow.loop import Loop, LoopBudget
@@ -90,7 +93,7 @@ class CriticTests(unittest.TestCase):
 class LoopTests(unittest.TestCase):
     def test_offline_workflow_with_critic(self):
         condition = json.loads((ROOT / "examples" / "bedroom.json").read_text())
-        result = run_draft_workflow(condition, None, catalog_path=str(CATALOG), llm=False,
+        result = run_draft_workflow(condition, None, catalog_path=str(CATALOG), llm=False, placement="all",
                                     loop_budget=LoopBudget(gpt_repairs=0, search_seconds=60))
         critic = result["diagnostics"]["critic"]
         self.assertGreater(critic["draft"]["hard_count"], 0)  # every object starts at one point
@@ -101,16 +104,27 @@ class LoopTests(unittest.TestCase):
             self.assertEqual(box["target_size_local_m"], sizes[box["id"]])
         self.assertTrue(all("accepted" in a for a in critic["loop"]["attempts"]))
 
+    def test_group_workflow_places_by_group(self):
+        condition = json.loads((ROOT / "examples" / "bedroom.json").read_text())
+        result = run_draft_workflow(condition, None, catalog_path=str(CATALOG), llm=False, placement="group",
+                                    loop_budget=LoopBudget(gpt_repairs=0, search_seconds=30))
+        d = result["diagnostics"]
+        self.assertEqual(d["placement"], "group")
+        self.assertEqual(sorted(i for g in d["draft"]["groups"] for i in g), sorted(o["id"] for o in condition["objects"]))
+        self.assertEqual(result["status"] == "clean", d["critic"]["final"]["hard_count"] == 0)
+        self.assertIn("plan", result["timing_s"])
+        with self.assertRaises(ValueError):
+            run_draft_workflow(condition, None, catalog_path=str(CATALOG), llm=False, yaw_mode="fastfill")
+
     def test_gpt_answer_respects_locked_supports_and_carries_children(self):
         condition = _room()
         plan = make_plan(condition, llm=False, semantic_only=True)
         g = _geometry(condition, plan)
         sizes = {"bed": [2.1, 1.6, .5], "nightstand": [.45, .45, .55], "desk": [.6, 1.2, .75], "chair": [.5, .5, .9],
                  "lamp": [.25, .25, .45]}
-        placed = CriticTests.placed if hasattr(CriticTests, "placed") else None
-        if placed is None:
+        if not hasattr(CriticTests, "placed"):
             CriticTests.setUpClass()
-            placed = CriticTests.placed
+        placed = CriticTests.placed
         loop = Loop(g, plan, sizes, SizeCatalog(CATALOG), Critic.for_plan(g, plan, templates=[]),
                     locked_parents=_required_parents(condition), budget=LoopBudget(gpt_repairs=1))
         answer = {"objects": {"desk": {"x": 4.6, "y": 2.2, "yaw_deg": 180},
@@ -126,6 +140,75 @@ class LoopTests(unittest.TestCase):
         new, _ = loop._apply(answer, {"desk"}, partial)
         self.assertNotIn("lamp", new)
         self.assertAlmostEqual(new["desk"]["bottom_center_m"][1], 2.2)
+
+
+def _box(ident, cat, x, y, sx, sy, sz, yaw):
+    """A box in layout_quality.boxes' form (front: local +X)."""
+    c, s = math.cos(yaw), math.sin(yaw)
+    corners = [(x + c * dx - s * dy, y + s * dx + c * dy) for dx, dy in ((sx / 2, sy / 2), (-sx / 2, sy / 2),
+                                                                         (-sx / 2, -sy / 2), (sx / 2, -sy / 2))]
+    return {"id": ident, "cat": cat, "head": cat.split()[-1], "poly": Polygon(corners), "front": np.array((c, s)),
+            "side": np.array((-s, c)), "centre": np.array((x, y)), "size": (sx, sy, sz), "bottom": 0.}
+
+
+class OrientationReachTests(unittest.TestCase):
+    floor = Polygon([(0, 0), (4, 0), (4, 4), (0, 4)])
+
+    def test_facing_allows_a_large_target_by_the_ray(self):
+        table = _box("t", "table", 2., 2., 1., 3., .75, 0.)
+        # 60 degrees off the table's centre, but the ray along the front still hits the long table
+        chair = _box("c", "chair", .5, 2., .5, .5, .9, math.radians(55))
+        self.assertGreater(abs(math.degrees(math.atan2(0., 1.5)) - 55), 45)
+        self.assertEqual(facing_error(chair, table["poly"]), 0.)
+        small = _box("s", "stool", 2., 2., .3, .3, .45, 0.)
+        self.assertGreater(facing_error(chair, small["poly"]), 0.)
+        # facing away: the ray must turn about 124 degrees to clip the table's far corner
+        self.assertAlmostEqual(facing_error(_box("c", "chair", .5, 2., .5, .5, .9, math.pi), table["poly"]),
+                               math.pi - math.atan2(1.5, 1.), places=6)
+
+    def test_back_to_the_wall_needs_distance_and_direction(self):
+        wl = walls(self.floor)
+        self.assertEqual(len(wl), 4)
+        # against the left wall (x = 0), facing +X into the room
+        good = _box("w", "wardrobe", .3, 2., .6, 1.2, 2., 0.)
+        self.assertEqual(wall_back_error(good, wl)[0], 0.)
+        flipped = _box("w", "wardrobe", .3, 2., .6, 1.2, 2., math.pi)
+        self.assertGreater(wall_back_error(flipped, wl)[0], .5)
+        # facing away from a far wall in the middle of the room: SceneSmith's unbounded "away" ray would pass it
+        middle = _box("w", "wardrobe", 2., 2., .6, 1.2, 2., 0.)
+        self.assertGreater(wall_back_error(middle, wl)[0], 1.)
+        self.assertGreater(wall_back_error(_box("w", "wardrobe", .3, 2., .6, 1.2, 2., math.radians(25)), wl)[0], 0.)
+
+    def test_reach_finds_the_blocker(self):
+        door = [Polygon([(1.5, 0), (2.5, 0), (2.5, .8), (1.5, .8)])]
+        # a row of cabinets across the room cuts the sofa at the top off from the door at the bottom
+        row = [_box(f"k{i}", "cabinet", .5 + i, 2., 1., .6, 1., math.pi / 2) for i in range(4)]
+        sofa = _box("sofa", "sofa", 2., 3.5, .9, 2., .9, -math.pi / 2)
+        missed = unreachable(self.floor, row + [sofa], [], door, .2, categories={"sofa"})
+        self.assertEqual([m[0] for m in missed], ["sofa"])
+        self.assertTrue(set(missed[0][2]) <= {f"k{i}" for i in range(4)} and missed[0][2])
+        gap = [_box(f"k{i}", "cabinet", .5 + i, 2., 1., .6, 1., math.pi / 2) for i in (0, 3)]
+        self.assertEqual(unreachable(self.floor, gap + [sofa], [], door, .2, categories={"sofa"}), [])
+
+    def test_a_coffee_table_does_not_cut_off_its_sofa(self):
+        door = [Polygon([(1.5, 0), (2.5, 0), (2.5, .8), (1.5, .8)])]
+        sofa = _box("sofa", "sofa", 2., 3.5, .9, 2., .9, -math.pi / 2)
+        table = _box("ct", "coffee table", 2., 2.7, .5, 1.6, .45, 0.)  # 0.3 m in front of the sofa
+        self.assertEqual(unreachable(self.floor, [sofa, table], [], door, .2, categories={"sofa"}), [])
+
+    def test_critic_flags_a_bed_turned_to_face_the_wall(self):
+        condition = _room()
+        plan = make_plan(condition, llm=False, semantic_only=True)
+        critic = Critic.for_plan(_geometry(condition, plan), plan, templates=[],
+                                 wall_rules={"against_wall": {"bed"}, "reach": set(), "reach_half_width_m": .2})
+        if not hasattr(CriticTests, "placed"):
+            CriticTests.setUpClass()
+        placed = CriticTests.placed
+        codes = [v.code for v in critic.assess(placed).soft]
+        self.assertNotIn("wall_back", codes)
+        bed = placed["bed"]
+        flipped = {**placed, "bed": {**bed, "yaw_rad": bed["yaw_rad"] + math.pi}}
+        self.assertIn("wall_back", [v.code for v in critic.assess(flipped).soft])
 
 
 if __name__ == "__main__":

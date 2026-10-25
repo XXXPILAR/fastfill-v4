@@ -14,8 +14,9 @@
                       check and repair of that group only, then frozen
 Shared by the three: the plan (made once, passed in, so the modes differ in nothing else), the sizes and suggested yaws,
 the critic (doors hard under the evaluator's rule, the even half's templates), fixed sizes, one GPT repair budget per
-room (``gpt_repairs``, shared by B's and C's steps) and one program-search budget (``loop_budget.search_seconds``,
-split over the steps still to run), and at the end the critic-judged polish and the final assessment.
+room (``gpt_repairs``, shared by B's and C's steps), the program repair (by default every step runs until its issues
+are tried, ``loop.LoopBudget``; an explicit ``loop_budget.search_seconds`` is split over the steps still to run, as in
+the recorded order experiments), and at the end the critic-judged polish and the final assessment.
 ``run_order_variants`` also returns B_final / C_final: the same step-by-step state followed by a whole-room loop with
 A's budget (an ablation separating "how the layout was generated" from "who may move in the repair").
 The search budget is checked between attempts, so one beam search can run past it: report measured seconds.
@@ -105,7 +106,7 @@ def functional_steps(geometry: Geometry, plan: Plan, order: list[str]) -> list[l
         changed, groups = False, grouped()
         for ident in order:
             parent = plan.parents.get(ident)
-            if parent in requests and assign[ident] != assign[parent] and \
+            if parent in assign and assign[ident] != assign[parent] and \
                     rank(groups[assign[parent]]) > rank(groups[assign[ident]]):
                 assign[ident], changed = assign[parent], True
                 break
@@ -167,7 +168,7 @@ def run_order_variants(condition: dict, sizes: dict[str, list[float]] | None, pl
     common = {"locked_parents": locked, "beam_width": beam_width, "candidate_limit": candidate_limit,
               "draft_weight": DRAFT_WEIGHT}
     steps = steps_for(mode, geometry, plan, fixed_sizes, catalog, batch)
-    records, draft_calls, gpt_calls, search_left = [], [], [], budget.search_seconds
+    records, draft_calls, gpt_calls, search_left = [], [], [], budget.search_seconds or 0.
     placed: dict[str, dict] = {}
     for k, ids in enumerate(steps):
         t0 = time.perf_counter()
@@ -188,9 +189,12 @@ def run_order_variants(condition: dict, sizes: dict[str, list[float]] | None, pl
             step_geometry, step_critic = sub_room(condition, plan, placed, templates)
             cls, extra = FocusedLoop, {"movable": set(ids)}
         left = max(budget.gpt_repairs - len(gpt_calls), 0)
-        step_budget = dataclasses.replace(budget, gpt_repairs=left, search_seconds=search_left / (len(steps) - k),
-                                          max_attempts=budget.max_attempts if mode == "A" else
-                                          min(budget.max_attempts, 3 * len(ids) + 4))
+        if budget.search_seconds is None:  # the default: every step runs until its issues are tried (loop.LoopBudget)
+            step_budget = dataclasses.replace(budget, gpt_repairs=left)
+        else:  # an explicit search budget (the recorded order experiments): shared out between the steps as before
+            step_budget = dataclasses.replace(budget, gpt_repairs=left, search_seconds=search_left / (len(steps) - k),
+                                              max_attempts=budget.max_attempts if mode == "A" else
+                                              min(budget.max_attempts or 24, 3 * len(ids) + 4))
         before = step_critic.assess(placed)
         loop = cls(step_geometry, plan, fixed_sizes, catalog, step_critic, ask=ask if left else None,
                    budget=step_budget, **common, **extra)

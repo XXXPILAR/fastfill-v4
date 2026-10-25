@@ -17,9 +17,15 @@ Proposals (flowchart §2 C):
            scope objects, and may re-pick the support of an object whose support it inferred (the input's supports and
            hard ``on`` constraints stay locked). Children move with their parent.
 Every candidate goes through ``Critic.better`` (flowchart §2 D, §3): accepted, or rolled back with the reason kept.
-The loop stops when nothing is left to try, after ``stale_limit`` attempts in a row without an accepted change,
-after ``max_attempts``, or when the program search has used ``search_seconds``. Each GPT request counts against
-``gpt_repairs`` whether its candidate is accepted or not.
+The loop stops when nothing is left to try: every issue (code and objects) is taken up once, worst first, and an
+issue that appears after a change is taken up too. Work, not time, decides how far the repair goes (as SceneSmith's
+critique rounds and solver iteration limits, LayoutVLM's fixed iterations): every attempt is bounded by the beam
+(``beam_width``, ``candidate_limit``), and the attempts are bounded by ``max_attempts`` (default: 24 plus three per
+issue found at the start). ``stale_limit`` (default off) stops after that many attempts in a row without an accepted
+change. There is no time limit by default: how long a room takes never decides how well it is repaired.
+``search_seconds``, when given (tests, the recorded order experiments), stops the loop once the program search has
+used that long; the loop then ends with termination "time limit", so a result cut short by time is never silent. Each GPT request counts against ``gpt_repairs`` whether its
+candidate is accepted or not.
 """
 
 from __future__ import annotations
@@ -48,11 +54,11 @@ SOFT_DRAFT_WEIGHT = .5
 
 @dataclass
 class LoopBudget:
-    gpt_repairs: int = 2          # K_repair: GPT repair requests, accepted or not
-    max_attempts: int = 24        # issues taken up
-    stale_limit: int = 4          # attempts in a row without an accepted change
-    search_seconds: float = 180.  # program search wall clock
-    min_soft_cost: float = .05    # soft violations below this weighted cost are left alone
+    gpt_repairs: int = 2                 # K_repair: GPT repair requests, accepted or not
+    max_attempts: int | None = None      # issues taken up; None: 24 + 3 per issue found at the start
+    stale_limit: int | None = None       # attempts in a row without an accepted change; None: no early stop
+    search_seconds: float | None = None  # program search time limit; None (default): none, the attempts decide
+    min_soft_cost: float = .05           # soft violations below this weighted cost are left alone
 
 
 REPAIR_INSTRUCTIONS = """You repair part of a furniture layout. The user message is JSON: the room (floor polygon in \
@@ -75,7 +81,9 @@ objects, keep door strips clear, keep the input's constraints. Prefer small move
 
 def _describe(v: Violation) -> str:
     unit = {"template_faces": "of facing error (normalised)", "relation_plan": "(normalised gap)",
-            "relation_user": "(normalised gap)", "access": "(missing free share, normalised)"}
+            "relation_user": "(normalised gap)", "access": "(missing free share, normalised)",
+            "wall_back": "(back-to-wall gap beyond 0.15 m plus angle off, normalised)",
+            "reach": "m from the floor a person can reach from a door"}
     return f"{v.code} {list(v.ids)}: {v.magnitude:.3f}{' m' if v.code in HARD_M else ' ' + unit.get(v.code, '')}" + \
         (f" ({v.detail})" if v.detail else "")
 
@@ -120,18 +128,25 @@ class Loop:
         return _with_children(self.plan, result)
 
     # ---------------------------------------------------------------- program proposal
-    def _extra_relations(self, target: Violation) -> list[dict]:
+    def _extra_relations(self, target: Violation, placed: dict[str, dict] | None = None) -> list[dict]:
         if target.code == "template_near":
             return [{"type": "near", "object_id": target.ids[0], "target_id": target.ids[1], "max_distance_m": .25,
                      "hard": False, "origin": "critic"}]
         if target.code == "template_faces":
             return [{"type": "faces", "object_id": target.ids[0], "target_id": target.ids[1], "hard": False,
                      "tolerance_rad": math.radians(40), "origin": "critic"}]
+        if target.code == "wall_back" and placed is not None:
+            direction = self.critic.wall_direction(placed[target.ids[0]])
+            if direction:
+                return [{"type": "against_wall", "object_id": target.ids[0], "tolerance_m": .1, "hard": False,
+                         "origin": "critic"},
+                        {"type": "faces_direction", "object_id": target.ids[0], "direction_xy": list(direction),
+                         "tolerance_rad": math.radians(8), "hard": False, "origin": "critic"}]
         return []
 
     def program(self, scope: set[str], target: Violation, placed: dict[str, dict]) -> list[dict[str, dict]]:
         geometry = self.g
-        extra = self._extra_relations(target)
+        extra = self._extra_relations(target, placed)
         if extra:
             geometry = copy.copy(self.g)
             geometry.soft = self.g.soft + extra
@@ -176,7 +191,10 @@ class Loop:
         """New boxes from the answer: poses for scope objects, supports re-picked where allowed, children carried."""
         parents = dict(self.plan.parents)
         poses: dict[str, dict] = {}
-        for ident, entry in (answer.get("objects") or {}).items():
+        entries = answer.get("objects")
+        if isinstance(entries, list):  # [{"id": ..., "x": ...}] instead of the map asked for
+            entries = {e["id"]: e for e in entries if isinstance(e, dict) and isinstance(e.get("id"), str)}
+        for ident, entry in (entries if isinstance(entries, dict) else {}).items():
             if ident not in scope or not isinstance(entry, dict):
                 continue
             x, y, yaw = (_number(entry.get(k), -1e4, 1e4) for k in ("x", "y", "yaw_deg"))
@@ -277,18 +295,25 @@ class Loop:
         best = min(scored, key=lambda t: t[0].key())
         return best[1], best[0]
 
+    def max_attempts(self, current: Assessment) -> int:
+        if self.budget.max_attempts is not None:
+            return self.budget.max_attempts
+        return 24 + 3 * len(self._targets(current, set()))
+
     def run(self, placed: dict[str, dict]) -> tuple[dict[str, dict], dict]:
         start = time.perf_counter()
         current = self.critic.assess(placed)
-        info = {"initial": current.summary(), "attempts": [], "termination": "max_attempts"}
+        max_attempts, limit = self.max_attempts(current), self.budget.search_seconds
+        info = {"initial": current.summary(), "attempts": [], "termination": "max_attempts",
+                "max_attempts": max_attempts, "time_limit_s": limit}
         tried, stale = set(), 0
-        for _ in range(self.budget.max_attempts):
+        for _ in range(max_attempts):
             targets = self._targets(current, tried)
             if not targets:
                 info["termination"] = "no issue left to try"
                 break
-            if self.search_s >= self.budget.search_seconds:
-                info["termination"] = "search time budget"
+            if limit is not None and self.search_s >= limit:
+                info["termination"] = "time limit"
                 break
             target = targets[0]
             tried.add((target.code, target.ids))
@@ -331,7 +356,7 @@ class Loop:
                 else:
                     self.failed.append(f"moving {sorted(scope)} for {_describe(target)} was rejected: {reason}")
             stale = 0 if accepted else stale + 1
-            if stale >= self.budget.stale_limit:
+            if self.budget.stale_limit is not None and stale >= self.budget.stale_limit:
                 info["termination"] = "no improvement"
                 break
         info.update(final=current.summary(), gpt_calls=self.gpt_calls, search_seconds=round(self.search_s, 3),

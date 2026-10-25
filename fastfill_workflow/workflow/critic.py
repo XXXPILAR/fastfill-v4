@@ -11,11 +11,19 @@
        template_near / template_faces   relation templates mined from the training rooms (``critic_templates.json``,
                        the even half; ``experiments/mine_split_templates.py``): for each floor obstacle of category A
                        and the nearest obstacle of category B, the gap beyond the template's 80th-percentile gap, or
-                       the facing error beyond 45 degrees (weight 0.5); REL (fastfill.v2.ops.layout_quality) counts
-                       the same pairs as pass / fail with the odd half's templates
+                       the turn needed to face B (``facing_error``: within 45 degrees of B's centre, as REL, or a ray
+                       along the front hitting B's footprint) (weight 0.5); REL (fastfill.v2.ops.layout_quality)
+                       counts the same pairs as pass / fail with the odd half's templates
        access          a floor obstacle at least 0.3 m tall whose usable sides (front; beds also the long sides,
                        tables every side; seats and tables do not block each other) all have less than half of the
                        0.5 m strip in front free (layout_quality.acc's rule), magnitude the missing share (weight 0.5)
+       wall_back       an object of a category that stands back to a wall in at least 80 % of the training rooms
+                       (``critic_wall_rules.json``, the even half; ``experiments/mine_wall_rules.py``) whose back face
+                       is more than 0.15 m from every wall or whose front is more than 10 degrees off the wall's
+                       inward normal: ``wall_back_error`` (weight 0.5)
+       reach           an object of a category reached in at least 90 % of the training rooms that a person 0.4 m wide
+                       cannot walk up to from a door (``unreachable``), magnitude the distance from the reachable floor
+                       (at least 0.1), the ids include the objects blocking the way (weight 1)
        window          a soft window-clearance issue (weight 0.25), door clearance when doors are soft (weight 1)
 Visual feedback is not part of either score (critic_flowchart_v2 §3: program scores and visual review are kept apart).
 
@@ -36,7 +44,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Point, Polygon
 from shapely.ops import unary_union
 
 from . import contract  # noqa: F401  (puts the fastfill package on sys.path)
@@ -46,10 +54,18 @@ from fastfill.validate import SEAT, TABLE
 from .geometry import Geometry, Issue, footprint
 
 TEMPLATES = Path(__file__).resolve().parents[1] / "critic_templates.json"
+WALL_RULES = Path(__file__).resolve().parents[1] / "critic_wall_rules.json"
 EPS_H, EPS_S, PROTECT_M = .005, .01, .05
 WEIGHTS = {"relation_user": 1., "relation_plan": .5, "template_near": .5, "template_faces": .5, "access": .5,
-           "window": .25, "door": 1.}
+           "window": .25, "door": 1., "wall_back": .5, "reach": 1.}
 SCALE = {"distance": 1., "angle": math.pi / 2, "share": .5}
+# person width as mined into critic_wall_rules.json (``reach_width_m``); the arm is how near a person's centre must
+# come to a side to use it beyond the half width
+REACH_HALF_WIDTH_M, REACH_ARM_M = .2, .4
+SOFA = {"sofa", "couch", "loveseat", "chaise"}
+# no functional front: any side may face the wall (a plant turned 90 degrees is not wrong)
+ANY_SIDE = {"lamp", "floorlamp", "plant", "plants", "floorplant", "plantfloor", "bin", "hamper", "basket", "vase"}
+WALL_GAP_M, WALL_ANGLE_RAD, WALL_MIN_LENGTH_M = .15, math.radians(10.), .3
 
 
 @dataclass(frozen=True)
@@ -106,12 +122,161 @@ def load_templates(path: str | Path | None = None) -> list[dict]:
     return json.loads(path.read_text())["templates"] if path.is_file() else []
 
 
+def load_wall_rules(path: str | Path | None = None) -> dict:
+    """{"against_wall": categories, "reach": categories, "reach_half_width_m": float}; empty sets without the file."""
+    path = Path(path) if path else WALL_RULES
+    if not path.is_file():
+        return {"against_wall": set(), "reach": set(), "reach_half_width_m": REACH_HALF_WIDTH_M}
+    data = json.loads(path.read_text())
+    return {"against_wall": {r["category"] for r in data["against_wall"]}, "reach": set(data["reach_categories"]),
+            "reach_half_width_m": data["reach_width_m"] / 2}
+
+
 def _sqrt_area(area: float) -> float:
     return math.sqrt(max(area, 0.))
 
 
+# ---------------------------------------------------------------- orientation and reachability (SceneSmith's tools,
+# made stricter: oriented boxes instead of axis-aligned ones, a distance limit on "back to the wall", and the pairs to
+# check come from templates and wall rules, not from a model's choice)
+def facing_error(b: dict, target: Polygon, centre_rad: float | None = math.radians(lq.FACING_DEG)) -> float:
+    """Radians the front of ``b`` must turn to face ``target`` (its oriented footprint). Facing means a ray from the
+    centre along the front hits the target (SceneSmith's check_facing test, so a large target allows more) or, with
+    ``centre_rad``, the front is within that angle of the direction to the target's centre (layout_quality's test,
+    which the training rooms pass more often for small targets: experiments/mine_wall_rules.py); 0 when facing."""
+    origin = b["centre"]
+    to = np.asarray(target.centroid.coords[0]) - origin
+    if target.contains(Point(origin)) or float(np.linalg.norm(to)) <= 1e-9:
+        return 0.
+    base = math.atan2(to[1], to[0])
+
+    def rel(v) -> float:
+        return (math.atan2(v[1], v[0]) - base + math.pi) % (2 * math.pi) - math.pi
+
+    spans = [rel(np.asarray(c) - origin) for c in target.exterior.coords[:-1]]
+    f = rel(b["front"])
+    ray = max(f - max(spans), 0.) if f > 0 else max(min(spans) - f, 0.)
+    return ray if centre_rad is None else min(ray, max(abs(f) - centre_rad, 0.))
+
+
+def walls(floor: Polygon, min_length_m: float = WALL_MIN_LENGTH_M) -> list[tuple[LineString, np.ndarray]]:
+    """The floor polygon's edges at least ``min_length_m`` long, each with its unit normal into the room."""
+    coords = list(floor.exterior.coords)
+    inward = 1. if floor.exterior.is_ccw else -1.  # counter-clockwise: the interior is left of each edge
+    out = []
+    for a, c in zip(coords[:-1], coords[1:]):
+        d = np.subtract(c, a)
+        length = float(np.linalg.norm(d))
+        if length >= min_length_m:
+            u = d / length
+            out.append((LineString([a, c]), inward * np.array((-u[1], u[0]))))
+    return out
+
+
+def any_side(b: dict) -> bool:
+    return b["head"] in ANY_SIDE or b["cat"].replace(" ", "") in ANY_SIDE
+
+
+def wall_back_error(b: dict, wall_list: list[tuple[LineString, np.ndarray]], gap_m: float = WALL_GAP_M,
+                    angle_rad: float = WALL_ANGLE_RAD) -> tuple[float, float, float]:
+    """How far ``b`` is from standing with its back against a wall, facing into the room: over the walls, the least
+    (gap of the back face's midpoint beyond ``gap_m``) + (angle between the front and the wall's inward normal beyond
+    ``angle_rad``, over pi/2). Returns (error, gap, angle) for the best wall; the gap is limited, unlike SceneSmith's
+    unbounded "away" ray, so a wardrobe in the middle of the room facing away from a far wall does not pass. Objects
+    without a functional front (``ANY_SIDE``) may stand with any side to the wall."""
+    sides = [(b["front"], b["size"][0] / 2)]
+    if any_side(b):
+        sides += [(-b["front"], b["size"][0] / 2), (b["side"], b["size"][1] / 2), (-b["side"], b["size"][1] / 2)]
+    best = (math.inf, math.inf, math.inf)
+    for (line, normal), (front, half) in ((w, f) for w in wall_list for f in sides):
+        gap = Point(*(b["centre"] - front * half)).distance(line)
+        angle = math.acos(max(-1., min(1., float(np.dot(front, normal)))))
+        error = max(gap - gap_m, 0.) + max(angle - angle_rad, 0.) / (math.pi / 2)
+        if error < best[0]:
+            best = (error, gap, angle)
+    return best
+
+
+def approach_sides(b: dict) -> list[tuple[np.ndarray, float, float]]:
+    """The sides one uses ``b`` from, as (outward unit vector, half width along the side, half depth to the side):
+    the front; beds also the long sides; tables and seats any side (a chair is pulled out from behind)."""
+    sx, sy, _ = b["size"]
+    sides = [(b["front"], sy / 2, sx / 2)]
+    if b["head"] in lq.BEDS:
+        sides += [(b["side"], sx / 2, sy / 2), (-b["side"], sx / 2, sy / 2)]
+    elif b["head"] in TABLE or b["head"] in SEAT:
+        sides += [(-b["front"], sy / 2, sx / 2), (b["side"], sx / 2, sy / 2), (-b["side"], sx / 2, sy / 2)]
+    return sides
+
+
+def walkable(floor: Polygon, obstacles: list[Polygon], half_width_m: float):
+    """Where the centre of a person ``2 * half_width_m`` wide can stand (SceneSmith's reachability: the floor shrunk
+    by the half width minus every obstacle grown by it)."""
+    free = floor.buffer(-half_width_m)
+    if obstacles and not free.is_empty:
+        free = free.difference(unary_union([o.buffer(half_width_m) for o in obstacles]))
+    return [g for g in getattr(free, "geoms", [free]) if not g.is_empty and g.area > 1e-6]
+
+
+def _kind(b: dict) -> str:
+    return "seat" if b["head"] in SEAT or b["head"] in SOFA else "table" if b["head"] in TABLE else ""
+
+
+def unreachable(floor: Polygon, bs: list[dict], fixed: list[Polygon], doors: list[Polygon],
+                half_width_m: float = REACH_HALF_WIDTH_M, categories: set[str] | None = None,
+                blockers: bool = True) -> list[tuple[str, float, tuple]]:
+    """Floor obstacles at least ``lq.ACC_MIN_HEIGHT_M`` tall (of ``categories``, when given) that a person
+    ``2 * half_width_m`` wide cannot walk up to from a door.
+
+    The free space a person's centre can use splits into regions; the regions touching a door's clearance zone are
+    the reachable ones (the largest region when the room has no door). An object is reached when a reachable region
+    comes within ``REACH_ARM_M`` of one of its approach sides (``approach_sides``). Seats and tables do not block each
+    other (one sits down between a sofa and its coffee table), as in ACC. Returns (id, distance from the reachable
+    space to its nearest side, the obstacles whose removal alone makes it reachable) per unreached object; unlike
+    SceneSmith's region count, a sliver behind a bed does not count, and the blockers name what to move."""
+    obstacles = [b for b in bs if lq.obstacle(b)]
+    targets = [b for b in obstacles if b["size"][2] >= lq.ACC_MIN_HEIGHT_M
+               and (categories is None or b["cat"] in categories)]
+    ignore = {"seat": "table", "table": "seat"}
+
+    def reached_space(kind: str, skip: str | None = None):
+        regions = walkable(floor, [o["poly"] for o in obstacles if o["id"] != skip
+                                   and not (kind and _kind(o) == ignore[kind])] + fixed, half_width_m)
+        if not regions:
+            return None
+        touching = [g for g in regions if any(g.distance(d) <= 1e-6 for d in doors)] if doors else []
+        return unary_union(touching or [max(regions, key=lambda g: g.area)])
+
+    def gap(space, b) -> float:
+        if space is None:
+            return math.inf
+        reach = half_width_m + REACH_ARM_M
+        zones = []
+        for d, hw, hd in approach_sides(b):
+            a = np.array((-d[1], d[0]))
+            near, far = b["centre"] + d * hd, b["centre"] + d * (hd + reach)
+            zones.append(Polygon([tuple(near + a * hw), tuple(near - a * hw), tuple(far - a * hw), tuple(far + a * hw)]))
+        return min(space.distance(z) for z in zones)
+
+    spaces = {k: reached_space(k) for k in {_kind(b) for b in targets}}
+    out = []
+    for b in targets:
+        kind = _kind(b)
+        g = gap(spaces[kind], b)
+        if g <= 1e-6:
+            continue
+        found = ()
+        if blockers and spaces[kind] is not None:
+            near = [o for o in obstacles if o is not b and o["poly"].distance(b["poly"]) <= 2 * half_width_m + REACH_ARM_M
+                    and not (kind and _kind(o) == ignore[kind])]
+            found = tuple(o["id"] for o in near if gap(reached_space(kind, skip=o["id"]), b) <= 1e-6)
+        out.append((b["id"], g, found))
+    return out
+
+
 class Critic:
-    def __init__(self, geometry: Geometry, user_soft: list[dict], plan_soft: list[dict], templates: list[dict]):
+    def __init__(self, geometry: Geometry, user_soft: list[dict], plan_soft: list[dict], templates: list[dict],
+                 wall_rules: dict | None = None):
         self.g = geometry
         self.user_soft, self.plan_soft = user_soft, plan_soft
         self.templates: dict[str, list[dict]] = {}
@@ -120,11 +285,15 @@ class Critic:
         self.row = {"condition": geometry.condition}  # what layout_quality's helpers read
         self.fixed_polys = lq.fixed_obstacles(self.row)
         self.floor_poly = geometry.polygon.buffer(0)
+        self.rules = load_wall_rules() if wall_rules is None else wall_rules
+        self.walls = walls(self.floor_poly) if self.floor_poly.geom_type == "Polygon" else []
+        self.door_zones = [zone for zone, _ in geometry.doors if not zone.is_empty]
 
     @classmethod
-    def for_plan(cls, geometry: Geometry, plan, templates: list[dict] | None = None) -> "Critic":
+    def for_plan(cls, geometry: Geometry, plan, templates: list[dict] | None = None,
+                 wall_rules: dict | None = None) -> "Critic":
         user = [r for r in geometry.explicit if not r.get("hard", True)]
-        return cls(geometry, user, list(plan.relations), load_templates() if templates is None else templates)
+        return cls(geometry, user, list(plan.relations), load_templates() if templates is None else templates, wall_rules)
 
     def with_geometry(self, geometry: Geometry) -> "Critic":
         critic = Critic.__new__(Critic)
@@ -208,12 +377,7 @@ class Critic:
                             out.append(Violation("template_near", (a["id"], nearest["id"]), excess / SCALE["distance"],
                                                  WEIGHTS["template_near"], f"{a_cat} near {t['b']}"))
                     else:
-                        to = nearest["centre"] - a["centre"]
-                        norm = float(np.linalg.norm(to))
-                        if norm <= 1e-6:
-                            continue
-                        angle = math.acos(max(-1., min(1., float(np.dot(a["front"], to / norm)))))
-                        excess = angle - math.radians(lq.FACING_DEG)
+                        excess = facing_error(a, nearest["poly"])
                         if excess > 0:
                             out.append(Violation("template_faces", (a["id"], nearest["id"]), excess / SCALE["angle"],
                                                  WEIGHTS["template_faces"], f"{a_cat} faces {t['b']}"))
@@ -244,11 +408,35 @@ class Critic:
                                      f"best side {best:.0%} free"))
         return out
 
+    def _wall_back(self, bs: list[dict]) -> list[Violation]:
+        out = []
+        for b in bs:
+            if b["cat"] in self.rules["against_wall"] and lq.obstacle(b) and self.walls:
+                error, gap, angle = wall_back_error(b, self.walls)
+                if error > 0:
+                    out.append(Violation("wall_back", (b["id"],), error, WEIGHTS["wall_back"],
+                                         f"back {gap:.2f} m from the wall, {math.degrees(angle):.0f} deg off"))
+        return out
+
+    def wall_direction(self, box: dict) -> tuple[float, float] | None:
+        """The inward normal of the wall ``box`` is nearest to standing back against (the loop's search target)."""
+        b = lq.boxes(self.row, {"objects": [box]})[0]
+        best = min(self.walls, key=lambda w: wall_back_error(b, [w])[0], default=None)
+        return None if best is None else (float(best[1][0]), float(best[1][1]))
+
+    def _reach(self, bs: list[dict]) -> list[Violation]:
+        if not self.rules["reach"] or self.floor_poly.geom_type != "Polygon":
+            return []
+        return [Violation("reach", (ident,) + blockers, max(gap, .1) / SCALE["distance"], WEIGHTS["reach"],
+                          "blocked by " + ", ".join(blockers) if blockers else "no way in")
+                for ident, gap, blockers in unreachable(self.floor_poly, bs, self.fixed_polys, self.door_zones,
+                                                        self.rules["reach_half_width_m"], self.rules["reach"])]
+
     def soft(self, placed: dict[str, dict]) -> list[Violation]:
         out = self._relations(self.user_soft, "relation_user", placed)
         out += self._relations(self.plan_soft, "relation_plan", placed)
         bs = self._quality_boxes(placed)
-        out += self._templates(bs) + self._access(bs)
+        out += self._templates(bs) + self._access(bs) + self._wall_back(bs) + self._reach(bs)
         for box in placed.values():
             for issue in self.g.opening_issues(box, doors=not self.g.hard_doors, windows=not self.g.hard_windows):
                 code = "door" if issue.code == "door_clearance" else "window"

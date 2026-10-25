@@ -66,11 +66,13 @@ class Refiner:
         self.counts = {"wall_snap": 0, "axis_align": 0, "near": 0, "faces": 0, "rejected": 0}
 
     def _carried(self, ident: str) -> list[str]:
+        """What stands on ident, placed so far (step-by-step placement polishes before the small items exist)."""
         result, stack = [], [ident]
         while stack:
             for child in self.children.get(stack.pop(), []):
-                result.append(child)
-                stack.append(child)
+                if child in self.placed:
+                    result.append(child)
+                    stack.append(child)
         return result
 
     def _issues(self, ids: list[str], placed: dict[str, dict]) -> int:

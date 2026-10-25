@@ -1,5 +1,9 @@
-"""Run the draft workflow over a rows file: ① LLM plan, ② FastFill size, ③ LLM draft, then the critic loop with up
-to ``--gpt-repairs`` GPT repairs and the critic-judged polish (``--no-critic``: ④ local repair, polish off, as v4).
+"""Run the draft workflow over a rows file: ① LLM plan, ② FastFill size, then (default, ``--placement staged``) the
+floor furniture and then the small items, each stage placed group by group with program checks and reviewed once by
+the LLM (``workflow.staged``; ``--no-semantic`` skips the reviews); ``--placement group``: one functional group at a
+time placed by the LLM, checked and repaired, and a final whole-room critic loop with up to ``--gpt-repairs`` GPT
+repairs and the critic-judged polish; ``--placement all``: ③ one LLM draft of the whole room and the critic loop;
+``--no-critic``: ③ draft, ④ local repair, polish off, as v4.
 
 LLM calls go to the official OpenAI API only (settings in ``.env`` beside ``workflow/``; ``workflow/credentials.py``).
 Step ② either runs a FastFill checkpoint in this process (``--checkpoint``, GPU recommended) or reads sizes from a
@@ -46,14 +50,16 @@ def preflight(settings: dict) -> None:
 
 
 def run_room(condition: dict, sizes: dict | None, yaws: dict | None, size_error: str | None, catalog: str,
-             settings: dict, yaw_mode: str, critic: bool = True, gpt_repairs: int = 2) -> tuple[dict, float, dict, int]:
+             settings: dict, yaw_mode: str, critic: bool = True, gpt_repairs: int = 2,
+             placement: str = "staged", semantic: bool = True) -> tuple[dict, float, dict, int]:
     """One room in a worker process: steps ①, ③ and the critic loop with polish (``critic=False``: ④ local repair
     without polish, the v4 run); step ②'s sizes and yaws are given."""
     start = time.perf_counter()
     try:
         result = run_draft_workflow(condition, sizes, catalog_path=catalog, polish=critic, model=settings["model"],
                                     base_url=settings["base_url"], api_key=settings["api_key"], yaws=yaws,
-                                    yaw_mode=yaw_mode, critic=critic, gpt_repairs=gpt_repairs)
+                                    yaw_mode=yaw_mode, critic=critic, gpt_repairs=gpt_repairs, placement=placement,
+                                    semantic=semantic)
     except FatalAPIError:
         raise
     except Exception as exc:
@@ -64,7 +70,9 @@ def run_room(condition: dict, sizes: dict | None, yaws: dict | None, size_error:
         d["size_error"] = size_error
     loop = (d.get("critic") or {}).get("loop") or {}
     calls = d.get("plan_llm", {}).get("calls", []) + d.get("draft", {}).get("calls", []) + \
-        [c for c in loop.get("gpt_calls", []) if "usage" in c]
+        [c for c in loop.get("gpt_calls", []) if "usage" in c] + \
+        [c for stage in ("stage_one", "stage_two") for c in
+         (((d.get("stages") or {}).get(stage) or {}).get("semantic") or {}).get("llm_calls", []) if "usage" in c]
     cost = sum(c.get("cost_usd") or 0 for c in calls)
     usage = [c.get("usage") or {} for c in calls]
     tokens = {"prompt_tokens": sum(u.get("prompt_tokens") or 0 for u in usage),
@@ -108,6 +116,10 @@ def main() -> None:
     ap.add_argument("--evaluate", action="store_true")
     ap.add_argument("--no-critic", action="store_true", help="the v4 workflow: ④ local repair, soft doors, no polish")
     ap.add_argument("--gpt-repairs", type=int, default=2, help="critic loop: GPT repair requests per room (K_repair)")
+    ap.add_argument("--placement", choices=("staged", "group", "all"), default="staged",
+                    help="staged: floor furniture then small items, program checks per group and an LLM review per "
+                         "stage; group: one functional group per LLM call, then a whole-room repair; all: one LLM call")
+    ap.add_argument("--no-semantic", action="store_true", help="staged: skip the LLM semantic reviews")
     a = ap.parse_args()
 
     settings = official_api()
@@ -128,7 +140,8 @@ def main() -> None:
             raise SystemExit(f"--sizes-file has {len(file_sizes)} lines, --rows {len(rows)}")
     (a.out / "config.json").write_text(json.dumps({
         "rows": str(a.rows), "model": settings["model"], "base_url": settings["base_url"],
-        "sizes": sizer.describe() if sizer else {"file": str(a.sizes_file)}, "yaw_mode": a.yaw_mode,
+        "sizes": sizer.describe() if sizer else {"file": str(a.sizes_file)}, "yaw_mode": a.yaw_mode, "placement": a.placement if not a.no_critic else "v4",
+        "semantic": a.placement == "staged" and not a.no_semantic, "critic": not a.no_critic,
         "budget_usd": a.budget_usd,
         "rooms": len(picked)}, indent=1))
 
@@ -165,7 +178,8 @@ def main() -> None:
                     break
                 i = pending.pop(0)
                 running[pool.submit(run_room, rows[i]["condition"], sizes[i], yaws[i], size_errors.get(i),
-                                    str(a.catalog), settings, a.yaw_mode, not a.no_critic, a.gpt_repairs)] = i
+                                    str(a.catalog), settings, a.yaw_mode, not a.no_critic, a.gpt_repairs,
+                                    a.placement, not a.no_semantic)] = i
             if not running:
                 break
             finished, _ = wait(running, return_when=FIRST_COMPLETED)
@@ -201,7 +215,9 @@ def main() -> None:
                           for k in ("prompt_tokens", "completion_tokens", "reasoning_tokens")},
                "wall_s": {"median": walls[len(walls) // 2] if walls else None, "max": walls[-1] if walls else None,
                           "sum": round(sum(walls), 1)},
-               "size_fallback_rooms": sum(1 for r in results.values() if (r.get("diagnostics") or {}).get("size_error"))}
+               "size_fallback_rooms": sum(1 for r in results.values() if (r.get("diagnostics") or {}).get("size_error")),
+               # an unexpected failure after placement started: the committed layout was kept, not dropped
+               "error_recovered_rooms": sum(1 for r in results.values() if (r.get("diagnostics") or {}).get("error"))}
     (a.out / "summary.json").write_text(json.dumps(summary, indent=1))
     print("summary:", json.dumps(summary), flush=True)
     if a.evaluate and done:
