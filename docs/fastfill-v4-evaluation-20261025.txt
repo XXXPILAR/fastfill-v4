@@ -1,0 +1,160 @@
+FastFill v4：空房间外壳＋指定家具清单的评估协议
+2026-10-25｜根据用户本轮确认的主任务整理
+
+先读结论
+
+输入是房间空壳与必须摆放的家具清单；FastFill为每个请求物体预测尺寸、位置、朝向及需要的支撑候选；RoomGenBench接收布局后生成或装配真实资产。
+主要问题是：指定家具是否齐全、大小与摆放是否合理、房间是否能使用、交接后是否仍然成立。
+本任务允许多种合理摆法。单个参考布局的坐标误差与场景图相似度是辅助诊断，不能单独决定生成质量。
+评估必须分别报告布局、真实mesh、物理仿真三个层级，并保留全部失败和未知检查的分母。
+
+本次内容是调研与协议建议，没有新的真实Qwen、VLM、资产生成或仿真得分，没有修改业务源码。
+配套一手来源、精确指标分母和本地反例保存在 docs/evidence/fastfill-v4-evaluation-20261025/。
+
+1. 主任务的输入与输出
+
+主输入：
+  - 空壳：真实floor polygon、坐标与单位、已知floor/height、已知门窗与结构障碍。所有方法使用同一份几何。
+  - 清单：稳定request ID、类别、数量、描述，以及用户实际给出的属性或要求。
+  - 未提供的家具尺寸、位置、yaw、支撑关系由方法预测；不能从参考布局自动补入输入。
+
+需要明确区分的评测配置：
+  A 主榜：空壳＋文字家具清单；未知尺寸由模型预测。没有用户关系要求时，不额外喂参考布局抽取的关系。
+  B 关系条件榜：A加用户明确给出的关系／支撑要求；每个方法接收完全相同的信息。
+  C 已知资产榜：给定真实assets或尺寸，只比较摆放。NaLA等已知资产方法可在这一榜公平比较。
+  D oracle-support诊断：显式提供参考支撑标签，衡量额外信息带来的上限；结果不能与A混在一起。
+
+模型输出至少应包含每个请求ID对应的正有限local full size、bottom-center与yaw；支撑parent是待验证的预测，不因写了parent字段就自动算接触成立。
+输出应能无损导出到RoomGenBench：保留ID、空壳、门窗、单位、轴约定与每实例的尺寸；metadata和生成mesh的实际几何要分别核对。
+
+数据要求：
+  - 无法确认是真实物理边界的reference_extent房间另列；不得当成已知空壳通过边界检查。
+  - 缺height时，天花板检查记unknown并公开覆盖率；不能将显示用默认高度当成测量值。
+  - fixed只保留输入中实际已知的结构／内置部分。不能把参考目标家具的bbox当成空壳信息。
+  - 冻结一份canonical condition清单和SHA256，所有方法都从这份清单预测；validity、目标几何、源标注对称策略仅供训练或评分。
+
+2. 相关工作实际上怎样评估
+
+SceneEval：明确区分请求一致性与场景合理性，涵盖数量、属性、关系、支撑、碰撞、越界、导航和可接近性。显式ID清单优先做确定性核对。官方实现中COL/OOB是mesh检查，NAV/ACC主要是二维bbox栅格；部分语义与功能侧判断使用VLM。
+  论文：https://arxiv.org/html/2503.14756v3
+  官方代码：https://github.com/3dlg-hcvc/SceneEval/tree/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5
+
+Holodeck：布局人评中固定对象，只改变摆放，以随机顺序展示俯视图，评价边界、碰撞、通行与合理性；全场景生成的其他实验允许选择assets。其ObjectNav任务Success/SPL不能直接当成布局成功率。
+  https://arxiv.org/html/2312.09067
+
+SceneNAT：报告输入关系的iRecall、FID/FID-CLIP/KID、SceneEval-style布局指标；附录A.7的碰撞严重度使用OBB交体积。其关系生成协议、OBB指标和吞吐设置不能不加说明搬到本任务。
+  https://arxiv.org/html/2601.07218v2
+
+NaLA：同一空房、同一组真实assets比较摆放，输入信息比主榜A更强。报告voxel-mesh碰撞、越界、悬空及多视角人评；可借鉴固定对象和裁去baseline额外模块的原则，直接对比应归入C。
+  https://arxiv.org/html/2606.29395v2
+
+SceneSmith：报告mesh／碰撞几何及重力模拟稳定性，另做盲法多视角评价。它允许增加合理物品的设定不适合直接搬到固定清单任务；并发吞吐不能当单房间延迟。
+  https://arxiv.org/html/2602.09153v2
+
+DiffuScene：FID/KID、真假场景分类与类别分布衡量生成集合。它们可作附表，但不会单独验证某房间的家具清单和可用性。主榜中类别分布本来由输入约束，匹配类别分布并不足以说明布局合理。
+  https://arxiv.org/html/2303.14207v2
+
+LEGO-Eval：把用户描述分解为原子约束，再用工具定位物体与检查关系。可借鉴需求分解，当前只核对了一手摘要和官方README，没有执行其工具／VLM。
+  https://arxiv.org/abs/2511.03001
+  https://github.com/gyeomh/LEGO-Eval
+
+IDEAL-Bench是图像到布局的重建评测，其单参考几何恢复指标不能直接替代这里的空壳生成评测。
+  https://arxiv.org/abs/2607.03614
+
+3. 指标名称与分母必须写清楚
+
+SceneEval官方commit 116881e…：
+  - NAV↑：最大连通可行走区域／全部可行走区域。配置含robot_width；代码有doors待补。高分不保证从门能进入，也不保证剩余自由面积足够。
+    https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/navigability.py
+  - ACC↑：功能侧带状区域的可用面积比例，功能侧由VLM确定。多侧聚合、N/A和front约定必须一致；局部带状空地不等于从门可达。
+    https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/accessibility.py
+  - COL↓：至少参与一个mesh碰撞的对象数／对象数，有接触容差。它不是碰撞对比例，也不是OBB交体积。
+    https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py
+  - OOB↓：mesh采样投射floor后判越界的对象数／对象数；不是完整3D天花板检查。
+    https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py
+  - Opening Clearance：逐门窗／检测侧的mesh投影遮挡比例与计数。没有门窗应记N/A；自定义blocked-door rate需单独定义，不能只写OPC。
+    https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/opening_clearance.py
+
+各论文同名COL可能是对象比例、加权对象对碰撞或OBB交体积；OPC也可能是面积遮挡率或被挡门比例。数值只能在同一实现、单位、容差和分母下比较。
+本项目的规则ACC、bbox COL与door-zone OPC应在名称中保留proxy／rule说明；没有运行官方mesh/VLM实现时，不应称为完整复现SceneEval。
+
+4. 适合FastFill的五层主表
+
+第一层：清单与接口
+  ExactInventory：所有请求ID恰好一次、不增不漏、类别数量相符的房间数／全部请求房间数。
+  同时列JSON／schema失败、超预算、重复、遗漏、额外物体与导出失败数。失败不可表现为零碰撞的优质布局。
+
+第二层：布局几何与尺寸
+  报告bbox越界对象比例及越界程度、requested-requested碰撞与requested-fixed碰撞、地面／天花板问题。
+  另列尺寸合理性：独立的类别／描述尺寸检查或盲评；正有限尺寸只是接口门槛，不能靠极小家具获得通行高分。
+  容差、2D／3D、support例外、交叠严重度全部冻结；桌椅嵌套、书在书架内等bbox重叠与真实mesh碰撞必须分层。
+
+第三层：房间能否使用
+  保留NAV并同时列FreeFloor；额外定义DoorReach，使用已声明宽度的agent从入口在膨胀障碍后的空间中检测可达区域。
+  检查到家具功能侧的可达、门前净空／可用时的门扇扫掠、墙挂／落地／物体上方的支撑候选。
+  支撑bbox近接只算proxy；没有真实surface证据的接触或稳定性不能算已验证。
+
+第四层：RoomGenBench完整场景
+  报每个请求实例是否有真实生成mesh、缺失／失败／placeholder／fallback数量、尺寸拟合畸变、生成资产的类别／描述一致性。
+  装配后重新检查空壳、门窗、实际mesh碰撞／越界／接触；若启用物理仿真再单列稳定率。
+  所有请求都进入覆盖与系统成功率分母。asset-key数量、请求实例数量和成功mesh实例数量分开。
+  视觉布局／语义／风格可做匿名随机A/B多视角人评或经校准的VLM辅助；同一渲染条件，不能让纹理／资产方法差异掩盖布局差异。
+
+第五层：效率
+  batch1同硬件warm p50/p95；cold start另列。拆开模型prefill、decoder、规则／验证与下游资产生成、装配、渲染时延。
+  同时列硬件、batch、调用数、轮数、失败和生成成本。decode_ms不能改名为完整场景端到端耗时。
+
+辅助表：
+  GT位置／尺寸／yaw误差和世界轴SG作为参考相似度；只在有效标签上计算，并显示对象／房间覆盖数。
+  用户显式给出的关系另算condition compliance；不要把未输入的全部参考三元组当成必须复刻的要求。
+  FID/KID／视觉分布与多样性只作为有效布局上的补充，使用固定渲染／资产策略、足够样本和清楚的采样协议。
+  分布指标、参考相似度与需求满足分别展示，暂不把它们揉成一个不透明总分。
+
+5. RoomGenBench在这条链上的位置
+
+官方公开版本为30f2e059d046ccd4aa928d0109a09a52f11693b5，仓库重定向到WorldEdge-Lab/RoomGenBench。
+原任务是给定SAGE布局bbox、描述和placement后生成／装配mesh；固定5房、313实例、184个type+description资产。它不负责从空壳预测未知布局。
+  合同：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/CONTRACT.md
+
+其现有评分包括资产语义／检索匹配、几何支撑、Room VQA及有参考项。当前FastFill动态适配器完成assembly，尚未把这些固定5房评分入口泛化到任意handoff。
+  几何：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py
+  VLM：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py
+  聚合：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py
+
+共享assembler会把mesh拟合进目标bbox。拟合后尺寸一致不证明FastFill预测的原始尺寸合理；需保存native／fitted尺寸和变形量。
+官方支撑评分会排除缺mesh的支撑对；面向本系统必须同时列接触评分覆盖率。没有validator／physics证据的generated_mesh_success不能叫完整场景物理通过。
+当前默认shell还存在窗口metadata未改变mesh、非矩形floor slab简化等限制；下游验收要验证实际空壳几何，而不仅是JSON字段保留。
+
+6. 当前结果与主任务的差距
+
+历史test300：285/300房带589条关系；115房含3078个支撑声明；32房含fixed；15房边界unknown，66房缺height。旧GPT结果收到完整条件。
+因此现有记录应保留为full-condition结果。若去掉关系／隐藏支撑形成A，所有方法必须对新输入重新预测，不能直接拿旧GPT答案作同输入对比。
+
+现有benchmark_request这条五房简化导出路径：复制313个参考support_parent，却把5扇门丢掉。原RoomGenBench给placement符合其自身任务；作为FastFill主榜输入时，这成为额外oracle信息且空壳不完整。
+应从canonical condition保留真实shell／opening，隐藏目标布局与参考支撑。提供参考支撑的版本单列D。其他完整condition导出路径不据此判为丢门。
+
+本地CPU反例（机制诊断，不是模型性能结果）：
+  - 正方形空壳中把沙发／桌子整体旋转180度，两布局均通过bbox检查、NAV/ACC不变，但SG和单参考位置误差变差。
+  - 本地规则NAV/ACC可在20cm窄通道得1；60cm agent入口可达面积仅21%。这说明当前proxy没有覆盖入口可达需求。
+  - 辅助layout_quality会跳过失败布局，50%失败与全成功可能显示相同条件质量分；必须附全请求失败率和覆盖率。
+  - 辅助COL可漏展示fixed碰撞，重复ID在v3辅助转换中可被折叠；主评测应先经过严格schema，分开列COL_requested/COL_fixed。
+
+7. 公平对比与最小实施顺序
+
+先冻结A的输入manifest：同空壳、同门窗、同家具清单、同预算。只把用户实际给出的信息放进condition；记录被排除的输入缺失房间及原因。
+然后给FastFill各组、同信息文本LLM和简单类别尺寸先验＋规则布局基线生成新预测。已知真实资产方法仅在C比较，或明确适配后再入A。
+同checkpoint拆开raw、support-attachment-only、spread、remask、legality，确保改善来自哪里可辨识。
+布局测试与受控下游分别进行：下游固定生成方法、配置、种子与拟合策略；保存mesh覆盖、变形和原始失败，再检查最终场景。
+汇总时以全部请求列系统成功与失败；条件质量附coverage；按source/group做配对bootstrap，按房型、家具密度和边界类型分层。所有调参用validation，test最终报告。
+
+主榜冻结前，历史结果仅能用于其原full-condition协议的离线复核。当前没有A协议的新模型分数。
+
+8. 本次产物与范围
+
+evaluation-literature.json：7个一手来源家族、官方实现定位和10组指标定义。
+roomgenbench-evaluation.json：原benchmark合同、评分入口和当前动态适配差距。
+current-evaluation-gaps.json：本地评估的协议盘点、定义局限和CPU反例。
+current-eval-counterexamples.json、roomgenbench-interface-repros.json：反例原始结果。
+proposed-protocol.json：建议主协议的结构化记录；是方案，不是已执行的评测配置。
+
+没有下载大型子模块、assets或weights，没有运行付费API、真实Qwen新预测或物理仿真。业务修复与新主榜运行均尚未执行。

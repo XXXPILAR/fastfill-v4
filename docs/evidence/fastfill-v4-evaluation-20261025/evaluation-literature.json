@@ -1,0 +1,325 @@
+{
+  "title": "FastFill：空壳＋固定家具清单→完整布局的评估文献核对",
+  "reviewed_at": "2026-10-25",
+  "task_contract": {
+    "input": "真实房间空壳／边界与可用门窗几何，以及指定家具的类别、数量、描述；没有给尺寸时，模型必须预测尺寸。",
+    "output": "完整布局（所有指定对象的中心、尺寸、朝向及所需支撑关系），随后交给共同的 RoomGenBench 下游。",
+    "excluded": "本次不讨论局部编辑创新；不把图像到布局重建或已知真实 asset 几何的摆放实验当作同一主任务。"
+  },
+  "search_boundary": {
+    "sources": "arXiv 论文正文／附录、作者官方 GitHub、官方代码。Web 搜索用于发现，二手 PaperNotes／EmergentMind 等不作证据。",
+    "date_window": "2023–2026，检索截至 2026-10-25；代表性针对调研，不声称穷尽所有 benchmark。",
+    "queries_run_this_phase": [
+      "SceneEval benchmark navigability accessibility collision official github",
+      "SceneNAT evaluation physical plausibility oriented bounding boxes",
+      "NaLA 3D native LLM layout fixed assets evaluation collision",
+      "Holodeck layout ablation study mean reciprocal rank"
+    ],
+    "additional_direct_reads": [
+      "https://arxiv.org/html/2503.14756v2",
+      "https://arxiv.org/html/2602.09153",
+      "https://arxiv.org/html/2601.07218v2",
+      "https://arxiv.org/html/2606.29395v2",
+      "https://arxiv.org/html/2312.09067",
+      "https://arxiv.org/html/2303.14207v2"
+    ],
+    "inclusion": "一手来源中直接描述室内场景／布局评估的指标、输入协议、几何实现或人工评价；保留与当前任务不完全一致者以说明边界。",
+    "exclusion": "二手总结、未核实排行榜、重建任务直接移植、凭搜索摘要推定实现。",
+    "counts": "纳入 7 个来源家族（6 篇原论文＋SceneEval 官方实现）；搜索引擎返回合并／截断，未记录全部命中数，不能给出 PRISMA 全筛选计数。",
+    "execution": "只读公开论文及源文件；未安装或运行 SceneEval，未调用任何 VLM、付费 API、训练或模拟。"
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "title": "SceneEval: Evaluating Semantic Coherence in Text-Conditioned 3D Indoor Scene Synthesis",
+      "url": "https://arxiv.org/html/2503.14756v2",
+      "year": 2025,
+      "publication": "论文 v2；官方仓库标注 WACV 2026 Oral。",
+      "read_level": "正文 §§3.2–3.4、§6；相关附录；另逐项读官方实现（S2）。",
+      "evidence_grade": "一手方法论文；对指标意图权重高，对外部任务充分性不构成独立验证。",
+      "extraction": "区分 fidelity（CNT/ATR/OOR/OAR）与 plausibility（SUP/NAV/ACC 等）。CNT 分母是数量规格条目，ATR 分母是属性规格条目，OOR/OAR 分母是相应约束规格；不是自动等价的对象召回率。匹配与部分语义检查使用 VLM。",
+      "applicability": "框架适合复用；FastFill 已有显式 request IDs／类别数量时，先做确定的清单核对，避免让 VLM 重猜身份。"
+    },
+    {
+      "id": "S2",
+      "title": "SceneEval official implementation",
+      "url": "https://github.com/3dlg-hcvc/SceneEval",
+      "pinned_commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+      "read_level": "完整读取所列 metric 文件、配置；下载到 /tmp 后静态核对，未运行。",
+      "evidence_grade": "一手可审计实现；对该 commit 的实际机制权重高。不是所有后续论文使用的 fork。",
+      "extraction": "COL/OOB 使用 mesh；NAV/ACC 主要使用旋转 2D bbox 占用。OPC 是 2025-10-27 v1.1 后加入的实现指标，不能倒写成原 June-v2 论文完整清单。仓库声明部分指标需要 VLM，COL/NAV/OOB/OPC 不需要。",
+      "version_caveat": "固定 commit、配置、单位与坐标转换；SceneSmith 的 physics COL 是另一个定义。",
+      "files": [
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/navigability.py#L125",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/accessibility.py#L151",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py#L52",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py#L63",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/support.py#L183",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/opening_clearance.py#L103",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_count.py#L38",
+        "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/configs/metrics.yaml#L8"
+      ]
+    },
+    {
+      "id": "S3",
+      "title": "Holodeck: Language Guided Generation of 3D Embodied AI Environments",
+      "url": "https://arxiv.org/html/2312.09067",
+      "year": 2023,
+      "publication": "CVPR 2024",
+      "read_level": "正文 §§4.1–4.3、§5。",
+      "evidence_grade": "一手论文；人评协议证据高，未独立复现性能。",
+      "extraction": "§4.3 保持对象相同，只改变摆放；随机排列俯视图，让人按边界、碰撞、通行和合理性排名，报告平均倒数排名。其他全场景实验允许选资产。CLIP 分数比较俯视图与房型文本；§5 Success/SPL 是 ObjectNav agent episode 指标。",
+      "applicability": "固定清单摆放的人评协议可借鉴；ObjectNav Success 不等于布局成功率，房型 CLIP 不证明数量或关系正确。"
+    },
+    {
+      "id": "S4",
+      "title": "SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis",
+      "url": "https://arxiv.org/html/2601.07218v2",
+      "year": 2026,
+      "read_level": "正文 §§4.1、4.2、4.4；附录 A.3、A.4、A.7。",
+      "evidence_grade": "一手预印本；指标文字定义权重高，性能未复现。",
+      "extraction": "iRecall 是输入关系三元组实现率；另报渲染分布 FID/FID-CLIP/KID 与 SceneEval-style NAV/COL/ACC。A.7 明确使用 OBB，报告交体积和、碰撞对平均交体积、交体积/较小对象体积。4.4 采用 batch128 的吞吐测时。",
+      "caveat": "其 NAV 文字展开与 SceneEval 命名不一致，表格仍明确 NAV/ACC 越高越好。正文仅写 SceneEval-style，不能推断等于 S2 mesh 实现；A.7 不是 mesh physics。自由生成关系指导协议也不是严格给定所有家具。",
+      "applicability": "使用关系实现率、碰撞严重度和统一测时设置；不直接搬其数值作本任务 baseline。"
+    },
+    {
+      "id": "S5",
+      "title": "NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation",
+      "url": "https://arxiv.org/html/2606.29395v2",
+      "year": 2026,
+      "read_level": "正文 §5.2–5.3；附录 D.1–D.4（HTML 标为 0.D）。",
+      "evidence_grade": "一手论文；正文及显式公式已读，未读／运行其 metric code。",
+      "extraction": "同一空房间、同一实际资产比较摆放；Holodeck 只保留 placement。D.3 COL 是 voxel mesh 碰撞指示按每对 Vi+Vj 加权；OOB 是二维 footprint 越界面积率再按 mesh 体积加权；floating 过滤墙顶挂件后用支撑图。D.4 统一俯视＋四斜视，人工／AI 评价物理、语义、美观。",
+      "caveat": "真实资产／尺寸几何已给，比 FastFill 纯文字未知尺寸主协议多信息；这些 metric 也不是动态物理模拟。",
+      "applicability": "同房间同家具及裁去 baseline 多余模块的原则可借鉴；asset-given 必须另表。"
+    },
+    {
+      "id": "S6",
+      "title": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+      "url": "https://arxiv.org/html/2602.09153",
+      "year": 2026,
+      "version": "v2, 2026-05-30",
+      "read_level": "附录 M.1–M.2.1、N.1–N.4、O.5。",
+      "evidence_grade": "一手预印本；physics 和人评定义明确，未运行仿真或核其 fork。",
+      "extraction": "M.2.1 使用相同 V-HACD/物性补全后，COL=穿透>1mm 的对象占比；STB=5秒重力模拟后平移<1cm且旋转<0.1rad。墙顶挂件固定，地毯排除。人评盲法随机双场景＋多视角；N.3 明确允许额外合理物品。O.5 时间是25场景并发／8 L40S。",
+      "applicability": "真实物理另设后续层；FastFill 人评必须改成固定清单，不允许多添家具来换视觉丰富性；并发测时不能当单场景延迟。"
+    },
+    {
+      "id": "S7",
+      "title": "DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis",
+      "url": "https://arxiv.org/html/2303.14207v2",
+      "year": 2023,
+      "publication": "CVPR 2024",
+      "read_level": "正文 §4 Evaluation Metrics 段及相邻实验。",
+      "evidence_grade": "一手论文；分布评估协议证据高，不验证特定条件满足。",
+      "extraction": "用统一俯视渲染比较生成／真实集合的 FID、KID、SCA、类别分布 CKL，并检查数量、对称性、bbox 交叠统计。SCA 接近50%表示真假分类难。此类指标评估集合分布，不要求每房间贴合唯一 GT pose。",
+      "applicability": "FID/KID 可作为附表；固定清单下类别分布一致很可能由输入强制满足，不能当布局质量证据。"
+    }
+  ],
+  "metric_definitions_verified": [
+    {
+      "name": "SceneEval NAV",
+      "direction": "higher",
+      "geometry": "旋转二维 bbox raster；默认256分辨率，robot_width=.2m，忽略 bbox 中心高度>2m 的对象。",
+      "numerator": "最大连通可行走区域像素",
+      "denominator": "所有可行走区域像素；没有可行走连通分量时为0",
+      "limits": "代码明确 TODO doors；不测从门口出发的可达率，不等于空闲面积/房间面积，也不保证存在足够大的空闲面积。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/navigability.py#L143",
+      "definition_locus": "draw bbox L155–189; connected components and rate L210–242"
+    },
+    {
+      "name": "SceneEval ACC",
+      "direction": "higher",
+      "geometry": "二维 bbox 占用；功能侧由 VLM 决定；默认侧边带宽.2m、offset .05m。",
+      "numerator": "该功能侧 band 中落在可用空地的像素",
+      "denominator": "完整 band 像素（超出房间的 band 仍算不可用）",
+      "aggregation": "同对象若允许多个功能侧取最高分；无适用侧返回-1，应列N/A及数量。",
+      "limits": "局部侧边空不证明人能从门口走到该处；需要一致的语义 front。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/accessibility.py#L197",
+      "definition_locus": "band construction L197–278; VLM/side aggregation L295–323"
+    },
+    {
+      "name": "SceneEval COL",
+      "direction": "lower",
+      "geometry": "实际 mesh 的 trimesh CollisionManager。",
+      "numerator": "参与至少一个判定碰撞的对象数（双方都记）",
+      "denominator": "评估对象数",
+      "tolerance": "初检相交后沿接触方向移开5mm仍相交才记；另输出scene_in_collision。",
+      "limits": "不是相交对数/Nchoose2，不是体积IoU，也不是重力仿真。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py#L52",
+      "definition_locus": "pair test L63–96; return L106–115"
+    },
+    {
+      "name": "SceneEval OOB",
+      "direction": "lower",
+      "geometry": "mesh表面采样向下投射至floor mesh；默认最少1000点。",
+      "numerator": "floor命中比例<.99 的对象数",
+      "denominator": "评估对象数",
+      "limits": "是floor footprint检查；不等于完整3D房间/天花板越界体积。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py#L63",
+      "definition_locus": "surface points and floor ray test L79–99"
+    },
+    {
+      "name": "SceneEval SUP",
+      "direction": "higher",
+      "geometry": "VLM支持类型＋mesh射线／接触几何；默认contact tolerance1cm。",
+      "numerator": "判定有支撑的对象数",
+      "denominator": "评估对象数",
+      "mechanism": "墙/顶要求合适接触；地面/对象支撑还检查centroid投影与接触点凸包。",
+      "limits": "几何支撑代理；不验证真实质心、摩擦、质量或动态平衡。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/support.py#L183",
+      "definition_locus": "ray/contact L183–287; stability proxy L298–331; rate L359–361"
+    },
+    {
+      "name": "SceneEval Opening Clearance（OPC不是唯一标准聚合公式）",
+      "direction": "raw occlusion lower; explicitly defined clear fraction higher",
+      "geometry": "门窗挤出slab内的mesh三角形投影到opening竖直面；默认100px/m。door深度默认为门宽，window向室内.5m。",
+      "numerator": "opening投影面上被遮挡的union像素",
+      "denominator": "该opening的全部面像素",
+      "aggregation": "代码输出每 opening／检测侧的 total_occlusion、opening_occluded 和计数；若做 blocked-side rate，分母是检测侧数；若做clear fraction须声明1−occlusion。",
+      "limits": "不是门铰链真实扫掠体积，也不是从门出入的路径规划；无门窗为N/A而非自动完美。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/opening_clearance.py#L103",
+      "definition_locus": "depth L103–132; mesh triangle projection L237–322; per-side output L346–451; summary counts L453–507"
+    },
+    {
+      "name": "SceneEval CNT",
+      "direction": "higher",
+      "numerator": "满足的数量规格条目数",
+      "denominator": "数量规格条目数",
+      "mechanism": "eq/lt/gt/le/ge 等规格；对象类别映射在上游VLM matching，不是直接固定request ID recall。",
+      "source": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_count.py#L38",
+      "definition_locus": "count-spec comparator and aggregation L38–68"
+    },
+    {
+      "name": "NaLA COL / OOB / floating",
+      "direction": "lower",
+      "collision": "sum_{i<j}(Vi+Vj)*I(voxel collision_ij) / sum_{i<j}(Vi+Vj)，并非交体积比；二元碰撞指示经mesh-volume pair权重。",
+      "oob": "ri=Area(footprint_i minus floor)/Area(footprint_i); sum Vi*ri / sum Vi。二维越界面积率的体积加权，不是三维越界体积积分。",
+      "floating": "排除墙/顶挂件后，unsupported对象数／该剩余对象数；支撑图来自接触距离和水平重叠。",
+      "source": "https://arxiv.org/html/2606.29395v2",
+      "definition_locus": "Appendix D.3, equations (8)–(10)"
+    },
+    {
+      "name": "SceneNAT A.7 OBB severity",
+      "direction": "lower",
+      "definitions": "全对象对交体积和；只在碰撞对平均的交体积；IoMin 为交体积/两对象较小体积的平均。几何是 OBB，不是实际mesh。",
+      "uncertainty": "正文未充分展开 IoMin平均时零碰撞对是否计入分母；复制该指标必须固定实际实现和分母，不能自行补成已核实事实。",
+      "source": "https://arxiv.org/html/2601.07218v2",
+      "definition_locus": "Appendix A.7 L484–495"
+    },
+    {
+      "name": "SceneSmith physics COL / STB",
+      "direction": "COL lower; STB higher",
+      "collision": "Drake collision geometry穿透>1mm的对象数／评估对象数。",
+      "stability": "5秒重力模拟(dt1ms)后位移<1cm且旋转<.1rad的对象比例；墙/顶挂件焊接，地毯排除。",
+      "required_common_preprocessing": "所有方法同样的V-HACD最多128hulls和统一密度1000kg/m^3物性估计；公开excluded对象分母。",
+      "source": "https://arxiv.org/html/2602.09153",
+      "definition_locus": "Appendix M.2.1"
+    }
+  ],
+  "synthesis": {
+    "established": "没有一个单指标涵盖固定清单忠实度、几何有效、功能可用、视觉合理及系统耗时。代表论文普遍将多个方面分开；同名COL的实现与分母可能不同。",
+    "task_mismatch": "自由选择家具的text-to-scene、已知asset几何的arrangement、单参考图像重建，与当前未知尺寸的指定清单全布局不能混用排行榜。",
+    "confidence": "对S2固定commit的定义高；对论文明确公式/协议高；对建议指标集合在FastFill上的充分性中等，仍须用人工标注反例校准。",
+    "gaps": "未发现一个已核实的一手标准，能直接覆盖FastFill全部输入约束和RoomGenBench交付链；未核RoomGenBench自身实现，本报告不声称其已支持以下建议；本次未验证所有baseline代码与论文分母完全一致。"
+  },
+  "recommended_fastfill_layers": [
+    {
+      "layer": 1,
+      "name": "输入清单与显式要求",
+      "metrics": [
+        "Exact inventory scene rate：类别/数量/指定身份全部一致的房间数 ÷ 全部请求房间数；同时报遗漏、额外、重复对象率。",
+        "若schema显式携带request ID，按该ID核对；可交换同类对象只在合法等价组内匹配。缺失ID的baseline用冻结的类别/描述匹配规则并公开失败项。",
+        "输出解析/有限数值/正尺寸/合法单位与坐标通过率，以及显式关系与用户给定尺寸约束通过率；无对应约束列N/A。",
+        "未给尺寸时另报类别合理尺度检查/人评，阈值和先验只由train或公开常识集确定，防止靠缩成极小家具换取零碰撞。"
+      ],
+      "provenance": "建议；受S1 fidelity框架启发，固定清单的精确核对不需要VLM。"
+    },
+    {
+      "layer": 2,
+      "name": "预测bbox几何",
+      "metrics": [
+        "OBB collision object rate与penetration/IoMin严重度分开；记录支持关系允许的接触，避免把桌下椅、支撑或嵌套的bbox代理错误当mesh穿透。",
+        "对象footprint越界面积比例、越界对象率，及地面/天花板穿透与悬浮；采用真实floor polygon，不以外接矩形代替。",
+        "门/窗clearance单列；有可靠铰链/开启元数据时才另报door swing sweep。",
+        "所有阈值、体素/raster精度和接触容差预先注册；同时报无后处理与最终原生后处理版本。"
+      ],
+      "provenance": "建议；bbox是布局代理层，报告名加BBox/OBB，不能宣称已完成mesh物理评估。"
+    },
+    {
+      "layer": 3,
+      "name": "功能与通行",
+      "metrics": [
+        "SceneEval NAV↑连通性，与free-floor/floor面积率并列，避免极小但连通的余地拿满分。",
+        "ACC↑及功能侧coverage；前向语义无法确定的对象单列unknown。几何长宽交换等价不自动等于椅子/柜门语义front等价。",
+        "另命名 DoorReach：从合法入口种子在固定agent footprint下可达的目标功能侧比例；不是把NAV改名。无入口元数据列N/A。",
+        "按输入门窗存在与否、狭窄/不规则/高密度房间分层；对象侧边可用和能从入口走到该侧两项分别看。"
+      ],
+      "provenance": "建议；S2清楚显示NAV和ACC的覆盖边界。"
+    },
+    {
+      "layer": 4,
+      "name": "RoomGenBench共同下游与真实asset",
+      "metrics": [
+        "相同asset来源、检索/生成器、seed、适配尺度策略及bounded repair预算，将所有方法layout变成真实mesh。",
+        "报完整asset交付率、missing/failed asset、预测尺寸→实际asset尺寸偏差，再用mesh COL/OOB/SUP/OPC重测；布局前后变化也报。",
+        "真实mesh结果与bbox代理层分表，并可标明碰撞来自预测布局还是共同asset适配；不静默丢掉难检索对象。",
+        "只有实际执行一致physics preprocessing＋gravity simulation后，才报STB；几何SUP或VLM物理观感不能写成physics pass。"
+      ],
+      "provenance": "建议；S2 mesh检查与S6真正physics区分清楚。"
+    },
+    {
+      "layer": 5,
+      "name": "合理替代、多样性与系统表现",
+      "metrics": [
+        "统一资产/相机的俯视＋多斜视盲评：固定清单忠实度、尺度/朝向与布局合理性、可用性分项；明确额外家具不允许。VLM先用人工子集校准，再固定模型版本/提示/视图，报不确定与失败率。",
+        "GT pose/size/yaw误差仅作监督诊断：只评valid字段、合法exchange与已知等价几何；不把唯一GT布局距离当唯一质量标准。",
+        "多seed同condition的valid-only布局多样性，并列每seed有效率；固定K和预算，不能用best-of-K挑样冒充单样本表现。",
+        "batch1端到端latency p50/p95＋吞吐另报；拆condition encoder/decoder/repair/asset/handoff阶段，注明cache、warmup、硬件、步数、并发、超时及成本。FID/KID仅作相同渲染和样本量的附表。"
+      ],
+      "provenance": "建议；人评/分布评估/延迟边界分别来自S3–S7，但本组合未作为已验证benchmark宣称。"
+    }
+  ],
+  "proposed_main_table": {
+    "mandatory": "ExactInventory↑；LayoutValid↑（定义见下）；BBoxCollidingObjects↓及严重度；FootprintOOB↓；Door/WindowClearance↑；NAV↑＋FreeFloor↑；ACC↑＋coverage；盲评布局合理性↑；layout端到端p50/p95↓。",
+    "layout_valid_definition": "建议自行命名并预注册：完整精确清单＋可解析有限正尺寸＋所有适用的硬几何/显式约束阈值通过。分母为全部请求房间，任何漏物体、崩溃、超时都失败。不要称其为论文已有标准Success。",
+    "downstream_table": "DeliveryComplete↑；MeshCollidingObjects↓；MeshOOB↓；MeshSupport↑；OpeningClearance↑；可选PhysicsSTB↑；全pipeline latency。保持与layout层区分。",
+    "avoid": "不合成一个未经校准的总分，也不单靠FID或某种GT坐标误差排名。"
+  },
+  "fair_baseline_contract": [
+    {
+      "item": 1,
+      "rule": "相同可用输入",
+      "details": "主榜只给同一空壳真实边界/门窗和文字家具清单；没有请求的GT尺寸、真实asset mesh、hidden validity/symmetry标签或参考pose都不得喂给任一方法。公共输入上的预处理需一致公开。"
+    },
+    {
+      "item": 2,
+      "rule": "分开问题设定",
+      "details": "主榜=Request-only且未知尺寸也要预测；增强榜=固定真实asset/尺寸后只做arrangement。NaLA原实验属于后者。若共同asset选择器先产生几何，所有方法都得到同一几何，并承认任务已经增强。"
+    },
+    {
+      "item": 3,
+      "rule": "baseline适配透明",
+      "details": "保留Holodeck等的placement子模块、去掉自主建房/选家具模块可借鉴，但给定未知尺寸时必须用同一可用信息解决尺寸问题。未支持不规则边界或固定inventory的模型标unsupported或另作公开适配；不得偷偷过滤输出 extras 或只保留容易样本。"
+    },
+    {
+      "item": 4,
+      "rule": "数据与预算相同",
+      "details": "按房屋分train/validation/test，冻结可见类别/描述/asset库；相同请求、随机种子、decode/repair/search和重试预算；raw与native-final分报，共同后处理另列。按家具数、密度、房型、异形边界、门窗覆盖、是否给尺寸分层。"
+    },
+    {
+      "item": 5,
+      "rule": "统一下游、失败分母与统计",
+      "details": "用相同RoomGenBench asset管线和渲染器。全房间数作为completion/valid-success分母；几何均值另报可评估coverage，失败输出不算零碰撞。主报room宏平均，附对象/约束微平均；同房间多seed保留聚类，用房屋/房间配对bootstrap区间。超时/缺mesh/unknown front/无门窗/无约束的处理预先规定。"
+    }
+  ],
+  "names_not_interchangeable": [
+    "NAV=最大连通自由区域/全部自由区域，不是入口可达率，也不是自由区域/房间面积。",
+    "ACC=局部功能侧边带空闲比例，不等于从门口可达的使用动作成功。",
+    "SceneEval COL=mesh参与碰撞对象率；NaLA COL=volume-weighted pair indicator；SceneSmith COL=Drake穿透阈值对象率；SceneNAT A.7=OBB严重度，不能横抄数值。",
+    "OPC必须说明每opening/每side以及occlusion↓或clear fraction↑；支撑SUP与动态STB分开。",
+    "Holodeck ObjectNav Success/SPL、生成完成率、家具放置覆盖率、全场景hard-valid率不是同一种Success/placement metric。未找到统一的placement rate标准，应逐个定义。"
+  ],
+  "limitations": "未执行指标、未验证FastFill当前代码是否已具备所有建议项、未独立复现论文排名。此报告为可追溯的针对性文献核对和协议建议，不是全面系统综述或新颖性证明。",
+  "no_metrics_executed": true
+}

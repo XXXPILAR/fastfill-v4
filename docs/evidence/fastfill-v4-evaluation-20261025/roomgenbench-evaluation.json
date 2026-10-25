@@ -1,0 +1,343 @@
+{
+  "task": "Evaluation of empty room shell + required furniture inventory -> FastFill predicts unknown sizes/layout -> RoomGenBench mesh",
+  "date": "2026-10-25",
+  "upstream": {
+    "requested_url": "https://github.com/RunyiYang/RoomGenBench",
+    "canonical_repo": "https://github.com/WorldEdge-Lab/RoomGenBench",
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "branch": "main",
+    "paper_status": "No paper link found in official README/tree; explicit web searches for RoomGenBench/paper/arxiv returned no results. This is not proof no paper exists; evidence here is official public code, not a claimed peer-reviewed publication."
+  },
+  "core_conclusion": "RoomGenBench is a downstream asset/mesh benchmark conditioned on provided layouts. It does not by itself evaluate FastFill empty-shell layout or unknown-size prediction. The correct evaluation requires an upstream layout layer, a downstream controlled asset layer and all-request end-to-end mesh-layout checks.",
+  "official_inputs": {
+    "source": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/prepare_inputs.py#L32",
+    "scenes": 5,
+    "object_instances": 313,
+    "unique_assets_by_type_description": 184,
+    "distinct_descriptions": 154,
+    "object_support_pairs": 146,
+    "provided_to_asset_methods": [
+      "asset_key",
+      "type",
+      "description",
+      "dimensions.width/length/height",
+      "place=floor/wall/on_object"
+    ],
+    "full_scene_fields": [
+      "room shell walls/doors/windows and dimensions",
+      "per-instance ID/type/description/asset_key",
+      "position",
+      "Euler XYZ rotation",
+      "dimensions",
+      "place_id"
+    ],
+    "known_layout_owner": "SAGE-10k annotations; shared assembler positions assets. Asset methods do not predict room arrangement.",
+    "asset_key": "slug(type)[:24] + sha1(description)[:8]; metric dimensions/place of first instance enter unique-asset registry, instance geometry remains on scene records."
+  },
+  "coordinate_contract": {
+    "FastFill": "meters, right-handed Z-up, bottom-center, full local [sx,sy,sz], local +X front, yaw rad CCW from world +X",
+    "SceneSpec_SAGE": "meters, Z-up, bottom-center, width local X / length local Y; front +Y; Euler XYZ degrees, Rz@Ry@Rx",
+    "conversion": "Scene width=FastFill sy; length=sx; height=sz; z rotation=degrees(wrap(yaw-pi/2)); position unchanged",
+    "generated_asset_GLB": "glTF Y-up, front +Z, arbitrary native scale/offset",
+    "upstream_fit": "GLTF_TO_SAGE maps (x,y,z)->(-x,z,y), yaw snap/aspect quarter turn, optional 90deg tip, anisotropic fit to target box, bottom-center to origin, then placement",
+    "room_output_GLB": "SAGE world (x,y,z)->glTF (x,z,-y)",
+    "local_fixtures": "0/90/-90/45deg asymmetric box corner Hausdorff error <=9.94e-16m, front-axis error <=1.58e-16. This verifies transforms, not semantic-front prediction."
+  },
+  "official_metrics": [
+    {
+      "metric": "VQA description/category",
+      "unit": "unique asset, 4 rendered views",
+      "implementation": "Qwen2.5-VL-7B normalized Yes/No logits; average over views",
+      "missing": "Placeholder box is rendered/scored; not dropped",
+      "does_not_measure": "Layout position quality, navigability, physical stability or calibrated probability of correctness",
+      "source": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py#L79"
+    },
+    {
+      "metric": "SigLIP-2 similarity / retrieval R@1,R@5",
+      "unit": "184 assets / 154 distinct descriptions",
+      "implementation": "L2-normalized view/text embeddings; similarity x100 and correct-description rank after averaging image views",
+      "missing": "Placeholder is included in all-asset aggregate",
+      "does_not_measure": "Unknown size accuracy or room-level spatial reasoning",
+      "source": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py#L69"
+    },
+    {
+      "metric": "Coverage",
+      "unit": "unique asset",
+      "implementation": "Status ok OR fallback counts as generated",
+      "missing": "failed/missing/legacy-excluded count zero",
+      "does_not_measure": "Strict genuine-method success; fallback must also be reported separately",
+      "source": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py#L75"
+    },
+    {
+      "metric": "Mesh support consistency",
+      "unit": "available generated object-supporter pair in the fixed reference layout",
+      "implementation": "25 downward rays from central 60% bbox grid; success iff hit_rate>=0.5 and absolute median gap<=0.02m",
+      "missing": "Pair omitted if either side has no loaded mesh; report n, not just percent",
+      "does_not_measure": "All-ray contact, floor/wall mounting, center-of-mass stability, full-body collision or dynamic physics",
+      "sources": [
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py#L58",
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py#L112",
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py#L87"
+      ]
+    },
+    {
+      "metric": "Room VQA",
+      "unit": "5 room perspective images",
+      "implementation": "Qwen Yes/No score for furnished room type and building style; missing image -> nan, aggregate nanmean",
+      "does_not_measure": "Direct numeric geometric validity or unseen room generalization",
+      "source": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py#L144"
+    },
+    {
+      "metric": "DINO-to-SAGE / F-score, Chamfer-to-SAGE",
+      "unit": "unique asset, fitted in same reference bbox",
+      "implementation": "View embedding similarity; surface samples 10000 each, normalized nearest-neighbor distances, F-score at 2%/5% diagonal",
+      "missing": "Placeholder included; reference SAGE meshes required locally",
+      "does_not_measure": "A unique correct asset shape; SAGE assets were themselves generated and the reference favors related appearance",
+      "sources": [
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py#L31",
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py#L47",
+        "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/README.md"
+      ]
+    }
+  ],
+  "not_measured_by_official_benchmark": [
+    "Empty-shell room-layout prediction correctness/unknown size prediction",
+    "Counterfactual constraint following or fixed-world edits",
+    "Navigation/accessibility/door clearance as an explicit programmatic benchmark metric",
+    "Arbitrary room topology, windows or generalization beyond fixed five rooms",
+    "Full mesh collision-free room validity, COM stability, wall mounting or rigid-body simulation",
+    "Total inference/generation/assembly latency or task-level reliability of FastFill"
+  ],
+  "current_fastfill_metrics": {
+    "bbox_geometry": "evaluate.py reports symmetry-aware size/yaw/position reference errors, upright BEV IoU, collapse, collision/containment and strict/unknown checks",
+    "usability_proxies": "ops/layout_quality.py NAV/ACC/COL/OPC/SG/REL are bbox/rule/relationship proxies; not mesh physics or the exact official SceneEval implementation",
+    "VLM_status": "ops/vlm_judge.py builds deterministic bbox panels/anchors and layout_boxes handoffs; it does not call a VLM or score generated meshes",
+    "dynamic_assembly": "roomgenbench.py reads arbitrary exported handoffs and generated GLB/sidecars; records native/fitted extents and failures but does not run official score scripts"
+  },
+  "gaps": [
+    {
+      "id": "input_protocol_oracle_support_missing_shell",
+      "status": "locally_reproduced",
+      "priority": "P1_for_intended_evaluation",
+      "locations": [
+        "fastfill/v2/roomgenbench.py:253",
+        "fastfill/v2/roomgenbench.py:263",
+        "fastfill/v2/direct_layout.py:68"
+      ],
+      "evidence": "All 313 official objects receive source place_id as support_parent, while each of five source doors is omitted and re-exported door count is zero.",
+      "impact": "Current benchmark_request is an oracle-support rectangular-input ablation, not strict empty shell + required inventory with unknown placement/size. It removes door-clearance difficulty.",
+      "recommendation": "Build canonical conditions from the observed empty shell (actual polygon, floor/height, wall-relative openings, fixed geometry only when given) plus ID/category/description requests. Do not copy target size/position/yaw/support unless user-supplied. Keep GT-support and known-size protocols explicitly named ablations."
+    },
+    {
+      "id": "official_scorers_fixed_reference",
+      "status": "static_confirmed",
+      "priority": "P1_for_intended_evaluation",
+      "upstream": [
+        "bench/score_geom.py:30",
+        "bench/score_geom.py:81",
+        "bench/score_geom.py:94",
+        "bench/score_vlm.py:26",
+        "bench/score_vlm.py:112",
+        "bench/score_aggregate.py:20"
+      ],
+      "local": [
+        "fastfill/v2/roomgenbench.py:206",
+        "fastfill/v2/roomgenbench.py:234"
+      ],
+      "evidence": "Official scorers load bench/inputs/assets.jsonl and fixed SCENES; local adapter only exports mesh + receipt and does not invoke these scorers.",
+      "impact": "Running unmodified official scripts does not score arbitrary FastFill handoffs and may score old reference layouts/assets instead.",
+      "recommendation": "Add a derivative evaluation runner outside upstream bench that consumes explicit handoff/assembly/asset-registry paths and provenance, reusing pure scoring helpers. Preserve the official benchmark unchanged."
+    },
+    {
+      "id": "fitting_hides_native_size",
+      "status": "static_confirmed",
+      "upstream": [
+        "bench/assemble.py:177",
+        "bench/assemble.py:217"
+      ],
+      "local": [
+        "fastfill/v2/roomgenbench.py:88",
+        "fastfill/v2/roomgenbench.py:95"
+      ],
+      "evidence": "Shared fitter rotates/snaps/tips and anisotropically forces asset extents to target bbox.",
+      "impact": "Post-fit bbox agreement is a transport sanity check, not evidence that FastFill size predictions are accurate or native asset proportions fit naturally.",
+      "recommendation": "Score predicted dimensions before fitting against trustworthy labels and physical/category priors; separately report scale anisotropy=max(scale)/min(scale), fit distortion, yaw-snap and tip counts. Fix generation method/seeds/cache across layout arms."
+    },
+    {
+      "id": "assembly_not_end_to_end_validity",
+      "status": "locally_reproduced",
+      "locations": [
+        "fastfill/v2/roomgenbench.py:233",
+        "fastfill/v2/roomgenbench.py:236",
+        "fastfill/v2/roomgenbench.py:240"
+      ],
+      "evidence": "layout_boxes receipt: assembly_complete=true, generated_mesh_success=false. A synthetic cuboid with ok sidecar: generated_mesh_success=true while validator=not_attempted, support=not_checked, physics=not_attempted.",
+      "impact": "GLB existence, completed assembly and generated_mesh_success cannot be reported as geometrically valid furnished-room success.",
+      "recommendation": "Report phase-specific completion and strict all-request mesh-layout success, plus collision/containment/opening/support checks. Keep physics unknown unless actually simulated; a WorldEdge host is outside this downstream output task."
+    },
+    {
+      "id": "shell_windows_and_nonconvex_floor",
+      "status": "locally_reproduced",
+      "upstream": [
+        "bench/assemble.py:83",
+        "bench/assemble.py:87",
+        "bench/assemble.py:94"
+      ],
+      "local": [
+        "fastfill/v2/roomgenbench.py:135",
+        "fastfill/v2/roomgenbench.py:145",
+        "fastfill/v2/roomgenbench.py:153"
+      ],
+      "evidence": "Adding one window to canonical metadata produces identical shell vertices/faces. An L-shaped 12m2 input floor becomes a 4.2x4.2 rectangular slab (17.64m2 including outward margin). Official five rooms have no windows and rectangular shells, so their tests do not expose this.",
+      "impact": "General empty-shell geometry may be visually/physically wrong even when metadata retains a polygon and windows.",
+      "recommendation": "Render/verify true polygon floor geometry; implement window cutouts or mark them explicitly unsupported. Retain the known shell as immutable evaluation input and compare geometry, not metadata only."
+    },
+    {
+      "id": "upright_reference_projection",
+      "status": "data_inspected",
+      "locations": [
+        "fastfill/v2/roomgenbench.py:297",
+        "fastfill/v2/roomgenbench.py:317"
+      ],
+      "evidence": "Official five room JSONs include 12 instances with >1deg X/Y tilt. FastFill ground_truth_layout drops X/Y rotations.",
+      "impact": "Reference roundtrip and mesh comparison need an upright-projection label; tilted instances cannot be claimed as exact full-6DoF recovery.",
+      "recommendation": "Report upright subset separately; evaluate the existing model on its supported yaw-only task and preserve tilt in downstream fixtures if future models support it."
+    },
+    {
+      "id": "support_semantics_not_unified",
+      "status": "prior_review_locally_reproduced",
+      "locations": [
+        "fastfill/v2/direct_layout.py:281",
+        "fastfill/v2/runtime.py:162",
+        "fastfill/v2/validation.py:379"
+      ],
+      "evidence": "Predicted parent can guide export, but core runtime/validator use request support declarations and leave undeclared support unknown; mixed partial graphs can form cycles on merge.",
+      "recommendation": "Use one merged candidate support graph with declared/predicted/inferred provenance, validate cycles after merging, and check actual mesh contact separately rather than treating the predicted label as proof."
+    },
+    {
+      "id": "condensed_metrics_and_support_coverage",
+      "status": "code_inspected_and_prior_reproduced",
+      "locations": [
+        "fastfill/v2/ops/remask_ablation.py:70",
+        "fastfill/v2/ops/remask_ablation.py:104",
+        "fastfill/v2/ops/v4_report.py:19"
+      ],
+      "evidence": "Local support accuracy skips no-layout requests; condensed table shows no-hard-violation clean rate without the hard-unknown rate. Official support metric also has a conditional generated-pair denominator.",
+      "recommendation": "Report all-request success, conditional quality, output coverage and eligible pair coverage together; do not equate conditional support percentages across methods with different generation coverage."
+    }
+  ],
+  "minimal_acceptance_plan": [
+    {
+      "phase": 1,
+      "name": "Freeze the intended input contract",
+      "checks": [
+        "Canonical room shell + required ID/category/description list; hide target bbox/pose and GT support unless explicitly provided by the user.",
+        "Preserve room polygon, floor elevation, height, all doors/windows and any truly fixed geometry.",
+        "Pin input/model/tokenizer/code/upstream commit/seed/decode/asset-generation identities; paired arms use identical admitted input rows and budgets.",
+        "Separate strict unknown-size layout task, oracle-support ablation, known-size ablation and GT-layout downstream upper bound."
+      ],
+      "pass": "No target geometry/support leakage; exact preservation of all observed shell facts."
+    },
+    {
+      "phase": 2,
+      "name": "CPU interface fixtures before large model runs",
+      "checks": [
+        "Asymmetric 2x1x0.8m boxes at yaw 0/90/-90/45deg, nonzero origin/floor and known front marker; compare 8 world corners and front axes.",
+        "L-shaped shell, multiple doors on one wall, window sill/cutout, wall-mounted furniture and table-lamp/fixed-support relations.",
+        "Identical type+description with repeated instances/different target dimensions; one asset key, distinct instance transforms and dimensions.",
+        "Missing/failed/fallback/invalid sidecar/corrupt GLB and thin native geometry preserve every requested ID and honest status."
+      ],
+      "pass": "All IDs exactly once; finite positive extents; corner error<=1e-6m; merged parent graph acyclic; metadata and rendered shell agree; failures visible in counts."
+    },
+    {
+      "phase": 3,
+      "name": "Evaluate layouts before and after decoding",
+      "checks": [
+        "Score raw argmax, attachment-only, legal-only and iterative/remask variants with matched settings; include E cache online/replay equality.",
+        "Retain every input request in success/latency denominators; report object budget and token failures.",
+        "Report boundary/door/window violations, collisions by pair and affected object, support type/contact evidence, NAV/ACC/OPC and functional relations as distinct proxies.",
+        "Unknown-size quality uses valid-label size/position/symmetry-aware yaw errors plus distributional/plausibility and blinded comparisons; do not demand one GT arrangement as the only correct room."
+      ],
+      "pass": "All-request strict/conditional/unknown rates and per-source/density results available; no improvement attributed solely to an unlabelled post-processing step."
+    },
+    {
+      "phase": 4,
+      "name": "Controlled downstream mesh evaluation",
+      "checks": [
+        "Use the same generation method, prompts, seeds and reusable asset identities across GT-layout/FastFill/LLM-layout arms; retain per-instance target dimensions.",
+        "Separate asset-generation ok/fallback/missing rates at unique-asset and requested-instance levels; never count placeholder-only renderability as mesh success.",
+        "Measure generated asset semantics (VQA/SigLIP) separately from actual assembled mesh containment/collision/opening clearance and support contact; include pre/post-fit scale distortion and rotations.",
+        "For support, report conditional ray-contact score plus available/required pair counts; floor/wall support, balance and dynamics require extra checks."
+      ],
+      "pass": "One immutable receipt links request→prediction→asset→fitted mesh→all checks. Strict mesh-layout success requires all requested genuine meshes and declared mandatory geometric checks passing; unknown evidence remains explicit."
+    },
+    {
+      "phase": 5,
+      "name": "Evidence ladder and reporting",
+      "checks": [
+        "Use the five official rooms as interface and illustrative transfer cases; they are too few for a generalization claim.",
+        "Expand held-out rooms by source/house, density, shell topology, openings and support complexity; resample by house when dependencies exist.",
+        "Report paired CIs and failure/coverage at each stage; distinguish transport tests from trained-model performance and physical simulation.",
+        "Freeze a failure gallery and blind room-render judgments; compare against shuffled/random/room-center and GT-layout anchors."
+      ],
+      "pass": "A reader can identify whether a failure came from layout, unknown size, support prediction, asset generation, fit policy or evaluation."
+    }
+  ],
+  "reproduction_artifact": "/tmp/fastfill-roomgenbench-interface-repros.json",
+  "upstream_source_receipts": [
+    {
+      "path": "README.md",
+      "sha256": "4cfc4695484c075a1188cd3a33100db1c5e486bb734cd34f2cdd520f5df18660",
+      "lines": 180,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/README.md"
+    },
+    {
+      "path": "bench/CONTRACT.md",
+      "sha256": "9ec2351cb8538e138b977f8f8e8f30a0492e60473318c0362e79d4f2c0577a28",
+      "lines": 93,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/CONTRACT.md"
+    },
+    {
+      "path": "bench/prepare_inputs.py",
+      "sha256": "fa4b55c877e6d17ca3e07fcf298e03b969ded9249c70d632192e41fabc071380",
+      "lines": 88,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/prepare_inputs.py"
+    },
+    {
+      "path": "bench/assemble.py",
+      "sha256": "3bb3b1a280c7074d0902a7ca0210ed433f5fc386da1bac735dc37f076763035f",
+      "lines": 345,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/assemble.py"
+    },
+    {
+      "path": "bench/render_eval.py",
+      "sha256": "d141fc78d8235011e68cd363b036d587f1f1bf460b03f28ca6ae016504fc5b02",
+      "lines": 129,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/render_eval.py"
+    },
+    {
+      "path": "bench/score_geom.py",
+      "sha256": "ddef22d516019caa877efff77b4516906483122f20268f955a2912acc7dfdd16",
+      "lines": 127,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py"
+    },
+    {
+      "path": "bench/score_vlm.py",
+      "sha256": "83db24dd3d037b130c1c05caa0f4503200a04418c235f283da26d3a16e76dcf2",
+      "lines": 163,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py"
+    },
+    {
+      "path": "bench/score_aggregate.py",
+      "sha256": "afac424e2e12eea64f59d4a89476b03ec9a1b07e59ef8528ed31eb8a554d256d",
+      "lines": 150,
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py"
+    }
+  ],
+  "executed": "Read-only GitHub text fetches; CPU conversion/shell/synthetic-cuboid assembly fixtures using downloaded official pure geometry helper. No model training, asset generation, VLM/GPU scoring, external writes or submodule initialization.",
+  "scope_limits": [
+    "Original full-resolution SAGE meshes/model assets/renders are not present locally, so official VLM/DINO/F-score numbers were not rerun.",
+    "Synthetic cuboid smoke tests do not establish learned-model quality or genuine generation success.",
+    "No project source changed by this agent; concurrent parent changes are outside this task."
+  ]
+}

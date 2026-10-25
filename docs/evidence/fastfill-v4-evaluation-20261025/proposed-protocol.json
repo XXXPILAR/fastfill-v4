@@ -1,0 +1,91 @@
+{
+  "status": "proposed_not_executed",
+  "date": "2026-10-25",
+  "task_confirmed_by_user": "一个房间空壳+需要的家具列表，然后下游对接roomgen",
+  "main_input": {
+    "shell": [
+      "known physical floor polygon and frame/units",
+      "known floor and height with missingness explicit",
+      "provided doors/windows and structural geometry"
+    ],
+    "inventory": [
+      "stable instance ids",
+      "categories and exact quantities",
+      "descriptions and user-provided attributes"
+    ],
+    "not_supplied_by_default": [
+      "target size/position/yaw",
+      "reference support or mined ground-truth relations",
+      "target validity or yaw symmetry metadata",
+      "real asset geometry"
+    ]
+  },
+  "profiles": {
+    "main": "shell + text inventory; unknown furniture dimensions predicted",
+    "explicit_constraints": "main plus user-supplied constraints; identical for all methods",
+    "asset_given": "known assets/dimensions; separate placement-only benchmark",
+    "oracle_support": "reference support labels; diagnostic only"
+  },
+  "evaluation_layers": [
+    "all-request exact inventory and interface success",
+    "bbox geometry, requested and fixed collisions, size plausibility",
+    "door-seeded agent reachability, opening clearance, functional access, proxy support",
+    "real mesh coverage/semantics/fit distortion/contact/collision and optional physical stability",
+    "batch1 warm/cold and decomposed downstream end-to-end latency"
+  ],
+  "auxiliary_only": [
+    "single-reference position/size/yaw errors",
+    "world-frame reference SG",
+    "FID/KID and visual distribution with controlled rendering"
+  ],
+  "aggregation": {
+    "request_denominator": "all selected room requests including failures",
+    "conditional_quality": "report metric coverage alongside scores; invalid outputs do not count as zero collisions",
+    "unknown": "separate from pass and violation",
+    "uncertainty": "paired source/group cluster bootstrap with source and density strata"
+  },
+  "current_artifact_profile": {
+    "test300_condition_profile": {
+      "rows": 300,
+      "rows_with_openings": 246,
+      "rows_with_fixed": 32,
+      "rows_with_constraints": 285,
+      "rows_with_support_decl": 115,
+      "objects_with_support_decl": 3078,
+      "constraints": 589,
+      "objects": 5061,
+      "unknown_floor_rows": 0,
+      "unknown_boundary_rows": 15,
+      "unknown_height_rows": 66,
+      "prediction_no_layout": 16
+    },
+    "fixed_categories": {
+      "beam": 1,
+      "styling column": 4,
+      "partition": 3,
+      "cabinet": 3,
+      "wardrobe": 8,
+      "basin cabinet": 1,
+      "fireplace": 2,
+      "radiator": 1,
+      "main staircase": 1,
+      "wall hook rail": 3,
+      "tv cabinet": 4,
+      "wine cabinet": 1,
+      "bathroom cabinet": 6,
+      "toilet": 1,
+      "otherstructure": 19
+    },
+    "saved_predictions_nonnull_schema_invalid": [],
+    "scope": "Existing heldout artifact only; no inference, training or API."
+  },
+  "data_and_run_requirements": [
+    "freeze canonical condition hashes before fresh method predictions",
+    "keep historical full-condition predictions under their original protocol",
+    "preserve original shell and openings through downstream geometry",
+    "use same downstream asset generation/fitting configuration and seeds",
+    "do not claim new model scores until main-profile predictions exist"
+  ],
+  "implementation_changes": false,
+  "new_inference_or_paid_evaluation": false
+}

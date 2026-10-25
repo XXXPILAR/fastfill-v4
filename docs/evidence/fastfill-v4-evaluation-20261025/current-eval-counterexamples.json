@@ -1,0 +1,103 @@
+{
+  "environment": {
+    "python": "3.13.1",
+    "numpy": "2.4.6",
+    "shapely": "2.1.1"
+  },
+  "NAV_and_ACC_counterexample": {
+    "passage_width_m": 0.2,
+    "agent_diameter_m": 0.6,
+    "NAV_largest_point_free_component": 1.0,
+    "ACC_local_strip": [
+      1,
+      1
+    ],
+    "door_seed_xy_m": [
+      0.4,
+      2.0
+    ],
+    "agent_clearance_components": 2,
+    "door_reachable_walkable_fraction": 0.21018683274021352,
+    "chair_approach_reachable": false
+  },
+  "multi_solution_counterexample": {
+    "A_bbox_valid": true,
+    "B_bbox_valid": true,
+    "NAV_A": 1.0,
+    "NAV_B": 1.0,
+    "ACC_A": [
+      2,
+      2
+    ],
+    "ACC_B": [
+      2,
+      2
+    ],
+    "SG_B_against_A": [
+      0,
+      2
+    ],
+    "GT_bottom_center_error_B_m": {
+      "mean": 3.605551275463989,
+      "valid_objects": 2
+    },
+    "interpretation": "Empty symmetric shell with no requested spatial relations: both preserve the sofa-table functional orientation after global 180-degree rotation, yet world-frame SG recall is 0."
+  },
+  "inventory_and_failure_counterexample": {
+    "requested_ids": [
+      "sofa",
+      "table"
+    ],
+    "returned_ids": [
+      "sofa",
+      "sofa",
+      "table"
+    ],
+    "strict_schema": "duplicate output IDs",
+    "v3_placements_accepts_duplicate": true,
+    "quality_with_one_failed_request": {
+      "rooms": 1,
+      "NAV": 1.0,
+      "ACC": 1.0,
+      "COL": 0.0,
+      "OPC": null,
+      "REL": null,
+      "SG": 1.0,
+      "acc_objects": 2,
+      "doors": 0,
+      "rel_checks": 0
+    },
+    "quality_all_requests_successful": {
+      "rooms": 2,
+      "NAV": 1.0,
+      "ACC": 1.0,
+      "COL": 0.0,
+      "OPC": null,
+      "REL": null,
+      "SG": 1.0,
+      "acc_objects": 4,
+      "doors": 0,
+      "rel_checks": 0
+    },
+    "interpretation": "The helper metrics are conditional on supplied layouts; failure/inventory gates must be enforced before publishing them as overall task success."
+  },
+  "fixed_collision_omission": {
+    "layout_quality_COL": [
+      0,
+      1
+    ],
+    "v3_fixed_collision_pairs": 1,
+    "strict_fixed_collision_violations": [
+      {
+        "code": "fixed_collision",
+        "status": "violation",
+        "hard": true,
+        "object_ids": [
+          "chair",
+          "column"
+        ],
+        "overlap_area_m2": 0.16000000000000028
+      }
+    ]
+  }
+}

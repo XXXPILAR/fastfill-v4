@@ -1,0 +1,521 @@
+{
+  "review_date": "2026-10-25",
+  "role": "Agency Model QA Specialist",
+  "corrected_primary_task": "给定空房间壳体和指定家具清单，生成完整布局，再交给RoomGenBench；不以局部编辑为主任务。",
+  "commit": "04290d6f689d4b89b42ecaffa5288413a6df6846",
+  "scope": "只读审核evaluate/layout_quality/v3_metrics/v4_report/remask_ablation及必要schema/validator/prompt边界；运行CPU几何反例和现有输入统计；未训练/推理真实Qwen/付费/改源码。",
+  "overall_assessment": "现有代码有可用的严格schema、失败/unknown拆分和多阶段证据；当前full-condition数据、条件性proxy表和单GT指标不足以单独证明empty-shell主任务质量。",
+  "what_current_code_gets_right": [
+    "evaluate调用validate_layout，要求请求IDs完整且恰好一次，尺寸正且有限。",
+    "evaluate把没有layout/超预算/生成错误保留在总请求分母，并显式区分hard violation与unknown。",
+    "core保守保留mesh/physics未知，不伪造通过；RoomGenBench receipt明确target_bbox_proxy/native/fitted/fallback。",
+    "remask_ablation已有raw/spread/多轮L/X路径，可用来分解学习与规则贡献。",
+    "当前llm_probe使用完整shell/doors/windows/fixed/constraints的workflow prompt，应准确区分于旧minimal LLM baseline。"
+  ],
+  "findings": [
+    {
+      "priority": 1,
+      "severity": "High",
+      "kind": "task_protocol_mismatch",
+      "title": "当前test300 full-condition不等于目标empty-shell+inventory主任务",
+      "locations": [
+        "fastfill/v2/ops/test300/README.md:24",
+        "fastfill/v2/ops/llm_probe.py:39",
+        "fastfill/v2/llm_workflow.py:99",
+        "fastfill/v2/ops/remask_ablation.py:132"
+      ],
+      "evidence": {
+        "test300_condition_profile": {
+          "rows": 300,
+          "rows_with_openings": 246,
+          "rows_with_fixed": 32,
+          "rows_with_constraints": 285,
+          "rows_with_support_decl": 115,
+          "objects_with_support_decl": 3078,
+          "constraints": 589,
+          "objects": 5061,
+          "unknown_floor_rows": 0,
+          "unknown_boundary_rows": 15,
+          "unknown_height_rows": 66,
+          "prediction_no_layout": 16
+        },
+        "fixed_categories": {
+          "beam": 1,
+          "styling column": 4,
+          "partition": 3,
+          "cabinet": 3,
+          "wardrobe": 8,
+          "basin cabinet": 1,
+          "fireplace": 2,
+          "radiator": 1,
+          "main staircase": 1,
+          "wall hook rail": 3,
+          "tv cabinet": 4,
+          "wine cabinet": 1,
+          "bathroom cabinet": 6,
+          "toilet": 1,
+          "otherstructure": 19
+        },
+        "saved_predictions_nonnull_schema_invalid": [],
+        "scope": "Existing heldout artifact only; no inference, training or API."
+      },
+      "interpretation": "历史GPT确实收到完整门窗/固定物体/约束，不能误说它没有门窗。相同历史full condition下可比较，但不能用历史GPT答案对比移除支撑、约束后的FastFill主任务。32间fixed中含cabinet/wardrobe等，须区分空壳内建结构与已有可移动家具。",
+      "action": "冻结canonical输入：测得的room shell/polygon/height/openings＋指定inventory(id/category/description/真正用户已知属性)；不从target添加support、关系、尺寸/位姿或validity symmetry。已明确给出的support可设独立controlled-support协议。所有方法必须收到相同信息；新协议必须重新预测，旧答案不得重标。"
+    },
+    {
+      "priority": 2,
+      "severity": "High",
+      "kind": "confirmed_ancillary_inventory_validation_gap",
+      "title": "核心evaluate严格inventory正确，独立v3/layout_quality入口缺同等门禁",
+      "locations": [
+        "fastfill/v2/schema.py:311",
+        "fastfill/v2/evaluate.py:724",
+        "fastfill/v2/ops/v3_metrics.py:68",
+        "fastfill/v2/ops/layout_quality.py:291"
+      ],
+      "evidence": {
+        "requested_ids": [
+          "sofa",
+          "table"
+        ],
+        "returned_ids": [
+          "sofa",
+          "sofa",
+          "table"
+        ],
+        "strict_schema": "duplicate output IDs",
+        "v3_placements_accepts_duplicate": true,
+        "quality_with_one_failed_request": {
+          "rooms": 1,
+          "NAV": 1.0,
+          "ACC": 1.0,
+          "COL": 0.0,
+          "OPC": null,
+          "REL": null,
+          "SG": 1.0,
+          "acc_objects": 2,
+          "doors": 0,
+          "rel_checks": 0
+        },
+        "quality_all_requests_successful": {
+          "rooms": 2,
+          "NAV": 1.0,
+          "ACC": 1.0,
+          "COL": 0.0,
+          "OPC": null,
+          "REL": null,
+          "SG": 1.0,
+          "acc_objects": 4,
+          "doors": 0,
+          "rel_checks": 0
+        },
+        "interpretation": "The helper metrics are conditional on supplied layouts; failure/inventory gates must be enforced before publishing them as overall task success."
+      },
+      "interpretation": "v3 placements先dict折叠，返回sofa,sofa,table仍可通过ID集合判断；validate_layout正确拒绝duplicate output IDs。layout_quality对layout未先做严格schema/id检查。",
+      "action": "所有辅助评估先统一调用validate_layout(layout,condition)，返回IDs与请求完全一致、无重复/缺失/新增、尺寸正且有限；inventory失败作为全请求失败，不靠metric helper自行忽略。"
+    },
+    {
+      "priority": 3,
+      "severity": "High",
+      "kind": "reporting_denominator_gap",
+      "title": "质量helper跳过None，主表未显示failure/unknown覆盖",
+      "locations": [
+        "fastfill/v2/ops/layout_quality.py:295",
+        "fastfill/v2/ops/layout_quality.py:304",
+        "fastfill/v2/ops/remask_ablation.py:159",
+        "fastfill/v2/ops/v4_report.py:16",
+        "fastfill/v2/evaluate.py:790",
+        "fastfill/v2/evaluate.py:881"
+      ],
+      "evidence": {
+        "requested_ids": [
+          "sofa",
+          "table"
+        ],
+        "returned_ids": [
+          "sofa",
+          "sofa",
+          "table"
+        ],
+        "strict_schema": "duplicate output IDs",
+        "v3_placements_accepts_duplicate": true,
+        "quality_with_one_failed_request": {
+          "rooms": 1,
+          "NAV": 1.0,
+          "ACC": 1.0,
+          "COL": 0.0,
+          "OPC": null,
+          "REL": null,
+          "SG": 1.0,
+          "acc_objects": 2,
+          "doors": 0,
+          "rel_checks": 0
+        },
+        "quality_all_requests_successful": {
+          "rooms": 2,
+          "NAV": 1.0,
+          "ACC": 1.0,
+          "COL": 0.0,
+          "OPC": null,
+          "REL": null,
+          "SG": 1.0,
+          "acc_objects": 4,
+          "doors": 0,
+          "rel_checks": 0
+        },
+        "interpretation": "The helper metrics are conditional on supplied layouts; failure/inventory gates must be enforced before publishing them as overall task success."
+      },
+      "interpretation": "一半请求失败与全部成功可得到同样NAV/ACC/COL/SG，只有rooms变化。evaluate本体保留总请求失败分母与unknown，但clean_room_rate定义为已验证布局中无硬violation，可包含hard unknown，v4表不展示这些限定。",
+      "action": "主表首先显示N_requested、N_inventory_valid、N_generated、all-request success/failure、每项unknown与有效覆盖；proxy质量同时报条件均值和全请求成功率，不能把conditional clean当完整可行率。"
+    },
+    {
+      "priority": 4,
+      "severity": "Medium",
+      "kind": "metric_definition_limit_not_implementation_bug",
+      "title": "NAV点自由空间连通与ACC局部条带不等于门入口可达性",
+      "locations": [
+        "fastfill/v2/ops/layout_quality.py:108",
+        "fastfill/v2/ops/layout_quality.py:120",
+        "fastfill/v2/ops/layout_quality.py:132",
+        "fastfill/v2/ops/layout_quality.py:152"
+      ],
+      "evidence": {
+        "passage_width_m": 0.2,
+        "agent_diameter_m": 0.6,
+        "NAV_largest_point_free_component": 1.0,
+        "ACC_local_strip": [
+          1,
+          1
+        ],
+        "door_seed_xy_m": [
+          0.4,
+          2.0
+        ],
+        "agent_clearance_components": 2,
+        "door_reachable_walkable_fraction": 0.21018683274021352,
+        "chair_approach_reachable": false
+      },
+      "interpretation": "20cm通道让NAV=1和ACC=1，但60cm宽agent从门只可达21.0%的可行走区域，椅子接近区不可达。当前NAV没有agent footprint膨胀/自由空间侵蚀，也不从door seed flood fill；ACC不要求其strip从入口可达。",
+      "action": "保留名称NAV_largest_component_proxy、ACC_local_strip_proxy；另加入指定agent半径的door-seeded reachability、功能侧接近区可达率、最窄通道/door swing clearance。当前ACC是代码声明的规则版，不是原版VLM judgment，不能把数值当SceneEval原版复现。"
+    },
+    {
+      "priority": 5,
+      "severity": "Medium",
+      "kind": "multi_solution_metric_limit_not_model_bug",
+      "title": "单GT误差与世界坐标SG仅表示参考相似度",
+      "locations": [
+        "fastfill/v2/evaluate.py:518",
+        "fastfill/v2/ops/layout_quality.py:245",
+        "fastfill/v2/ops/layout_quality.py:274"
+      ],
+      "evidence": {
+        "A_bbox_valid": true,
+        "B_bbox_valid": true,
+        "NAV_A": 1.0,
+        "NAV_B": 1.0,
+        "ACC_A": [
+          2,
+          2
+        ],
+        "ACC_B": [
+          2,
+          2
+        ],
+        "SG_B_against_A": [
+          0,
+          2
+        ],
+        "GT_bottom_center_error_B_m": {
+          "mean": 3.605551275463989,
+          "valid_objects": 2
+        },
+        "interpretation": "Empty symmetric shell with no requested spatial relations: both preserve the sofa-table functional orientation after global 180-degree rotation, yet world-frame SG recall is 0."
+      },
+      "interpretation": "无约束对称空壳内两件家具整体旋转180°：两布局bbox valid、NAV=1、ACC=1，SG却0/2、位置参考误差3.6056m。不同但合法、保留功能关系的布局不该仅因偏离单个GT被称为低质量。",
+      "action": "位置/yaw/size/BEV-IoU和SG列为reference-similarity辅助指标；主结论看清单、shell几何合法性、可达性/功能、显式用户约束、下游mesh与多样性。REL训练统计也是plausibility proxy，不是真值或普适规则。"
+    },
+    {
+      "priority": 6,
+      "severity": "Medium",
+      "kind": "confirmed_metric_aggregation_gap",
+      "title": "layout_quality.COL不含与fixed结构的碰撞",
+      "locations": [
+        "fastfill/v2/ops/layout_quality.py:167",
+        "fastfill/v2/ops/layout_quality.py:177",
+        "fastfill/validate.py:99"
+      ],
+      "evidence": {
+        "layout_quality_COL": [
+          0,
+          1
+        ],
+        "v3_fixed_collision_pairs": 1,
+        "strict_fixed_collision_violations": [
+          {
+            "code": "fixed_collision",
+            "status": "violation",
+            "hard": true,
+            "object_ids": [
+              "chair",
+              "column"
+            ],
+            "overlap_area_m2": 0.16000000000000028
+          }
+        ]
+      },
+      "interpretation": "椅子与柱子重合0.16m²时COL=0/1，但v3 coll_fixed=1且核心validator报fixed_collision；底层检测正常，是该聚合列的覆盖范围不完整。",
+      "action": "分别报告COL_requested、COL_fixed、severe/tuck/support-associated overlap；不要用单一COL=0宣称无碰撞。"
+    },
+    {
+      "priority": 7,
+      "severity": "Medium",
+      "kind": "support_and_unknown_semantics_limit",
+      "title": "floor/wall/物体支撑与门窗unknown必须分开解释",
+      "locations": [
+        "fastfill/v2/validation.py:213",
+        "fastfill/v2/validation.py:233",
+        "fastfill/v2/validation.py:393",
+        "fastfill/v2/ops/v3_metrics.py:12",
+        "fastfill/v2/ops/v3_metrics.py:81",
+        "fastfill/v2/ops/layout_quality.py:160"
+      ],
+      "interpretation": "core support从请求声明读取，未声明是unknown；object top不代表真实表面，wall check只是侧边贴近边界，openings在core中unchecked；OPC只查door clearance，不覆盖窗扇可操作性或墙挂锚固。v3 wall声明会绕开support_fail，不应把这等同墙面接触已验。",
+      "action": "主任务不注入隐藏GT support。给已声明support单独判遵守程度；预测support判图一致性/box接触proxy，真实面接触与稳定性留给mesh/physics。floor penetration、floating、wall gap、door/window功能分别成列，未知就是unknown并报覆盖。"
+    },
+    {
+      "priority": 8,
+      "severity": "Medium",
+      "kind": "latency_measurement_scope_limit",
+      "title": "decode_ms是部分热推理均值，不是RoomGenBench端到端时延",
+      "locations": [
+        "fastfill/v2/ops/remask_ablation.py:118",
+        "fastfill/v2/ops/remask_ablation.py:129",
+        "fastfill/v2/ops/remask_ablation.py:142",
+        "fastfill/v2/ops/remask_ablation.py:159",
+        "fastfill/v2/evaluate.py:1024",
+        "fastfill/v2/evaluate.py:909"
+      ],
+      "interpretation": "计时前已加载模型并预collate，decode包含模型/规则/序列化但不含输入准备、asset generation/assembly；只给均值，不给分位与失败时间。evaluate对supplied predictions不会推断其生成时延，即使wrapper有latency_s。",
+      "action": "分别报cold start、tokenize/encode、decoder rounds、规则后处理、序列化导出、RoomGenBench资产/装配；warmup后GPU同步测P50/P95，所有失败保留；API时间与本地GPU时间单列服务边界和硬件。"
+    }
+  ],
+  "input_profile": {
+    "test300_condition_profile": {
+      "rows": 300,
+      "rows_with_openings": 246,
+      "rows_with_fixed": 32,
+      "rows_with_constraints": 285,
+      "rows_with_support_decl": 115,
+      "objects_with_support_decl": 3078,
+      "constraints": 589,
+      "objects": 5061,
+      "unknown_floor_rows": 0,
+      "unknown_boundary_rows": 15,
+      "unknown_height_rows": 66,
+      "prediction_no_layout": 16
+    },
+    "fixed_categories": {
+      "beam": 1,
+      "styling column": 4,
+      "partition": 3,
+      "cabinet": 3,
+      "wardrobe": 8,
+      "basin cabinet": 1,
+      "fireplace": 2,
+      "radiator": 1,
+      "main staircase": 1,
+      "wall hook rail": 3,
+      "tv cabinet": 4,
+      "wine cabinet": 1,
+      "bathroom cabinet": 6,
+      "toilet": 1,
+      "otherstructure": 19
+    },
+    "saved_predictions_nonnull_schema_invalid": [],
+    "scope": "Existing heldout artifact only; no inference, training or API."
+  },
+  "counterexamples": {
+    "environment": {
+      "python": "3.13.1",
+      "numpy": "2.4.6",
+      "shapely": "2.1.1"
+    },
+    "NAV_and_ACC_counterexample": {
+      "passage_width_m": 0.2,
+      "agent_diameter_m": 0.6,
+      "NAV_largest_point_free_component": 1.0,
+      "ACC_local_strip": [
+        1,
+        1
+      ],
+      "door_seed_xy_m": [
+        0.4,
+        2.0
+      ],
+      "agent_clearance_components": 2,
+      "door_reachable_walkable_fraction": 0.21018683274021352,
+      "chair_approach_reachable": false
+    },
+    "multi_solution_counterexample": {
+      "A_bbox_valid": true,
+      "B_bbox_valid": true,
+      "NAV_A": 1.0,
+      "NAV_B": 1.0,
+      "ACC_A": [
+        2,
+        2
+      ],
+      "ACC_B": [
+        2,
+        2
+      ],
+      "SG_B_against_A": [
+        0,
+        2
+      ],
+      "GT_bottom_center_error_B_m": {
+        "mean": 3.605551275463989,
+        "valid_objects": 2
+      },
+      "interpretation": "Empty symmetric shell with no requested spatial relations: both preserve the sofa-table functional orientation after global 180-degree rotation, yet world-frame SG recall is 0."
+    },
+    "inventory_and_failure_counterexample": {
+      "requested_ids": [
+        "sofa",
+        "table"
+      ],
+      "returned_ids": [
+        "sofa",
+        "sofa",
+        "table"
+      ],
+      "strict_schema": "duplicate output IDs",
+      "v3_placements_accepts_duplicate": true,
+      "quality_with_one_failed_request": {
+        "rooms": 1,
+        "NAV": 1.0,
+        "ACC": 1.0,
+        "COL": 0.0,
+        "OPC": null,
+        "REL": null,
+        "SG": 1.0,
+        "acc_objects": 2,
+        "doors": 0,
+        "rel_checks": 0
+      },
+      "quality_all_requests_successful": {
+        "rooms": 2,
+        "NAV": 1.0,
+        "ACC": 1.0,
+        "COL": 0.0,
+        "OPC": null,
+        "REL": null,
+        "SG": 1.0,
+        "acc_objects": 4,
+        "doors": 0,
+        "rel_checks": 0
+      },
+      "interpretation": "The helper metrics are conditional on supplied layouts; failure/inventory gates must be enforced before publishing them as overall task success."
+    },
+    "fixed_collision_omission": {
+      "layout_quality_COL": [
+        0,
+        1
+      ],
+      "v3_fixed_collision_pairs": 1,
+      "strict_fixed_collision_violations": [
+        {
+          "code": "fixed_collision",
+          "status": "violation",
+          "hard": true,
+          "object_ids": [
+            "chair",
+            "column"
+          ],
+          "overlap_area_m2": 0.16000000000000028
+        }
+      ]
+    }
+  },
+  "executable_no_training_no_paid_evaluation_checklist": [
+    {
+      "step": 1,
+      "action": "冻结任务与输入身份",
+      "do_now_without_training_or_paid_calls": [
+        "保存本次empty-shell+inventory canonical condition schema、允许字段白名单、每房condition hash和inventory hash；原始完整row只供scoring标签，不传推理。",
+        "保留真实polygon/doors/windows/height；对未知边界/height另设cohort；fixed仅保留经过审定的空壳内建结构。",
+        "记录显式用户support/关系是否给出；GT推导约束另作full-condition/upper-bound实验。"
+      ],
+      "output": "protocol manifest与cohort/index，不改写历史GPT结果。"
+    },
+    {
+      "step": 2,
+      "action": "先执行严格清单/格式门禁与反例回归",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python3 -B /tmp/fastfill-current-eval-counterexamples.py",
+        "PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python3 -B /tmp/fastfill-current-eval-fixed-collision-repro.py"
+      ],
+      "do_now_without_training_or_paid_calls": [
+        "对已有预测逐条validate_layout，缺失/重复/新增ID、非法尺寸、非有限数、超预算/生成失败均保留在N_requests。",
+        "验证same condition的labelled/bare remask输出一致；不允许validity symmetry影响主任务推理。"
+      ],
+      "output": "per-request failure reasons与inventory exact rate。"
+    },
+    {
+      "step": 3,
+      "action": "离线重评分已有历史full-condition预测",
+      "commands": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -B -m fastfill.v2.evaluate --data fastfill/v2/ops/test300/rows.jsonl --predictions fastfill/v2/ops/test300/gpt56_predictions.jsonl --output /tmp/fastfill-historical-full-condition-eval",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -B -m fastfill.v2.ops.v3_metrics --rows fastfill/v2/ops/test300/rows.jsonl --method GPT56=fastfill/v2/ops/test300/gpt56_predictions.jsonl --output /tmp/fastfill-historical-v3-eval"
+      ],
+      "do_now_without_training_or_paid_calls": [
+        "这些命令只重评分已有full-condition答案，不生成新答案。输出路径必须未存在。",
+        "并排报all-request失败、hard violation、hard unknown、proxy碰撞/越界/door、支撑分项；v3 repaired结果与原始结果分开。",
+        "layout_quality使用已核实train-only模板和同一严格输入门禁；不把helper分数单独当整体成功率。"
+      ],
+      "output": "历史任务可审计分项报告；不当新主任务结果。"
+    },
+    {
+      "step": 4,
+      "action": "固定同一主协议做方法和后处理比较",
+      "do_now_without_training_or_paid_calls": [
+        "已有本地checkpoint时只做推理，不需重训：base/D/E × raw/spread/remask无L/有L，同一房间/清单/shell与预算。没有对应新协议预测时明确尚未完成。",
+        "加入便宜的规则/随机-logits+相同后处理对照；单GT/SG列作辅助，不做唯一排序。",
+        "按(source,group)聚类bootstrap，按来源、请求数/房间面积密度、wall/on-object占比、opening/known-geometry分层。",
+        "先看每种方法失败与覆盖差异，再看成功条件下质量。"
+      ],
+      "output": "主任务方法表和规则贡献分解；GPT新协议对比须有新协议真实答案，不能由旧答案变名获得。"
+    },
+    {
+      "step": 5,
+      "action": "把RoomGenBench下游作为独立阶段验收",
+      "do_now_without_training_or_paid_calls": [
+        "已有GLB/sidecar且子模块可用时，可离线assemble并检查每requested ID实例数、transform、native/fitted尺寸、placeholder/fallback/failed计数；没有资产时仅做bbox proxy导出。",
+        "分别记录布局预测、资产生成/检索、fit/装配、realmesh验证各阶段成功率和时延。"
+      ],
+      "output": "all-request coverage的handoff/assembly receipt；不把proxy成功上升为physics成功。"
+    }
+  ],
+  "requires_downstream_realmesh": [
+    "实际mesh-墙/地板/物体穿插与细薄结构，而非OBB近似。",
+    "真实support surface接触、中心质量、稳定性/重力、墙挂安装，而非bbox top或侧边靠墙。",
+    "agent footprint/height的真实mesh导航、门扇摆动、家具功能部件可操作空间。",
+    "资产语义front、可使用面、尺度与canonical transform/asset fitting造成的变化。",
+    "真实资产生成成功率、fallback/placeholder、装配正确性和端到端时延；未知项明确标注。"
+  ],
+  "reproducibility": {
+    "scripts": [
+      "/tmp/fastfill-current-eval-counterexamples.py",
+      "/tmp/fastfill-current-eval-fixed-collision-repro.py"
+    ],
+    "results": "/tmp/fastfill-current-eval-counterexamples.json",
+    "input_profile": "/tmp/fastfill-current-eval-input-profile.json",
+    "test300_rows_sha256": "c2a6afb4cb783e59f279367311c153a9a8acffc4dcd275f574d72af2f1458a8c"
+  },
+  "not_claimed": [
+    "没有证明当前Qwen布局质量优于/劣于GPT。",
+    "没有把GT误差高或SG低直接判为多解任务失败。",
+    "没有把CPU proxy、规则ACC或bbox可行称为SceneEval原版VLM/realmesh/physics验证。",
+    "没有把历史full-condition GPT预测重标为新empty-shell协议结果。"
+  ]
+}
