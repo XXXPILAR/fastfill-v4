@@ -1,0 +1,25 @@
+{
+  "environment": {
+    "python": "3.13.1",
+    "torch": "2.6.0"
+  },
+  "labelled_symmetry": [
+    [
+      2,
+      2
+    ]
+  ],
+  "condition_only_symmetry": [
+    [
+      1,
+      1
+    ]
+  ],
+  "one_pass_equal": true,
+  "two_round_deltas": {
+    "position_normalized": 6.783008575439453e-05,
+    "size": 0.01841568946838379,
+    "yaw_logits": 0.03548434376716614,
+    "position_cell_logits": 0.026384800672531128
+  }
+}

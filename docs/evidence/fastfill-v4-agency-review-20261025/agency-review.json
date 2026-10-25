@@ -1,0 +1,1374 @@
+{
+  "date": "2026-10-25",
+  "commit": "2aa9b7923483ad778be78c9194ed663b59ed5058",
+  "scope": {
+    "full_source_read_files": 281,
+    "full_source_read_lines": 52871,
+    "source_hash_changes": [],
+    "agency_roles": [
+      "Code Reviewer",
+      "Model QA Specialist",
+      "Research Synthesist"
+    ],
+    "graph": "MCP transport closed; source fallback used",
+    "external_reference_checkouts": "RoomGenBench empty, V-DETR and MinkowskiEngine absent; missing source not claimed read",
+    "project_modified": false,
+    "real_qwen_training_or_inference": false,
+    "paid_llm_calls": false
+  },
+  "verdict": "先修正支撑监督、评估/部署输入与缓存合同，再重评D/E；研究方案是可检验候选，未证明全球新颖性或性能增益。",
+  "priority_order": [
+    "Hungarian support child-label gather before inverse-parent remapping",
+    "Labelled/bare condition multi-round invariance and pinned-slot preservation",
+    "Support-head cache roundtrip equality and cache identity binding",
+    "All-request failure denominators, pass/violation/unknown disclosure, grouped uncertainty and Slurm error propagation",
+    "Frozen-checkpoint rule attribution and counterfactual probes before architecture expansion"
+  ],
+  "prior_test_evidence": {
+    "v2_core": {
+      "passed": 114,
+      "skipped": 2,
+      "seconds": 27.48,
+      "log": "/tmp/fastfill-v4-core-tests.log"
+    },
+    "v2_extra": {
+      "passed": 19,
+      "seconds": 3.84,
+      "log": "/tmp/fastfill-v4-extra-tests.log"
+    },
+    "legacy_root": {
+      "passed": 137,
+      "failed": 1
+    },
+    "legacy_code_v4": {
+      "passed": 150,
+      "failed": 1,
+      "skipped": 2,
+      "log": "/tmp/fastfill-v4-legacy-v4-pytest.log",
+      "manual_path_rebinding": {
+        "tests": 2,
+        "passed": 2,
+        "reason": "Explicit current checkout path supplied to bridge and holdout checks."
+      }
+    },
+    "legacy_failure_cause": "Installed transformers 4.49.0 does not export Qwen3Config; requirements expect >=4.56.0",
+    "not_executed": [
+      "GPU training",
+      "paid LLM calls",
+      "remote jobs",
+      "publication",
+      "coverage percentage measurement"
+    ]
+  },
+  "reviews": {
+    "engineering-review": {
+      "role": "Agency Code Reviewer",
+      "scope": "Independent read-only engineering and experiment-integrity review, building on prior full-code inventory; focused traces and local reproductions, not a second claim to reread every file.",
+      "commit": "2aa9b7923483ad778be78c9194ed663b59ed5058",
+      "graph_status": "search_graph returned project not indexed; filesystem fallback used.",
+      "project_modified": false,
+      "external_actions": "No dependency installation, network API call, remote job, push or publication.",
+      "artifacts": {
+        "repro_script": "/tmp/fastfill-agency-engineering-repros.py",
+        "repro_results": "/tmp/fastfill-agency-engineering-repro-results.json"
+      },
+      "positive_contracts": [
+        "Raw versus reconciled asset geometry remains separate.",
+        "Unknown required mesh/physics/support evidence correctly blocks runtime acceptance.",
+        "ID completeness, finite geometry, explicit support declarations and cycle rejection are enforced in core schemas.",
+        "Evaluation base reports retain failures and unknowns; the condensed v4 summaries need to preserve those distinctions."
+      ],
+      "findings": [
+        {
+          "id": "E-cache-changes-geometry",
+          "priority": "P1",
+          "kind": "correctness",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/evaluate.py:414",
+            "fastfill/v2/evaluate.py:423",
+            "fastfill/v2/evaluate.py:452"
+          ],
+          "trigger": "Save/replay heads from support_head=True when the decoded condition does not explicitly declare all parents.",
+          "evidence": "Wall example: online spread [0.1,1,1.2], parent wall; cached replay [1,1,0], no parent.",
+          "impact": "Offline re-decoding can change E geometry and invalidate paired metrics or decode ablations. Existing replay test uses no support head.",
+          "minimal_fix": "Include support_logits in the stored tensor schema; version cache schema and fail clearly when a support-head cache lacks it. Preserve old non-support caches.",
+          "test": "E support-head online versus stored replay equality for argmax/spread, including floor/wall/request-parent and partially declared supports."
+        },
+        {
+          "id": "LLM-cache-identity",
+          "priority": "P1",
+          "kind": "experiment_provenance",
+          "status": "locally_reproduced_without_network",
+          "locations": [
+            "fastfill/v2/ops/llm_probe.py:57",
+            "fastfill/v2/ops/llm_hybrid.py:117",
+            "fastfill/v2/ops/llm_hybrid.py:137"
+          ],
+          "trigger": "Reuse an output directory with changed rows, row ordering, model, method, draft predictions or repair settings.",
+          "evidence": "Preseed old-source room_000 success, run new-source/new-model inputs with chat forbidden: both scripts silently reuse the old result; hybrid rewrites RUN.json to new identities.",
+          "impact": "A baseline can be attributed to a model/input that never generated it; identical IDs across rooms conceal stale results from ID validation.",
+          "minimal_fix": "Pin an immutable run binding before loading per-row caches (row hash, draft hash, model/endpoint, prompt/code hash, method, repair settings); reject mismatches or require a new directory. Write row binding and atomic cache files.",
+          "test": "Same inputs resume without calls; changed rows/order/model/method/settings refuse reuse; corrupt or partial cache retries safely."
+        },
+        {
+          "id": "slurm-false-success",
+          "priority": "P1",
+          "kind": "orchestration",
+          "status": "locally_reproduced_in_temp_sandbox",
+          "locations": [
+            "fastfill/v2/ops/isambard_v4_test300.sbatch:30",
+            "fastfill/v2/ops/isambard_v4_test300.sbatch:34",
+            "fastfill/v2/ops/isambard_v4_test300.sbatch:35",
+            "fastfill/v2/ops/isambard_v4_ablation.sbatch:54",
+            "fastfill/v2/ops/isambard_v4_ablation.sbatch:78",
+            "fastfill/v2/ops/isambard_v4_ablation.sbatch:83"
+          ],
+          "trigger": "Mandatory GPT evaluation/report fails, or an earlier command in a grouped background subshell fails and the last succeeds.",
+          "evidence": "Executed actual scripts in a temporary repo with fake Python: forced evaluate exit 42 and report exit 43; both batch scripts returned 0. No GPU, network or real Slurm job used.",
+          "impact": "Slurm/automation sees success while comparisons or the report are incomplete; early subgroup failure can be hidden.",
+          "minimal_fix": "Propagate every required stage into failed and use explicit chaining or errexit within mandatory grouped workers; retain optional figure failures as optional.",
+          "test": "Shell-level fake-command matrix: failure at each mandatory stage returns nonzero; missing optional plotting does not."
+        },
+        {
+          "id": "support-accuracy-survivorship",
+          "priority": "P2",
+          "kind": "measurement",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/ops/remask_ablation.py:75",
+            "fastfill/v2/ops/remask_ablation.py:78",
+            "fastfill/v2/ops/remask_ablation.py:88",
+            "fastfill/v2/ops/v4_report.py:67"
+          ],
+          "trigger": "One arm or decode fails to return layouts for some rooms, especially over-capacity dense rooms.",
+          "evidence": "Two hidden floor-parent labels, one correct predicted room and one layout=None produces all=1.0, objects=1.",
+          "impact": "Reported support accuracy is conditional on successful inference; unequal failure rates can improve it artificially. It is not a wrong conditional mean, but the report does not display its coverage/eligible denominator.",
+          "minimal_fix": "Report conditional accuracy and all-request accuracy/coverage together, preserving eligible labels including failed requests and paired common cohorts.",
+          "test": "One-success/one-failure sample reports 50% all-request accuracy, 50% coverage and 100% conditional accuracy; visible declarations excluded consistently."
+        },
+        {
+          "id": "clean-room-unknown-hiding",
+          "priority": "P2",
+          "kind": "measurement",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/evaluate.py:790",
+            "fastfill/v2/ops/remask_ablation.py:104",
+            "fastfill/v2/ops/v4_report.py:19"
+          ],
+          "trigger": "Conditions lack support declarations or contain openings that are currently unchecked; E_nosupport necessarily introduces support_unknown.",
+          "evidence": "A room with no hard violation but hard_unknown=True yields clean_room_rate=1.0 and clean_room_rate_known_only=None. The main report tracks unknown, but v4 summary only displays clean_room_rate.",
+          "impact": "The headline clean-room percentage can be read as valid/stable despite unverified mandatory support/openings. Parent reports retain the distinction; the v4 condensed table loses it.",
+          "minimal_fix": "Rename displayed metric to no-hard-violation rate and add strict ok, hard-unknown rate, failure rate and evaluated-room denominator.",
+          "test": "Summary/report preserves strict-versus-unknown distinctions on otherwise identical rooms; unknown cannot be presented as certified success."
+        },
+        {
+          "id": "E-support-runtime-gap",
+          "priority": "P2",
+          "kind": "integration_capability_gap",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/runtime.py:155",
+            "fastfill/v2/runtime.py:162",
+            "fastfill/v2/validation.py:350",
+            "fastfill/v2/validation.py:379",
+            "fastfill/v2/direct_layout.py:281"
+          ],
+          "trigger": "An E layout predicts a parent for an object without an explicit parent in the request.",
+          "evidence": "Raw output parent=floor is exported as predicted by RoomGenBench; reconcile overwrites it with None; validator reports support_unknown and runtime_ok=false.",
+          "impact": "E support predictions influence decoder/export but are not operational in the actual-asset validation path. Current conservative fail-closed policy is safe; it does not establish that E solved deployment support.",
+          "minimal_fix": "Define one typed candidate-support graph with declared/predicted provenance and request override. Check predicted candidates against verified actual support geometry; never promote a prediction itself into proof. Keep unknown when evidence is absent.",
+          "test": "Consistent parent/provenance across decoding, export and actual-asset runtime; declared parents override conflicts; verified surfaces can validate a predicted candidate, and missing surfaces stay unknown."
+        },
+        {
+          "id": "mixed-support-cycle",
+          "priority": "P2",
+          "kind": "boundary_contract",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/schema.py:316",
+            "fastfill/v2/schema.py:322",
+            "fastfill/v2/direct_layout.py:275",
+            "fastfill/v2/direct_layout.py:281"
+          ],
+          "trigger": "Partially specified external layout output parents combine with existing request declarations.",
+          "evidence": "Condition a->b and layout only b->a pass validate_layout separately, then RoomGenBench exports a->b declared and b->a predicted.",
+          "impact": "A supposedly validated handoff can contain a cyclic combined support graph. Normal serialize_predictions writes every parent and avoids this specific partial-output case; external layouts can trigger it.",
+          "minimal_fix": "Validate the effective merged graph (declared overrides predicted) once at the boundary and reuse the canonical result across all consumers.",
+          "test": "Two individually acyclic partial graphs that form a combined cycle are rejected; conflicts with a declared parent have an explicit policy."
+        },
+        {
+          "id": "remask-attachment-confound",
+          "priority": "P2",
+          "kind": "ablation_interpretation",
+          "status": "locally_reproduced",
+          "locations": [
+            "fastfill/v2/remask.py:35",
+            "fastfill/v2/remask.py:292",
+            "fastfill/v2/tests/test_remask.py:81"
+          ],
+          "trigger": "One-round legal=False remasking with an E head that predicts floor or another object while the raw geometry differs from the support attachment.",
+          "evidence": "Identical heads yield raw argmax z=1.2 m, but remask(rounds=1,legal=False) z=0 from the unconditional final attachment. Existing equivalence test has no support head and floor-fixed z.",
+          "impact": "The documented one-round equivalence is false for E; improvements over argmax mix learned reconditioning with deterministic attachment. The operation itself can be useful, but requires a separate ablation.",
+          "minimal_fix": "Expose attach_supports as an explicit decode option and record it in results; compare raw, attachment-only, legal-only and iterative variants using matched settings.",
+          "test": "One-round equivalence when attachment is off, plus deliberate divergence and recorded attachment counts when it is on."
+        },
+        {
+          "id": "direct-request-checkpoint-budget",
+          "priority": "P2",
+          "kind": "interface_limit",
+          "status": "previous_repro_rechecked_code",
+          "locations": [
+            "fastfill/v2/predict.py:62",
+            "fastfill/v2/direct_layout.py:68",
+            "fastfill/v2/roomgenbench.py:283"
+          ],
+          "trigger": "129-256 objects with a max_objects=256 checkpoint via direct --request instead of canonical --condition.",
+          "impact": "Early parser cap blocks a model-supported inventory. Canonical-condition inference and remask_ablation already pass the model budget.",
+          "minimal_fix": "Load model configuration before request expansion and pass its max_objects; keep explicit hard upper bounds.",
+          "test": "256 checkpoint accepts 129 and 256 direct requests, rejects 257; 128 checkpoint still rejects 129."
+        },
+        {
+          "id": "autorun-four-gpu-assumption",
+          "priority": "P2",
+          "kind": "orchestration",
+          "status": "static_confirmed",
+          "locations": [
+            "fastfill/v2/autorun.py:156",
+            "fastfill/v2/autorun.py:546",
+            "fastfill/v2/autorun.py:551",
+            "fastfill/v2/autorun.py:556",
+            "fastfill/v2/autorun.py:590"
+          ],
+          "trigger": "CLI permits fewer than four GPU entries and final phase runs after training.",
+          "impact": "Training can consume its full budget before an IndexError in final evaluation; duplicated/blank entries also are not checked here.",
+          "minimal_fix": "Validate the four-GPU phase requirement before launch or explicitly schedule final jobs over the available GPU pool.",
+          "test": "Invalid GPU configurations fail before launching work; supported 1/2/4 GPU scheduling completes all final jobs."
+        }
+      ],
+      "recommended_order": [
+        "Repair E cache fidelity and immutable LLM cache bindings.",
+        "Make mandatory Slurm stages fail visibly.",
+        "Preserve all-request coverage/strict/unknown metrics and isolate deterministic attachment in ablations.",
+        "Unify the merged support-candidate contract, then connect it to real verified support geometry.",
+        "Align parser budgets and validate GPU plans before training."
+      ]
+    },
+    "model-qa": {
+      "role": "Agency Model QA Specialist",
+      "review_date": "2026-10-25",
+      "project_root": "/Users/slian/Desktop/3D/Worldedge/fastfill-v4",
+      "commit": "2aa9b7923483ad778be78c9194ed663b59ed5058",
+      "opinion": "Needs work before deployment-equivalence or learned-spatial-reasoning claims; model quality undetermined without current Qwen checkpoints and corresponding generated outputs.",
+      "scope": "Independent source/mechanism review after prior full-code read; local CPU repros only. No source changes, GPU training, paid APIs, remote jobs or installs.",
+      "graph_access": "search_graph: project not indexed; disk fallback used.",
+      "evidence_environment": {
+        "python": "3.13.1",
+        "torch": "2.6.0"
+      },
+      "findings": [
+        {
+          "id": "MQA-1",
+          "severity": "High",
+          "classification": "confirmed_training_label_bug",
+          "title": "Hungarian交换后support子标签没有gather",
+          "locations": [
+            "fastfill/v2/losses.py:270",
+            "fastfill/v2/losses.py:272",
+            "fastfill/v2/losses.py:275",
+            "fastfill/v2/batch.py:478",
+            "fastfill/v2/batch.py:490"
+          ],
+          "observation": "几何target/validity按assignment重排，但support_target只把父索引映射到inverse assignment，没有先对孩子维gather。移除support条件后，原有不同隐藏support角色可以进入同一合法交换组。",
+          "evidence": {
+            "synthetic": {
+              "assignment": [
+                [
+                  1,
+                  0
+                ]
+              ],
+              "support_labels_before_assignment": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "expected_child_labels": [
+                [
+                  1,
+                  0
+                ]
+              ],
+              "support_loss_actual": 20.0,
+              "support_loss_with_child_gather": 0.0,
+              "support_accuracy_actual": 0.0,
+              "active_objective_count": 0,
+              "groups": [
+                [
+                  "anonymous_0",
+                  "anonymous_0"
+                ]
+              ]
+            },
+            "heldout_real_room": {
+              "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+              "row": 98,
+              "request_count": 84,
+              "swapped_ids": [
+                "obj_0002",
+                "obj_0055"
+              ],
+              "support_targets_before": [
+                17,
+                15
+              ],
+              "assignment_of_swapped": [
+                55,
+                2
+              ],
+              "supervised_support_slots": 84,
+              "correct_child_gather_ce": 0.0,
+              "actual_support_ce": 0.9523809552192688,
+              "actual_support_accuracy": 0.9761904761904762,
+              "target_slots_different": 2
+            },
+            "heldout_exposure": {
+              "drop_support": {
+                "eligible_rows": 300,
+                "affected_rows": 24,
+                "affected_groups": 78,
+                "affected_group_members": 239,
+                "examples": [
+                  {
+                    "row": 98,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+                    "source": "MansionWorld",
+                    "group": "anonymous_2",
+                    "ids": [
+                      "obj_0002",
+                      "obj_0055",
+                      "obj_0063"
+                    ],
+                    "categories": [
+                      "magazine",
+                      "magazine",
+                      "magazine"
+                    ],
+                    "support_targets": [
+                      17,
+                      15,
+                      9
+                    ],
+                    "support_labels": {
+                      "obj_0002": "obj_0015",
+                      "obj_0055": "obj_0013",
+                      "obj_0063": "obj_0007"
+                    }
+                  },
+                  {
+                    "row": 98,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+                    "source": "MansionWorld",
+                    "group": "anonymous_3",
+                    "ids": [
+                      "obj_0003",
+                      "obj_0012"
+                    ],
+                    "categories": [
+                      "pen cup",
+                      "pen cup"
+                    ],
+                    "support_targets": [
+                      63,
+                      39
+                    ],
+                    "support_labels": {
+                      "obj_0003": "obj_0061",
+                      "obj_0012": "obj_0037"
+                    }
+                  },
+                  {
+                    "row": 98,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+                    "source": "MansionWorld",
+                    "group": "anonymous_5",
+                    "ids": [
+                      "obj_0005",
+                      "obj_0025"
+                    ],
+                    "categories": [
+                      "magazine",
+                      "magazine"
+                    ],
+                    "support_targets": [
+                      15,
+                      17
+                    ],
+                    "support_labels": {
+                      "obj_0005": "obj_0013",
+                      "obj_0025": "obj_0015"
+                    }
+                  }
+                ]
+              },
+              "minimal": {
+                "eligible_rows": 150,
+                "affected_rows": 13,
+                "affected_groups": 42,
+                "affected_group_members": 138,
+                "examples": [
+                  {
+                    "row": 105,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_8f_400_fp002#0/F6_pantry_1",
+                    "source": "MansionWorld",
+                    "group": "anonymous_1",
+                    "ids": [
+                      "obj_0001",
+                      "obj_0008"
+                    ],
+                    "categories": [
+                      "storage box",
+                      "storage box"
+                    ],
+                    "support_targets": [
+                      16,
+                      9
+                    ],
+                    "support_labels": {
+                      "obj_0001": "obj_0014",
+                      "obj_0008": "obj_0007"
+                    }
+                  },
+                  {
+                    "row": 106,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_8f_400_fp002#1/F4_private_office_2",
+                    "source": "MansionWorld",
+                    "group": "anonymous_0",
+                    "ids": [
+                      "obj_0000",
+                      "obj_0013"
+                    ],
+                    "categories": [
+                      "storage box",
+                      "storage box"
+                    ],
+                    "support_targets": [
+                      3,
+                      18
+                    ],
+                    "support_labels": {
+                      "obj_0000": "obj_0001",
+                      "obj_0013": "obj_0016"
+                    }
+                  },
+                  {
+                    "row": 125,
+                    "scene_id": "MansionWorld::mansionworld/public_healthcare_2f_300_fp002#2/F2_consultation_room_3",
+                    "source": "MansionWorld",
+                    "group": "anonymous_6",
+                    "ids": [
+                      "obj_0006",
+                      "obj_0038"
+                    ],
+                    "categories": [
+                      "magazine stack",
+                      "magazine stack"
+                    ],
+                    "support_targets": [
+                      19,
+                      30
+                    ],
+                    "support_labels": {
+                      "obj_0006": "obj_0017",
+                      "obj_0038": "obj_0028"
+                    }
+                  }
+                ]
+              },
+              "drop_support_category_only": {
+                "eligible_rows": 300,
+                "affected_rows": 31,
+                "affected_groups": 85,
+                "affected_group_members": 448,
+                "examples": [
+                  {
+                    "row": 37,
+                    "scene_id": "il3d:74a0fd70-94ff-11f0-9d02-60cf84ae2082",
+                    "source": "IL3D_synthetic",
+                    "group": "anonymous_2",
+                    "ids": [
+                      "obj_0003",
+                      "obj_0004"
+                    ],
+                    "categories": [
+                      "basket",
+                      "basket"
+                    ],
+                    "support_targets": [
+                      0,
+                      -100
+                    ],
+                    "support_labels": {
+                      "obj_0003": "floor",
+                      "obj_0004": null
+                    }
+                  },
+                  {
+                    "row": 98,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+                    "source": "MansionWorld",
+                    "group": "anonymous_2",
+                    "ids": [
+                      "obj_0002",
+                      "obj_0005",
+                      "obj_0025",
+                      "obj_0055",
+                      "obj_0063"
+                    ],
+                    "categories": [
+                      "magazine",
+                      "magazine",
+                      "magazine",
+                      "magazine",
+                      "magazine"
+                    ],
+                    "support_targets": [
+                      17,
+                      15,
+                      17,
+                      15,
+                      9
+                    ],
+                    "support_labels": {
+                      "obj_0002": "obj_0015",
+                      "obj_0005": "obj_0013",
+                      "obj_0025": "obj_0015",
+                      "obj_0055": "obj_0013",
+                      "obj_0063": "obj_0007"
+                    }
+                  },
+                  {
+                    "row": 98,
+                    "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+                    "source": "MansionWorld",
+                    "group": "anonymous_3",
+                    "ids": [
+                      "obj_0003",
+                      "obj_0012"
+                    ],
+                    "categories": [
+                      "pen cup",
+                      "pen cup"
+                    ],
+                    "support_targets": [
+                      63,
+                      39
+                    ],
+                    "support_labels": {
+                      "obj_0003": "obj_0061",
+                      "obj_0012": "obj_0037"
+                    }
+                  }
+                ]
+              },
+              "data_sha256": "c2a6afb4cb783e59f279367311c153a9a8acffc4dcd275f574d72af2f1458a8c",
+              "scope": "Held-out test300 deterministic views only; not an estimate of actual training incidence or realized assignments."
+            }
+          },
+          "impact": "对被交换且隐藏support标签不同的孩子，正确的几何-支撑联合预测得到错误梯度和错误support accuracy。真实84对象房间构造2孩子合法交换时，正确CE为0，当前CE为0.95238。不能据heldout exposure估计实际训练发生率或Qwen性能损失。",
+          "recommendation": "先 target=batch[\"support_target\"].gather(1, assignment)，再对target>=2使用inverse assignment映射父slot；ignore标签随孩子一起gather。加入非identity assignment且不同父支持的回归测试。",
+          "formal_E_relevance": {
+            "drop_support_p": 0.2,
+            "minimal_form_p": 0.5,
+            "given_pose_p": 0.5,
+            "hungarian": true,
+            "support_loss": 0.5
+          },
+          "scope_limit": "曝光计数包含SUPPORT_IGNORE与有效标签不同的组，是触发条件数，不是已发生错误次数。训练集当前未在工作区，未估其发生率。"
+        },
+        {
+          "id": "MQA-2",
+          "severity": "High",
+          "classification": "confirmed_evaluation_deployment_mismatch",
+          "title": "Remask迭代pose编码依赖只存在于标签validity的对称约定",
+          "locations": [
+            "fastfill/v2/ops/remask_ablation.py:132",
+            "fastfill/v2/batch.py:265",
+            "fastfill/v2/batch.py:271",
+            "fastfill/v2/remask.py:192",
+            "fastfill/v2/remask.py:278",
+            "fastfill/v2/masked_layout.py:28"
+          ],
+          "observation": "评估脚本collate整行target/validity；迭代编码模型自己预测的pose时，使用该行GT validity中的yaw_symmetry_order和size_axis_swap_allowed。真实condition-only输入默认order=1、swap=False。",
+          "evidence": {
+            "environment": {
+              "python": "3.13.1",
+              "torch": "2.6.0"
+            },
+            "labelled_symmetry": [
+              [
+                2,
+                2
+              ]
+            ],
+            "condition_only_symmetry": [
+              [
+                1,
+                1
+              ]
+            ],
+            "one_pass_equal": true,
+            "two_round_deltas": {
+              "position_normalized": 6.783008575439453e-05,
+              "size": 0.01841568946838379,
+              "yaw_logits": 0.03548434376716614,
+              "position_cell_logits": 0.026384800672531128
+            }
+          },
+          "heldout_exposure": {
+            "test300_objects": 5061,
+            "yaw_symmetry_order": {
+              "2": 4473,
+              "4": 588
+            },
+            "size_axis_swap_allowed_true": 588,
+            "condition_only_defaults": {
+              "yaw_symmetry_order": 1,
+              "size_axis_swap_allowed": false
+            }
+          },
+          "impact": "相同condition和相同模型的首轮raw输出完全一样，但多轮remask可因额外标注元数据而变化；tiny CPU机制复现size最大差0.0184157、yaw-logit差0.0354843。该数值不能外推Qwen质量。属于推理协议可复现性与部署等价性问题，不是GT位置/尺寸直接泄漏。",
+          "recommendation": "使预测pose编码仅依赖可部署输入和预测几何；固定统一约定或把有证据的对称属性显式纳入条件协议并在训练/推理一致使用。增加完整labelled row与bare-condition多轮输出不变性测试。修协议后需明确旧checkpoint兼容性，不能静默改实验口径。"
+        },
+        {
+          "id": "MQA-3",
+          "severity": "Medium",
+          "classification": "confirmed_internal_given_pose_contract_gap",
+          "title": "Remask pinned给定位姿没有保留输出，也没有占据合法性raster",
+          "locations": [
+            "fastfill/v2/remask.py:182",
+            "fastfill/v2/remask.py:188",
+            "fastfill/v2/remask.py:204",
+            "fastfill/v2/remask.py:211",
+            "fastfill/v2/remask.py:283"
+          ],
+          "observation": "given mask被当作已committed，跳过之后的commit；out仍由首轮模型预测初始化，raster只含fixed而未预占given的footprint。",
+          "evidence": {
+            "given_id": "a",
+            "given_position": [
+              1.0,
+              1.0,
+              0.0
+            ],
+            "returned_given_position": [
+              3.125,
+              3.125,
+              0.0
+            ],
+            "open_position": [
+              1.125,
+              1.125,
+              0.0
+            ],
+            "open_overlap_with_actual_given_m2": 0.765625,
+            "known_footprint_m2": 1.0
+          },
+          "impact": "给定a位置[1,1,0]，返回a为[3.125,3.125,0]；开放物体与真实given的1m² footprint重叠0.765625m²。触发于带_given_pose_ids的内部remask接口；标准ablation没有given，因此不能说所有D/E现有输出均受影响。model.forward不覆写given输出本身有明确文档，缺口位于remask把其视为固定/已提交状态的组合契约。",
+          "recommendation": "给定状态单独携带明确raw几何，输出保留它、raster预占它，并使attach_supports跳过固定given。不要从模n角度特征反解唯一yaw，也不要读取未声明given的GT目标。"
+        },
+        {
+          "id": "MQA-4",
+          "severity": "Medium",
+          "classification": "confirmed_eligibility_bug",
+          "title": "active-objective计数漏掉support与expected_geometry",
+          "locations": [
+            "fastfill/v2/objective.py:31",
+            "fastfill/v2/train.py:142",
+            "fastfill/v2/train.py:710"
+          ],
+          "observation": "criterion产生新loss，但local_objective_count只计旧几何/regularizer项。",
+          "evidence": {
+            "support_only_loss": 20.0,
+            "active_count": 0,
+            "prior_root_reproduction": "独立根代理已复现support-only和expected_geometry-only都被_preflight拒绝。"
+          },
+          "impact": "仅新loss启用时样本preflight被拒，或新loss有梯度但窗口被当无目标跳过。正式E配置旧position/size/yaw权重大于0，不能把此bug描述为正常E完全不训练。",
+          "recommendation": "新loss的有效实例mask纳入共享eligibility规则，使用与criterion一致的条件、given和有效支持标签策略，并测试独立新loss训练。"
+        },
+        {
+          "id": "MQA-5",
+          "severity": "Medium",
+          "classification": "confirmed_statistical_assumption_risk_not_model_failure",
+          "title": "房间bootstrap未按house/group聚类",
+          "locations": [
+            "fastfill/v2/ops/compare.py:15",
+            "fastfill/v2/ops/compare.py:78",
+            "fastfill/v2/ops/stratify.py:324",
+            "fastfill/v2/anchor_probe.py:17",
+            "fastfill/v2/anchor_probe.py:90"
+          ],
+          "observation": "CI与sign test把room当独立单位。根代理核实test300共300房间但只有257个(source,group)，21个group有重复房间，最大11间。anchor_probe已在注释承认house不独立。",
+          "evidence_source": "Root独立磁盘统计；本子代理复核算法实现，未重复root toy分析。",
+          "impact": "当同group房间误差相关时，有效独立样本数低于room数，room-only CI可能偏窄。不能断言所有现有显著性结论都错。",
+          "recommendation": "保留room加权点估计，按(source,provenance.group)做paired cluster bootstrap，报告独立group数；sign test可在group聚合后做，或用cluster randomization检验。"
+        }
+      ],
+      "supporting_observations": [
+        {
+          "severity": "Medium",
+          "classification": "confirmed_metric_contract_mismatch",
+          "title": "独立support_accuracy按原ID评分而geometry允许合法交换",
+          "locations": [
+            "fastfill/v2/ops/remask_ablation.py:70",
+            "fastfill/v2/ops/remask_ablation.py:85"
+          ],
+          "evidence": {
+            "support_accuracy_stable_id": {
+              "all": 0.9761904761904762,
+              "floor": 1.0,
+              "wall": 1.0,
+              "object": 0.9333333333333333,
+              "objects": 84,
+              "declared_in_input": 0
+            },
+            "position_error_legal_matching": {
+              "mean": 2.793716675027279e-07,
+              "valid_objects": 84
+            },
+            "note": "Perfect geometry under legal assignment and perfect support relative to assigned geometry, but strict-ID support accuracy penalises swapped children."
+          },
+          "recommendation": "同时报告固定ID与与geometry相同assignment下的support图准确率；对父和子ID均映射。若坚持固定ID，则训练/几何评估也必须明确相同身份语义。"
+        },
+        {
+          "severity": "Medium",
+          "classification": "design_alignment_risk",
+          "title": "选模只看minimal无given的raw-head目标，未直接选择部署的remask质量",
+          "locations": [
+            "fastfill/v2/train.py:107",
+            "fastfill/v2/train.py:462",
+            "fastfill/v2/train.py:610",
+            "fastfill/v2/train.py:746",
+            "fastfill/v2/train.py:778"
+          ],
+          "observation": "validation不做given增强，也不运行remask/spread；D的条件依赖收益未作为选模主指标，E目标另含support loss。",
+          "recommendation": "预先冻结所有arm共用的validation主指标，另记录full/minimal、raw/deployed decode和anchor-probe；小固定验证子集估计部署指标，test只在最终使用。",
+          "limit": "没有当前训练checkpoint或曲线，不能判断选中checkpoint实际更差。"
+        },
+        {
+          "severity": "Info",
+          "classification": "attribution_requirement",
+          "title": "raw与规则收益必须分开",
+          "locations": [
+            "fastfill/v2/evaluate.py:125",
+            "fastfill/v2/evaluate.py:162",
+            "fastfill/v2/ops/remask_ablation.py:44"
+          ],
+          "observation": "spread实现墙边转向、支撑吸附和collision-aware选择，remaskL另有raster合法过滤。",
+          "recommendation": "同模型同输入比较raw、spread、remask无L、remaskL、随机/打乱logits+相同规则，分别报告learned与rule贡献。yaw对称误差不能证明semantic-facing正确。"
+        }
+      ],
+      "three_low_cost_experiments": [
+        {
+          "rank": 1,
+          "name": "CPU协议不变性与标签映射审计",
+          "cost": "现有小tensor与tiny CPU脚本，单次通常数秒；无需Qwen、无需重训。",
+          "controls": [
+            "identity与非identity Hungarian，子/父同时交换，SUPPORT_IGNORE混合",
+            "同condition的完整row与bare condition；rounds=1/2/4",
+            "给定物体输出与occupancy固定"
+          ],
+          "metrics": [
+            "correct-support CE/accuracy与手工oracle差值",
+            "labelled/bare max tensor delta与最终layout一致性",
+            "given几何逐字段保持，开放物体与given overlap"
+          ],
+          "stop_rule": "任何一项不变性失败，先冻结对应D/E比较口径并修复协议后重新生成受影响结果；不启动大训练。",
+          "cannot_conclude": "CPU/tiny通过不证明Qwen质量提高，只证明代码契约正确。"
+        },
+        {
+          "rank": 2,
+          "name": "同checkpoint的学习贡献与规则贡献分解",
+          "cost": "不重训；选定base/D/E checkpoint各取同一50–100个独立group，首轮可缓存；推理耗时须先profile20间。现工作区无真实checkpoint，未执行。",
+          "controls": [
+            "raw argmax",
+            "spread",
+            "remask4不带L",
+            "remask4L与remask4LX",
+            "打乱/均匀logits加相同规则，保持物体与房间相同"
+          ],
+          "metrics": [
+            "all-request失败率、OBB碰撞/越界/door、正确匹配support、几何误差和延迟",
+            "每source/对象密度分层",
+            "同group成对bootstrap CI"
+          ],
+          "stop_rule": "若D/E优势只在L/spread存在，或者随机logits+相同规则接近该收益，不把结论写为模型学会空间推理；先定位规则贡献。",
+          "cannot_conclude": "规则有效可以是工程成果，但无法单独支持模型表征创新或mesh/physics可行性。"
+        },
+        {
+          "rank": 3,
+          "name": "可行反事实anchor依赖测试",
+          "cost": "不重训；20–50个独立group小推理集，或程序生成可行paired scenes；现工作区无真实checkpoint，未执行。",
+          "controls": [
+            "同房间/inventory无given",
+            "给出原位置anchor",
+            "给出可行平移/旋转anchor（相关物体有预先定义的相对关系目标）",
+            "随机但同尺度anchor控制；全部用raw/remask无L看学习贡献"
+          ],
+          "metrics": [
+            "依赖物体相对anchor位移/朝向响应",
+            "非依赖物体不必要移动",
+            "约束满足、碰撞与support、paired group CI"
+          ],
+          "stop_rule": "若正确与随机anchor无稳定区别，或变化只来自合法性过滤，暂停增加decoder/头的复杂度；先处理训练信号与条件使用。",
+          "cannot_conclude": "synthetic关系测试只能证明指定可行关系上的条件响应，不能证明任意真实房间审美、功能合理或物理稳定。"
+        }
+      ],
+      "repro_scripts": [
+        "/tmp/fastfill-model-qa-repro.py",
+        "/tmp/fastfill-model-qa-symmetry-repro.py",
+        "/tmp/fastfill-model-qa-support-exposure.py",
+        "/tmp/fastfill-model-qa-real-support-repro.py"
+      ],
+      "source_sha256": {
+        "fastfill/v2/losses.py": "d36d5a55fcc2bf69d06da7e2d40bb057c36f87ea6d65413fd451dd75cda65785",
+        "fastfill/v2/objective.py": "f13067db9932940272122ea4320a7eeeea44fe42dbd5c30e320f49c725eefc49",
+        "fastfill/v2/matching.py": "3ae60074cd184cc3adce3526a7c4582687730c13c018f6a270dc51d49b26dceb",
+        "fastfill/v2/batch.py": "575a31ac2d82725700f030a0498ea8ab7efc15fc1e5c87cbf53153846171d7fa",
+        "fastfill/v2/model.py": "9a615425f6eea41b6d268964fc09e532cc2c18fbc11397d2da9a20ebf699544c",
+        "fastfill/v2/masked_layout.py": "42cec23abe568dcf826b6fe74c902f06375812eb398c10179613185f74fba950",
+        "fastfill/v2/remask.py": "bcbe9105827652f67b01fdb364254eab68f3587d87937574ac0e0617fa76a636",
+        "fastfill/v2/train.py": "b3dd2e37f8d9cfc5b4c984a46642c84e0cd4a2d23375f3004b562bcb8afebbce",
+        "fastfill/v2/anchor_probe.py": "ccd7a2e869eede2d19fdb082ba7310c108cd0313a29b2b775a36b96fd0285c46",
+        "fastfill/v2/ops/remask_ablation.py": "772ff7dafabd67d40b9c4b0e8345be7cb3d4c4bfbac1e613ca7040458b7d9f50",
+        "fastfill/v2/ops/compare.py": "dc5b2495d05f4cbe5a16918f4eebba92ef41db3c2a3423a18755aa7d92e2c5ac",
+        "fastfill/v2/ops/stratify.py": "a9a8ecec575a8f819c71b072009bd8cce3f263a896699bd8d8236f37a3fc5291"
+      }
+    },
+    "research": {
+      "date": "2026-10-25",
+      "role": "Agency Research Synthesist",
+      "research_question": "Which established methods overlap with FastFill v4, and which bounded experiments could establish useful engineering or research improvements in request-bound, dense, partially supervised indoor layout generation?",
+      "search_scope": {
+        "type": "Targeted evidence map, not an exhaustive systematic review or proof of novelty",
+        "searched": [
+          "web search constrained at synthesis to arXiv, CVF proceedings, NeurIPS proceedings, ICLR proceedings, author project pages, official GitHub"
+        ],
+        "window": "2023-01-01 through 2026-10-25; ATISS 2021 retained as a foundational comparator",
+        "languages": "English paper titles and author pages; no language-complete search",
+        "inclusion": [
+          "Object-based indoor layout generation or directly adjacent scene generation",
+          "Primary paper, author-maintained project, or official repository",
+          "Method overlap relevant to masking, constraints, continuous geometry, assets, or editing"
+        ],
+        "exclusion": [
+          "Secondary paper aggregators as method evidence",
+          "RGB-D/whole-surface synthesis treated as adjacent, not interchangeable with requested-object layout",
+          "Unverified performance claims and cross-paper metric pooling"
+        ],
+        "search_queries": [
+          "SceneNAT scene layout non autoregressive mask iterative generation paper",
+          "DiffuScene MiDiffusion 3D scene synthesis controllable layout official paper",
+          "OptiScene room layout optimization LLM scene generation paper",
+          "HouseCraft SceneSmith asset aware scene generation paper",
+          "SceneNAT Masked Generative Modeling Language Guided Indoor Scene Synthesis arxiv 2601.07218",
+          "MiDiffusion mixed discrete continuous diffusion 3D scene synthesis paper official",
+          "LayoutGPT Compositional Visual Planning Generation Large Language Models official paper",
+          "HouseCraft 3D indoor scene generation arxiv",
+          "InstructScene Instruction Driven 3D Indoor Scene Synthesis Semantic Graph Prior ICLR 2024 official",
+          "MaskScene scene layout generation masked 3D indoor paper",
+          "PhyScene CVPR 2024 paper official",
+          "\"MaskScene\" \"Hierarchical\" arxiv code",
+          "\"Holodeck\" \"Language Guided\" \"3D\" CVPR 2024 official",
+          "\"MaskScene\" site:ieeexplore.ieee.org",
+          "\"MaskScene\" site:arxiv.org",
+          "\"mixed diffusion\" \"3D Indoor\" github Hu",
+          "\"OptiScene\" \"NeurIPS\" paper 2025",
+          "3D scene layout generation symmetry aware object orientation ambiguity equivalent bounding box",
+          "symmetry aware pose representation object pose estimation quotient space Bregier 2017",
+          "LEGO-Net Learning Regular Rearrangements of Objects in Rooms symmetry equivariant 2023"
+        ],
+        "counts": "10 high-relevance primary-source paper families included below; search-engine result counts were not retained and are not presented as PRISMA counts."
+      },
+      "code_calibration": [
+        {
+          "path": "SERVER_RUN.md",
+          "lines": "54-87",
+          "fact": "Current v4 comparison uses baseline/D/E, max_objects=256; D adds noisy given-pose masking, E adds a support pointer."
+        },
+        {
+          "path": "fastfill/v2/model.py",
+          "lines": "155-182,217-285",
+          "fact": "Qwen condition encoding, bidirectional object slots, grid/residual XY plus z/positive size/yaw heads; optional pose embedding/support pointer."
+        },
+        {
+          "path": "fastfill/v2/remask.py",
+          "lines": "1-41,163-296",
+          "fact": "Module explicitly credits MaskGIT/SceneNAT; uses cosine schedule, raw maximum-cell confidence, optional geometric legality, retraction, support attachment."
+        },
+        {
+          "path": "code_v4/fastfill/tools/contrast_set.py",
+          "lines": "1-17,51-63,133-172",
+          "fact": "Repository already has v1 faces/near paired counterfactuals with feasible witnesses. It excludes subjects supporting children; a structured v2/support-closure extension would extend existing work, not introduce counterfactual testing from zero."
+        },
+        {
+          "path": "fastfill/v2/remask.py",
+          "lines": "191-193,278-279",
+          "fact": "Symmetry/order and size-axis-swap fields are taken from collated batches to encode predicted intermediate poses. Model QA reports one-pass parity but two-pass differences when these label-only fields are present versus bare-condition defaults. This agent did not independently run that reproduction."
+        }
+      ],
+      "papers": [
+        {
+          "name": "SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis",
+          "date": "v1 2026-01-12; v2 2026-08-11",
+          "status": "Primary preprint; arXiv currently says under review",
+          "urls": [
+            "https://arxiv.org/abs/2601.07218",
+            "https://arxiv.org/html/2601.07218v2",
+            "https://github.com/lojol2327/SceneNAT-official"
+          ],
+          "read_level": "Primary methods §3.1-3.4, experiments/appendix excerpts, official repository README; sampler source not inspected",
+          "evidence_weight": "High for method overlap; moderate for author-reported benchmark findings; no independent replication performed",
+          "method": "Discrete semantic/appearance/layout tokens, masked non-autoregressive decoding, auxiliary set-predicted relation queries, confidence/cosine remasking.",
+          "overlap": "Object masking, replacement/noise, bidirectional refinement, cosine schedule and confidence-first remasking already exist. FastFill explicitly acknowledges this lineage.",
+          "distinct_scope": "FastFill fixes requested IDs/categories, predicts continuous geometry with partial-label masks, and targets dense multi-source scenes rather than freely generating a closed-library object inventory.",
+          "limit": "The paper itself identifies fixed quantization, hyperparameter tuning, synthetic-only training and closed retrieval as limits. Its published speed/FID cannot be transferred to FastFill."
+        },
+        {
+          "name": "Mixed Diffusion for 3D Indoor Scene Synthesis (MiDiffusion)",
+          "date": "v1 2024-05-31; v2 2024-12-09; CVF WACV 2026 version located",
+          "status": "Primary paper and official implementation",
+          "urls": [
+            "https://arxiv.org/abs/2405.21066",
+            "https://arxiv.org/html/2405.21066v2",
+            "https://openaccess.thecvf.com/content/WACV2026/papers/Hu_Mixed_Diffusion_for_3D_Indoor_Scene_Synthesis_WACV_2026_paper.pdf",
+            "https://github.com/MIT-SPARK/MiDiffusion"
+          ],
+          "read_level": "Abstract, primary method excerpts §4.1-4.2 and partial-condition statement, official README; implementation not executed",
+          "evidence_weight": "High for existence of mixed-domain/noisy partial conditioning; moderate for task-specific empirical gains",
+          "method": "Separate categorical corruption and continuous geometric diffusion, floor conditioning, corruption-and-masking for known objects.",
+          "overlap": "Mixed discrete/continuous representations and partial-scene conditioning are established, so combining grid classes and continuous residuals is not sufficient as a novelty claim.",
+          "comparison_limit": "Joint semantic generation differs from a fixed requested inventory; adapt the conditioning before benchmarking."
+        },
+        {
+          "name": "DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis",
+          "date": "v1 2023-03-24; v2 2024-03-12; CVPR 2024",
+          "status": "Peer-reviewed primary paper",
+          "urls": [
+            "https://arxiv.org/abs/2303.14207",
+            "https://openaccess.thecvf.com/content/CVPR2024/html/Tang_DiffuScene_Denoising_Diffusion_Models_for_Generative_Indoor_Scene_Synthesis_CVPR_2024_paper.html",
+            "https://openaccess.thecvf.com/content/CVPR2024/papers/Tang_DiffuScene_Denoising_Diffusion_Models_for_Generative_Indoor_Scene_Synthesis_CVPR_2024_paper.pdf"
+          ],
+          "read_level": "Primary abstract, representation/method PDF excerpts",
+          "evidence_weight": "High for joint unordered object-set synthesis and shape retrieval; no reproduced performance",
+          "method": "Joint diffusion of position, size, orientation, semantic category and shape features in an unordered object set, followed by shape retrieval.",
+          "overlap": "Joint geometry prediction, inter-object reasoning and retrieval after layout prediction predate FastFill."
+        },
+        {
+          "name": "InstructScene: Instruction-Driven 3D Indoor Scene Synthesis with Semantic Graph Prior",
+          "date": "2024-02-07; ICLR 2024 Spotlight",
+          "status": "Peer-reviewed primary paper",
+          "urls": [
+            "https://arxiv.org/abs/2402.04717",
+            "https://proceedings.iclr.cc/paper_files/paper/2024/file/6d96950e6ce0b92e3d0fb2afa634e0f2-Paper-Conference.pdf",
+            "https://chenguolin.github.io/projects/InstructScene/"
+          ],
+          "read_level": "Primary abstract/introduction and author method page",
+          "evidence_weight": "High for graph-prior/layout-decoder mechanism; moderate for author-reported effectiveness",
+          "method": "Semantic graph prior with discretized object appearance and relations, followed by a graph-conditioned geometric layout decoder.",
+          "overlap": "Adding a relation graph or auxiliary relation supervision alone is already established; a support-specific improvement needs controlled evidence beyond an additional head."
+        },
+        {
+          "name": "PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI",
+          "date": "2024; CVPR 2024 Highlight",
+          "status": "Peer-reviewed primary paper",
+          "urls": [
+            "https://arxiv.org/abs/2404.09465",
+            "https://physcene.github.io/",
+            "https://openaccess.thecvf.com/content/CVPR2024/papers/Yang_PhyScene_Physically_Interactable_3D_Scene_Synthesis_for_Embodied_AI_CVPR_2024_paper.pdf"
+          ],
+          "read_level": "Author project, primary PDF evaluation/ablation/limitation excerpts",
+          "evidence_weight": "High for collision/layout/reachability guidance; moderate for reported benchmark effects",
+          "method": "Conditional diffusion with explicit collision, room-layout and agent-interaction guidance, including articulated assets.",
+          "overlap": "Geometric guidance and collision avoidance during generation are established, rather than new merely because moved from a postprocessor into decoding.",
+          "limit": "Physical metrics trade off; do not optimize collision alone or infer rigid-body validity from OBB checks."
+        },
+        {
+          "name": "LayoutGPT: Compositional Visual Planning and Generation with Large Language Models",
+          "date": "v1 2023-05-24; v2 2023-10-28; NeurIPS 2023",
+          "status": "Peer-reviewed primary paper",
+          "urls": [
+            "https://arxiv.org/abs/2305.15393",
+            "https://research.google/pubs/layoutgpt-compositional-visual-planning-and-generation-with-large-language-models/",
+            "https://github.com/UCSB-AI/LayoutGPT"
+          ],
+          "read_level": "Primary abstract, author paper PDF excerpts, official repository metadata",
+          "evidence_weight": "High for LLM visual planning lineage; no direct contemporary performance inference",
+          "method": "In-context layout demonstrations in a structured language to turn text conditions into 2D/3D layouts.",
+          "overlap": "LLMs producing structured geometry are established; keep this as a historical prompt baseline, not the only recent comparison."
+        },
+        {
+          "name": "Holodeck: Language Guided Generation of 3D Embodied AI Environments",
+          "date": "arXiv 2023; CVPR 2024",
+          "status": "Peer-reviewed primary paper and official repository",
+          "urls": [
+            "https://arxiv.org/abs/2312.09067",
+            "https://openaccess.thecvf.com/content/CVPR2024/html/Yang_Holodeck_Language_Guided_Generation_of_3D_Embodied_AI_Environments_CVPR_2024_paper.html",
+            "https://github.com/allenai/Holodeck"
+          ],
+          "read_level": "Primary abstract, constraint-layout ablation excerpt, official README",
+          "evidence_weight": "High for constraint-plus-asset generation lineage; moderate for reported human evaluation",
+          "method": "Language model proposes spatial relations; retrieved assets and a layout solver instantiate a scene.",
+          "overlap": "Asset selection plus a constraint solver is established. FastFill should compare useful speed/quality/controllability under the same requested assets and geometry."
+        },
+        {
+          "name": "OptiScene: LLM-driven Indoor Scene Layout Generation via Scaled Human-aligned Data Synthesis and Multi-Stage Preference Optimization",
+          "date": "NeurIPS 2025",
+          "status": "Peer-reviewed primary paper and official repository",
+          "urls": [
+            "https://papers.neurips.cc/paper_files/paper/2025/hash/3ca6d336ddaa316a6ae953a20b9477cf-Abstract-Conference.html",
+            "https://github.com/PolySummit/OptiScene"
+          ],
+          "read_level": "Official conference abstract and official training README; full training not reproduced",
+          "evidence_weight": "High for SFT/preference-optimization pipeline; no independent gains verified",
+          "method": "Human-inspected synthetic layout data, SFT followed by multi-stage DPO.",
+          "overlap": "Simply adding DPO is not a new idea in this exact application. Preference labels need to match the structured FastFill task, and verified objective gains should precede preference training."
+        },
+        {
+          "name": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+          "date": "2026; author project reports ICML 2026 Spotlight",
+          "status": "Primary author project/preprint; venue claim read from author project",
+          "urls": [
+            "https://arxiv.org/abs/2602.09153",
+            "https://scenesmith.github.io/"
+          ],
+          "read_level": "Author system/method page; parent independently inspecting the paper",
+          "evidence_weight": "High for published system design; moderate for author-selected demonstrations; no replication",
+          "method": "Hierarchical designer/critic/orchestrator stages with generated and retrieved assets and simulation metadata.",
+          "overlap": "An agentic propose/check/repair scene loop is already established and generally costs far more than a compact learned layout decoder; compare under explicit budgets."
+        },
+        {
+          "name": "NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation",
+          "date": "v1 2026-06-28; v2 2026-08-13; ECCV 2026",
+          "status": "Accepted primary paper; venue confirmed in arXiv comments and author page",
+          "urls": [
+            "https://arxiv.org/abs/2606.29395",
+            "https://rainzor.github.io/publications/nala/"
+          ],
+          "read_level": "Primary abstract/metadata and author abstract; parent reading methods in depth",
+          "evidence_weight": "High for existence of 3D-input LLM coarse/discrete plus continuous refinement; effect sizes not independently assessed",
+          "method": "Native 3D boundary/asset encoding into an LLM with discrete coarse autoregressive poses followed by continuous regression.",
+          "overlap": "LLM plus continuous geometry refinement is already an explicit near neighbor. A FastFill claim must establish what request-bound parallel decoding, heterogeneous supervision, or constrained repair contributes."
+        }
+      ],
+      "adjacent_or_incomplete": [
+        {
+          "name": "ATISS",
+          "url": "https://arxiv.org/abs/2110.03675",
+          "read_level": "Primary abstract/metadata",
+          "reason": "2021 foundation retained outside main time window. Partial-scene generation and permutation-aware conditioning already existed."
+        },
+        {
+          "name": "HouseCrafter",
+          "url": "https://arxiv.org/abs/2406.20077",
+          "read_level": "Primary abstract/metadata; v1 2024-06-28 and v2 2025-08-19 verified",
+          "reason": "Floorplan to multi-view RGB-D and reconstructed whole scenes; adjacent rather than a drop-in fixed-inventory object-layout baseline."
+        },
+        {
+          "name": "MaskScene: Hierarchical Conditional Masked Models for Real-Time 3D Indoor Scene Synthesis",
+          "url": "https://doi.org/10.1109/TVCG.2026.3658429",
+          "read_level": "Publisher access failed; bibliography confirmed by author institution profile https://jsjxy.bistu.edu.cn/docs/2026-03/0d628d08699c41ec9d0ead6710a0262c.pdf and bibliographic indexes",
+          "reason": "Relevant 2026 masked-scene title must be checked before a novelty claim; no detailed method or speed claim is used here because publisher full text was not obtained."
+        },
+        {
+          "name": "LEGO-Net: Learning Regular Rearrangements of Objects in Rooms",
+          "urls": [
+            "https://arxiv.org/abs/2301.09629",
+            "https://openaccess.thecvf.com/content/CVPR2023/papers/Wei_LEGO-Net_Learning_Regular_Rearrangements_of_Objects_in_Rooms_CVPR_2023_paper.pdf",
+            "https://ivl.cs.brown.edu/research/lego-net.html"
+          ],
+          "status": "CVPR 2023 primary paper",
+          "read_level": "Primary abstract, introduction/method PDF excerpts and author project page",
+          "method": "Transformer iterative denoising of noisy positions/orientations of a fixed object set, informed by a floor plan and a preference for limited movement.",
+          "implication": "Fixed inventory, noisy pose recovery and minimal movement are already prior art. The asset-change/support-closure proposal needs a more specific contribution."
+        },
+        {
+          "name": "Defining the Pose of any 3D Rigid Object and an Associated Distance",
+          "url": "https://arxiv.org/abs/1612.04631",
+          "status": "Primary pose-representation research, 2016 preprint",
+          "read_level": "Primary abstract/search excerpt; full method not inspected",
+          "implication": "Treating symmetric poses as equivalence classes/sets of rigid transforms predates this project. Fixing annotation-dependent conditioning is engineering; generic symmetry awareness is not itself novel."
+        },
+        {
+          "name": "GALA: Geometry-Aware Language Model for Controllable Object Arrangement",
+          "url": "https://xccelephant.github.io/paper/gala/",
+          "status": "Author page says SIGGRAPH Asia 2026; paper and code not yet linked",
+          "read_level": "Author teaser only",
+          "implication": "Track as a close forthcoming neighbor in geometry-aware support/containment/collision; teaser cannot establish exact mechanism or empirical superiority."
+        }
+      ],
+      "conclusions": {
+        "high_confidence": [
+          "Object masking + noisy visible poses + confidence/cosine remasking is inherited methodology, not a defensible standalone FastFill novelty claim.",
+          "Joint geometry, partial conditioning, explicit relations, geometry-guided generation, asset retrieval and LLM-plus-continuous output all have close prior work.",
+          "FastFill's potentially useful research setting is the combination of exact requested IDs, heterogeneous partial supervision, dense scenes and actual-asset reconciliation; a task setting is not by itself a new algorithm.",
+          "Any intermediate-pose representation must be determined by the same information at training/evaluation/deployment. Annotation-only symmetry flags affecting inference are an input-contract defect before they are a research topic."
+        ],
+        "not_established": [
+          "No evidence from static code establishes current Qwen model quality or that E beats D.",
+          "No cross-paper FID/latency numbers here establish FastFill superiority; inventories, asset libraries, hardware and test distributions differ.",
+          "This targeted search does not establish that any proposed direction is globally novel."
+        ],
+        "prerequisite": "Repair support-output/cache identity and evaluation contracts before interpreting new ablations."
+      },
+      "directions": [
+        {
+          "rank": 1,
+          "title": "Calibrate commitment and retraction to geometric/support failure, under a fixed decoding budget",
+          "prior": [
+            "SceneNAT confidence remasking",
+            "PhyScene geometry guidance"
+          ],
+          "current_gap": "remask.py:241-242 scores only the chosen XY cell's raw softmax probability; it is not a calibrated probability of a feasible full object or support subtree.",
+          "testable_hypothesis": "At the same number of decode passes and candidate checks, committing/retracting by estimated actual violation risk improves dense-scene feasibility more than max-XY confidence.",
+          "candidate_method": "Use geometry margins, position entropy, support confidence and dependency closure to rank a commit. Retracting a parent revisits its support descendants. Fit calibration only on validation rollouts, not held-out test labels.",
+          "minimum_experiment": "Freeze one D/E checkpoint. Compare max-XY, random, footprint-first, geometry-margin and calibrated-risk orders at 1/4/8 decoder calls on house-disjoint rooms, separately <=32,33-128,129-256 objects.",
+          "metrics": [
+            "Hard known bbox violation rate",
+            "Support accuracy and unknown rate separately",
+            "Position/size/yaw errors before and after decoding",
+            "P50/P95 latency and number of decoder/collision checks",
+            "Calibration of predicted risk against observed violations"
+          ],
+          "failure_conditions": [
+            "No advantage over the same legality filter with a simple ranking",
+            "Gain disappears at equal candidate-check/latency budget",
+            "Improved collision only by degrading request relation fidelity or moving many uninvolved objects"
+          ],
+          "novelty_status": "A research hypothesis about calibrated budget allocation and support dependencies; not a claim that confidence remasking or legality filtering is new.",
+          "engineering_estimate": "1-3 engineer days for inference-only benchmark; 1-2 additional weeks for a learned risk head and robust experiments, excluding GPU queue time"
+        },
+        {
+          "rank": 2,
+          "title": "Actual-asset substitution with local support-consistent repair",
+          "prior": [
+            "DiffuScene retrieval",
+            "Holodeck asset+solver",
+            "NaLA native 3D assets",
+            "SceneSmith agentic scene construction; root also checking newer Function2Scene/Scenethesis",
+            "LEGO-Net fixed-inventory denoising and limited object travel",
+            "ReSpace minimal-disturbance editing identified by parent; further method comparison required"
+          ],
+          "current_gap": "FastFill predicts target envelopes then reconciles actual asset sizes; its learned pose conditioning and remasking could be reused to repair only the affected local neighborhood rather than regenerate all placements.",
+          "testable_hypothesis": "Conditioning a small local repair step on actual asset dimensions/support surfaces preserves request semantics and unaffected placements while recovering feasibility under asset substitution.",
+          "candidate_method": "Replace one or more assets, pin unaffected objects, re-open the replaced asset plus support descendants/conflict neighbors, condition on actual sizes, and repair with a fixed 1-4 pass budget. Preserve stable IDs and report infeasible/unknown explicitly.",
+          "minimum_experiment": "Start with 300 house-disjoint scenes with an independently validated feasible witness; substitute assets/OBBs at 0%,10%,25% size differences. Compare no repair, current bounded translation, full remask and local support-closure remask. Include LEGO-Net/ReSpace-style disturbance-aware alternatives when their input contracts can be aligned; do not compare only against full regeneration.",
+          "metrics": [
+            "Actual bbox acceptance versus target bbox acceptance",
+            "Constraint fidelity",
+            "Moved-uninvolved-object fraction and displacement",
+            "Support-surface checks where evidence exists",
+            "Failure/unknown rates",
+            "End-to-end latency including resolver"
+          ],
+          "failure_conditions": [
+            "Repair helps only when assets are anisotropically rescaled or objects removed",
+            "No advantage over deterministic translation at equal budget",
+            "Method uses reference target placement or test labels to choose repairs",
+            "BBox gains are described as mesh/physics validity without corresponding checkers"
+          ],
+          "novelty_status": "Local budgeted repair under asset identity/size changes may be a sharper contribution; asset-aware generation and check-repair loops are established and require additional closest-work screening.",
+          "engineering_estimate": "3-5 engineer days for OBB substitution harness; 2-4 weeks for real-asset/support-surface integration, excluding training and asset preparation"
+        },
+        {
+          "rank": 3,
+          "title": "Counterfactual constraint editing with support closure and minimal-change evaluation",
+          "prior": [
+            "InstructScene relation-conditioned generation",
+            "SceneNAT relational queries",
+            "Existing FastFill v1 contrast_set.py faces/near feasible-witness pairs"
+          ],
+          "current_gap": "Existing v1 contrast pairs deliberately avoid furniture carrying children; v2 masked generation needs evidence that it responds to changed constraints and preserves unrelated objects across dense support graphs.",
+          "testable_hypothesis": "Training/decoding on paired feasible interventions improves out-of-distribution instruction response and local edit stability beyond reproducing source-layout priors.",
+          "candidate_method": "Extend the existing witness generator into v2 stable-ID conditions, moving an anchor together with its support descendants. Construct A/B constraints that require different feasible layouts; add fixed obstacles and actual-size substitutions, preserving unaffected placements.",
+          "minimum_experiment": "Create 100-300 human-audited or solver-witnessed pairs from held-out houses; evaluate both directions A->B and B->A. Compare frozen current checkpoint, local remask, and a small paired-intervention fine-tune with identical decode budget.",
+          "metrics": [
+            "Both-variants feasible-and-satisfied pair rate",
+            "Same-answer rate under conflicting feasible conditions",
+            "Uninvolved-object displacement",
+            "Support-subtree consistency",
+            "Generalization by relation type/count, source, and object density"
+          ],
+          "failure_conditions": [
+            "Pairs contain infeasible constraints or hidden reference-layout leakage",
+            "Only reference-friendly A improves while counterfactual B does not",
+            "Gains vanish on unseen relation combinations/houses",
+            "The evaluation extension is presented as a new algorithm without a methodological contribution"
+          ],
+          "novelty_status": "An extension of an existing project tool and established controllability evaluation. Research value depends on a systematic benchmark and a demonstrated method that resolves the failure.",
+          "engineering_estimate": "2-4 engineer days to port existing v1 contrast machinery to v2; roughly 1-2 weeks for support-graph witnesses and audited benchmark"
+        }
+      ],
+      "fair_comparison_contract": [
+        "Hold requested IDs/categories/counts and available geometry fixed across methods; separate full inventory generation from arrangement of a supplied inventory.",
+        "Use the same asset library, original geometry and postprocessing budget; report raw outputs, rule-repaired outputs and actual asset outcomes separately.",
+        "Split by house/group, retain failures in denominators, include 129-256 object rooms and report partial-label/unknown scopes.",
+        "Compare inference latency including the Qwen condition pass and geometry/resolver work on fixed hardware; published SceneNAT batch-size-128 timing is not a single-room latency target.",
+        "Avoid claiming physical validity from bbox-only checks; do not silently convert unknown support/front/mesh information to a pass."
+      ],
+      "modifications": "Only /tmp research artifact written; no repository files, package installation, paid API calls or remote jobs."
+    },
+    "root-review": {
+      "empirical_inventory": {
+        "test300": {
+          "rows": 300,
+          "source_group_units": 257,
+          "repeated_units": 21,
+          "largest_unit_rooms": 11,
+          "sha256": "c2a6afb4cb783e59f279367311c153a9a8acffc4dcd275f574d72af2f1458a8c",
+          "yaw_symmetry_order": {
+            "2": 4473,
+            "4": 588
+          },
+          "requested_objects": 5061
+        },
+        "probe20": {
+          "rows": 20,
+          "source_group_units": 20,
+          "repeated_units": 0,
+          "largest_unit_rooms": 1,
+          "sha256": "e23e5115dae6c0a7797d794fd3bdf3199a052b9cf038b02547caf9fb395c4641",
+          "yaw_symmetry_order": {
+            "2": 262,
+            "4": 14
+          },
+          "requested_objects": 276
+        }
+      },
+      "statistical_review": {
+        "location": "fastfill/v2/ops/stratify.py:324; fastfill/v2/ops/compare.py:15",
+        "finding": "Current bootstrap and sign test resample/treat rooms as units, while test300 includes repeated source/group units. Correlation within groups would make room-only uncertainty optimistic. Actual change to trained-model confidence intervals not measured because paired trained-model outcomes were not present.",
+        "recommendation": "Retain per-room effect estimand, but bootstrap source/group clusters; report source-stratified effects and failures in all-request denominators."
+      },
+      "scope": {
+        "gpu_training": false,
+        "paid_api_calls": false,
+        "source_modified": false,
+        "git_status": ""
+      }
+    },
+    "root-research": {
+      "date": "2026-10-25",
+      "scope": "Targeted primary-source research, not an exhaustive novelty search or an experimental replication.",
+      "primary_sources": [
+        {
+          "title": "Function2Scene: 3D Indoor Scene Layout from Functional Specifications",
+          "submitted": "2026-05-29",
+          "url": "https://arxiv.org/html/2605.30819v1",
+          "read_level": "Primary abstract, introduction, method/termination and evaluation sections",
+          "relevance": "Functional constraints and a grounded check-and-repair loop are already studied; adding an LLM critic alone is not a novel contribution. Its user-study result is not a FastFill benchmark."
+        },
+        {
+          "title": "RoomCraft: Controllable and Complete 3D Indoor Scene Generation",
+          "submitted": "2025-06-27",
+          "url": "https://arxiv.org/abs/2506.22291",
+          "read_level": "Primary abstract and submission metadata",
+          "relevance": "Constraint networks, placement sequencing and conflict-aware completeness have precedents. No claim that every implementation detail was inspected."
+        },
+        {
+          "title": "Direct Numerical Layout Generation for 3D Indoor Scene Synthesis via Spatial Reasoning",
+          "version": "2025-10-23 v2",
+          "url": "https://arxiv.org/html/2506.05341v2",
+          "read_level": "Primary abstract, introduction and method outline; asset-layout alignment explicitly described",
+          "relevance": "DirectLayout already iterates between asset dimensions and scene layout; a FastFill asset-feedback proposal must specify stronger task constraints and a controlled benefit."
+        },
+        {
+          "title": "ReSpace: Text-Driven Autoregressive 3D Indoor Scene Synthesis and Editing",
+          "version": "2026-06-29 v6",
+          "url": "https://arxiv.org/html/2506.02459v6",
+          "read_level": "Primary abstract, introduction and representation/editing protocol",
+          "relevance": "Text-driven object addition/removal/swapping, explicit boundaries and geometry-aware preference alignment already exist; local editing alone is not a novelty claim."
+        },
+        {
+          "title": "EditRoom: LLM-parameterized Graph Diffusion for Composable 3D Room Layout Editing",
+          "version": "2025-04-01 v2",
+          "url": "https://arxiv.org/abs/2410.12836",
+          "read_level": "Primary abstract and submission metadata",
+          "relevance": "Six types of language-driven layout editing and automatically generated edit pairs already exist. Support-subtree counterfactuals must be distinguished and directly evaluated."
+        },
+        {
+          "title": "NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation",
+          "version": "2026-08-13 v2",
+          "url": "https://arxiv.org/html/2606.29395v2",
+          "read_level": "Primary sections 3 and 4.1-4.3 and abstract; ECCV acceptance stated in arXiv metadata",
+          "relevance": "Native asset/room geometry tokens and discrete anchoring plus continuous pose refinement precede this review. A generic LLM-plus-regression-head claim would overlap."
+        },
+        {
+          "title": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+          "version": "2026-05-30 v2",
+          "url": "https://arxiv.org/html/2602.09153v2",
+          "read_level": "Primary introduction, hierarchy and agent-method sections; supporting author project",
+          "relevance": "Hierarchical support, asset routing and physically checked iterative scene construction are established. Author-reported density and physics results are not independently replicated here."
+        }
+      ],
+      "query_families": [
+        "3D indoor scene layout generation counterfactual constraints controllable scene synthesis benchmark 2025 2026 arxiv",
+        "scene layout asset retrieval feedback actual bounding box size optimization 2025 2026 indoor generation",
+        "SceneNAT parallel non autoregressive 3D scene synthesis masked iterative decoding",
+        "LayoutVLM ReSpace 3D editing asset constraints arxiv",
+        "EditRoom language guided 3D scene editing arxiv",
+        "DirectLayout 3D layout generation LLM rewards arxiv"
+      ],
+      "recommended_problem": "Under a fixed requested inventory and hard scene constraints, repair dense layouts after actual-asset substitution with a small decoding budget while preserving locked objects and verified support dependencies.",
+      "novelty_status": "Research hypothesis only: constituent techniques and several nearby problem formulations already exist. Originality and practical gains require direct comparisons.",
+      "pilot_experiments": [
+        {
+          "priority": 1,
+          "name": "Calibrated geometric/support risk for commitment and retraction",
+          "prerequisites": "Fix support assignment, label-versus-bare inference and pinned-slot contracts before comparing decoders.",
+          "design": "Freeze one checkpoint. Use 100-300 validation rooms for a pilot, with a final untouched grouped test set. Compare random ordering, current maximum XY probability, deterministic geometry margin and a calibrated joint-risk policy under the same 1/2/4/8-round budgets. Report attachment-only separately.",
+          "metrics": "All-request geometric pass/violation/unknown counts, reference errors where labels are valid, decoding calls, prefill/decoder/raster/validator latency and p95 end-to-end latency. Fit any calibration only on held-out validation partitions, not test outcomes.",
+          "failure_condition": "A learned policy fails to outperform a simple geometric ordering at equal compute, or gains disappear when attachment and legality rules are held equal.",
+          "implementation_estimate": "1-3 engineer days for a frozen-checkpoint pilot after correctness fixes; full training cost depends on actual hardware."
+        },
+        {
+          "priority": 2,
+          "name": "Local repair after asset substitution",
+          "design": "In 50-100 validation scenes, replace one asset with another catalog asset whose immutable native size differs. Reopen only that asset, necessary support descendants and conflicting neighbors; compare bounded translation, full-scene decoding and local masked repair. A synthetic dimension-perturbation stress test is a separate preliminary stage, not evidence of real mesh correctness.",
+          "metrics": "All requested IDs retained, unchanged native asset scale, zero locked-object drift, support/contact evidence status, collision/boundary violations, number of moved objects and latency. Use verified support surfaces or explicitly report unknown support.",
+          "failure_condition": "An apparent gain comes from dropping objects, resizing assets, moving locked background, hiding unknown checks or using more compute than the comparison.",
+          "implementation_estimate": "3-5 engineer days for a bbox/verified-surface prototype; mesh or physics integration is a separate task."
+        },
+        {
+          "priority": 3,
+          "name": "Counterfactual control over support dependencies",
+          "design": "Extend the existing code_v4 v1 contrast_set concept into structured v2. Generate pairs with the same room/inventory but two different feasible constraints, each with an independent witness. Include support descendants and fixed obstacles; compare compliance, preservation and runtime under both constraints. Use natural-language graph-edit and rule-based baselines under matched inputs.",
+          "metrics": "Paired constraint-response success, retention of unaffected geometry, support-closure consistency and group-clustered confidence intervals; semantic-facing claims use only verified front evidence.",
+          "failure_condition": "The model imitates the original reference but does not respond to the alternate feasible condition, or success relies entirely on deterministic postprocessing.",
+          "implementation_estimate": "2-4 engineer days for a bounded validation set and evaluation harness; these estimates exclude model retraining."
+        }
+      ],
+      "fair_comparison": [
+        "Match room boundaries, openings, fixed objects, requested inventory and asset information across methods; report unsupported task adaptations.",
+        "Separate raw model, attachment-only, spread, remask, legality and actual-asset repair contributions.",
+        "Keep all requests in failure denominators; disclose unknown checks, rejected rooms and coverage of each reference metric.",
+        "Cluster statistical resampling by source/group when rooms share those units; report source and density strata.",
+        "Do not compare paper-reported speed or FID from different hardware/datasets directly with FastFill, and do not claim rigid-body validity from bbox geometry."
+      ]
+    }
+  },
+  "clarification": "证据强度说明（2026-10-25 再核对）\n\n1. 已重新运行真实房间的支撑标签复现：84件物体中，合法交换两本杂志，人工构造匹配后完全正确的支撑预测。正确标签重排的CE=0，当前实现CE=0.952380955；这证明损失计算存在错位，不是已训练模型的实际错误率。\n2. 已重新运行相同condition的多轮输入一致性复现：tiny模型首轮完全一致，两轮后输出不同。这证明标签元数据可以改变推理路径，不能把数值幅度外推到Qwen。\n3. 没有运行真实Qwen训练或定量比较新旧checkpoint，因此尚不知道上述问题对现有模型性能的实际影响。\n4. 创新方向是基于一手文献提出的研究假设，尚未证明性能收益或全球新颖性。\n5. 审核覆盖原提交2aa9b792的281个代码文件。RoomGenBench为空，V-DETR/MinkowskiEngine缺失，未把缺失源码算作已读。\n\n持久证据目录：docs/evidence/fastfill-v4-agency-review-20261025/\n完整结构化报告：agency-review.json\n本次重跑结果：support-repro-results.json、symmetry-repro-results.json\n原逐文件阅读收据：source-read-coverage.json\n复现脚本原文已嵌入agency-review.json的reproducibility字段。\n\n============================================================\n\n",
+  "reproducibility": {
+    "support": {
+      "script_source": "\"\"\"Replay child support-label assignment on a real held-out test300 room without model inference.\"\"\"\nimport sys,json\nfrom pathlib import Path\nsys.path.insert(0,'/Users/slian/Desktop/3D/Worldedge/fastfill-v4')\nimport torch\nfrom fastfill.v2.batch import AUGMENT_DEFAULTS, augment_sample,collate_samples,TinyTokenizer\nfrom fastfill.v2.matching import match_batch\nfrom fastfill.v2.losses import GeometryCriterion,LossConfig\npath=Path('/Users/slian/Desktop/3D/Worldedge/fastfill-v4/fastfill/v2/ops/test300/rows.jsonl')\nrow=json.loads(path.read_text().splitlines()[98]);opts={k:0. if k.endswith('_p') or k.startswith('given_pose_') else False for k in AUGMENT_DEFAULTS};opts['drop_support_p']=1.\ns=augment_sample(row,opts,torch.Generator().manual_seed(0));b=collate_samples([s],TinyTokenizer(),max_length=10**8,max_objects=10**6)\ngroups={}\nfor i,g in enumerate(b['exchangeable_group'][0]):\n if g:groups.setdefault(g,[]).append(i)\nids=next(indices for indices in groups.values() if len(set(b['support_target'][0,indices].tolist()))>1)\na,c=ids[:2];n=b['slot_mask'].shape[1]\np={'position_normalized':b['targets']['position_normalized'].nan_to_num().clone(),'size':torch.ones(1,n,3),'yaw_logits':torch.zeros(1,n,12),'yaw_residuals':torch.zeros(1,n,12),'slot_mask':b['slot_mask']};p['position_normalized'][:,[a,c]]=p['position_normalized'][:,[c,a]]\ncfg=LossConfig(position=0.,size=0.,yaw_cls=0.,yaw_reg=0.,support=1.)\nassignment=match_batch(p,b);inverse=assignment.argsort(1);original=b['support_target'];children=original.gather(1,assignment);correct=torch.where(children>=2,2+inverse.gather(1,(children-2).clamp_min(0)),children)\np['support_logits']=torch.full((1,n,n+2),-20.)\nfor i in range(n):\n if correct[0,i]>=0:p['support_logits'][0,i,correct[0,i]]=20.\nr=GeometryCriterion(cfg)(p,b,global_counts=False)\nwrong=torch.where(original>=2,2+inverse.gather(1,(original-2).clamp_min(0)),original)\nmask=correct>=0;delta={'scene_id':row['provenance']['scene_id'],'row':98,'request_count':n,'swapped_ids':[s['condition']['objects'][i]['id'] for i in [a,c]],'support_targets_before':original[0,[a,c]].tolist(),'assignment_of_swapped':assignment[0,[a,c]].tolist(),'supervised_support_slots':int(mask.sum()),'correct_child_gather_ce':float(torch.nn.functional.cross_entropy(p['support_logits'][mask],correct[mask])),'actual_support_ce':float(r['support']),'actual_support_accuracy':float(r['term_sums']['support_accuracy'])/r['term_counts']['support'],'target_slots_different':int((correct!=wrong).sum())}\nprint(json.dumps(delta,indent=2));Path('/tmp/fastfill-model-qa-real-support-results.json').write_text(json.dumps(delta,indent=2)+'\\n')\n",
+      "script_sha256": "3ad231a5e81c91b3bb207d82aa5bbc09fa9a1f91c3d37fcdcf452b24cd104611",
+      "rerun_exit_code": 0
+    },
+    "symmetry": {
+      "script_source": "\"\"\"Show labelled-vs-condition-only iterative decoding uses unavailable label metadata.\"\"\"\nimport sys,json,platform\nfrom pathlib import Path\nsys.path.insert(0,'/Users/slian/Desktop/3D/Worldedge/fastfill-v4')\nimport torch\nfrom fastfill.v2.batch import collate_samples,TinyTokenizer\nfrom fastfill.v2.model import ModelConfig,build_model,model_inputs\nfrom fastfill.v2.remask import remask_predictions\nfrom fastfill.v2.masked_layout import pose_features\ncondition={'schema_version':'fastfill.v2','room':{'frame':'right_handed_z_up','floor_polygon_xy_m':[[0.,0.],[4.,0.],[4.,4.],[0.,4.]],'floor_z_m':0.,'height_m':3.,'floor_known':True,'boundary_known':True},'constraints':[],'objects':[{'id':i,'category':'chair','description':'chair','support_parent':'floor'} for i in ['a','b']]}\nsample={'condition':condition,'target':{'schema_version':'fastfill.v2','objects':[{'id':i,'target_size_local_m':[1.,.5,.8],'bottom_center_m':[1.+j,1.,0.],'yaw_rad':0.} for j,i in enumerate(['a','b'])]},'validity':{'position':[[True]*3]*2,'size':[[True]*3]*2,'yaw':[True]*2,'yaw_symmetry_order':[2,2],'size_axis_swap_allowed':[False,False],'exchangeable_group':[None,None]}}\nlabel=collate_samples([sample],TinyTokenizer());bare=collate_samples([{'condition':condition}],TinyTokenizer())\ntorch.manual_seed(1)\nmodel=build_model(ModelConfig(backbone='tiny',decoder_dim=32,decoder_heads=4,decoder_layers=1,tiny_hidden_size=32,lora_rank=0,pose_conditioning=True,position_head='grid_residual',position_grid=8))\ntorch.nn.init.normal_(model.given_pose_embedding[-1].weight,std=.2)\nwith torch.no_grad():\n a=model(**model_inputs(label));b=model(**model_inputs(bare))\n one_pass_equal=all(torch.equal(a[k],b[k]) for k in a)\n a=remask_predictions(model,label,rounds=2,legal=False);b=remask_predictions(model,bare,rounds=2,legal=False)\n deltas={k:float((a[k]-b[k]).abs().max()) for k in ['position_normalized','size','yaw_logits','position_cell_logits']}\nr={'environment':{'python':platform.python_version(),'torch':torch.__version__},'labelled_symmetry':label['yaw_symmetry_order'].tolist(),'condition_only_symmetry':bare['yaw_symmetry_order'].tolist(),'one_pass_equal':one_pass_equal,'two_round_deltas':deltas}\nprint(json.dumps(r,indent=2));Path('/tmp/fastfill-model-qa-symmetry-results.json').write_text(json.dumps(r,indent=2)+'\\n')\n",
+      "script_sha256": "22996a3a8bbadabc04fefc9e4f58751f5760264701ab21de158f8d2592cf1efd",
+      "rerun_exit_code": 0
+    }
+  }
+}

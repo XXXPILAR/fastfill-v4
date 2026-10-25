@@ -1,0 +1,249 @@
+证据强度说明（2026-10-25 再核对）
+
+1. 已重新运行真实房间的支撑标签复现：84件物体中，合法交换两本杂志，人工构造匹配后完全正确的支撑预测。正确标签重排的CE=0，当前实现CE=0.952380955；这证明损失计算存在错位，不是已训练模型的实际错误率。
+2. 已重新运行相同condition的多轮输入一致性复现：tiny模型首轮完全一致，两轮后输出不同。这证明标签元数据可以改变推理路径，不能把数值幅度外推到Qwen。
+3. 没有运行真实Qwen训练或定量比较新旧checkpoint，因此尚不知道上述问题对现有模型性能的实际影响。
+4. 创新方向是基于一手文献提出的研究假设，尚未证明性能收益或全球新颖性。
+5. 审核覆盖原提交2aa9b792的281个代码文件。RoomGenBench为空，V-DETR/MinkowskiEngine缺失，未把缺失源码算作已读。
+
+持久证据目录：docs/evidence/fastfill-v4-agency-review-20261025/
+完整结构化报告：agency-review.json
+本次重跑结果：support-repro-results.json、symmetry-repro-results.json
+原逐文件阅读收据：source-read-coverage.json
+复现脚本原文已嵌入agency-review.json的reproducibility字段。
+
+============================================================
+
+FastFill v4：Agency独立审核与研究建议
+日期：2026-10-25
+代码提交：2aa9b7923483ad778be78c9194ed663b59ed5058
+
+已读范围：281/281源码文件、52,871行。逐文件哈希复验未变。
+Agency角色：Code Reviewer / Model QA Specialist / Research Synthesist。
+缺失子模块未计入已读；审核未修改业务源码、不启动真实Qwen/GPU训练或付费API。
+
+结论
+先修正支撑监督、评测/部署条件、缓存与实验记账，再重评D/E。当前候选创新尚未经过实验或完整新颖性证明。
+
+一、模型QA（证据、修复、测试详见配套JSON）
+MQA-1 [High] Hungarian交换后support子标签没有gather
+位置：fastfill/v2/losses.py:270, fastfill/v2/losses.py:272, fastfill/v2/losses.py:275, fastfill/v2/batch.py:478, fastfill/v2/batch.py:490
+观察：几何target/validity按assignment重排，但support_target只把父索引映射到inverse assignment，没有先对孩子维gather。移除support条件后，原有不同隐藏support角色可以进入同一合法交换组。
+
+MQA-2 [High] Remask迭代pose编码依赖只存在于标签validity的对称约定
+位置：fastfill/v2/ops/remask_ablation.py:132, fastfill/v2/batch.py:265, fastfill/v2/batch.py:271, fastfill/v2/remask.py:192, fastfill/v2/remask.py:278, fastfill/v2/masked_layout.py:28
+观察：评估脚本collate整行target/validity；迭代编码模型自己预测的pose时，使用该行GT validity中的yaw_symmetry_order和size_axis_swap_allowed。真实condition-only输入默认order=1、swap=False。
+
+MQA-3 [Medium] Remask pinned给定位姿没有保留输出，也没有占据合法性raster
+位置：fastfill/v2/remask.py:182, fastfill/v2/remask.py:188, fastfill/v2/remask.py:204, fastfill/v2/remask.py:211, fastfill/v2/remask.py:283
+观察：given mask被当作已committed，跳过之后的commit；out仍由首轮模型预测初始化，raster只含fixed而未预占given的footprint。
+
+MQA-4 [Medium] active-objective计数漏掉support与expected_geometry
+位置：fastfill/v2/objective.py:31, fastfill/v2/train.py:142, fastfill/v2/train.py:710
+观察：criterion产生新loss，但local_objective_count只计旧几何/regularizer项。
+
+MQA-5 [Medium] 房间bootstrap未按house/group聚类
+位置：fastfill/v2/ops/compare.py:15, fastfill/v2/ops/compare.py:78, fastfill/v2/ops/stratify.py:324, fastfill/v2/anchor_probe.py:17, fastfill/v2/anchor_probe.py:90
+观察：CI与sign test把room当独立单位。根代理核实test300共300房间但只有257个(source,group)，21个group有重复房间，最大11间。anchor_probe已在注释承认house不独立。
+
+二、工程审核
+E-cache-changes-geometry [P1] locally_reproduced
+位置：fastfill/v2/evaluate.py:414, fastfill/v2/evaluate.py:423, fastfill/v2/evaluate.py:452
+触发：Save/replay heads from support_head=True when the decoded condition does not explicitly declare all parents.
+证据：Wall example: online spread [0.1,1,1.2], parent wall; cached replay [1,1,0], no parent.
+影响：Offline re-decoding can change E geometry and invalidate paired metrics or decode ablations. Existing replay test uses no support head.
+建议：Include support_logits in the stored tensor schema; version cache schema and fail clearly when a support-head cache lacks it. Preserve old non-support caches.
+
+LLM-cache-identity [P1] locally_reproduced_without_network
+位置：fastfill/v2/ops/llm_probe.py:57, fastfill/v2/ops/llm_hybrid.py:117, fastfill/v2/ops/llm_hybrid.py:137
+触发：Reuse an output directory with changed rows, row ordering, model, method, draft predictions or repair settings.
+证据：Preseed old-source room_000 success, run new-source/new-model inputs with chat forbidden: both scripts silently reuse the old result; hybrid rewrites RUN.json to new identities.
+影响：A baseline can be attributed to a model/input that never generated it; identical IDs across rooms conceal stale results from ID validation.
+建议：Pin an immutable run binding before loading per-row caches (row hash, draft hash, model/endpoint, prompt/code hash, method, repair settings); reject mismatches or require a new directory. Write row binding and atomic cache files.
+
+slurm-false-success [P1] locally_reproduced_in_temp_sandbox
+位置：fastfill/v2/ops/isambard_v4_test300.sbatch:30, fastfill/v2/ops/isambard_v4_test300.sbatch:34, fastfill/v2/ops/isambard_v4_test300.sbatch:35, fastfill/v2/ops/isambard_v4_ablation.sbatch:54, fastfill/v2/ops/isambard_v4_ablation.sbatch:78, fastfill/v2/ops/isambard_v4_ablation.sbatch:83
+触发：Mandatory GPT evaluation/report fails, or an earlier command in a grouped background subshell fails and the last succeeds.
+证据：Executed actual scripts in a temporary repo with fake Python: forced evaluate exit 42 and report exit 43; both batch scripts returned 0. No GPU, network or real Slurm job used.
+影响：Slurm/automation sees success while comparisons or the report are incomplete; early subgroup failure can be hidden.
+建议：Propagate every required stage into failed and use explicit chaining or errexit within mandatory grouped workers; retain optional figure failures as optional.
+
+support-accuracy-survivorship [P2] locally_reproduced
+位置：fastfill/v2/ops/remask_ablation.py:75, fastfill/v2/ops/remask_ablation.py:78, fastfill/v2/ops/remask_ablation.py:88, fastfill/v2/ops/v4_report.py:67
+触发：One arm or decode fails to return layouts for some rooms, especially over-capacity dense rooms.
+证据：Two hidden floor-parent labels, one correct predicted room and one layout=None produces all=1.0, objects=1.
+影响：Reported support accuracy is conditional on successful inference; unequal failure rates can improve it artificially. It is not a wrong conditional mean, but the report does not display its coverage/eligible denominator.
+建议：Report conditional accuracy and all-request accuracy/coverage together, preserving eligible labels including failed requests and paired common cohorts.
+
+clean-room-unknown-hiding [P2] locally_reproduced
+位置：fastfill/v2/evaluate.py:790, fastfill/v2/ops/remask_ablation.py:104, fastfill/v2/ops/v4_report.py:19
+触发：Conditions lack support declarations or contain openings that are currently unchecked; E_nosupport necessarily introduces support_unknown.
+证据：A room with no hard violation but hard_unknown=True yields clean_room_rate=1.0 and clean_room_rate_known_only=None. The main report tracks unknown, but v4 summary only displays clean_room_rate.
+影响：The headline clean-room percentage can be read as valid/stable despite unverified mandatory support/openings. Parent reports retain the distinction; the v4 condensed table loses it.
+建议：Rename displayed metric to no-hard-violation rate and add strict ok, hard-unknown rate, failure rate and evaluated-room denominator.
+
+E-support-runtime-gap [P2] locally_reproduced
+位置：fastfill/v2/runtime.py:155, fastfill/v2/runtime.py:162, fastfill/v2/validation.py:350, fastfill/v2/validation.py:379, fastfill/v2/direct_layout.py:281
+触发：An E layout predicts a parent for an object without an explicit parent in the request.
+证据：Raw output parent=floor is exported as predicted by RoomGenBench; reconcile overwrites it with None; validator reports support_unknown and runtime_ok=false.
+影响：E support predictions influence decoder/export but are not operational in the actual-asset validation path. Current conservative fail-closed policy is safe; it does not establish that E solved deployment support.
+建议：Define one typed candidate-support graph with declared/predicted provenance and request override. Check predicted candidates against verified actual support geometry; never promote a prediction itself into proof. Keep unknown when evidence is absent.
+
+mixed-support-cycle [P2] locally_reproduced
+位置：fastfill/v2/schema.py:316, fastfill/v2/schema.py:322, fastfill/v2/direct_layout.py:275, fastfill/v2/direct_layout.py:281
+触发：Partially specified external layout output parents combine with existing request declarations.
+证据：Condition a->b and layout only b->a pass validate_layout separately, then RoomGenBench exports a->b declared and b->a predicted.
+影响：A supposedly validated handoff can contain a cyclic combined support graph. Normal serialize_predictions writes every parent and avoids this specific partial-output case; external layouts can trigger it.
+建议：Validate the effective merged graph (declared overrides predicted) once at the boundary and reuse the canonical result across all consumers.
+
+remask-attachment-confound [P2] locally_reproduced
+位置：fastfill/v2/remask.py:35, fastfill/v2/remask.py:292, fastfill/v2/tests/test_remask.py:81
+触发：One-round legal=False remasking with an E head that predicts floor or another object while the raw geometry differs from the support attachment.
+证据：Identical heads yield raw argmax z=1.2 m, but remask(rounds=1,legal=False) z=0 from the unconditional final attachment. Existing equivalence test has no support head and floor-fixed z.
+影响：The documented one-round equivalence is false for E; improvements over argmax mix learned reconditioning with deterministic attachment. The operation itself can be useful, but requires a separate ablation.
+建议：Expose attach_supports as an explicit decode option and record it in results; compare raw, attachment-only, legal-only and iterative variants using matched settings.
+
+direct-request-checkpoint-budget [P2] previous_repro_rechecked_code
+位置：fastfill/v2/predict.py:62, fastfill/v2/direct_layout.py:68, fastfill/v2/roomgenbench.py:283
+触发：129-256 objects with a max_objects=256 checkpoint via direct --request instead of canonical --condition.
+证据：
+影响：Early parser cap blocks a model-supported inventory. Canonical-condition inference and remask_ablation already pass the model budget.
+建议：Load model configuration before request expansion and pass its max_objects; keep explicit hard upper bounds.
+
+autorun-four-gpu-assumption [P2] static_confirmed
+位置：fastfill/v2/autorun.py:156, fastfill/v2/autorun.py:546, fastfill/v2/autorun.py:551, fastfill/v2/autorun.py:556, fastfill/v2/autorun.py:590
+触发：CLI permits fewer than four GPU entries and final phase runs after training.
+证据：
+影响：Training can consume its full budget before an IndexError in final evaluation; duplicated/blank entries also are not checked here.
+建议：Validate the four-GPU phase requirement before launch or explicitly schedule final jobs over the available GPU pool.
+
+三、优先研究方向（均为假设）
+1. Calibrated geometric/support risk for commitment and retraction
+实验：Freeze one checkpoint. Use 100-300 validation rooms for a pilot, with a final untouched grouped test set. Compare random ordering, current maximum XY probability, deterministic geometry margin and a calibrated joint-risk policy under the same 1/2/4/8-round budgets. Report attachment-only separately.
+指标：All-request geometric pass/violation/unknown counts, reference errors where labels are valid, decoding calls, prefill/decoder/raster/validator latency and p95 end-to-end latency. Fit any calibration only on held-out validation partitions, not test outcomes.
+判败：A learned policy fails to outperform a simple geometric ordering at equal compute, or gains disappear when attachment and legality rules are held equal.
+原型估时：1-3 engineer days for a frozen-checkpoint pilot after correctness fixes; full training cost depends on actual hardware.
+
+2. Local repair after asset substitution
+实验：In 50-100 validation scenes, replace one asset with another catalog asset whose immutable native size differs. Reopen only that asset, necessary support descendants and conflicting neighbors; compare bounded translation, full-scene decoding and local masked repair. A synthetic dimension-perturbation stress test is a separate preliminary stage, not evidence of real mesh correctness.
+指标：All requested IDs retained, unchanged native asset scale, zero locked-object drift, support/contact evidence status, collision/boundary violations, number of moved objects and latency. Use verified support surfaces or explicitly report unknown support.
+判败：An apparent gain comes from dropping objects, resizing assets, moving locked background, hiding unknown checks or using more compute than the comparison.
+原型估时：3-5 engineer days for a bbox/verified-surface prototype; mesh or physics integration is a separate task.
+
+3. Counterfactual control over support dependencies
+实验：Extend the existing code_v4 v1 contrast_set concept into structured v2. Generate pairs with the same room/inventory but two different feasible constraints, each with an independent witness. Include support descendants and fixed obstacles; compare compliance, preservation and runtime under both constraints. Use natural-language graph-edit and rule-based baselines under matched inputs.
+指标：Paired constraint-response success, retention of unaffected geometry, support-closure consistency and group-clustered confidence intervals; semantic-facing claims use only verified front evidence.
+判败：The model imitates the original reference but does not respond to the alternate feasible condition, or success relies entirely on deterministic postprocessing.
+原型估时：2-4 engineer days for a bounded validation set and evaluation harness; these estimates exclude model retraining.
+
+四、创新边界与一手来源
+SceneNAT已覆盖masked/confidence/cosine remasking；NaLA已有原生3D输入和粗细位姿；DirectLayout已有asset-layout alignment；LEGO-Net/ReSpace/EditRoom已有重排/编辑；Function2Scene已有功能约束check-repair。现有代码v1 contrast_set也已包含反事实工具，v2扩展要明确新的任务和证据。
+
+SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis
+Primary methods §3.1-3.4, experiments/appendix excerpts, official repository README; sampler source not inspected
+https://arxiv.org/abs/2601.07218
+Object masking, replacement/noise, bidirectional refinement, cosine schedule and confidence-first remasking already exist. FastFill explicitly acknowledges this lineage.
+
+Mixed Diffusion for 3D Indoor Scene Synthesis (MiDiffusion)
+Abstract, primary method excerpts §4.1-4.2 and partial-condition statement, official README; implementation not executed
+https://arxiv.org/abs/2405.21066
+Mixed discrete/continuous representations and partial-scene conditioning are established, so combining grid classes and continuous residuals is not sufficient as a novelty claim.
+
+DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis
+Primary abstract, representation/method PDF excerpts
+https://arxiv.org/abs/2303.14207
+Joint geometry prediction, inter-object reasoning and retrieval after layout prediction predate FastFill.
+
+InstructScene: Instruction-Driven 3D Indoor Scene Synthesis with Semantic Graph Prior
+Primary abstract/introduction and author method page
+https://arxiv.org/abs/2402.04717
+Adding a relation graph or auxiliary relation supervision alone is already established; a support-specific improvement needs controlled evidence beyond an additional head.
+
+PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI
+Author project, primary PDF evaluation/ablation/limitation excerpts
+https://arxiv.org/abs/2404.09465
+Geometric guidance and collision avoidance during generation are established, rather than new merely because moved from a postprocessor into decoding.
+
+LayoutGPT: Compositional Visual Planning and Generation with Large Language Models
+Primary abstract, author paper PDF excerpts, official repository metadata
+https://arxiv.org/abs/2305.15393
+LLMs producing structured geometry are established; keep this as a historical prompt baseline, not the only recent comparison.
+
+Holodeck: Language Guided Generation of 3D Embodied AI Environments
+Primary abstract, constraint-layout ablation excerpt, official README
+https://arxiv.org/abs/2312.09067
+Asset selection plus a constraint solver is established. FastFill should compare useful speed/quality/controllability under the same requested assets and geometry.
+
+OptiScene: LLM-driven Indoor Scene Layout Generation via Scaled Human-aligned Data Synthesis and Multi-Stage Preference Optimization
+Official conference abstract and official training README; full training not reproduced
+https://papers.neurips.cc/paper_files/paper/2025/hash/3ca6d336ddaa316a6ae953a20b9477cf-Abstract-Conference.html
+Simply adding DPO is not a new idea in this exact application. Preference labels need to match the structured FastFill task, and verified objective gains should precede preference training.
+
+SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes
+Author system/method page; parent independently inspecting the paper
+https://arxiv.org/abs/2602.09153
+An agentic propose/check/repair scene loop is already established and generally costs far more than a compact learned layout decoder; compare under explicit budgets.
+
+NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation
+Primary abstract/metadata and author abstract; parent reading methods in depth
+https://arxiv.org/abs/2606.29395
+LLM plus continuous geometry refinement is already an explicit near neighbor. A FastFill claim must establish what request-bound parallel decoding, heterogeneous supervision, or constrained repair contributes.
+
+Function2Scene: 3D Indoor Scene Layout from Functional Specifications
+Primary abstract, introduction, method/termination and evaluation sections
+https://arxiv.org/html/2605.30819v1
+Functional constraints and a grounded check-and-repair loop are already studied; adding an LLM critic alone is not a novel contribution. Its user-study result is not a FastFill benchmark.
+
+RoomCraft: Controllable and Complete 3D Indoor Scene Generation
+Primary abstract and submission metadata
+https://arxiv.org/abs/2506.22291
+Constraint networks, placement sequencing and conflict-aware completeness have precedents. No claim that every implementation detail was inspected.
+
+Direct Numerical Layout Generation for 3D Indoor Scene Synthesis via Spatial Reasoning
+Primary abstract, introduction and method outline; asset-layout alignment explicitly described
+https://arxiv.org/html/2506.05341v2
+DirectLayout already iterates between asset dimensions and scene layout; a FastFill asset-feedback proposal must specify stronger task constraints and a controlled benefit.
+
+ReSpace: Text-Driven Autoregressive 3D Indoor Scene Synthesis and Editing
+Primary abstract, introduction and representation/editing protocol
+https://arxiv.org/html/2506.02459v6
+Text-driven object addition/removal/swapping, explicit boundaries and geometry-aware preference alignment already exist; local editing alone is not a novelty claim.
+
+EditRoom: LLM-parameterized Graph Diffusion for Composable 3D Room Layout Editing
+Primary abstract and submission metadata
+https://arxiv.org/abs/2410.12836
+Six types of language-driven layout editing and automatically generated edit pairs already exist. Support-subtree counterfactuals must be distinguished and directly evaluated.
+
+ATISS
+
+https://arxiv.org/abs/2110.03675
+
+HouseCrafter
+
+https://arxiv.org/abs/2406.20077
+
+MaskScene: Hierarchical Conditional Masked Models for Real-Time 3D Indoor Scene Synthesis
+
+https://doi.org/10.1109/TVCG.2026.3658429
+
+LEGO-Net: Learning Regular Rearrangements of Objects in Rooms
+CVPR 2023 primary paper
+['https://arxiv.org/abs/2301.09629', 'https://openaccess.thecvf.com/content/CVPR2023/papers/Wei_LEGO-Net_Learning_Regular_Rearrangements_of_Objects_in_Rooms_CVPR_2023_paper.pdf', 'https://ivl.cs.brown.edu/research/lego-net.html']
+
+Defining the Pose of any 3D Rigid Object and an Associated Distance
+Primary pose-representation research, 2016 preprint
+https://arxiv.org/abs/1612.04631
+
+GALA: Geometry-Aware Language Model for Controllable Object Arrangement
+Author page says SIGGRAPH Asia 2026; paper and code not yet linked
+https://xccelephant.github.io/paper/gala/
+
+五、公平比较条件
+Match room boundaries, openings, fixed objects, requested inventory and asset information across methods; report unsupported task adaptations.
+Separate raw model, attachment-only, spread, remask, legality and actual-asset repair contributions.
+Keep all requests in failure denominators; disclose unknown checks, rejected rooms and coverage of each reference metric.
+Cluster statistical resampling by source/group when rooms share those units; report source and density strata.
+Do not compare paper-reported speed or FID from different hardware/datasets directly with FastFill, and do not claim rigid-body validity from bbox geometry.
+
+所有原始审核、最小复现结果、文献查询和证据分级均收录在同名JSON。
+本次没有真实Qwen新结果，不能用CPU机制复现数值推断实际模型性能；test300曝光不等于训练发生率。

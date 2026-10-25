@@ -1,0 +1,22 @@
+{
+  "scene_id": "MansionWorld::mansionworld/office_corporate_hq_6f_400_fp005#1/F4_open_plan_workstations",
+  "row": 98,
+  "request_count": 84,
+  "swapped_ids": [
+    "obj_0002",
+    "obj_0055"
+  ],
+  "support_targets_before": [
+    17,
+    15
+  ],
+  "assignment_of_swapped": [
+    55,
+    2
+  ],
+  "supervised_support_slots": 84,
+  "correct_child_gather_ce": 0.0,
+  "actual_support_ce": 0.9523809552192688,
+  "actual_support_accuracy": 0.9761904761904762,
+  "target_slots_different": 2
+}
