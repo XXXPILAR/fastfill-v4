@@ -314,7 +314,7 @@ class CandidateGenerator:
             return candidates, Counter({"support_geometry": 1} if not candidates else {})
         all_candidates = self._generic(ident) + self._relative(ident, placed)
         valid, blocked = [], Counter()
-        for level in (0, 1, 2) if self.local else (0,):
+        for level in (0, 1, 2) if self.local and getattr(self.catalog, "allow_shrink", True) else (0,):
             if level:  # local mode: shrink only when no full-size pose fits
                 self.shrink[ident] = level
                 self.cache.pop(ident, None)
@@ -385,6 +385,8 @@ def beam_search(geometry: Geometry, catalog: SizeCatalog, plan: Plan, *, mode: s
     complete = [state for state in beam if not geometry.validate(state.placed)]
     if not complete:
         trace["partial"] = max(beam, key=lambda s: s.rank).placed
+    # every complete state of the last beam, best rank first (the critic loop picks among them by its own score)
+    trace["complete"] = [s.placed for s in sorted(complete, key=lambda s: s.rank, reverse=True)]
     return (max(complete, key=lambda s: s.rank) if complete else None), trace
 
 

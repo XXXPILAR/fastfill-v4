@@ -28,15 +28,19 @@ SHRINK_FACTORS = {1: .95, 2: .90}
 
 class FixedSizes:
     """Catalog interface for the solver with one size per object; ``shrunk`` scales it uniformly by 5 or 10 %,
-    never below the train catalog's 15th percentile on an axis (and never growing an axis already below it)."""
+    never below the train catalog's 15th percentile on an axis (and never growing an axis already below it).
+    ``allow_shrink=False`` (the critic loop's default) keeps every size: a bounded search that finds no full-size
+    pose does not show that the size cannot fit, and shrinking would trade size accuracy for fewer collisions."""
 
-    def __init__(self, sizes: dict[str, list[float]], catalog: SizeCatalog):
-        self.sizes, self.catalog = sizes, catalog
+    def __init__(self, sizes: dict[str, list[float]], catalog: SizeCatalog, allow_shrink: bool = True):
+        self.sizes, self.catalog, self.allow_shrink = sizes, catalog, allow_shrink
 
     def candidates(self, request: dict, llm_hint=None) -> list[tuple[list[float], float, str]]:
         return [(self.sizes[request["id"]], 0., "fixed")]
 
     def shrunk(self, request: dict, level: int) -> list[tuple[list[float], float, str]]:
+        if not self.allow_shrink:
+            return []
         size = self.sizes[request["id"]]
         record = self.catalog.categories.get(_key(request["category"]))
         floor = record["p15"] if record else [0.] * 3

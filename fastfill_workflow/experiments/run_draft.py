@@ -1,4 +1,5 @@
-"""Run the draft workflow over a rows file: ① LLM plan, ② FastFill size, ③ LLM draft, ④ local repair (⑤ off).
+"""Run the draft workflow over a rows file: ① LLM plan, ② FastFill size, ③ LLM draft, then the critic loop with up
+to ``--gpt-repairs`` GPT repairs and the critic-judged polish (``--no-critic``: ④ local repair, polish off, as v4).
 
 LLM calls go to the official OpenAI API only (settings in ``.env`` beside ``workflow/``; ``workflow/credentials.py``).
 Step ② either runs a FastFill checkpoint in this process (``--checkpoint``, GPU recommended) or reads sizes from a
@@ -45,13 +46,14 @@ def preflight(settings: dict) -> None:
 
 
 def run_room(condition: dict, sizes: dict | None, yaws: dict | None, size_error: str | None, catalog: str,
-             settings: dict, yaw_mode: str) -> tuple[dict, float, dict, int]:
-    """One room in a worker process: steps ①, ③, ④ (step ②'s sizes and yaws are given)."""
+             settings: dict, yaw_mode: str, critic: bool = True, gpt_repairs: int = 2) -> tuple[dict, float, dict, int]:
+    """One room in a worker process: steps ①, ③ and the critic loop with polish (``critic=False``: ④ local repair
+    without polish, the v4 run); step ②'s sizes and yaws are given."""
     start = time.perf_counter()
     try:
-        result = run_draft_workflow(condition, sizes, catalog_path=catalog, polish=False, model=settings["model"],
+        result = run_draft_workflow(condition, sizes, catalog_path=catalog, polish=critic, model=settings["model"],
                                     base_url=settings["base_url"], api_key=settings["api_key"], yaws=yaws,
-                                    yaw_mode=yaw_mode)
+                                    yaw_mode=yaw_mode, critic=critic, gpt_repairs=gpt_repairs)
     except FatalAPIError:
         raise
     except Exception as exc:
@@ -60,7 +62,9 @@ def run_room(condition: dict, sizes: dict | None, yaws: dict | None, size_error:
     d = result.get("diagnostics") or {}
     if size_error and d:
         d["size_error"] = size_error
-    calls = d.get("plan_llm", {}).get("calls", []) + d.get("draft", {}).get("calls", [])
+    loop = (d.get("critic") or {}).get("loop") or {}
+    calls = d.get("plan_llm", {}).get("calls", []) + d.get("draft", {}).get("calls", []) + \
+        [c for c in loop.get("gpt_calls", []) if "usage" in c]
     cost = sum(c.get("cost_usd") or 0 for c in calls)
     usage = [c.get("usage") or {} for c in calls]
     tokens = {"prompt_tokens": sum(u.get("prompt_tokens") or 0 for u in usage),
@@ -102,6 +106,8 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=1, help="rooms in parallel processes (8 suits ~500 RPM)")
     ap.add_argument("--mp-start", default="spawn", help=argparse.SUPPRESS)  # tests use fork to keep their mocks
     ap.add_argument("--evaluate", action="store_true")
+    ap.add_argument("--no-critic", action="store_true", help="the v4 workflow: ④ local repair, soft doors, no polish")
+    ap.add_argument("--gpt-repairs", type=int, default=2, help="critic loop: GPT repair requests per room (K_repair)")
     a = ap.parse_args()
 
     settings = official_api()
@@ -159,7 +165,7 @@ def main() -> None:
                     break
                 i = pending.pop(0)
                 running[pool.submit(run_room, rows[i]["condition"], sizes[i], yaws[i], size_errors.get(i),
-                                    str(a.catalog), settings, a.yaw_mode)] = i
+                                    str(a.catalog), settings, a.yaw_mode, not a.no_critic, a.gpt_repairs)] = i
             if not running:
                 break
             finished, _ = wait(running, return_when=FIRST_COMPLETED)

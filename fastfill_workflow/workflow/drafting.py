@@ -94,16 +94,19 @@ def parse_poses(text: str, ids: set[str]) -> tuple[dict[str, dict], dict]:
 
 
 def assemble(geometry: Geometry, plan: Plan, sizes: dict[str, list[float]],
-             poses: dict[str, dict]) -> tuple[dict[str, dict], list[str]]:
-    """Boxes for every request, parents before children; returns (placed, ids without a usable pose)."""
-    placed, missing = {}, []
+             poses: dict[str, dict], *, ids: list[str] | None = None,
+             placed: dict[str, dict] | None = None) -> tuple[dict[str, dict], list[str]]:
+    """Boxes for every request (or only ``ids``, beside the boxes already ``placed``), parents before children;
+    returns (placed, ids without a usable pose)."""
+    placed, missing = dict(placed or {}), []
+    wanted = set(geometry.requests) if ids is None else set(ids)
     anchor = geometry.polygon.representative_point()
 
     def put(ident: str) -> None:
         if ident in placed:
             return
         parent = plan.parents.get(ident, "floor")
-        if parent in geometry.requests:
+        if parent in wanted:
             put(parent)
         parent_box = placed.get(parent, geometry.fixed.get(parent))
         if parent not in ("floor", "wall") and parent_box is None:
@@ -130,7 +133,7 @@ def assemble(geometry: Geometry, plan: Plan, sizes: dict[str, list[float]],
             z = geometry._support_height(_pose(ident, size, x, y, 0, yaw, parent), parent, parent_box)
         placed[ident] = _pose(ident, size, x, y, z, yaw, parent)
 
-    for ident in geometry.requests:
+    for ident in (geometry.requests if ids is None else ids):
         put(ident)
     return placed, missing
 
@@ -155,3 +158,51 @@ def make_draft(condition: dict, plan: Plan, sizes: dict[str, list[float]], geome
         info["error"] = f"{type(exc).__name__}: {exc}"[:300]
     placed, info["missing"] = assemble(geometry, plan, sizes, poses)
     return placed, info
+
+
+ALL_OBJECTS_RULE = "- Include every object id exactly once; do not add or remove objects."
+assert ALL_OBJECTS_RULE in DRAFT_INSTRUCTIONS
+# step-by-step placement (orders B / C): the rule above is replaced, not contradicted
+PARTIAL_INSTRUCTIONS = DRAFT_INSTRUCTIONS.replace(ALL_OBJECTS_RULE, """\
+- Each object has a status. "placed": already placed, with its pose; it stays where it is: treat it like a fixed \
+object. "place_now": place these, and answer for these only, each exactly once. "later": placed afterwards; do not \
+answer for them, but leave sensible room for them. Do not add objects.""")
+
+
+def partial_request_text(condition: dict, plan: Plan, sizes: dict[str, list[float]], ids: list[str],
+                         placed: dict[str, dict], yaws: dict[str, float] | None = None) -> str:
+    """``request_text`` with every object's status: placed (with its pose), place_now, or later (size only)."""
+    payload = json.loads(request_text(condition, plan, sizes, yaws))
+    now = set(ids)
+    for entry in payload["objects"]:
+        ident = entry["id"]
+        if ident in placed:
+            box = placed[ident]
+            entry.update(status="placed", x=round(box["bottom_center_m"][0], 3), y=round(box["bottom_center_m"][1], 3),
+                         z=round(box["bottom_center_m"][2], 3), yaw_deg=round(math.degrees(box["yaw_rad"]), 1))
+            entry.pop("suggested_yaw_deg", None)
+        else:
+            entry["status"] = "place_now" if ident in now else "later"
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def make_partial_draft(condition: dict, plan: Plan, sizes: dict[str, list[float]], geometry: Geometry,
+                       ids: list[str], placed: dict[str, dict], *, yaws: dict[str, float] | None = None,
+                       model: str | None = None, base_url: str | None = None,
+                       api_key: str | None = None) -> tuple[dict[str, dict], dict]:
+    """One LLM call placing only ``ids`` beside the ``placed`` boxes (which stay); returns (placed with the new
+    boxes, info) as ``make_draft``. Parents of ``ids`` must be placed already or be among ``ids``."""
+    info: dict = {"calls": [], "dropped": {}, "missing": [], "error": None}
+    poses: dict[str, dict] = {}
+    try:
+        instructions = PARTIAL_INSTRUCTIONS + (SUGGESTED_YAW_RULE if yaws else "")
+        text, call = llm_client.ask(instructions, partial_request_text(condition, plan, sizes, ids, placed, yaws),
+                                    model=model, base_url=base_url, api_key=api_key)
+        info["calls"].append(call)
+        poses, info["dropped"] = parse_poses(text, set(ids))
+    except (RuntimeError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
+        if isinstance(exc, ValueError) and "requires --model" in str(exc):
+            raise
+        info["error"] = f"{type(exc).__name__}: {exc}"[:300]
+    new, info["missing"] = assemble(geometry, plan, sizes, poses, ids=ids, placed=placed)
+    return new, info

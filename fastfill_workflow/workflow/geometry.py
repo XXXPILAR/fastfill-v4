@@ -6,9 +6,17 @@ import math
 from dataclasses import dataclass
 
 from shapely.geometry import LineString, Polygon
+from . import contract  # noqa: F401  (puts the fastfill package on sys.path)
+from fastfill.anchors import FLAT
+from fastfill.scene import norm_cat
 from fastfill.v2.validation import on_wall
 
 EPS = 1e-5
+# door rule "evaluator" (the critic's): the door clearance OPC scores (fastfill.v2.ops.layout_quality.opc): a door's
+# 0.8 m strip (evaluate.DOOR_ZONE_DEPTH_M, cell_costs.door_zones' rectangle) is blocked by a floor-standing obstacle
+# (bottom within FLOOR_OBSTACLE_M of the floor, at least THIN_OBSTACLE_M tall, not a rug or mat) overlapping it by
+# more than DOOR_OVERLAP_M2; objects on furniture or on the wall above it do not block it
+DOOR_DEPTH_M, FLOOR_OBSTACLE_M, THIN_OBSTACLE_M, DOOR_OVERLAP_M2 = .8, .15, .1, .01
 # the evaluator's tolerance (fastfill.v2.validation.validate_scene tolerance_m): boundary and vertical bounds
 BOUNDARY_TOL = 1e-4
 # an object stands on another when its footprint centre lies on the parent's surface (within this margin) and its
@@ -80,9 +88,15 @@ class Issue:
 
 class Geometry:
     def __init__(self, condition: dict, parents: dict[str, str], relations: list[dict],
-                 *, allow_thin_overlap: bool = False, hard_openings: bool = True):
-        """``hard_openings=False`` (the draft workflow) scores door and window clearance as soft issues: the
-        evaluator does not check openings, and ground-truth rooms often place furniture in those strips."""
+                 *, allow_thin_overlap: bool = False, hard_openings: bool = True, hard_doors: bool | None = None,
+                 hard_windows: bool | None = None, door_rule: str = "workflow"):
+        """``hard_openings=False`` (the draft workflow without the critic) scores door and window clearance as soft
+        issues: the evaluator does not check openings, and ground-truth rooms often place furniture in those strips.
+        ``hard_doors`` / ``hard_windows`` set the two separately (default: ``hard_openings``). ``door_rule``:
+        "workflow" (any object in the strip below the door top, a floor object at most 5 cm tall excepted) or
+        "evaluator" (the OPC rule, see DOOR_DEPTH_M)."""
+        if door_rule not in ("workflow", "evaluator"):
+            raise ValueError(f"unknown door_rule {door_rule!r}")
         self.condition = condition
         self.room = condition["room"]
         self.floor = float(self.room["floor_z_m"])
@@ -93,14 +107,17 @@ class Geometry:
         self.fixed = {ident: as_box(obj) for ident, obj in self.fixed_raw.items()}
         self.parents = parents
         self.allow_thin_overlap = allow_thin_overlap
-        self.hard_openings = hard_openings
+        self.hard_doors = hard_openings if hard_doors is None else hard_doors
+        self.hard_windows = hard_openings if hard_windows is None else hard_windows
+        self.hard_openings = self.hard_doors and self.hard_windows
+        self.door_rule = door_rule
         self.explicit = condition["constraints"]
         self.soft = relations + [r for r in self.explicit if not r.get("hard", True)]
         self.hard = [r for r in self.explicit if r.get("hard", True)]
         self.doors, self.windows = [], []
         for opening in self.room.get("openings", []):
             if opening.get("type") == "door":
-                zone = _opening_strip(self.room["floor_polygon_xy_m"], opening, .8)
+                zone = _opening_strip(self.room["floor_polygon_xy_m"], opening, DOOR_DEPTH_M)
                 if zone is not None:
                     self.doors.append((zone.intersection(self.polygon), opening))
             elif opening.get("type") == "window":
@@ -158,24 +175,41 @@ class Geometry:
                         not surface.buffer(SUPPORT_CENTRE_MARGIN).covers(shape.centroid)):
                     issues.append(Issue("object_support", (ident, parent_id)))
 
-        if self.hard_openings:
-            issues.extend(self.opening_issues(box))
+        if self.hard_doors or self.hard_windows:
+            issues.extend(self.opening_issues(box, doors=self.hard_doors, windows=self.hard_windows))
         issues.extend(self._collisions_and_keepout(box, placed, shape, height))
         return issues
 
-    def opening_issues(self, box: dict) -> list[Issue]:
+    def blocks_doors(self, box: dict) -> bool:
+        """Can ``box`` block a door under ``door_rule``?"""
+        z, height = box["bottom_center_m"][2], box["target_size_local_m"][2]
+        if self.door_rule == "evaluator":
+            words = norm_cat(self.requests.get(box["id"], {}).get("category") or "object").split()
+            return z - self.floor <= FLOOR_OBSTACLE_M and height >= THIN_OBSTACLE_M and \
+                (words[-1] if words else "") not in FLAT
+        return not (height <= .05 and self.parents.get(box["id"], "floor") == "floor")
+
+    def door_overlap(self, box: dict, zone: Polygon, opening: dict) -> float:
+        """Area of ``box``'s footprint in the door ``zone`` that counts as blocking (0 when it does not block)."""
+        if not self.blocks_doors(box):
+            return 0.
+        z, height = box["bottom_center_m"][2], box["target_size_local_m"][2]
+        if self.door_rule == "workflow":
+            door_top = self.floor + float(opening.get("height_m", 2.1))
+            if not (z < door_top - EPS and z + height > self.floor + EPS):
+                return 0.
+        area = footprint(box).intersection(zone).area
+        return area if area > (DOOR_OVERLAP_M2 if self.door_rule == "evaluator" else EPS) else 0.
+
+    def opening_issues(self, box: dict, *, doors: bool = True, windows: bool = True) -> list[Issue]:
         ident, shape = box["id"], footprint(box)
         z, height = box["bottom_center_m"][2], box["target_size_local_m"][2]
-        parent_id = self.parents.get(ident, "floor")
         issues = []
-        for zone, opening in self.doors:
-            if height <= .05 and parent_id == "floor":
-                continue
-            door_top = self.floor + float(opening.get("height_m", 2.1))
-            if z < door_top - EPS and z + height > self.floor + EPS and shape.intersection(zone).area > EPS:
+        for zone, opening in self.doors if doors else ():
+            if self.door_overlap(box, zone, opening):
                 issues.append(Issue("door_clearance", (ident,)))
                 break
-        for strip, opening in self.windows:
+        for strip, opening in self.windows if windows else ():
             sill = self.floor + float(opening.get("sill_height_m", 0))
             top = sill + float(opening.get("height_m", 1.2))
             if z < top - EPS and z + height > sill + EPS and shape.intersection(strip).area > EPS:
@@ -237,6 +271,35 @@ class Geometry:
             raise ValueError(f"unsupported relation: {kind}")
         return None if ok else Issue("relation_" + kind, (ident,) + ((target_id,) if target_id else ()))
 
+    def relation_gap(self, relation: dict, placed: dict[str, dict]) -> float | None:
+        """How far ``relation`` is from holding, 0 when ``relation_issue`` passes it (None: not applicable). Metres
+        for distances, radians for facings; a failed against_wall / between / on counts at least 0.05."""
+        if self.relation_issue(relation, placed) is None:
+            kind = relation["type"]
+            obj = placed.get(relation.get("object_id"), self.fixed.get(relation.get("object_id")))
+            return None if kind == "keepout" or obj is None else 0.
+        kind = relation["type"]
+        obj = placed.get(relation["object_id"], self.fixed.get(relation["object_id"]))
+        target_id = relation.get("target_id", relation.get("parent_id"))
+        target = placed.get(target_id, self.fixed.get(target_id)) if target_id else None
+        if kind in {"faces", "faces_direction"}:
+            if kind == "faces":
+                dx = target["bottom_center_m"][0] - obj["bottom_center_m"][0]
+                dy = target["bottom_center_m"][1] - obj["bottom_center_m"][1]
+            else:
+                dx, dy = relation["direction_xy"]
+            return max(_angle_error(obj["yaw_rad"], math.atan2(dy, dx)) - relation.get("tolerance_rad", math.pi / 6), 0.)
+        if kind in {"near", "clearance"}:
+            distance = footprint(obj).distance(footprint(target))
+            return max(distance - relation.get("max_distance_m", 1.0), 0.) if kind == "near" else \
+                max(relation["min_distance_m"] - distance, 0.)
+        if kind == "against_wall":
+            return max(footprint(obj).distance(self.polygon.exterior) - relation.get("tolerance_m", .1), .05)
+        if kind == "between":
+            a, b = [placed.get(t, self.fixed.get(t))["bottom_center_m"][:2] for t in relation["target_ids"]]
+            return max(LineString([a, b]).distance(footprint(obj).centroid), .05)
+        return 1.
+
     def new_hard_issues(self, box: dict, placed: dict[str, dict]) -> list[Issue]:
         trial = {**placed, box["id"]: box}
         issues = self.check_box(box, placed)
@@ -263,6 +326,7 @@ class Geometry:
     def soft_score(self, placed: dict[str, dict]) -> tuple[float, list[Issue]]:
         issues = [issue for relation in self.soft
                   if (issue := self.relation_issue(relation, placed)) is not None]
-        if not self.hard_openings:
-            issues += [issue for box in placed.values() for issue in self.opening_issues(box)]
+        if not (self.hard_doors and self.hard_windows):
+            issues += [issue for box in placed.values() for issue in
+                       self.opening_issues(box, doors=not self.hard_doors, windows=not self.hard_windows)]
         return -float(len(issues)), issues

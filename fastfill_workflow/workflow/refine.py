@@ -8,6 +8,9 @@ Per floor object (priority order; whatever stands on it moves along rigidly):
     a violated soft ``faces`` within ``MAX_TURN`` is turned to face the target.
 A move is kept only when the moved boxes have no more hard issues than before (none, for a box that had none),
 the soft score does not drop, and the object stays within ``MAX_SHIFT_M`` / ``MAX_TURN`` of where step ⑤ found it.
+With a ``critic`` (the critic loop's), a move is judged by its rule on the whole room instead: ``Critic.better`` for
+moves that must improve a relation, ``Critic.not_worse`` for wall snaps and axis alignment (critic_flowchart_v2 ⑥:
+polish moves are candidates under the loop's acceptance rule, so a snap cannot block a door or break a relation).
 """
 
 from __future__ import annotations
@@ -51,9 +54,10 @@ def _moved(box: dict, dx: float, dy: float, turn: float = 0., pivot: tuple[float
 
 
 class Refiner:
-    def __init__(self, geometry: Geometry, plan: Plan, placed: dict[str, dict]):
-        self.g, self.plan = geometry, plan
+    def __init__(self, geometry: Geometry, plan: Plan, placed: dict[str, dict], critic=None):
+        self.g, self.plan, self.critic = geometry, plan, critic
         self.placed = dict(placed)
+        self.assessment = critic.assess(self.placed) if critic else None
         self.origin = {ident: (box["bottom_center_m"][:2], box["yaw_rad"]) for ident, box in placed.items()}
         self.walls = _walls(geometry)
         self.children: dict[str, list[str]] = {}
@@ -90,6 +94,16 @@ class Refiner:
             moved[child] = _moved(self.placed[child], dx, dy, turn, pivot)
         ids = list(moved)
         trial = {**self.placed, **moved}
+        if self.critic is not None:
+            after = self.critic.assess(trial)
+            ok = self.critic.better(after, self.assessment)[0] if need_soft_gain else \
+                self.critic.not_worse(after, self.assessment)
+            if not ok:
+                self.counts["rejected"] += 1
+                return False
+            self.placed, self.assessment = trial, after
+            self.counts[kind] += 1
+            return True
         before_hard, after_hard = self._issues(ids, self.placed), self._issues(ids, trial)
         before_soft, after_soft = self.g.soft_score(self.placed)[0], self.g.soft_score(trial)[0]
         better_soft = after_soft > before_soft if need_soft_gain else after_soft >= before_soft
@@ -154,9 +168,10 @@ class Refiner:
                         break
 
 
-def refine(geometry: Geometry, plan: Plan, placed: dict[str, dict], *, rounds: int = 2) -> tuple[dict[str, dict], dict]:
+def refine(geometry: Geometry, plan: Plan, placed: dict[str, dict], *, rounds: int = 2,
+           critic=None) -> tuple[dict[str, dict], dict]:
     """Step ⑤: returns (placed, info) with counts of kept and rejected moves and soft issues before / after."""
-    refiner = Refiner(geometry, plan, placed)
+    refiner = Refiner(geometry, plan, placed, critic)
     soft_before = len(geometry.soft_score(placed)[1])
     hard_before = len(geometry.validate(placed))
     floor_objects = [ident for ident in placed if plan.parents.get(ident) == "floor"]
@@ -170,4 +185,6 @@ def refine(geometry: Geometry, plan: Plan, placed: dict[str, dict], *, rounds: i
     info = {**refiner.counts, "soft_issues_before": soft_before,
             "soft_issues_after": len(geometry.soft_score(result)[1]),
             "hard_issues_before": hard_before, "hard_issues_after": len(geometry.validate(result))}
+    if critic is not None:
+        info["critic_after"] = refiner.assessment.key()
     return result, info
