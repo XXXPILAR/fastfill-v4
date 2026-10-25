@@ -30,6 +30,7 @@ table (REL with ``--templates``, the odd half's templates by default), ``--evalu
         --rooms-file fastfill_workflow/experiments/test50_rooms.json \\
         --checkpoint runs/main4-cell05-v4fixed-e5-base/model-step-6552 --device cuda \\
         --out runs/draft-workflow/orders-test50 --budget-usd 60 --workers 8 --quality --evaluate
+After a stop, ``--summary-only`` (no API, no model, no new rooms) writes the summary of the rooms already done.
 Pilot first (``--indices ...`` or ``--limit-rooms 6``) to measure the cost per room; B makes one LLM call per object
 (``--batch`` k places k objects per call).
 """
@@ -222,10 +223,22 @@ def main() -> None:
     ap.add_argument("--quality", action="store_true", help="layout_quality table per variant in <out>/quality.md")
     ap.add_argument("--templates", type=Path, default=HERE / "experiments" / "quality50" / "eval_templates_odd.json")
     ap.add_argument("--evaluate", action="store_true")
+    ap.add_argument("--summary-only", action="store_true",
+                    help="no API, no model, no new rooms: summarise the rooms already done in --out (after a stop)")
     a = ap.parse_args()
     if a.rooms_file and not a.indices:  # explicit --indices (a pilot) win over the rooms file
         a.indices = json.loads(a.rooms_file.read_text())["indices"]
     final = not a.no_final_repair
+    if a.summary_only:  # the run's own settings (config.json), whatever this command line says
+        config = json.loads((a.out / "config.json").read_text())
+        rows = [json.loads(l) for l in a.rows.read_text().splitlines() if l.strip()]
+        picked = json.loads((a.out / "rooms.json").read_text())
+        final = config["fingerprint"]["final_repair"]
+        names = [n for m in config["modes"] for n in variants_of(m, final)]
+        done = [i for i in picked if all((a.out / n / f"room_{i:03d}.json").exists() for n in names)]
+        print(f"{len(done)} of {len(picked)} rooms done in every variant {names}", flush=True)
+        summarise(a.out, rows, done, names, a)
+        return
 
     settings = official_api()
     rows = [json.loads(l) for l in a.rows.read_text().splitlines() if l.strip()]

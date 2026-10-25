@@ -208,7 +208,8 @@ class Loop:
             done.add(ident)
             order.append(ident)
 
-        moved = _with_children(Plan(parents), set(poses))
+        # children placed so far move along (in step-by-step placement, objects still to come are not in ``placed``)
+        moved = _with_children(Plan(parents), set(poses)) & set(placed)
         for ident in moved:
             visit(ident)
         for ident in order:

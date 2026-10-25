@@ -122,6 +122,10 @@ class LoopTests(unittest.TestCase):
         answer = {"objects": {"desk": {"x": 4.6, "y": 2.2, "yaw_deg": 180}}}
         new, _ = loop._apply(answer, {"desk", "lamp"}, placed)  # no pose for the lamp: carried with the desk
         self.assertAlmostEqual(new["lamp"]["bottom_center_m"][1], 2.2)
+        partial = {k: v for k, v in placed.items() if k != "lamp"}  # step-by-step: the lamp is not placed yet
+        new, _ = loop._apply(answer, {"desk"}, partial)
+        self.assertNotIn("lamp", new)
+        self.assertAlmostEqual(new["desk"]["bottom_center_m"][1], 2.2)
 
 
 if __name__ == "__main__":
