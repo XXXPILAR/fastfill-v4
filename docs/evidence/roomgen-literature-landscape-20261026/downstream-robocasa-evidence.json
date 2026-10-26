@@ -1,0 +1,188 @@
+{
+  "title": "RoboCasa / RoboCasa365 对完整房间生成下游评估的适用边界",
+  "date": "2026-10-26",
+  "scope": "只核两项厨房机器人下游基准的原论文、作者项目及官方GitHub选定代码/文档。不扩展为policy/RL综述，不运行仿真/policy，不下载资产/模型，不做付费调用，不修改项目。",
+  "user_target": "观测空壳+指定文字家具清单、未知尺寸→完整布局；同时评RoomGenBench生成/装配和机器人任务（导航或操作）。",
+  "sources_searched": [
+    "arXiv原文HTML",
+    "robocasa.ai作者项目/论文链接",
+    "robocasa/robocasa官方GitHub REST与固定commit文本文件",
+    "robocasa-benchmark/leaderboard官方README"
+  ],
+  "queries": [
+    "RoboCasa 2024 arxiv official project task success environment train test scene variation",
+    "RoboCasa365 2026 official arxiv github benchmark"
+  ],
+  "source_hierarchy": "均为作者一手论文/项目/代码；论文结果是作者报告，未独立复现。当前代码与2024旧版、2026论文初版不是同一版本，分别说明。",
+  "official_shared_repo": {
+    "url": "https://github.com/robocasa/robocasa",
+    "commit": "2ce1aecdd76e29b52d32fdb160436c5a3e230b07",
+    "tree_entries": 1436,
+    "tree_truncated": false,
+    "public_scope": "实质环境、任务、资产下载、场景registry、文档及policy wrapper；评估入口依policy官方fork另有依赖，不将选定文件核查等同全部论文评估复现。",
+    "official_proof": {
+      "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/README.md#L5",
+      "location": "L5-14 明示2024原始RoboCasa、2026 RoboCasa365及作者论文/文档链接",
+      "read_level": "一手；选定正文/源码已读"
+    },
+    "version": "setup.py version1.0.1；mujoco==3.3.1等依赖见固定源码。"
+  },
+  "benchmarks": [
+    {
+      "name": "RoboCasa",
+      "title": "RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots",
+      "year_note": "arXiv 2406.02523v1, 2024-06-04；RSS2024由作者README citation确认",
+      "paper_url": "https://arxiv.org/abs/2406.02523",
+      "paper_read": "https://arxiv.org/html/2406.02523v1",
+      "project_url": "https://robocasa.ai/",
+      "repo_url": "https://github.com/robocasa/robocasa",
+      "kind": "robot-task simulation benchmark; kitchen-specific",
+      "task_scope": "原始论文100个厨房任务：25 atomic、75 composite；120厨房scene与2509对象。导航为其中一个技能，不是通用任意房间ObjectNav基准。",
+      "success_and_denominator": "机器人任务完成的episode成功率。§V-A为24 atomic任务的学习实验，每任务50 trials、跨5个固定评估scene；不要将100个已定义任务误写为100个任务均有同一主表完整评测。所读段落未独立明确每个scene分到多少trial。",
+      "train_test": "§V-A只测未见对象实例；5个评测scene中2个使用训练未见style。所读段落没有支持“所有评测layout都未见”，也不补造完整heldout房间split。Composite主实验另选5个代表性任务，不与atomic指标混合。",
+      "scene_variation": "floor plan、style/fixture/texture、对象实例和初始摆放；论文原始版本与当前365资产/registry规模分开。",
+      "simulation_assets": "基于robosuite/MuJoCo，面向厨房的可交互家具/电器、物体物理与移动操作机器人；资产与成功条件包含任务语义，静态mesh可视装配不能替代。",
+      "fit": "可借鉴episode成功率与对象/style泛化协议；直接评我们任意卧室/客厅不成立。先有可执行厨房fixture/对象/task mapping才可在厨房子集报告RoboCasa-style任务结果。",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2406.02523v1",
+          "location": "#III, #IV, #V-A, #V-B；web lines54,63-69,188-210,249-251",
+          "read_level": "一手；选定正文/源码已读"
+        },
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/README.md#L135",
+          "location": "Citation original-release RSS2024",
+          "read_level": "一手；选定正文/源码已读"
+        }
+      ],
+      "not_verified": [
+        "2024论文精确历史commit与全部任务成功谓词未追溯；不能把当前2026代码谓词无条件称为2024原实现。",
+        "未训练policy/复现学习结果；未核完整每任务horizon表。"
+      ]
+    },
+    {
+      "name": "RoboCasa365",
+      "title": "RoboCasa365: A Large-Scale Simulation Framework for Training and Benchmarking Generalist Robots",
+      "year_note": "arXiv2603.04356v1,2026-03-04；作者正式PDF/README标ICLR2026",
+      "paper_url": "https://arxiv.org/abs/2603.04356",
+      "paper_read": "https://arxiv.org/html/2603.04356v1",
+      "project_url": "https://robocasa.ai/",
+      "repo_url": "https://github.com/robocasa/robocasa",
+      "kind": "robot-task simulation benchmark; kitchen-specific",
+      "task_scope": "365厨房任务（65 atomic、300 composite），其中220需mobile manipulation；2500 pretraining厨房由50layout×50style组成，另10个target厨房。主评测选50任务：18 atomic、16 composite-seen、16 composite-unseen。",
+      "success_and_denominator": "原文AppendixG.2：每任务30trials，任务特定horizon内任何时刻满足该任务二元成功谓词即成功，随后报告跨任务平均成功率。当前官方docs为每任务随机50scenarios，不能与原文30trial协议混写。",
+      "train_test": {
+        "multi_task": "原文§4.1和当前docs：在pretrain厨房评50任务；Composite-Unseen指不在pretraining数据中的任务，zero-shot任务泛化，不等于未见房间。",
+        "foundation": "原文§4.2/当前docs：pretrain后可在target数据fine-tune，全部评target厨房。target的10个layout/style配对与pretrain50×50独立，fixture/appliance/texture/object实例split亦分开。因为有target fine-tune，不能把该setting笼统叫完全zero-shot新环境。",
+        "current_code_split": "env_utils.py:86-100，target→layout/style(1,1)…(10,10)+target objects；pretrain→layout/style group -2，scene_registry映射11..60。"
+      },
+      "simulation_assets": "MJCF对象及交互region标注，关节化厨房fixture/appliance；robosuite+MuJoCo。论文B.1说明CPU physics/GPU rendering，20Hz。当前安装README要求robosuite master和约10GB厨房资产；本轮不下载。",
+      "version_boundary": "当前1.0.1于2026-05-12把所有任务horizon增至1.5×。需固定RoboCasa/robosuite/MuJoCo版本、horizon、trial数与task/split；旧论文30trial与当前50scenario结果不直接合榜。",
+      "fit": "对厨房操作与mobile-manipulation子集高度相关；不是房间生成评分器，不直接提供任意生成GLB→全任务仿真的零适配导入。普通家具布局没有电器关节/按钮/容器语义时，许多任务无定义。",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2603.04356v1",
+          "location": "#3.2-3.4, #4.1-4.2, #B.1-B.2, #G.2",
+          "read_level": "一手；选定正文/源码已读"
+        },
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/docs/benchmarking/benchmarking_overview.md#L18",
+          "location": "v1.0.1 horizon note; L25-33 task/split and50scenarios",
+          "read_level": "一手；选定正文/源码已读"
+        },
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/docs/benchmarking/multitask_learning.md#L67",
+          "location": "--split pretrain与三个task sets",
+          "read_level": "一手；选定正文/源码已读"
+        },
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/docs/benchmarking/foundation_model_learning.md#L120",
+          "location": "always evaluate target；target fine-tuning流程",
+          "read_level": "一手；选定正文/源码已读"
+        }
+      ],
+      "not_verified": [
+        "未读所有365个任务谓词，未独立核全policy fork的aggregation/失败处理。",
+        "只确认官方checkpoint链接存在，未下载/运行checkpoint。",
+        "没有证据支持我们的RoomGenBench输出已能直接加载RoboCasa；此处为适配建议。"
+      ]
+    }
+  ],
+  "selected_actual_success_code": [
+    {
+      "name": "NavigateKitchen",
+      "definition": "目标是EnvUtils计算的fixture前机器人base目标位姿；不是家具中心或任意可见点。成功要求base平面位置距目标≤0.20m，且cos(yaw_error)≥0.98（等价约11.48°以内，角度值为推算）。",
+      "sources": [
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/environments/kitchen/atomic/kitchen_navigate.py#L109",
+          "location": "L109-113 target pose; L124-140 success",
+          "read_level": "一手；选定正文/源码已读"
+        }
+      ],
+      "caveat": "这是当前1.0.1选定源码；不是NAV最大连通面积，也没有在该成功谓词内直接检查SPL或无碰撞。episode其它终止/碰撞统计本轮未核。"
+    },
+    {
+      "name": "PickPlaceCounterToCabinet",
+      "definition": "object_inside_cabinet AND gripper_obj_far；不仅对象目标XY距离。",
+      "sources": [
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/environments/kitchen/atomic/kitchen_pick_place.py#L127",
+          "location": "L127-137",
+          "read_level": "一手；选定正文/源码已读"
+        }
+      ],
+      "caveat": "只举一个实际任务成功谓词，不代表所有操作成功统一判定；obj_inside_of/gripper距离helper阈值本轮未进一步审读。"
+    },
+    {
+      "name": "scene split实现",
+      "definition": "target为10个固定layout/style配对；pretrain为50layout×50style组和对应objects split。",
+      "sources": [
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/utils/env_utils.py#L86",
+          "location": "L86-100",
+          "read_level": "一手；选定正文/源码已读"
+        },
+        {
+          "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/models/scenes/scene_registry.py#L85",
+          "location": "L85-88；L166-169",
+          "read_level": "一手；选定正文/源码已读"
+        }
+      ]
+    }
+  ],
+  "public_code_and_dependencies": [
+    {
+      "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/setup.py#L17",
+      "location": "mujoco==3.3.1,numpy==2.2.5,numba==0.61.2,etc;version1.0.1",
+      "read_level": "一手；选定正文/源码已读"
+    },
+    {
+      "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/README.md#L46",
+      "location": "robosuite master install; L64-68 approx10GB assets",
+      "read_level": "一手；选定正文/源码已读"
+    },
+    {
+      "url": "https://github.com/robocasa-benchmark/leaderboard",
+      "location": "official policy leaderboard supports three task splits; not a room-generator leaderboard",
+      "read_level": "官方README已读；未审聚合脚本"
+    }
+  ],
+  "recommended_fastfill_evaluation": {
+    "status": "以下为适配建议/研究者推断，非RoboCasa原生benchmark协议，未实施。",
+    "layer1_assembly": "所有房间先评 exact-ID/count coverage、asset resolution、RoomGenBench assembly/import成功、真实碰撞/稳定与保留房间门窗；这是必要独立层，不用机器人policy成功替代。",
+    "layer2_navigation": "固定机器人、起点采样、目标家具前approach poses、物理engine/controller与budget，报告到达率/路径效率/碰撞/无法生成有效目标比例；可借鉴RoboCasa20cm+朝向谓词，但一般房间应明确称自建导航协议，不冒称官方RoboCasa365榜。",
+    "layer3_manipulation_kitchen_subset": "仅对已有MJCF/可操作语义映射的厨房子集，挑一两个短任务如open cabinet、pick-place；固定同一policy/planner与initial-state seeds，严格依任务success谓词执行。静态Mesh柜子没有关节时记作不具备任务可执行性，而非随意补一个假操作成功。",
+    "denominators": "预注册scene×task×seed清单，报告无条件端到端成功/所有预定episode。生成失败、资产缺失、装配/导入失败、起点/目标不可行不得静默排除；另报task-applicable比例和在有效场景条件下的policy SR作诊断。",
+    "causal_control": "policy失败同时受视觉域差异、控制能力和布局影响；布局方法比较应配对相同输入/资产提供者/机器人/任务与随机种子，区分oracle feasibility/planning可解与冻结policy真实rollout成功。",
+    "heldout": "生成器训练/检索/先验与评测shell/layout/asset实例隔离；冻结policy的见过环境情况另标。不要把task-unseen、object-unseen、layout-unseen、style-unseen混为一个generalization。"
+  },
+  "takeaways": [
+    "装配成功与可执行机器人任务成功是两个独立下游层，应同时报告。",
+    "RoboCasa365是准确存在的2026基准，官方代码公开且有真实二元success谓词。",
+    "厨房专用交互资产与任务语义使其适合操作子集；一般房间导航需自建一致协议或另选兼容sim，不能直接抄其policy排行榜得分。",
+    "原论文30trials、当前文档50scenarios和1.5×horizon存在版本边界；实施前锁定版本。"
+  ],
+  "executed": false,
+  "no_policy_gpu_paid_or_project_changes": true,
+  "output": "/tmp/fastfill-downstream-robocasa-evidence-20261026.json"
+}

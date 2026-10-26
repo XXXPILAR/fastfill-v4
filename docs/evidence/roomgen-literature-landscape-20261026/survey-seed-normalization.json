@@ -1,0 +1,8 @@
+{
+  "source_url": "https://3dlg-hcvc.github.io/Comp3DSceneGen/static/data/paper_summary_full.csv",
+  "operation": "Normalize CRLF to LF for repository whitespace checks; no parsed cell changed",
+  "source_sha256": "cb60fcff2fa939beb87c124a50e5b70cfd3d9ee2c906991368b28b14d1cbda65",
+  "archived_sha256": "de2e4e0f2607d1641c961860af5b6d8a58fa7d70c1de8fbf7ce5432ab42a5ab8",
+  "parsed_rows_including_header": 160,
+  "parsed_cells_unchanged": true
+}

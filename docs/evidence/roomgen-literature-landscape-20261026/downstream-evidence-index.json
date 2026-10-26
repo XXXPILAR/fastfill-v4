@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-26",
+  "user_confirmed": "Both asset generation/assembly and robot downstream task service; aesthetics auxiliary",
+  "scope": "Targeted downstream evidence supplement, not all robotics literature or all task success predicates",
+  "generation_catalog_entries": 56,
+  "targeted_evidence_rows": 8,
+  "new_reference_families_outside_generation_catalog": 4,
+  "entries": [
+    {
+      "name": "PhyScene",
+      "paper_url": "https://arxiv.org/abs/2404.09465",
+      "evidence": "可达/连通和简化交互proxy",
+      "boundary": "不能当作抓取或开柜rollout成功；仿真前准备与任务成功分开"
+    },
+    {
+      "name": "SceneSmith",
+      "paper_url": "https://arxiv.org/abs/2602.09153",
+      "evidence": "100场景、4类pick/place实际执行",
+      "boundary": "成功判定含状态与视觉评审；当前mean>=0.9不等于每项硬目标全满足；非不同生成器的成功率对比"
+    },
+    {
+      "name": "SceneCode",
+      "paper_url": "https://arxiv.org/abs/2605.19587",
+      "evidence": "MuJoCo接触开合/滑动demo",
+      "boundary": "该操作展示未给任务episode分母与总成功率；模块存在不能升级为量化任务实验"
+    },
+    {
+      "name": "Infinigen Indoors",
+      "paper_url": "https://arxiv.org/abs/2406.11824",
+      "evidence": "去阴影、遮挡边界等视觉下游；场景导出",
+      "boundary": "导出Isaac/Unreal不等于原论文已测导航/操作任务成功"
+    },
+    {
+      "name": "HSSD / HSSD-Habitat",
+      "paper_url": "https://arxiv.org/abs/2306.11290",
+      "evidence": "ObjectNav训练、跨域rollout、SR/SPL",
+      "boundary": "原论文导航证据不能扩成Manip成功；当前关节/支撑面准备能力另列"
+    },
+    {
+      "name": "GRScenes / GRUtopia",
+      "paper_url": "https://arxiv.org/abs/2407.10943",
+      "evidence": "Object/SocialNav与Loco-Manip任务基准",
+      "boundary": "论文规模与当前公开数据不同；paper所测Loco-Manip基线SR=0；不能把可加载当任务已解决"
+    },
+    {
+      "name": "RoboCasa",
+      "paper_url": "https://arxiv.org/abs/2406.02523",
+      "evidence": "厨房操作任务、仿真资产与policy评测",
+      "boundary": "只适合有相应关节/交互区域的厨房任务；普通静态mesh需转换和任务编译"
+    },
+    {
+      "name": "RoboCasa365",
+      "paper_url": "https://arxiv.org/abs/2603.04356",
+      "evidence": "多任务/未见任务与target-kitchen迁移设置",
+      "boundary": "未见任务不等于未见房间；原文30trials与现文档50scenarios及horizon更新需锁版本"
+    }
+  ],
+  "source_audits": [
+    "downstream-generation-task-evidence.json",
+    "downstream-hssd-grscenes-evidence.json",
+    "downstream-robocasa-evidence.json",
+    "downstream-priority-review.json"
+  ],
+  "primary_endpoints": [
+    "All-request actual asset/assembly validity rate",
+    "All-request actual robot-task success rate under fixed robot/policy/task/protocol",
+    "Task success conditional on valid assembly, reported alongside full denominators",
+    "Optional training utility under equal episodes/compute on held-out scenes/tasks"
+  ],
+  "failure_ledger": "Separate layout,assetgen,assembly,taskcompile,invalidinitialstate,planning,execution,validator_unknown; retain all requested scenes and objects",
+  "task_compilation": "Bind target request IDs to actual assets/parts, frames, joints/receptacles/affordances, robot spawn/initial state and required goal predicates. Static mesh alone does not imply articulated manipulation capability.",
+  "hard_success_policy": "Every mandatory goal predicate must pass. Partial reward,mean requirement score or VLM judgment is a separate diagnostic.",
+  "fairness": "Match difficulty/goal/robot/policy and budgets. Do not reward dropped objects, oversized rooms, invalid starts silently resampled away, or unsupported tasks omitted from denominators.",
+  "experiments_executed": false
+}

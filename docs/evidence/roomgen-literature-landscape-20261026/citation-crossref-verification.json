@@ -1,0 +1,28 @@
+{
+  "total_dois": 2,
+  "verified": [
+    "10.1111/cgf.70591",
+    "10.3390/electronics15173943"
+  ],
+  "failed": [],
+  "metadata": {
+    "10.1111/cgf.70591": {
+      "title": "Survey on Compositional 3D Indoor Scene Generation",
+      "authors": "Tam, H., Pun, H., Wang, A., et al.",
+      "year": "2026",
+      "journal": "Computer Graphics Forum",
+      "volume": "",
+      "pages": "",
+      "doi": "10.1111/cgf.70591"
+    },
+    "10.3390/electronics15173943": {
+      "title": "OpenAsset: A Pipeline for Open-World Asset Integration into Indoor Scene Synthesis",
+      "authors": "Hong, Y., Li, W.",
+      "year": "2026",
+      "journal": "Electronics",
+      "volume": "15",
+      "pages": "3943",
+      "doi": "10.3390/electronics15173943"
+    }
+  }
+}

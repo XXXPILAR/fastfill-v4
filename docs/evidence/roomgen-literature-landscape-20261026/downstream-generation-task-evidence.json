@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-26",
+  "scope": "Targeted follow-up of four already catalogued primary papers. Reused cached original texts, fixed repository snapshots and selected source files; no new broad survey, source changes, models, simulator executions, training or paid calls.",
+  "user_objective": "Both RoomGenBench asset generation/assembly and robot navigation/manipulation matter. Aesthetics is auxiliary. Keep scene realization success and task execution success as separate measured endpoints.",
+  "evidence_taxonomy": {
+    "E1": "Actual policy or planner execution with defined task outcomes and episode count.",
+    "E2": "Quantitative geometric reachability, collision, contact or stability proxy; no executed-policy success implication.",
+    "E3": "Qualitative simulator/robot demonstration without reported episode denominator or task-success protocol.",
+    "E4": "Exporter/scene-load/asset metadata support only.",
+    "E5": "Quantitative non-robot downstream learning task; useful but not navigation/manipulation evidence."
+  },
+  "papers": [
+    {
+      "name": "PhyScene",
+      "paper": "https://arxiv.org/html/2404.09465",
+      "primary_loci": [
+        "Section4 Metric/Table3",
+        "AppendixA.2",
+        "AppendixE",
+        "AppendixG"
+      ],
+      "robot_evidence_level": [
+        "E2",
+        "E3"
+      ],
+      "navigation": {
+        "task": "Average object reachability from a random starting point on the floor and largest walkable component / total walkable area. Agent size matters.",
+        "scale": "Paper evaluates scene metrics on1000synthesized scenes; this is not1000policy-rollout episodes. Appendix agent-width comparisons use0.2,0.3,0.5metres.",
+        "success_definition": "Geometric reachable-object rate and free-space connectivity, not language-goal navigation success/SPL under an executed perception/action policy.",
+        "implementation_detail": "Guidance maps boxes to floor occupancy, dilates for agent width and usesA*paths to guide layouts. Guidance proxy and evaluation CAD occupancy are distinct.",
+        "executed_policy_success_reported": "No quantitative robot navigation policy success protocol established in reviewed sections."
+      },
+      "manipulation": {
+        "task": "AppendixG extends walkability to interaction endpoints with fully-open articulated envelopes and paths toward handles/interactive areas.",
+        "scale": "AppendixG reports simplified interactiveness0.101→0.143; no rollout episode denominator found there.",
+        "success_definition": "Robot can geometrically reach the endpoint of a maximally interacted part. This is not successful grasp/contact execution and drawer/cabinet opening.",
+        "claim_boundary": "Paper explicitly describes it as a preliminary simplified estimate; heterogeneous grasping/motion-planning modules are not jointly solved."
+      },
+      "official_interface": {
+        "repo": "https://github.com/PhyScene/PhyScene",
+        "commit": "50a32af9b114448d89e002b2d06e86bccdcec202",
+        "entry": "https://github.com/PhyScene/PhyScene/blob/50a32af9b114448d89e002b2d06e86bccdcec202/run/test_livingroom.sh#L3",
+        "verified_scope": "Previously read launcher invokes scripts/eval/calc_ckl.py with floor conditioning, mesh overlap mode and1000scene generation. No robot task executor or full reachability scorer was newly audited/executed.",
+        "not_equivalent": "A scene-generation/evaluation launcher is not an executed robot task benchmark."
+      },
+      "use_for_fastfill": "Borrow agent-width/door or functional-approach geometry and articulated swept-volume stress tests as proxies. To claim task improvement, run a common actual navigation/manipulation policy with fixed tasks and failures retained."
+    },
+    {
+      "name": "SceneSmith",
+      "paper": "https://arxiv.org/html/2602.09153",
+      "primary_loci": [
+        "Section4.3",
+        "Section4.4",
+        "AppendixL.1–L.4/Table12",
+        "AppendixM.2.1"
+      ],
+      "robot_evidence_level": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "actual_policy_experiment": {
+        "task": "Four pick-and-place tasks: fruit from bowl→plate; coke can from shelf→table; cup from floor→sink; water bottle kitchen→living-room coffee table.",
+        "scale": "100generated scenes,25per task; three room-level tasks and one house-level task.",
+        "robot_policy": "Model-based KUKA LBR iiwa14 with mobile base and telescoping lift; segmented point clouds, grasp sampling,collision-awareIK,RRT-Connect and trajectory limits. Degraded variant relaxes gripper motion/clearance constraints.",
+        "success_definition": "An evaluator agent inspects final state using signed distances/support/overlap and multi-view vision, checking task requirements over candidate object pairs. This is not just scene geometry.",
+        "reported_counts": {
+          "fruit_plate_standard": "3/25",
+          "fruit_plate_degraded": "3/25",
+          "can_table_standard": "6/25",
+          "can_table_degraded": "4/25",
+          "cup_sink_standard": "4/25",
+          "cup_sink_degraded": "3/25",
+          "bottle_coffee_table_standard": "3/25",
+          "bottle_coffee_table_degraded": "2/25",
+          "overall_standard": "16/100",
+          "overall_degraded": "12/100"
+        },
+        "validator_check": "Authors manually labeled300evaluations: initial,standard-result,degraded-result for each scene;299/300agreement(99.7%).",
+        "inference_limits": [
+          "These counts compare two policies inside generated scenes; they do not establish SceneSmith layout generation beats other scene generators on task success.",
+          "No independent statistical significance established here for16versus12successes.",
+          "299/300agreement applies to this evaluation set; not proof of universal validator accuracy.",
+          "The house-level bring task includes mobility, but no separate standardized ObjectNav/SPL benchmark is established."
+        ]
+      },
+      "qualitative_only": "Section4.4 separately shows RB-Y1 teleoperation and an external zero-shot policy moving an apple bowl→cuttingboard. Do not count video demonstrations as the100-scene task benchmark or generalization success rates.",
+      "geometry_only": "COL and5-second static-equilibrium metrics are physical proxies, not the16% task-success metric.",
+      "official_interface": {
+        "repo": "https://github.com/nepfaff/scenesmith",
+        "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+        "validate_entry": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scripts/robot_eval/validate.py#L38",
+        "validator_logic": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/robot_eval/success_validation/validator_agent.py#L80",
+        "documented_call": "python scripts/robot_eval/validate.py --scene-state <metadata.json> --dmd <final_robot_poses.dmd.yaml> --scene-dir <scene> --task \"<task>\"",
+        "verified_code_definition": "Current validator maps requirements to0/0.5/1, averages them, and overall_success is average>=0.9. This is not equivalent to requiring every mandatory goal predicate true.",
+        "other_interfaces": "Public scripts generate_prompts.py and policy_interface.py support task→scene prompts and goal bindings/pose targets. Their presence does not independently certify the entire paper KUKA execution pipeline or100-scene artifacts are reproducible.",
+        "executed": false
+      },
+      "use_for_fastfill": "Reuse the distinction between initial non-goal state,actual policy rollout and final-state task verification. Add hard mandatory goal checks for the selected task; keep the policy,robot,asset physics andbudgetcommon across layouts."
+    },
+    {
+      "name": "SceneCode",
+      "paper": "https://arxiv.org/html/2605.19587",
+      "primary_loci": [
+        "Section3.3",
+        "Section4.1",
+        "Section4.4/Figure5"
+      ],
+      "robot_evidence_level": [
+        "E3",
+        "E4"
+      ],
+      "navigation": {
+        "reported": "SceneEvalNAV/ACC are scene proxies. No explicit navigation-policy episode count/success protocol found in reviewed evaluation.",
+        "boundary": "30room prompts are scene-synthesis evaluation units, not30robot episodes."
+      },
+      "manipulation": {
+        "task": "Generated articulated asset imported intoMuJoCo; a robot physically opens or slides independent movable links with compiled joints.",
+        "scale": "Figure5/Section4.4qualitative demonstration. Robot episode count,randomization protocol and aggregate success rate are not reported in that section.",
+        "success_definition": "No task-level binary success threshold or repeated-rollout denominator established. Demonstrates contact/articulation capability, not measured manipulation success improvement."
+      },
+      "asset_realization": "Part-aware programs compile rigid/articulated objects intoSDFwith approximate mass,inertia,collision proxies andjoint metadata. This is relevant to downstream assembly but does not guarantee realistic dynamics or successful manipulation.",
+      "official_interface": {
+        "repo": "https://github.com/wangpuyi/SceneCode",
+        "commit": "1c8e972d24c960a319b5df936ae552ad410beb85",
+        "validate_entry": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scripts/robot_eval/validate.py#L38",
+        "validator_logic": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scenecode/robot_eval/success_validation/validator_agent.py#L81",
+        "exporter_tree_path": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scripts/export_scene_to_mujoco.py#L1",
+        "verified_scope": "Read current robotvalidate wrapper andsuccessscorelogic this turn: state/DMD/task inputs andmeanrequirement score>=0.9. Exporter exists in pinned complete tree; its body was not audited here.",
+        "critical_boundary": "Public robot_eval utility does not upgrade the paper qualitativeMuJoCodemo to a reported quantitative task benchmark. No demo reproduction executed."
+      },
+      "use_for_fastfill": "Relevant to object-level articulation andsimulatormetadata handoff. Evaluate jointlimits,collisionproperties andtaskaffordances on realizedmeshes; measure actualrollout success separately."
+    },
+    {
+      "name": "Infinigen Indoors",
+      "paper": "https://arxiv.org/html/2406.11824",
+      "primary_loci": [
+        "Section3 simulator export",
+        "Section4.2/Table2",
+        "Section4.3/Table4",
+        "AppendixG"
+      ],
+      "robot_evidence_level": [
+        "E4"
+      ],
+      "other_downstream_evidence_level": [
+        "E5"
+      ],
+      "navigation_manipulation": {
+        "reported": "Exports scenes/assets toIsaacSim,Unreal androbotdescription formats; illustrated interactive frame rates. Reviewed experiments do not report a robot-navigation/manipulation policy benchmark.",
+        "success_definition": null,
+        "episode_count": null,
+        "boundary": "Scene export/load is compatibility evidence, not success of a navigation/manipulation task."
+      },
+      "actual_quantitative_downstream": [
+        {
+          "task": "Shadow removal",
+          "scale": "2000synthetic shadow/shadow-free image pairs;compareShadowFormer trained onISTDrealdata alone versusreal+synthetic.",
+          "metrics": "PSNR andRMSE onISTD,ISTD+ andSRD.",
+          "result_boundary": "Synthetic addition slightly worsens in-domainISTDbut improves zero-shotSRD; not universal improvement orroboticsuccess."
+        },
+        {
+          "task": "Occlusion boundary estimation",
+          "scale": "1464generated images withGTboundaries;trainU-Netfromscratch onInfinigenIndoors versusInfinigenNature/Hypersim;test curatedartist-designedsyntheticscenes.",
+          "metrics": "ODSdataset-thresholdFscore,OISper-image-thresholdFscore,mAP.",
+          "result_boundary": "A quantitative perception/data-generation task; notnav/manip rollout. Curated synthetic test-set size not established here."
+        }
+      ],
+      "official_interface": {
+        "repo": "https://github.com/princeton-vl/infinigen",
+        "commit": "224598d4a2ff95b4fc928e72c222598b7122c698",
+        "export_entry": "https://github.com/princeton-vl/infinigen/blob/224598d4a2ff95b4fc928e72c222598b7122c698/src/infinigen/tools/export.py#L1256",
+        "verified_scope": "Read CLI main/argument surface: input_folder,output_folder,format,individual,omniverse,etc. Current repository also has simulator exporters and occlusion-mask generation paths; these are export/data utilities.",
+        "other_tree_paths": [
+          "src/infinigen/tools/compute_occlusion_masks.py",
+          "src/infinigen/core/sim/exporters/urdf_exporter.py",
+          "src/infinigen/core/sim/exporters/mjcf_exporter.py"
+        ],
+        "unverified": "Original shadow-removal andocclusion task train/eval entrypoints were not located andfullyaudited inthis follow-up; no quantitative model orsimulatorruns executed.",
+        "version_limit": "Pinned current repository has evolved since2024paper; current exporter functionality is not proof every paper experiment is released at this commit."
+      },
+      "use_for_fastfill": "Useful for generating diverse controllable assets/geometry/annotations andsimulator export. For robot task claims, separately create a fixed-policy task evaluation. Aesthetic preference is optional; appearance realism may still matter for a visionpolicy."
+    }
+  ],
+  "implications_for_our_evaluation": {
+    "paired_endpoints": [
+      "All-request exact inventory andreal-meshgeneration/assembly coverage,fallbacks,geometry/support validity.",
+      "Taskepisodes withfixedrobot/policy/initialstate/goal andvaliditycriteria; reportall-requestend-to-endtask success andconditional-on-valid-assembly success separately."
+    ],
+    "nav_minimum": "Defineagentfootprint,height,motionconstraints,start/goal distribution,doorlocations andsensor/policy. Door-seededpathfeasibility is anengineeringproxy; executed episode success/SPL is the taskendpoint whennavigationisrun.",
+    "manip_minimum": "Requireinitialstate notalreadygoal;fixrobot/controller,grasp andplanningbudget,objectmass/friction/collision/joints andgoals. Hardgoalcriteria shouldnot be dilutedbyaveraging withunrelatedrequirements.",
+    "statistical_unit": "Pairlayouts on the same tasks,assetdraws andpolicyseeds;cluster byhouse/source andnestmultipleepisodes withinroom. Keepgenerationfailure andtimeout denominators.",
+    "baseline": "WinningGPTone-shot remains essential;same asset realization,physics adaptation andpolicy forGPT/LayoutVLM/FastFill. Do not compare paperreportednumbers acrossdifferent environments.",
+    "aesthetics": "Auxiliary by default. Category/identity/visibility andrealisticvisual cues can be task-relevant for perception,which differs from beauty.",
+    "scope_boundary": "Four selected sources only; this is not a comprehensive survey of robotic navigation/manipulation benchmarks or everydownstream task."
+  },
+  "no_execution_claim": "No scene load,static geometry score,physics simulation,task policy,paid judge,model inference ortraining executed inthis task. Source code andpaper evidence only.",
+  "source_receipts": [
+    {
+      "file": "/tmp/fastfill-downstream-generation-task-evidence-20261026/princeton-vl__infinigen__src__infinigen__tools__export.py",
+      "bytes": 44838,
+      "sha256": "dd01fbec80f7abb34ee375f796d9dee01b585213e1b4b5954d51d1c2d4709d50"
+    },
+    {
+      "file": "/tmp/fastfill-downstream-generation-task-evidence-20261026/wangpuyi__SceneCode__scripts__robot_eval__validate.py",
+      "bytes": 3828,
+      "sha256": "a579780e382cb9e8cf3b4a0efc9cef096eb0c1770085e936cd81744823b41fd5"
+    },
+    {
+      "file": "/tmp/fastfill-downstream-generation-task-evidence-20261026/wangpuyi__SceneCode__scenecode__robot_eval__success_validation__validator_agent.py",
+      "bytes": 8330,
+      "sha256": "4cd2680f1f14cc330869578e4b0468630c93771dede78f39203a64bbe8dc9451"
+    }
+  ],
+  "cached_primary_texts": [
+    "/tmp/fastfill-roomgen-root-research-20261026/papers/2605.19587.html",
+    "/tmp/fastfill-roomgen-root-research-20261026/papers/2406.11824.html"
+  ]
+}

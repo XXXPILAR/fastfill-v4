@@ -1,0 +1,40 @@
+{
+  "required_fields": "pass",
+  "unique_arxiv_ids": "pass",
+  "html_card_count": 56,
+  "no_external_resources": true,
+  "whitelisted_https_links": 114,
+  "no_event_attributes": true,
+  "no_raw_json_script": true,
+  "syntax_check": "node --check passed",
+  "missing_archive_paths": [],
+  "counts": {
+    "included": 56,
+    "deduplicated": 0,
+    "by_reading_tier": {
+      "作者综述目录；候选未逐篇核查": 1,
+      "摘要/README或题名级；更弱证据": 2,
+      "论文 + README/目录；指标代码未审全": 12,
+      "论文/作者页/可用性核查；未核评估源码": 12,
+      "选定源码/函数已核；未做整集复现": 29
+    },
+    "by_kind": {
+      "paper": 52,
+      "benchmark": 3,
+      "survey": 1
+    }
+  },
+  "paper_urls_not_rendered": [],
+  "repo_urls_not_rendered": [],
+  "browser_visual_check": "Not completed: browser security review rejected file:// protocol; no bypass attempted.",
+  "filter_runtime": "Passed: initial count, empty result, reset, case folding/multiword queries, code filter, topic filter and combined search; local DOM fixture, not browser visual validation.",
+  "root_final_checks": {
+    "json_files_parsed": 17,
+    "entries": 56,
+    "stable_source_paths_exist": true,
+    "script_syntax_after_label_edit": "passed",
+    "manual_edits": "Reading tier wording clarifies no complete benchmark reproduction; no logic changed",
+    "figure": "AI concept map manually inspected; not quantitative or complete taxonomy",
+    "local_figure_and_research_note_links": true
+  }
+}

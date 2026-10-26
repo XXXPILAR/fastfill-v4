@@ -1,0 +1,2 @@
+Verified journal metadata: Survey on Compositional 3D Indoor Scene Generation (10.1111/cgf.70591); OpenAsset (10.3390/electronics15173943).
+Two CrossRef records verified; arXiv/conference references are checked in their primary-source audits, not claimed CrossRef-verified.

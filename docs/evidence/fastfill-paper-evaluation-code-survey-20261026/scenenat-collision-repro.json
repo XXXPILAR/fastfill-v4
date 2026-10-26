@@ -1,0 +1,49 @@
+{
+  "executed": true,
+  "scope": "One isolated CPU geometry function from upstream pinned source; no model, rendering, dataset or paper reproduction",
+  "input_half_extent_boxes": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0
+    ]
+  ],
+  "actual_intersection_matrix": [
+    [
+      8.0,
+      8.0
+    ],
+    [
+      8.0,
+      8.0
+    ]
+  ],
+  "actual_inter_vol_mean": 4.0,
+  "actual_inter_vol_sum": 16.0,
+  "actual_iomin": 3.9999960000040002,
+  "reference_unordered_pair_intersection_volume": 8.0,
+  "reference_pair_iomin": 1.0,
+  "assertions": {
+    "pair_volume": true,
+    "reported_iomin_exceeds_one": true
+  },
+  "versions": {
+    "numpy": "1.26.4",
+    "shapely": "2.1.1",
+    "matplotlib": "3.10.1"
+  },
+  "interpretation": "Sizes are treated as half extents; volume denominator omits factor 8. Mean uses M*M entries including zeroed diagonal; total includes both (i,j) and (j,i)."
+}

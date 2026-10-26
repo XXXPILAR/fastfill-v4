@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-26",
+  "scope": "Primary-source additions by root; selected source read, no model/evaluation execution",
+  "user_steering": "No original screenshot result files available; user explicitly said to leave them aside. Do not chase or reconstruct screenshot-run attribution. New lightweight workflow will be provided later.",
+  "papers": [
+    {
+      "name": "I-Design",
+      "paper_url": "https://arxiv.org/html/2404.02838v1",
+      "project_url": "https://atcelen.github.io/I-Design/",
+      "repo_url": "https://github.com/atcelen/IDesign",
+      "commit": "7bc891c72e45f36f6461f5848c3c052723faede4",
+      "method_facts": "Multi-agent scene graph, backtracking placement, asset retrieval and rendering. Relational graph, agent dialogue and collision/boundary-aware postprocessing already covered in 2024.",
+      "relevant_limit": "Paper section9 acknowledges inferred bbox aspect ratios can disagree with retrieved geometry, causing anisotropic scaling distortions and orientation mismatch. This pain is not itself newly discovered by FastFill.",
+      "eval_code": "https://github.com/atcelen/IDesign/blob/7bc891c72e45f36f6461f5848c3c052723faede4/gpt_v_as_evaluator.py#L59",
+      "eval_scope": "Official script scores five JSON dimensions, repeats three times and saves each mean/std; no overall four-dimension average defined in this file. Paper body often describes four dimensions while appendix prompt lists five; do not infer screenshot incorrect from column count.",
+      "novelty_exclusion": "Multi-agent+scene graph+placement solver+GPT visual judge is established."
+    },
+    {
+      "name": "SceneReVis",
+      "paper_url": "https://arxiv.org/html/2602.09432v1",
+      "repo_url": "https://github.com/Runder-sun/SceneReVis",
+      "commit": "e2daa314bc9398e3a180bef241d45535812b7c97",
+      "method_facts": "Iterative render-diagnose-edit tool loop; SceneChain-12k, SFT then GRPO multi-turn training with geometric and semantic feedback and final physics optimization. Mandatory object verification includes repeated object counts.",
+      "inference_budget": "Appendix C7 author reports 251s/scene from empty with15iterations and208s from GPT scaffold with10iterations. This is the paper-specific setting, not independently reproduced or directly compared to our timing.",
+      "relevant_limit": "Appendix E acknowledges iterative latency versus one-pass methods and retrieval/data restrictions; future generative asset integration remains open in that work.",
+      "eval_code": [
+        "https://github.com/Runder-sun/SceneReVis/blob/e2daa314bc9398e3a180bef241d45535812b7c97/eval/voxel_eval.py",
+        "https://github.com/Runder-sun/SceneReVis/blob/e2daa314bc9398e3a180bef241d45535812b7c97/eval/vlm_scene_eval.py"
+      ],
+      "code_scope": "Actual VLM/voxel/mesh evaluation files exist; selected functions and thresholds read, not a full paper-code equivalence audit.",
+      "novelty_exclusion": "Self-reflection, learned/RL correction, mandatory-object checks and a final physics solver are not by themselves new."
+    },
+    {
+      "name": "Global Graph-Validated Optimization for VLM-based 3D Indoor Scene Generation",
+      "paper_url": "https://arxiv.org/html/2608.03064v1",
+      "repo_url": null,
+      "code_status": "No author code link found in inspected paper text and targeted search; not proof that no public code exists.",
+      "method_facts": "Global Semantic Verification checks relational/feasibility/completeness/semantic graph conflicts with iterative VLM refinement. Global Physical Feasibility Search combines evolutionary exploration and gradient refinement.",
+      "inference_budget": "Paper implementation: population50, retain5;30generations for<10objects else50; top5 refined for200gradient steps; choose minimum energy. Not a lightweight single proposal.",
+      "eval_scope": "Paper follows33scenes/11types LayoutVLM setup and also reports SceneEval-100; no results independently reproduced here.",
+      "relevant_limit": "Paper admits stochastic GPT selection/quantity/evaluation and inconsistent assets/oversized/render failures. Asset pre-check is a suggested improvement already, so cannot be claimed as our novelty.",
+      "novelty_exclusion": "Global graph validation, conflict-driven reflection and hybrid global/local geometric optimization have direct 2026 precedent."
+    }
+  ],
+  "source_receipts": [
+    {
+      "repo": "atcelen/IDesign",
+      "commit": "7bc891c72e45f36f6461f5848c3c052723faede4",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/atcelen/IDesign/7bc891c72e45f36f6461f5848c3c052723faede4/README.md",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/atcelen__IDesign/README.md",
+      "sha256": "6cd57bf884dc6bf3c953ea7e4cedb42f8a0c5ad3dca630b79351788df3b5d60c",
+      "bytes": 1963
+    },
+    {
+      "repo": "atcelen/IDesign",
+      "commit": "7bc891c72e45f36f6461f5848c3c052723faede4",
+      "path": "gpt_v_as_evaluator.py",
+      "url": "https://raw.githubusercontent.com/atcelen/IDesign/7bc891c72e45f36f6461f5848c3c052723faede4/gpt_v_as_evaluator.py",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/atcelen__IDesign/gpt_v_as_evaluator.py",
+      "sha256": "89c9bd85e7d1df09110e75297007d5b518397dd983f13ef42e2fee8db977817a",
+      "bytes": 4637
+    },
+    {
+      "repo": "Runder-sun/SceneReVis",
+      "commit": "e2daa314bc9398e3a180bef241d45535812b7c97",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/Runder-sun/SceneReVis/e2daa314bc9398e3a180bef241d45535812b7c97/README.md",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/Runder-sun__SceneReVis/README.md",
+      "sha256": "282df59c5e33b22c983e1b9132ad325435b23eb2bdeee5415027c5f87c2bb925",
+      "bytes": 14170
+    },
+    {
+      "repo": "Runder-sun/SceneReVis",
+      "commit": "e2daa314bc9398e3a180bef241d45535812b7c97",
+      "path": "eval/vlm_scene_eval.py",
+      "url": "https://raw.githubusercontent.com/Runder-sun/SceneReVis/e2daa314bc9398e3a180bef241d45535812b7c97/eval/vlm_scene_eval.py",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/Runder-sun__SceneReVis/eval/vlm_scene_eval.py",
+      "sha256": "35ce6e2bc0e56d2e6056d4f415163e58b86b72cac90f52bafb39095be577dcaf",
+      "bytes": 45473
+    },
+    {
+      "repo": "Runder-sun/SceneReVis",
+      "commit": "e2daa314bc9398e3a180bef241d45535812b7c97",
+      "path": "eval/voxel_eval.py",
+      "url": "https://raw.githubusercontent.com/Runder-sun/SceneReVis/e2daa314bc9398e3a180bef241d45535812b7c97/eval/voxel_eval.py",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/Runder-sun__SceneReVis/eval/voxel_eval.py",
+      "sha256": "42879a81b967ccedf480d5fe145264f790382388bb66ebdb32d978dc277d6a97",
+      "bytes": 35225
+    },
+    {
+      "repo": "Runder-sun/SceneReVis",
+      "commit": "e2daa314bc9398e3a180bef241d45535812b7c97",
+      "path": "eval/myeval.py",
+      "url": "https://raw.githubusercontent.com/Runder-sun/SceneReVis/e2daa314bc9398e3a180bef241d45535812b7c97/eval/myeval.py",
+      "local_path": "/tmp/fastfill-roomgen-root-research-20261026/Runder-sun__SceneReVis/eval/myeval.py",
+      "sha256": "64cd46e1e166dd8b250e745b28293590042f3218933242ab7a949144a38d9070",
+      "bytes": 32309
+    }
+  ],
+  "new_models_trained": false,
+  "paid_calls": false
+}

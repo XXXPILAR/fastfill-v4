@@ -1,0 +1,234 @@
+{
+  "date": "2026-10-26",
+  "scope": "Root static audit of three papers/frameworks and one downstream benchmark",
+  "papers": [
+    {
+      "name": "SceneEval",
+      "paper_url": "https://arxiv.org/abs/2503.14756v3",
+      "repo_url": "https://github.com/3dlg-hcvc/SceneEval",
+      "official_proof": "https://3dlg-hcvc.github.io/SceneEval/ (Code link leads to official repo)",
+      "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+      "repository_public": true,
+      "eval_code_status": "Actual metric modules and non-VLM evaluation plan verified.",
+      "eval_files": [
+        {
+          "path": "main.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/main.py"
+        },
+        {
+          "path": "configs/evaluation_plan/no_llm_plan.yaml",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/configs/evaluation_plan/no_llm_plan.yaml"
+        },
+        {
+          "path": "metrics/collision.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py"
+        },
+        {
+          "path": "metrics/out_of_bound.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py"
+        },
+        {
+          "path": "metrics/navigability.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/navigability.py"
+        },
+        {
+          "path": "metrics/accessibility.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/accessibility.py"
+        },
+        {
+          "path": "metrics/support.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/support.py"
+        },
+        {
+          "path": "metrics/opening_clearance.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/opening_clearance.py"
+        },
+        {
+          "path": "metrics/obj_count.py",
+          "url": "https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_count.py"
+        }
+      ],
+      "paper_evaluation": [
+        "Explicit requirements: object counts/attributes/object-object and object-architecture relations; implicit plausibility: collision/support/navigability/accessibility/out-of-bounds/opening clearance.",
+        "COL uses mesh collision manager with small 5mm displacement recheck; counts objects participating in collisions, not colliding-pair fraction.",
+        "NAV rasterizes rotated boxes; default robot width 0.2m, resolution256; largest walkable component / all walkable space. It does not by itself ensure reachability from door.",
+        "SUP uses inferred support type and geometric contact/centroid hull; ACC uses inferred functional sides. These are proxies, not gravity simulation."
+      ],
+      "actual_input_profile": "Evaluator consumes generated SceneState + real assets + annotated user requirements; it is not a generation baseline.",
+      "commands": [
+        "python main.py (README demo; evaluates its bundled methods/examples, not FastFill without adapter)"
+      ],
+      "limits": [
+        "Requires Blender/asset preparation and scene conversion.",
+        "COL/NAV/OOB/opening clearance need no VLM; count/attributes/relations/support/accessibility use the default VLM pathway.",
+        "Full experimental reproduction, asset downloads and VLM judgments were not executed.",
+        "Stable request-ID inventory checks should be deterministic in FastFill; do not replace them with VLM category matching."
+      ],
+      "fit_for_fastfill": "First choice for shared geometry and usability evaluation after RoomGenBench assembly; preserve definitions and report component metrics.",
+      "executed": false
+    },
+    {
+      "name": "LEGO-Eval",
+      "paper_url": "https://arxiv.org/abs/2511.03001v3",
+      "repo_url": "https://github.com/gyeomh/LEGO-EVAL",
+      "official_proof": "Paper abstract links https://gyeomh.github.io/LEGO-Eval/; project Code link resolves to https://github.com/gyeomh/LEGO-EVAL.",
+      "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+      "repository_public": true,
+      "eval_code_status": "Actual evaluation pipeline, tools and aggregation verified; not all paper experiments located/executed.",
+      "eval_files": [
+        {
+          "path": "scripts/run.sh",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/scripts/run.sh"
+        },
+        {
+          "path": "evaluation/main.py",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/main.py"
+        },
+        {
+          "path": "evaluation/eval.py",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/eval.py"
+        },
+        {
+          "path": "evaluation/functions.py",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/functions.py"
+        },
+        {
+          "path": "evaluation/toolrunner.py",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/toolrunner.py"
+        },
+        {
+          "path": "evaluation/instr_decompose.py",
+          "url": "https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/instr_decompose.py"
+        }
+      ],
+      "paper_evaluation": [
+        "Paper: holistic success means every constraint for a description holds; partial success means fraction of valid constraints, grouped by Floor Layout/Material Selection/Object Selection/Object Placement.",
+        "Separate evaluator validation measures F1 and Cohen kappa against human judgments. These assess the judge, not the layout generator.",
+        "Source main.py computes total partial as sum(num_correct)/sum(num_constraints); paper main table Avg is average by constraint type. Keep these aggregation conventions separate."
+      ],
+      "actual_input_profile": "Text instructions + generated AI2THOR/Holodeck-compatible scene with real asset information; evaluator invokes scene/geometry/image/text tools.",
+      "commands": [
+        "bash scripts/run.sh (fill paths/model/endpoints; it calls python evaluation/main.py)"
+      ],
+      "limits": [
+        "AI2THOR pinned build, Xorg/GPU, Objathor assets/materials/multiview asset images and model endpoints are needed.",
+        "Tool selection/constraint validation still uses LLM/VLM; not a deterministic geometry-only validator.",
+        "Current main entry returns success ratios; F1/kappa human calibration is not the same output.",
+        "Strict full-scene success depends on a frozen nonempty request-constraint set; record judge/version/seed/failures."
+      ],
+      "fit_for_fastfill": "Adopt atomic requirement checks plus all-constraints scene success. Use VLM only for appearance/ambiguous semantics and calibrate on a small human-labeled subset.",
+      "executed": false
+    },
+    {
+      "name": "SemLayoutDiff",
+      "paper_url": "https://arxiv.org/abs/2508.18597v2",
+      "repo_url": "https://github.com/3dlg-hcvc/SemLayoutDiff",
+      "official_proof": "https://3dlg-hcvc.github.io/SemLayoutDiff/ (Code link leads to official repo)",
+      "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+      "repository_public": true,
+      "eval_code_status": "Unified evaluator and all four metric modules verified.",
+      "eval_files": [
+        {
+          "path": "scripts/eval.py",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/scripts/eval.py"
+        },
+        {
+          "path": "configs/evaluation_config.yaml",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/configs/evaluation_config.yaml"
+        },
+        {
+          "path": "eval/calculate_oob.py",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/calculate_oob.py"
+        },
+        {
+          "path": "eval/fid_metric.py",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/fid_metric.py"
+        },
+        {
+          "path": "eval/kl_metric.py",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/kl_metric.py"
+        },
+        {
+          "path": "eval/sca.py",
+          "url": "https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/sca.py"
+        }
+      ],
+      "paper_evaluation": [
+        "FID/KID from common resized renderings via clean-fid; SCA learns real-vs-synthetic classifier; CKL compares category distributions; OOB checks generated scene states.",
+        "Important source definition: calculate_oob.py only checks bbox.position XY inside first floor polygon (strict Point.within); does not test object footprint/OBB/mesh extent.",
+        "Source SCA creates model and optimizer once outside its ten-run loop: run scores are successive training stages, not ten independently reset models."
+      ],
+      "actual_input_profile": "Room/architecture mask + room type → semantic map → predicted object sizes/poses. Standard release does not enforce our exact supplied furniture inventory.",
+      "commands": [
+        "python scripts/eval.py --config configs/evaluation_config.yaml"
+      ],
+      "limits": [
+        "Need original splits, renderings and scene-state conversion; SSTK/asset metadata used for rendering.",
+        "README contains real HuggingFace weight/data links alongside placeholder wget examples. We did not download or validate those artifacts.",
+        "Scene plausibility is delegated to separate SceneEval repo.",
+        "Do not report its center-only OOB as full-footprint/mesh OOB; do not treat its ten SCA stages as independent-run uncertainty.",
+        "No-floor scenes return None: directory JSON count stays in scene-OOB denominator but object totals exclude them. FastFill must record missing-shell cases as unknown/failure, not passed."
+      ],
+      "fit_for_fastfill": "Useful architecture-conditioned comparison and distribution-metric reference; requires inventory conditioning adaptation, so not a drop-in same-input baseline.",
+      "executed": false
+    },
+    {
+      "name": "RoomGenBench",
+      "paper_url": null,
+      "repo_url": "https://github.com/WorldEdge-Lab/RoomGenBench",
+      "official_proof": "Project README and existing FastFill submodule mapping redirect from RunyiYang/RoomGenBench to WorldEdge-Lab/RoomGenBench; not classified as a peer-reviewed paper.",
+      "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+      "repository_public": true,
+      "eval_code_status": "Render, geometry, VLM and aggregation entry points verified.",
+      "eval_files": [
+        {
+          "path": "bench/render_eval.py",
+          "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/render_eval.py"
+        },
+        {
+          "path": "bench/score_geom.py",
+          "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py"
+        },
+        {
+          "path": "bench/score_vlm.py",
+          "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py"
+        },
+        {
+          "path": "bench/score_aggregate.py",
+          "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py"
+        }
+      ],
+      "paper_evaluation": [
+        "Fixed-layout asset generation/assembly benchmark: 5 rooms, 313 object instances, 184 unique type-description assets.",
+        "Per-asset four-view VQA description/category, SigLIP-2 similarity, retrieval R@5; support ray consistency and coverage. Room VQA auxiliary.",
+        "Reference DINO/SAGE and mesh F-score are reference diagnostics, not proof of a unique correct asset.",
+        "Aggregate support criterion is hit_rate>=0.5 and absolute median gap<=0.02m, for available object-support pairs. Missing mesh pairs reduce denominator; coverage includes fallback status."
+      ],
+      "actual_input_profile": "Given room/object boxes/descriptions and original support relationships → generate/retrieve and fit real meshes; evaluates downstream asset quality, not unknown layout generation.",
+      "commands": [
+        "python bench/score_aggregate.py (after renders, geometry and VLM raw outputs; upstream README offers Slurm launchers)"
+      ],
+      "limits": [
+        "Current scorers enumerate the original five scenes and expect benchmark paths/results. Dynamic FastFill scenes need scorer adapters.",
+        "Requires render/model weights/assets; no GPU/VLM evaluation executed.",
+        "Anisotropic bbox fitting can hide native asset-size problems; preserve native and fitted mesh sizes and distortion.",
+        "Separate missing/fallback/actual mesh coverage, and retain required support pairs in the end-to-end failure denominator."
+      ],
+      "fit_for_fastfill": "Required downstream layer; add shared collision/OOB/door reachability after real meshes are fitted. Do not reuse original GT layouts/support as main-task inputs.",
+      "executed": false
+    }
+  ],
+  "receipts_file": "/tmp/fastfill-paper-code-frameworks-20261026/source-receipts.json",
+  "executed": false,
+  "cross_review": {
+    "reviewer": "agency_research (Research Synthesist)",
+    "scope": "Existing local sources only; no network/edits",
+    "verified": [
+      "LEGO micro partial denominator and holistic denominator",
+      "SemLayoutDiff center-only OOB, first floor, strict within",
+      "SemLayoutDiff SCA model/optimizer reused across ten loop stages",
+      "RoomGenBench support denominator/median-gap criterion"
+    ],
+    "limits": "Paper table type-macro convention is sourced to paper section 5.2; not inferred solely from implementation."
+  }
+}

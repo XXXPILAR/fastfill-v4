@@ -1,0 +1,631 @@
+Room generation 研究与代码证据目录
+核查日期：2026-10-26
+真实空房间边界/可用门窗几何 + 指定文字家具清单（类别/数量/描述；无GT尺寸/资产）→完整布局→共同RoomGenBench下游
+2024–2026选定室内布局/场景生成工作，单列2021/2023基础与相邻任务；作者原文、项目和官方代码的分层核查。不是穷尽检索，不声称全部代码已读或论文结果已复现。
+方法代码公开 ≠ 评估源码已核 ≠ 论文全部指标可复现；来源结论按原始审计边界保留。未下载模型/资产，未训练或运行论文指标/付费API。
+去重条目：56；原始综述159条/2024–2025的68条仅候选seed，未全部核查。
+
+== 2024–2026方法与相邻任务 ==
+
+Agentic Designer — Agentic Designer: Progressive Multi-Agent Collaboration for Structure-Aware Interior Layout Generation
+年份：TPAMI 2026 per arXiv comment and related DOI 10.1109/TPAMI.2026.3711762.
+主来源：https://arxiv.org/html/2607.20866v1
+GitHub：https://github.com/haochengCop/Agentic-Designer
+主题：学习与直接布局 / 语言与关系规划
+证据：The paper links the author project; its Code link points to haochengCop/Agentic-Designer. / Targeted reading: III-A, III-D, IV-C, IV-D, V-C and VI. / 目录/README核查；未执行
+方法代码公开：repo: https://github.com/haochengCop/Agentic-Designer / commit: 6d8297ad6a54d7720b373996fa4b94eb0fb3250a / tree_entries: 45 / tree_truncated: False / snapshot_file: /tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/haochengCop__Agentic-D
+评估源码核查：Author: concave boundaries and deep exterior recesses can create topological ambiguity. / 2D footprint metrics do not establish mesh support, stability or door-seeded reachability. / ANF and OR do not establish exact inventory; mean pairwis
+任务关系：Close architectural conditioning and dimension/pose prediction. Needs exact required IDs, 3D heights/support and the same RoomGenBench realization; architectural information must be equally available to baselines.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2026-adjacent.json # papers[0]
+
+AnyHome — AnyHome: Open-Vocabulary Generation of Structured and Textured 3D Homes
+年份：2023-12-11 / name: ECCV 2024 / evidence: https://ivl.cs.brown.edu/research/anyhome.html / date_note: 2024 conference, 2023 preprint; do not label first introduced in 2024.
+主来源：https://arxiv.org/abs/2312.06644
+GitHub：https://github.com/FreddieRao/anyhome_github
+主题：语言与关系规划 / 视觉/渲染引导
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: https://github.com/FreddieRao/anyhome_github / reachable: True / commit: 6bd964b9e3ec0e96d2e3f41482098bffb537357c / commit_date: 2024-07-08T03:05:46Z / tree_truncated: False / snapshot: /tmp/fastfill-roomgen-catalog-2024-2025-20261026/
+评估源码核查：url: https://github.com/FreddieRao/anyhome_github/blob/6bd964b9e3ec0e96d2e3f41482098bffb537357c/README.md#L4 / observed: Gradual release statement. / url: https://github.com/FreddieRao/anyhome_github/blob/6bd964b9e3ec0e96d2e3f41482098bffb53
+任务关系：Need bypass floor-plan/inventory expansion, enforce exact required IDs, preserve observed polygon/openings, separate bbox vs realized mesh.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[0]
+
+ArtiScene — ArtiScene: Language-Driven Artistic 3D Scene Generation Through Image Intermediary
+年份：CVPR2025
+主来源：https://arxiv.org/abs/2506.00742
+GitHub：https://github.com/NVlabs/ArtiScene
+主题：image_asset_bridge
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：公开分步生成与装配脚本；未核完整evaluation；README仍有内部git clone示例
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：与RoomGenBench相邻的生成资产/布局桥接先例，固定清单和空壳并非原始评测
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[3]
+
+Co-Layout — Co-Layout: LLM-driven Co-optimization for Interior Layout
+年份：AAAI 2026, volume 40(17), pages 14371–14379.
+主来源：https://arxiv.org/html/2511.12474v2
+GitHub：https://github.com/xccElephant/co-layout
+主题：语言与关系规划
+证据：目录/README核查；未执行
+方法代码公开：repo: https://github.com/xccElephant/co-layout / commit: e847bfaf8523f57a94225a2490e2279330014b6d / tree_entries: 51 / tree_truncated: False / snapshot_file: /tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/xccElephant__co-layout-snapsh
+评估源码核查：Floor-based furniture only; wall and tabletop objects are future work. / LLM constraints may conflict; finite grid and four orientations restrict the layout domain. / Five quantitative examples do not establish broad ranking generalization
+任务关系：Strong adjacent packing/constraint reference. Disable architecture redesign for an observed shell. Its dimensions come from the LLM rather than necessarily GT; use a common non-GT size provider in a controlled comparison.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2026-adjacent.json # papers[2]
+
+DeBaRA — DeBaRA: Denoising-Based 3D Room Arrangement Generation
+年份：2024-09-26 / name: NeurIPS 2024 main conference / evidence: https://papers.nips.cc/paper_files/paper/2024/hash/c55aeaa3a85954615319a7e55c81197a-Abstract-Conference.html
+主来源：https://arxiv.org/abs/2409.18336
+GitHub：未核
+主题：自回归/掩码/扩散布局
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: 未核 / reachable: 未核 / status: Official repository not verified; do not infer no code exists anywhere.
+评估源码核查：No official repo verified after paper, author-page and targeted GitHub search; code availability remains unconfirmed. / Do not convert paper equations into a claim released scorer exists.
+任务关系：Close task match at category-list + floor-plan level. Needs text-description/open-vocabulary/door/support adapter and official implementation access; fixed-category unknown-size layout is established prior work.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[2]
+
+DiffuScene — DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis
+年份：2023 首发预印本；CVPR 2024
+主来源：https://arxiv.org/html/2303.14207v2
+GitHub：https://github.com/tangjiapeng/DiffuScene
+主题：自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核FID/KID/PR及AABB统计；未找到独立SCA/CKL入口
+评估源码核查：公开模型与部分metric源码确实存在；存在硬路径、依赖及未找到的论文metric入口，不是开箱全指标复现包。
+任务关系：arrangement给定尺寸/shape；主榜需class-only适配 / native: 无条件生成或partial text描述→全场景；arrangement给class＋尺寸＋shape，不等于未知尺寸清单。 / stronger_input: 公开arrangement演示取dataset既有size及shape，并且所读rearrangement配置未用floor mask；不能当同条件门窗/尺寸预测baseline。 / adaptation: 要参与主榜须明确改为class-only＋真实边界输入；若保留已知size/asset，则放
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[1] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json # papers[name=DiffuScene]
+
+DirectLayout — Direct Numerical Layout Generation for 3D Indoor Scene Synthesis via Spatial Reasoning
+年份：2025 / NeurIPS2025（作者项目页）
+主来源：https://arxiv.org/html/2506.05341
+GitHub：https://github.com/rxjfighting/DirectLayout
+主题：学习与直接布局
+证据：论文 + 目录/README及选定源码核查；未运行
+方法代码公开：status: 流程代码公开；论文训练的专用模型明确不发布，因此发布版不是可复现论文trained-model数字的开箱baseline。 / explicit_model_release_note: https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/README.md#L27 / files: url: https://github.com/rx
+评估源码核查：应把论文trained-model、论文general reasoning ablation、当前GPT API demo分成不同baseline。不同年代API模型不能借论文标题当成同一个系统。 / 论文训练权重与DPO数据 / 当前API版本的效果 / 全部指标实现和延迟对照 / 非矩形边界/完整清单硬约束
+任务关系：主任务概念近邻高；复现trained baseline低；当前API demo可另标适配版对照。 / 不能把“LLM直接numeric layout＋未知size＋真实asset反馈”当新意；它是最关键对照之一。最重要的可复现限制是专用模型未放出。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-reasoning.json # papers[3]
+
+EchoScene — EchoScene: Indoor Scene Generation via Information Echo over Scene Graph Diffusion
+年份：2024-05-02 / name: ECCV 2024; 3DV2025 Nectar Track presentation / evidence: https://sites.google.com/view/echoscene
+主来源：https://arxiv.org/abs/2405.00915
+GitHub：https://github.com/ymxlzgy/echoscene
+主题：语言与关系规划 / 自回归/掩码/扩散布局
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: https://github.com/ymxlzgy/echoscene / reachable: True / commit: fdc78e87fa88be6de744674c28fa86d1edd78f66 / commit_date: 2024-06-03T16:28:51Z / tree_truncated: False / snapshot: /tmp/fastfill-roomgen-catalog-2024-2025-20261026/ymxlzgy_
+评估源码核查：url: https://github.com/ymxlzgy/echoscene/blob/fdc78e87fa88be6de744674c28fa86d1edd78f66/scripts/eval_3dfront.py#L1 / observed: Public eval entry (not executed). / url: https://github.com/ymxlzgy/echoscene/blob/fdc78e87fa88be6de744674c28fa86
+任务关系：Requires external text->graph compiler with no GT relations and canonical IDs; preserve actual shell/openings. SG is stronger relation input than an unstructured mandatory inventory.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[3]
+
+FirePlace — FirePlace:
+Geometric Re fi nements of LLM Common Sense Re asoning for 3D Object Place ment
+年份：2025；作者论文
+主来源：https://arxiv.org/abs/2503.04919
+GitHub：未核
+主题：semantic_solver
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：作者项目无GitHub链接；未建立官方实现，不把同名仓库当本篇代码
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：最直接的细粒度真实支撑/功能surface prior art，但不是整房间未知size from scratch
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[10]
+
+FlairGPT — FlairGPT: Repurposing LLMs for Interior Designs
+年份：Eurographics2025
+主来源：https://arxiv.org/abs/2501.04648
+GitHub：https://github.com/gabriellelittle1/FlairGPT
+主题：semantic_solver
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：生成/优化与Metrics.py存在；README明言object retrieval未实现，不能当完整资产pipeline
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：更接近未知尺寸与门窗功能要求；需冻结用户清单，适合作strong solver baseline
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[9]
+
+FreeScene — FreeScene: Mixed Graph Diffusion for 3D Scene Synthesis from Free Prompts
+年份：CVPR2025
+主来源：https://arxiv.org/abs/2506.02781
+GitHub：未核
+主题：learned_layout
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：所查paper无官方Code链接，常见作者项目URL404；未建立可用官方repo，不等于全网无代码
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：受控采样可固定部分变量；固定完整IDs与真实边界要验证，不能将rearrangement已知尺寸当主榜
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[4]
+
+Global Graph-Validated Optimization for VLM-based 3D Indoor Scene Generation — Global Graph-Validated Optimization for VLM-based 3D Indoor Scene Generation
+年份：2026
+主来源：https://arxiv.org/html/2608.03064v1
+GitHub：未核
+主题：视觉/渲染引导 / 几何/物理与可用性
+证据：论文方法/实验已读；官方实现未核
+方法代码公开：No author code link found in inspected paper text and targeted search; not proof that no public code exists.
+评估源码核查：Paper follows33scenes/11types LayoutVLM setup and also reports SceneEval-100; no results independently reproduced here.
+任务关系：Paper admits stochastic GPT selection/quantity/evaluation and inconsistent assets/oversized/render failures. Asset pre-check is a suggested improvement already, so cannot be claimed as our novelty. / Global graph validation, conflict-driven reflection and hybrid global/local geom
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-research-audit.json # papers[2]
+
+Global-Local MCTS 2026 — Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation
+年份：2026预印本；2025TreeSearch扩展
+主来源：https://arxiv.org/abs/2606.06002
+GitHub：https://github.com/dw-dengwei/TreeSearchGen
+主题：semantic_solver
+证据：作者官方README/题名级核查
+方法代码公开：与2025共享官方实现；本次未审读metric代码
+评估源码核查：摘要/作者README或题名级证据；本轮未审读指标代码。
+任务关系：过程reward/树搜索/逐步验证不再足够新；额外调用预算必须计入
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[13]
+
+Global-Local Tree Search — Global-Local Tree Search in VLMs for 3D Indoor Scene Generation
+年份：CVPR2025
+主来源：https://openaccess.thecvf.com/content/CVPR2025/html/Deng_Global-Local_Tree_Search_in_VLMs_for_3D_Indoor_Scene_Generation_CVPR_2025_paper.html
+GitHub：https://github.com/dw-dengwei/TreeSearchGen
+主题：semantic_solver
+证据：CVF摘要/官方README核查
+方法代码公开：官方README明确对应CVPR2025及2026扩展；public source存在，尚未固定commit/审读evaluator
+评估源码核查：摘要/作者README或题名级证据；本轮未审读指标代码。
+任务关系：分层搜索/逐对象候选已有；现发布repo默认MCTS不能直接叫2025论文原版
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[12]
+
+GuidedSceneGen — Scene Generation at Absolute Scale: Utilizing Semantic and Geometric Guidance From Text for Accurate and Interpretable 3D Indoor Scene Generation
+年份：2026；作者项目标ECCV2026
+主来源：https://arxiv.org/abs/2603.13910
+GitHub：https://github.com/d3ixi/GuidedSceneGen
+主题：image_asset_bridge
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：repo可访问但当前树仅README/docs/figures，无实现证据
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：layout→visual生成桥接相关；产物为3DGS，不能直接当RoomGenBench可交互单体mesh
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[8]
+
+HDSL — HDSL: A Hierarchical Domain-Specific Language for Structured 3D Indoor Scene Generation and Localized Editing with LLM Agents
+年份：2026预印本
+主来源：https://arxiv.org/abs/2606.09738
+GitHub：未核
+主题：programs_motifs
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：原文与定向搜索未找到已验证官方repo；不声称不存在
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：局部结构检索与少token编辑已有前例；不是只改可读JSON便有新意
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[5]
+
+Holodeck — Holodeck: Language Guided Generation of 3D Embodied AI Environments
+年份：2023 预印本；CVPR 2024
+主来源：https://arxiv.org/abs/2312.09067
+GitHub：https://github.com/allenai/Holodeck
+主题：语言与关系规划 / 资产/程序/模拟
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：公开生成/检索/渲染；当前树未找到论文完整评分器
+评估源码核查：generation_retrieval_render_helpers_public_paper_evaluation_suite_not_found / Complete current recursive tree inspected: generation, asset retrieval, render helpers and packaging. No human-study pipeline, rendered-room CLIP batch evaluator,
+任务关系：先检索真实assets再摆放；需统一空壳与清单 / fit: partial: actual-asset functional room generation; default creates floor plan and furniture inventory. / known_size_requirement: User need not know sizes, but placement follows asset selection and uses retrieved actual asset bbox geometry. / adaptati
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[5] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json # papers[name=Holodeck]
+
+HSM — HSM: Hierarchical Scene Motifs for Multi-Scale Indoor Scene Generation
+年份：2025-03-21 / name: 3DV 2026 / evidence: https://arxiv.org/abs/2503.16848 / date_note: 2025 first preprint; current author project and arXiv explicitly identify 3DV2026.
+主来源：https://arxiv.org/abs/2503.16848
+GitHub：https://github.com/3dlg-hcvc/hsm
+主题：语言与关系规划 / 资产/程序/模拟
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: https://github.com/3dlg-hcvc/hsm / reachable: True / commit: 17d108fa321c1c4489374c0e737917a71044deff / commit_date: 2025-12-02T08:05:32Z / tree_truncated: False / snapshot: /tmp/fastfill-roomgen-catalog-2024-2025-20261026/3dlg-hcvc__h
+评估源码核查：url: https://github.com/3dlg-hcvc/hsm/blob/17d108fa321c1c4489374c0e737917a71044deff/README.md#L174 / observed: SceneEval export and warning against GLB evaluation. / url: https://github.com/3dlg-hcvc/hsm/blob/17d108fa321c1c4489374c0e737917a
+任务关系：Close open-vocabulary, boundary-aware functional comparison; must bypass item invention and preserve requested IDs; separate retrieval-known geometry from unknown-size layout-first track.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[4]
+
+I-Design — I-Design
+年份：2024
+主来源：https://arxiv.org/html/2404.02838v1
+GitHub：https://github.com/atcelen/IDesign
+主题：语言与关系规划
+证据：论文方法/实验 + 选定源码已读；未运行
+方法代码公开：已见方法源码
+评估源码核查：https://github.com/atcelen/IDesign/blob/7bc891c72e45f36f6461f5848c3c052723faede4/gpt_v_as_evaluator.py#L59 / Official script scores five JSON dimensions, repeats three times and saves each mean/std; no overall four-dimension average defined
+任务关系：Paper section9 acknowledges inferred bbox aspect ratios can disagree with retrieved geometry, causing anisotropic scaling distortions and orientation mismatch. This pain is not itself newly discovered by FastFill. / Multi-agent+scene graph+placement solver+GPT visual judge is est
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-research-audit.json # papers[0]
+
+Imaginarium — Imaginarium: Vision-guided High-Quality 3D Scene Layout Generation
+年份：2025 / SIGGRAPH Asia2025 / ACM TOG
+主来源：https://arxiv.org/html/2510.15564
+GitHub：https://github.com/HiHiAllen/Imaginarium
+主题：视觉/渲染引导 / 语言与关系规划
+证据：论文 + 目录/README及选定源码核查；未运行
+方法代码公开：status: 实际CLI、模块、数据、FLUX LoRA和derived weights都有可见发布；不是只有README。 / files: url: https://github.com/HiHiAllen/Imaginarium/blob/c02b3159889015d2a7fa8f0d3c50bb56a8ff1eb3/run_imaginarium_T2I.py#L1 / role: 文本转图CLI / url: https://github.com/HiHiAll
+评估源码核查：参考image重建分数不等于指定清单全布局质量；人工比较未能替换全部trained baseline资产库。移植前须统一assets/rendering，不能只比最终图像丰富度。 / 数据下载/权重运行 / 版权重制后与论文版的一致性 / 完整eval脚本 / 240秒的独立端到端复测
+任务关系：布局/资产联合视觉背景高；固定inventory、未知尺寸、真实shell主榜需明显适配。 / 对资产和视觉质量有价值，是RoomGenBench下游/资产库近邻；多视觉模型加优化较重，不适合直接替换FastFill轻量布局head。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-reasoning.json # papers[4]
+
+Infinigen Indoors — Infinigen Indoors: Photorealistic Indoor Scenes using Procedural Generation
+年份：CVPR2024
+主来源：https://arxiv.org/abs/2406.11824
+GitHub：https://github.com/princeton-vl/infinigen
+主题：procedural_assets
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：公开实质程序系统/资产与solver代码；完整论文评估未核
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：可作资产生成/约束solver参考；不能将其全场景流程当同条件轻量布局baseline
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[0]
+
+InstructScene — InstructScene: Instruction-Driven 3D Indoor Scene Synthesis with Semantic Graph Prior
+年份：2024
+主来源：https://arxiv.org/html/2402.04717
+GitHub：https://github.com/chenguolin/InstructScene
+主题：语言与关系规划 / 自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核关系、图像指标脚本；SCA聚合需审查
+评估源码核查：公开完整主推理/主要metric入口，但官方权重覆盖、README命令和SCA统计存在明显复现注意点；未运行，不可说全部论文指标开箱复现。
+任务关系：部分指令→完整场景；原CLI不使用真实空壳 / native: 描述部分关系和外观→自由生成整场景semantic graph→size/pose；固定清单/真实room shell不是该CLI的主约束。 / useful: iRecall源码是可复用的关系满足率参考，必须区分category级triplet和request-instance约束；用统一asset/坐标约定。 / adaptation: 主榜需固定request类别/数量并给真实边界；若无边界输入只能标该能力不支持，不能用依据输出自造floor绕过OOB。
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[3] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json # papers[name=InstructScene]
+
+INTERIORAGENT — INTERIORAGENT: LLM Agent for Interior Design-Aware 3D Layout Generation
+年份：3DV 2026, confirmed by primary coauthor publication pages.
+主来源：https://openreview.net/pdf?id=ypBfokcXvA
+GitHub：https://github.com/KunalMGupta/interioragent
+主题：语言与关系规划
+证据：https://ishit.github.io/ (INTERIORAGENT3DV2026;Paperlinkhttps://ishit.github.io/static/papers/kunal_3dv26.pdf) / https://kunwang0129.github.io/publications / 目录/README核查；未执行
+方法代码公开：repo: https://github.com/KunalMGupta/interioragent / commit: f72f1b675c5e9aea93af56e7cfe049c9b456a6b2 / tree_entries: 622 / tree_truncated: False / snapshot_file: /tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/KunalMGupta__interiorage
+评估源码核查：Default creation can alter inventory and shell; constrain these for the user task. / Current pipeline needs actual assets, Blender and API-backed planning/critics; not inherently lightweight. / Published study details and exact paper-era im
+任务关系：Useful reference for group/anchor DSL and functional tools. Enforce canonical IDs, fixed shell/openings, shared asset information and bounded scales. Grouping, retrieval and feedback alone are established ingredients.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2026-adjacent.json # papers[1]
+
+LayoutDreamer — LAYOUTDREAMER: Physics-guided Layout for Text-to-3D Compositional Scene Generation
+年份：首发2025-02-04，已读arXiv v2 2025-03-22；arXiv登记Pattern Recognition 178 (2026), 113427。
+主来源：https://arxiv.org/html/2502.01949v2
+GitHub：未核
+主题：视觉/渲染引导
+证据：论文§3.1–3.4、§4.1–4.2；arXiv元数据确认年份和期刊版。 / 未运行
+方法代码公开：本次针对性搜索及原论文中未找到可确认的官方公开GitHub；不能据此断言永不公开。ThreeStudio/GaussianDreamer是依赖，不是LayoutDreamer官方实现。
+评估源码核查：论文§3.1–3.4、§4.1–4.2；arXiv元数据确认年份和期刊版。 / 未找到官方源码，未运行；2026期刊全文相对arXiv变更未逐项核。
+任务关系：这是组合text-to-3D生成，不是只做空壳家具布局；资产优化成本很重。T3Bench高分不证明固定inventory、门窗或真实房间边界满足。不可把结尾15分钟当端到端耗时，也不可把能量代理叫真实刚体稳定性。 / 可引用以限制“关系图＋物理loss”的新颖性，但不建议移植3DGS生成pipeline。我们的轻量下游后续由用户提供，应保持模块边界。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/related-work-audit.json # papers[3]
+
+LayoutVLM — LayoutVLM: Differentiable Optimization of 3D Layout via Vision-Language Models
+年份：arXiv首发2024-12；已读v3 2025-03-11；CVPR2025。
+主来源：https://arxiv.org/html/2412.02193
+GitHub：https://github.com/sunfanyunn/LayoutVLM
+主题：几何/物理与可用性 / 视觉/渲染引导
+证据：论文§4、§5.1、A.2/A.3及官方README/main和布局调用关键段。 / 未运行
+方法代码公开：claim: 官方main当前固定mode='one_shot'；论文分组预算和此CLI默认模式要区分。one_shot仍有可微优化，不能等于纯GPT一次直接坐标。 / url: https://github.com/sunfanyunn/LayoutVLM/blob/85d06b4cd2478551188a0b4a47cd658c85c41315/main.py#L109 / claim: 实际布局代码存在one_shot/group模式、程序解析/执行重试；调用预算必须含
+评估源码核查：论文§4、§5.1、A.2/A.3及官方README/main和布局调用关键段。 / 未运行仓库、权重、评估或API，未验证论文计时；官方README不是全部实验可复现证明。
+任务关系：已知asset几何比主榜多信息；代理几何与真实可用性仍须分别检查。主表的VLM观感及PSA不能替代精确清单/尺度约束。关系过滤依赖初始化，可排掉真实但初始pose未满足的要求（机制推论，非独立实验）。 / 不能把“加关系图/加梯度solver/画front箭头”单独当新意；它是必要强基线。直接GPT输出若已更好，应先确认我们解码或repair是否降低语义质量，而不是默认堆更多反馈轮次。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/related-work-audit.json # papers[0]
+
+MetaSpatial — MetaSpatial: Reinforcing 3D Spatial Reasoning in VLMs for the Metaverse
+年份：2025 / ICLR2026（作者页和repo标注）
+主来源：https://arxiv.org/html/2503.18470
+GitHub：https://github.com/PzySeere/MetaSpatial
+主题：学习与直接布局
+证据：论文 + 目录/README及选定源码核查；未运行
+方法代码公开：status: 公开GRPO训练框架、数据构造、渲染/physics reward和HF数据；未确认公开可下载的finetuned checkpoint，未验证当前commit覆盖最新论文全部3D-SPO。 / files: url: https://github.com/PzySeere/MetaSpatial/blob/a3c89c27674550d6517f790bc1d7435f148ace67/examples/run_qwen2_5_vl_7b_3d_reason
+评估源码核查：已给asset sizes及room metadata有条件优势；奖励中的format对象匹配不是未知size/pose质量。训练成本与单轮推理成本必须分开。 / 最新3D-SPO完整实现 / 专用权重发布 / 模型数据隔离和总训练成本 / paper全部评估结果复现
+任务关系：研究定位高；直接same-input baseline需补尺寸/朝向输出和shell接口，checkpoint可用性待定。 / “RL学会空间布局/把多轮修复蒸馏进单次推理”已有直接工作；适合轻量推理方向的强近邻，需在未知尺寸及更严格shell任务上定义区别。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-reasoning.json # papers[2]
+
+MiDiffusion — Mixed Diffusion for 3D Indoor Scene Synthesis
+年份：2024
+主来源：https://arxiv.org/html/2405.21066v2
+GitHub：https://github.com/MIT-SPARK/MiDiffusion
+主题：自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：模型库＋官方ThreedFront评估库
+评估源码核查：公开model＋单独官方通用eval仓库，主要自动metric入口覆盖较全；已核静态机制但存在几何/抽样细节，未运行，不能标全论文已复现。
+任务关系：object_conditioned固定类别/数量，预测尺寸/pose；需用户清单适配 / native: 4篇里最接近主任务的现成语义入口：floor＋固定class/count→预测未知size/pose。原CLI从benchmark dataset读类别，需adapter替换为用户清单。 / limitations: 不原生理解逐对象长描述/开放类别/门窗功能几何；closure类词表及最大slots有限。不能声称已满足FastFill完整输入。 / track: 优先object_conditioned主榜适配；furniture_arrange
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[2] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json # papers[name=MiDiffusion]
+
+NaLA — NaLA
+年份：2026
+主来源：https://arxiv.org/abs/2606.29395
+GitHub：https://github.com/adamcwan/NaLA-code
+主题：学习与直接布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：有train/infer；当前树未找到论文评分器
+评估源码核查：Public training and inference code exists. No dedicated implementation/runner for paper weighted voxel collision, volume-weighted OOB, floating ratio, Gemini evaluation or human-study aggregation found in pinned complete public tree. eval_d
+任务关系：空壳＋相同真实asset集合/点云；尺寸信息更强
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[9] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json # papers[name=NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation]
+
+Open-Universe-2024 — Open-Universe Indoor Scene Generation using LLM Program Synthesis and Uncurated Object Databases
+年份：2024-02-05 / name: 2024 arXiv preprint; venue not asserted / evidence: https://rioak.github.io/
+主来源：https://arxiv.org/abs/2403.09675
+GitHub：未核
+主题：语言与关系规划
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: 未核 / reachable: 未核 / status: Official repository not verified; do not infer no code exists anywhere.
+评估源码核查：Original official repo not verified. Related coauthor repository mxgmn/ImperativeScene links DeclarativeScene, but target https://github.com/mxgmn/DeclarativeScene returns404 in this check. / ImperativeScene is follow-up code, not evidence
+任务关系：Relevant program/retrieval prior art; needs exact furniture IDs, observed shell/openings, and size/asset verification. Do not name this SceneCraft.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[7]
+
+OpenAsset — OpenAsset: A Pipeline for Open-World Asset Integration into Indoor Scene Synthesis
+年份：Electronics 2026, 15(17):3943; published 2 September 2026.
+主来源：https://www.mdpi.com/2079-9292/15/17/3943
+GitHub：https://github.com/hyc16481/OpenAsset
+主题：编辑与资产实现
+证据：目录/README核查；未执行
+方法代码公开：repo: https://github.com/hyc16481/OpenAsset / commit: 44765c95c502a8e95d07935d4c4cc195399b869a / tree_entries: 1 / tree_truncated: False / snapshot_file: /tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/hyc16481__OpenAsset-snapshot.json
+评估源码核查：Depends on segmentation and single-view reconstruction; occlusion and complex geometry remain difficult. / Metric-specific GT subsets differ and their denominators need disclosure. / The grounded-on-floor criterion does not cover the full w
+任务关系：An adjacent asset-realization extension when photos are supplied. Not a direct text-inventory layout baseline; do not give only this competitor image information.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2026-adjacent.json # papers[3]
+
+OptiScene — OptiScene
+年份：2025
+主来源：https://arxiv.org/abs/2506.07570
+GitHub：https://github.com/PolySummit/OptiScene
+主题：学习与直接布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：公开SFT/DPO/merge/inference；当前树未找到评分器
+评估源码核查：sft_dpo_merge_inference_public_paper_evaluators_not_found / Complete official recursive tree inspected: 24 blobs, train/DPO/merge/inference scripts, prompt/data pointers. No FID/OOR evaluator, scene renderer, GPT-4o scoring prompts, human s
+任务关系：明确给定家具h/w/d；已知尺寸条件 / fit: known-size layout placement; not directly same unknown-size problem. / known_size_requirement: Yes: numeric furniture bbox h/w/d are explicit prompt inputs. / adaptation: Use shared non-GT size prior/provider for main-task adapted baseline; alternatively
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[6] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json # papers[name=OptiScene]
+
+PhyScene — PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI
+年份：CVPR2024 Highlight；arXiv2404.09465。
+主来源：https://arxiv.org/html/2404.09465
+GitHub：https://github.com/PhyScene/PhyScene
+主题：几何/物理与可用性 / 自回归/掩码/扩散布局
+证据：论文§3.2–3.3、§4 Metric、A.2、E–G；官方README和test_livingroom launcher。 / 未运行
+方法代码公开：claim: 官方launcher显式生成1000场景，开启floor condition，overlap_type='mesh'；统计实现与具体mesh remeshing仍未逐行重审。 / url: https://github.com/PhyScene/PhyScene/blob/50a32af9b114448d89e002b2d06e86bccdcec202/run/test_livingroom.sh#L3 / claim: README给geometry生成、re
+评估源码核查：论文§3.2–3.3、§4 Metric、A.2、E–G；官方README和test_livingroom launcher。 / 只核公开文本与launcher；未取模型、未跑CAD碰撞、A*或仿真。
+任务关系：标准输入是floor-conditioned分布采样，不原生严格遵从逐对象开放文字清单；含多步diffusion及资产检索，不是一次布局前向。碰撞、边界、通行目标会相互冲突，不能只优化一项再称全部提高。 / 可借鉴代理检查与尺度防作弊。若我们预测未知尺寸，要同时报尺度合理性，防止repair/训练通过缩家具换低碰撞。不能把“补可通行loss/门柜可打开”笼统当首次创新。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/related-work-audit.json # papers[1]
+
+Reason-3D — Text-to-Scene with Large Reasoning Models
+年份：2025 / AAAI2026（官方会议页面确认2026-03-14）
+主来源：https://arxiv.org/html/2509.26091v2
+GitHub：https://github.com/ETH-DISCO/reason-3d
+主题：语言与关系规划
+证据：论文 + 目录/README及选定源码核查；未运行
+方法代码公开：status: 公开preprocessing、retrieval、placement、rendering代码；未找到独立paper benchmark/human-study汇总脚本。 / files: url: https://github.com/ETH-DISCO/reason-3d/blob/6940530c179ef1afcbbefe8856a10f9055909adc/README.md#L60 / role: 入口说明 / url: https://githu
+评估源码核查：检索top-k基于目标asset identity，布局人评另测；不要把选资产强项当相同家具布局强项。论文附录collision-free命名与描述需用发布实现另固定分母。 / Gemini当前版本效果 / 实际token/latency / 完整官方评估pipeline / assets相对尺度假设在RoomGenBench的适配
+任务关系：高：强off-the-shelf文本推理对照；主任务仍需显式固定inventory、真实polygon/door约束和未知尺寸处理。 / 应增加强reasoning baseline，不能只战胜旧LayoutGPT。直接数字布局＋collision feedback已有先例；其语义接受bbox overlap提醒我们避免过强盒子repair。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-reasoning.json # papers[1]
+
+ReSpace — ReSpace
+年份：2025
+主来源：https://arxiv.org/abs/2506.02459
+GitHub：https://github.com/GradientSpaces/respace
+主题：编辑与资产实现
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核src/eval.py和full/instr脚本；未找到完整人评分析
+评估源码核查：substantial_public_quantitative_evaluator_human_study_analysis_not_found / Meshes/voxelization errors caught and set to 0.0 at src/eval.py:710–712 and 726–728, potentially understating violations. Reuse must record failed/unknown, not zero.
+任务关系：预测尺寸、支持边界，但fullscene自行规划清单 / fit: closest of these four: text-conditioned predicted size/layout, arbitrary boundary, retrieved real meshes and mesh metric. Fullscene mode still plans its own object inventory. / known_size_requirement: No exact user size required; predicted text/s
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[7] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json # papers[name=ReSpace]
+
+RoboLayout — RoboLayout: Differentiable 3D Scene Generation for Embodied Agents
+年份：2026预印本；arXiv页面记v1 2026-02-18、v2 2026-03-09，编号2603.05522；未核实正式会议接收。
+主来源：https://arxiv.org/html/2603.05522v2
+GitHub：https://github.com/alishams21/robolayout
+主题：几何/物理与可用性
+证据：论文IV-B3/IV-C4、V/VI；官方README/main及LayoutVLM调用关键段。 / 未运行
+方法代码公开：claim: one_shot是单组布局；名为finetuned的模式是LLM先分组再逐组摆放，不能据模式名说做了模型权重微调。 / url: https://github.com/alishams21/robolayout/blob/2db9a7fb58eed3b5dfc26e521dfedb630c115ff7/main.py#L23 / claim: robot_radius默认.3m；实际输入读取已处理asset metadata和bbox尺寸。 / url: htt
+评估源码核查：论文IV-B3/IV-C4、V/VI；官方README/main及LayoutVLM调用关键段。 / 未运行代码；未核精确全局优化步数/请求次数和wall-clock。
+任务关系：实际asset/尺寸已给；圆盘两两间距不是门口可达或操作可行证明。公开实验支撑有限，不宜借其描述推出性能确定优于LayoutVLM。 / “轻量局部repair”本身已有公开近邻；若采用，只能把更好的错误定位、未知尺寸一致性及实测质量/延迟收益作为待验证贡献。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/related-work-audit.json # papers[2]
+
+SceneCode — SceneCode: Executable World Programs for Editable Indoor Scenes with Articulated Objects
+年份：2026预印本
+主来源：https://arxiv.org/abs/2605.19587
+GitHub：https://github.com/wangpuyi/SceneCode
+主题：procedural_assets
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：实质代码与SceneEval exporter/COL/STB模块存在；本轮只核目录与README，不标全部评分器已核
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：生成新mesh＋布局＋simulator闭环直接先例；可研究轻量交接，但不是“接下游”本身新
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[7]
+
+SceneCraft-layout — SceneCraft: Layout-Guided 3D Scene Generation
+年份：2024-10-11 / name: NeurIPS 2024 / evidence: https://arxiv.org/abs/2410.09049
+主来源：https://arxiv.org/abs/2410.09049
+GitHub：https://github.com/OrangeSodahub/SceneCraft
+主题：视觉/渲染引导
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: https://github.com/OrangeSodahub/SceneCraft / reachable: True / commit: 33cc5f8bdbcb4f425a323ba7393fc1a2c3762a77 / commit_date: 2025-07-07T14:32:19Z / tree_truncated: False / snapshot: /tmp/fastfill-roomgen-catalog-2024-2025-20261026/O
+评估源码核查：url: https://github.com/OrangeSodahub/SceneCraft/blob/33cc5f8bdbcb4f425a323ba7393fc1a2c3762a77/scripts/compute_metrics.py#L729 / observed: Metric dispatch CS/IS/FID/KID; selected source read only, unexecuted. / url: https://github.com/Orang
+任务关系：Downstream appearance/geometry realization module after layout, not competing unknown-size layout predictor. Input privileges must not be hidden.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[6]
+
+SceneCraft-LLM — SceneCraft: An LLM Agent for Synthesizing 3D Scenes as Blender Code
+年份：2024-03-02 / name: ICML 2024 / evidence: https://proceedings.mlr.press/v235/hu24g.html / note: First author page additionally labels Oral.
+主来源：https://arxiv.org/abs/2403.01248
+GitHub：未核
+主题：语言与关系规划
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: 未核 / reachable: 未核 / status: Official repository not verified; do not infer no code exists anywhere.
+评估源码核查：No official repo verified from PMLR, arXiv, author page or targeted search; do not substitute unrelated OrangeSodahub repo. / Paper includes prompts/algorithm but this is not proof of released executable evaluator.
+任务关系：General program-synthesis prior art, not a drop-in mandatory-furniture room baseline. Need fixed shell/inventory, unified asset conditions and scripts that export actual instance poses.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[5]
+
+SceneMotifCoder — SceneMotifCoder: Example-driven Visual Program Learning for Generating 3D Object Arrangements
+年份：2024预印本；3DV2025 Oral
+主来源：https://arxiv.org/abs/2408.02211
+GitHub：https://github.com/3dlg-hcvc/smc
+主题：programs_motifs
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：实现/learn/inference和数据链接公开；未在本轮定位完整论文评估runner
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：功能组先验复用的直接前例；不是整间固定空壳完整清单的现成baseline
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[1]
+
+SceneNAT — SceneNAT
+年份：2026
+主来源：https://arxiv.org/abs/2601.07218
+GitHub：https://github.com/lojol2327/SceneNAT-official
+主题：学习与直接布局 / 自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核入口及部分指标；当前IoMin实现有归一化反例
+评估源码核查：PARTIAL public evaluation coverage. Official evaluation entry implements iRecall, visual distribution metrics, DOS, OBB intersections and generation-call timing. NAV/ACC/floor-penetration scorer not found in reviewed official eval files or
+任务关系：文字关系条件；给对象数不等于固定完整清单
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[8] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json # papers[name=SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis]
+
+ScenePilot — ScenePilot: Grow-and-Repair Policy for Text-Driven 3D Indoor Scene Generation
+年份：2026-08-31 · arXiv预印本
+主来源：https://arxiv.org/abs/2608.30307
+GitHub：https://github.com/Zjw-Louie/ScenePilot
+主题：语言与关系规划 / 编辑与资产实现
+证据：原文方法/训练/实验/附录已读 + 作者项目/Code404核查；指标源码未核
+方法代码公开：作者项目Code指向 Zjw-Louie/ScenePilot；核查时网页/API404，未建立公开实现/权重/数据可下载状态。
+评估源码核查：官方Code404，未核验论文评估源码；设计审阅不等于方法/结果复现。
+任务关系：Text prompt, room boundary, asset pool. Planner chooses object groups/composition; not immutable complete-request inventory by default. / Test train-only anchor statistics and exact-ID functional grouping without training first; freeze repair while2x2 flat/group and noRAG/RAG. Th
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/scenepilot-source-check.json # identity / official_code ; docs/evidence/roomgen-literature-landscape-20261026/scenepilot-design-review.json # scope / fit_summary / findings ; docs/evidence/roomgen-literature-landscape-20261026/scenepilot-paper-audit.json # task_input / mechanism / paper_evaluation / leakage_boundary
+
+SceneReVis — SceneReVis
+年份：2026
+主来源：https://arxiv.org/html/2602.09432v1
+GitHub：https://github.com/Runder-sun/SceneReVis
+主题：视觉/渲染引导 / 编辑与资产实现
+证据：论文方法/实验 + 选定源码已读；未运行
+方法代码公开：已见方法源码
+评估源码核查：Actual VLM/voxel/mesh evaluation files exist; selected functions and thresholds read, not a full paper-code equivalence audit. / https://github.com/Runder-sun/SceneReVis/blob/e2daa314bc9398e3a180bef241d45535812b7c97/eval/voxel_eval.py / htt
+任务关系：Appendix E acknowledges iterative latency versus one-pass methods and retrieval/data restrictions; future generative asset integration remains open in that work. / Self-reflection, learned/RL correction, mandatory-object checks and a final physics solver are not by themselves new
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-research-audit.json # papers[1]
+
+SceneSmith — SceneSmith
+年份：2026
+主来源：https://arxiv.org/abs/2602.09153
+GitHub：https://github.com/nepfaff/scenesmith
+主题：语言与关系规划 / 资产/程序/模拟
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：主库导出/任务验证；作者SceneEval fork有自动评估
+评估源码核查：评估入口/关键指标代码的已读范围见原审计；未运行。
+任务关系：开放词汇生成，允许额外物件；需固定清单
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[10] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json # papers[name=SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes]
+
+SceneTeller — SceneTeller: Language-to-3D Scene Generation
+年份：2024-07-30 / name: ECCV 2024 / evidence: https://sceneteller.github.io/
+主来源：https://arxiv.org/abs/2407.20727
+GitHub：https://github.com/sceneteller/SceneTeller
+主题：视觉/渲染引导
+证据：论文 + 作者页/目录及选定文本源码核查；未运行
+方法代码公开：url: https://github.com/sceneteller/SceneTeller / reachable: True / commit: 4e481f944c6dfe5fc0211a39a9c375aad6ba62ce / commit_date: 2024-12-16T23:49:20Z / tree_truncated: False / snapshot: /tmp/fastfill-roomgen-catalog-2024-2025-20261026/sc
+评估源码核查：url: https://github.com/sceneteller/SceneTeller/blob/4e481f944c6dfe5fc0211a39a9c375aad6ba62ce/README.md#L65 / observed: Generation/assembly/stylization instructions. / url: https://github.com/sceneteller/SceneTeller/blob/4e481f944c6dfe5fc02
+任务关系：Need observed shell/opening and exact-ID adapter; single-GT mIoU is auxiliary because many layouts satisfy plain inventory. Style score does not measure functional layout.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2024-2025.json # entries[1]
+
+Scenethesis — Scenethesis : A Language and Vision Agentic Framework for 3D Scene Generation
+年份：2025预印本；ICLR2026
+主来源：https://arxiv.org/abs/2505.02836
+GitHub：未核
+主题：image_asset_bridge
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：作者NVIDIA项目可读，无GitHub链接；本轮未找到已验证实现
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：support/物理/可达与layout-asset偏差已有先例；不能直接宣称我们的真实mesh闭环首创
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[11]
+
+SceneWeaver — SceneWeaver: All-in-One 3D Scene Synthesis with an Extensible and Self-Reflective Agent
+年份：2025 / NeurIPS2025
+主来源：https://arxiv.org/html/2509.20414
+GitHub：https://github.com/Scene-Weaver/SceneWeaver
+主题：语言与关系规划 / 资产/程序/模拟
+证据：论文 + 目录/README及选定源码核查；未运行
+方法代码公开：status: 完整可见实现/工具/部分evaluation入口，仍需复杂依赖和资产。 / files: url: https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/Pipeline/main.py#L7 / role: main→SceneDesigner.run / url: https://github.com/Scene-Weaver/Sc
+评估源码核查：#CN是碰撞对数量，不能替换参与碰撞对象率；自由增加物体会影响丰富度/碰撞数，不能与固定清单直接混排行。 / 全部tool可执行性 / 当前repo默认15步与论文10步配置的准确复现 / wall-clock/API独立重测 / 所有metric源码及人评复现
+任务关系：背景近邻高；轻量主baseline低。要做同输入对照需锁定清单/真实shell并限制工具与预算。 / 直接覆盖critic/反思/多工具工作流、物理repair。“加agent/critic”不是独立创新；约一小时流程不适合用户希望的轻量pipeline。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-reasoning.json # papers[0]
+
+SDesc3D — SDesc3D: Towards Layout-Aware 3D Indoor Scene Generation from Short Descriptions
+年份：2026预印本，当前arXiv v3
+主来源：https://arxiv.org/abs/2604.01972
+GitHub：未核
+主题：retrieval_planning
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：原文说Code will be publicly available；本轮未建立已发布官方代码
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：与ScenePilot相邻的retrieval/group/anchor/critic先例；清单/尺寸预测主协议仍需适配
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[6]
+
+SemLayoutDiff — SemLayoutDiff
+年份：未核年份，见主来源
+主来源：https://arxiv.org/abs/2508.18597v2
+GitHub：https://github.com/3dlg-hcvc/SemLayoutDiff
+主题：自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核统一eval入口和4类metric模块
+评估源码核查：Unified evaluator and all four metric modules verified. / Need original splits, renderings and scene-state conversion; SSTK/asset metadata used for rendering. / README contains real HuggingFace weight/data links alongside placeholder wget e
+任务关系：空壳/门窗mask条件，自行决定家具清单 / Useful architecture-conditioned comparison and distribution-metric reference; requires inventory conditioning adaptation, so not a drop-in same-input baseline.
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[13] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json # papers[name=SemLayoutDiff]
+
+The Scene Language — The Scene Language: Representing Scenes with Programs, Words, and Embeddings
+年份：2024预印本；CVPR2025 Highlight
+主来源：https://arxiv.org/abs/2410.16770
+GitHub：https://github.com/zzyunzhi/scene-language
+主题：programs_motifs
+证据：方法与实验段落已核；存在仓库时仅核目录/README，未运行
+方法代码公开：程序与render等实现公开；存在impl_eval.py但未审读指标等价性
+评估源码核查：本轮方法与实验段落/README/目录核查；完整论文评估源码等价性未核。详见原卡。
+任务关系：可借表示/局部编辑；增加DSL本身不是新意，真实空壳/清单需约束
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/root-extra-catalog.json # entries_or_papers[2]
+
+VIGOR — VIGOR: Verifiable Industrial Geometry Optimization and Repair in Scene Programs
+年份：Preprint submitted 9 October 2026; no accepted venue assigned here.
+主来源：https://arxiv.org/html/2610.13145v1
+GitHub：未核
+主题：几何/物理与可用性
+证据：目录/README核查；未执行
+方法代码公开：repo: 未核 / status: No official repository established from paper links and targeted title/arXiv searches. / search_boundary: This means no official link was located in this audit, not proof code cannot exist elsewhere. / eval_entry: 未核 / me
+评估源码核查：Controlled fixed schema/inventory and Python state semantics; not general real-mesh or live Unity physics validation. / Constructibility filtering selects known-feasible references; it does not evaluate arbitrary infeasible inventories. / I
+任务关系：Relevant prior art for complete verification and coupled repair, but known fixed asset geometry and executable programs differ from unknown-size text inventory to RoomGenBench.
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/catalog-2026-adjacent.json # papers[4]
+
+== 早期基础（2021/2023） ==
+
+ATISS — ATISS: Autoregressive Transformers for Indoor Scene Synthesis
+年份：2021 · NeurIPS
+主来源：https://arxiv.org/html/2110.03675
+GitHub：https://github.com/nv-tlabs/ATISS
+主题：自回归/掩码/扩散布局
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核FID/KL/SCA脚本
+评估源码核查：官方源码公开；3个主要自动metric实现已核；存在环境/采样/临时目录细节；尚未端到端复现论文。
+任务关系：自由生成类别与数量；需固定清单适配 / native: room type＋floor mask→自由决定家具类别数量；不原生消费逐对象文字描述/门窗语义。 / feasible_adapter: 已有autoregressive_decode_with_class_label可对request类别逐一预测未知尺寸/pose；外层控制数量/停止符和顺序，需要公开为适配baseline，不能称现成全清单CLI。 / forbidden_advantage: 不能把GT尺寸/pose塞到partial scene去当纯清单baseline；墙门窗无法表达的输
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[0] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json # papers[name=ATISS]
+
+LayoutGPT — LayoutGPT: Compositional Visual Planning and Generation with Large Language Models
+年份：2023
+主来源：https://arxiv.org/abs/2305.15393
+GitHub：https://github.com/UCSB-AI/LayoutGPT
+主题：语言与关系规划
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核OOB/KL＋vendored ATISS FID
+评估源码核查：public_quantitative_evaluators / OOB is rectangle+bbox, not arbitrary polygon or mesh; 0.1m tolerance. / Unknown predicted classes skipped in category counts. / No support stability, opening clearance, exact furniture-ID coverage or navigat
+任务关系：预测尺寸/pose但自行决定清单，原协议限矩形 / fit: partial; jointly predicts dimensions/layout, but generates its own inventory and assumes rectangular room. / known_size_requirement: No exact user furniture dimensions required. run_layoutgpt_3d.py outputs size/position/orientation from room and exe
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[4] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json # papers[name=LayoutGPT]
+
+== 评估与下游 benchmark ==
+
+LEGO-Eval — LEGO-Eval
+年份：2025 预印本；2026 版本
+主来源：https://arxiv.org/abs/2511.03001v3
+GitHub：https://github.com/gyeomh/LEGO-EVAL
+主题：评估/benchmark
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核21工具框架、入口与成功率聚合
+评估源码核查：Actual evaluation pipeline, tools and aggregation verified; not all paper experiments located/executed. / AI2THOR pinned build, Xorg/GPU, Objathor assets/materials/multiview asset images and model endpoints are needed. / Tool selection/cons
+任务关系：评估框架；AI2THOR场景/资产和LLM/VLM / Adopt atomic requirement checks plus all-constraints scene success. Use VLM only for appearance/ambiguous semantics and calibrate on a small human-labeled subset.
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[12] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json # papers[name=LEGO-Eval]
+
+RoomGenBench — RoomGenBench
+年份：本地 benchmark/工作流，非论文年份
+主来源：未核
+GitHub：https://github.com/WorldEdge-Lab/RoomGenBench
+主题：评估/benchmark
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核render/geom/VLM/aggregate
+评估源码核查：Render, geometry, VLM and aggregation entry points verified. / Current scorers enumerate the original five scenes and expect benchmark paths/results. Dynamic FastFill scenes need scorer adapters. / Requires render/model weights/assets; no G
+任务关系：给定layout→生成/装配assets；下游benchmark / Required downstream layer; add shared collision/OOB/door reachability after real meshes are fitted. Do not reuse original GT layouts/support as main-task inputs.
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[14] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json # papers[name=RoomGenBench]
+
+SceneEval — SceneEval
+年份：2025–2026，具体版本见原审计
+主来源：https://arxiv.org/abs/2503.14756v3
+GitHub：https://github.com/3dlg-hcvc/SceneEval
+主题：评估/benchmark
+证据：论文 + 选定源码/目录核查；未运行
+方法代码公开：已核实际metric模块和无VLM运行计划
+评估源码核查：Actual metric modules and non-VLM evaluation plan verified. / Requires Blender/asset preparation and scene conversion. / COL/NAV/OOB/opening clearance need no VLM; count/attributes/relations/support/accessibility use the default VLM pathway
+任务关系：评估框架；需SceneState和真实mesh / First choice for shared geometry and usability evaluation after RoomGenBench assembly; preserve definitions and report component metrics.
+原始审计：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json # entries[11] ; docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json # papers[name=SceneEval]
+
+== 综述与候选种子 ==
+
+Comp3DSceneGen survey — Survey on Compositional 3D Indoor Scene Generation
+年份：CGF 2026 · DOI 10.1111/cgf.70591
+主来源：https://doi.org/10.1111/cgf.70591
+GitHub：https://github.com/3dlg-hcvc/Comp3DSceneGen
+主题：survey
+证据：作者综述项目/目录；未逐篇核查全部候选
+方法代码公开：公开综述文献目录；非生成器仓库。
+评估源码核查：不适用：综述条目。
+任务关系：用于查漏与扩展检索；不能证明相关论文已全部覆盖。
+原始审计：docs/evidence/roomgen-literature-landscape-20261026/survey-paper-summary.csv # author survey candidate bibliography

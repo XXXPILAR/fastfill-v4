@@ -1,0 +1,620 @@
+{
+  "audit_date": "2026-10-26",
+  "scope": "Read-only primary-source paper/project + official GitHub default-branch snapshots. Full recursive trees inspected; only small text files downloaded to /tmp. No benchmark/model/render/simulation executed, no dependencies or datasets installed, no paid calls or external mutations.",
+  "task": "Empty observed shell + required furniture list without sizes -> layout and size prediction -> RoomGenBench generation/assembly -> independent evaluation.",
+  "paper_vs_code_separated": true,
+  "papers": [
+    {
+      "name": "LayoutGPT",
+      "paper_url": "https://arxiv.org/abs/2305.15393",
+      "repo_url": "https://github.com/UCSB-AI/LayoutGPT",
+      "project_url": "https://layoutgpt.github.io/",
+      "official_proof": "Author project Code link points to weixi-feng/LayoutGPT, redirecting to UCSB-AI/LayoutGPT.",
+      "commit": "fc31954962553e5b65bf267a904a6930d50b1f5e",
+      "commit_date": "2024-04-10T05:16:05Z",
+      "tree_complete": true,
+      "blob_count": 454,
+      "paper_evaluation": {
+        "source": "https://arxiv.org/html/2305.15393",
+        "task": "3D-FRONT rectangular bedrooms/living rooms; separate 2D tests must not be treated as 3D physical evaluation.",
+        "metrics": [
+          {
+            "metric": "OOB",
+            "kind": "rotated footprint bbox against room rectangle",
+            "unit": "scene fraction with any outside object"
+          },
+          {
+            "metric": "category KL",
+            "kind": "generated vs GT aggregate object-class frequency"
+          },
+          {
+            "metric": "FID",
+            "kind": "rendered-image distribution against dataset renderings"
+          }
+        ]
+      },
+      "code_evaluation": {
+        "status": "public_quantitative_evaluators",
+        "eval_files": [
+          {
+            "path": "eval_scene_layout.py",
+            "line": 56,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L56",
+            "implementation": "Footprint corners, normalized 256-coordinate conversion and 0.1m rectangle margin."
+          },
+          {
+            "path": "eval_scene_layout.py",
+            "line": 102,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L102",
+            "implementation": "Category-frequency KL."
+          },
+          {
+            "path": "eval_scene_layout.py",
+            "line": 148,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L148",
+            "implementation": "rect_test filtering; CLI prints scene-level OOB + KL."
+          },
+          {
+            "path": "ATISS/scripts/compute_fid_scores.py",
+            "line": 46,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/ATISS/scripts/compute_fid_scores.py#L46",
+            "implementation": "Vendored ATISS clean-FID evaluator: rendered directories + annotations; ten random repeats."
+          },
+          {
+            "path": "ATISS/scripts/render_from_files.py",
+            "line": 1,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/ATISS/scripts/render_from_files.py#L1",
+            "implementation": "Scene renderer preceding FID."
+          }
+        ],
+        "commands": [
+          "python eval_scene_layout.py --dataset_dir ./ATISS/data_output --file <predictions.json> --room bedroom",
+          "python ATISS/scripts/compute_fid_scores.py <real_renderings> <generated_renderings> <annotations>"
+        ],
+        "limits": [
+          "OOB is rectangle+bbox, not arbitrary polygon or mesh; 0.1m tolerance.",
+          "Unknown predicted classes skipped in category counts.",
+          "No support stability, opening clearance, exact furniture-ID coverage or navigation in 3D evaluator.",
+          "2D GLIP/counting/spatial scripts do not score 3D physics.",
+          "FID uses fixed /tmp/test_real and /tmp/test_fake dirs; isolate parallel jobs."
+        ]
+      },
+      "dependencies": [
+        "Preprocessed 3D-FRONT statistics, boxes.npz, splits.",
+        "ATISS renderer, 3D-FUTURE licensed mesh assets, textures and render setup for images.",
+        "clean-fid/model weights and CUDA assumed by FID code; generation uses legacy OpenAI interfaces."
+      ],
+      "task_applicability": {
+        "fit": "partial; jointly predicts dimensions/layout, but generates its own inventory and assumes rectangular room.",
+        "known_size_requirement": "No exact user furniture dimensions required. run_layoutgpt_3d.py outputs size/position/orientation from room and exemplars.",
+        "adaptation": [
+          "Force supplied required IDs/counts; use observed shell and openings.",
+          "Explicitly convert Y-up X/Z floor-plane center/half extents to FastFill Z-up bottom center/full extents.",
+          "Category KL becomes trivial with fixed exact inventory; use coverage and independent geometry instead.",
+          "Use matched catalog/renderings/reference data for FID."
+        ],
+        "source_files": [
+          {
+            "path": "run_layoutgpt_3d.py",
+            "line": 51,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/run_layoutgpt_3d.py#L51",
+            "implementation": "Room-condition prompt."
+          },
+          {
+            "path": "run_layoutgpt_3d.py",
+            "line": 94,
+            "url": "https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/run_layoutgpt_3d.py#L94",
+            "implementation": "Exemplar half extents multiplied by two."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Holodeck",
+      "paper_url": "https://arxiv.org/abs/2312.09067",
+      "repo_url": "https://github.com/allenai/Holodeck",
+      "project_url": "https://yueyang.ai/holodeck/",
+      "official_proof": "Author project Code link points to allenai/Holodeck.",
+      "commit": "362b8ed948b867b69a72f1f9491f4caa88419bfc",
+      "commit_date": "2024-08-26T16:55:32Z",
+      "tree_complete": true,
+      "blob_count": 31,
+      "paper_evaluation": {
+        "source": "https://arxiv.org/html/2312.09067",
+        "metrics": [
+          {
+            "metric": "human preference/rating",
+            "kind": "asset selection, spatial/layout coherence, overall scene quality with rendered evidence"
+          },
+          {
+            "metric": "CLIP score",
+            "kind": "OpenCLIP ViT-L/14 LAION2B rendered top-down image vs a top-down view of [scene type]; cosine times 100"
+          },
+          {
+            "metric": "ObjectNav Success and SPL",
+            "kind": "downstream trained navigation policy on artist-created NoveltyTHOR scenes"
+          }
+        ]
+      },
+      "code_evaluation": {
+        "status": "generation_retrieval_render_helpers_public_paper_evaluation_suite_not_found",
+        "eval_files": [],
+        "related_files": [
+          {
+            "path": "ai2holodeck/generation/utils.py",
+            "line": 43,
+            "url": "https://github.com/allenai/Holodeck/blob/362b8ed948b867b69a72f1f9491f4caa88419bfc/ai2holodeck/generation/utils.py#L43",
+            "implementation": "get_top_down_frame renders via AI2-THOR; no CLIP batch scoring."
+          },
+          {
+            "path": "ai2holodeck/generation/objaverse_retriever.py",
+            "line": 83,
+            "url": "https://github.com/allenai/Holodeck/blob/362b8ed948b867b69a72f1f9491f4caa88419bfc/ai2holodeck/generation/objaverse_retriever.py#L83",
+            "implementation": "CLIP/SBERT asset retrieval; not paper room-image CLIP evaluation."
+          },
+          {
+            "path": "ai2holodeck/main.py",
+            "line": 1,
+            "url": "https://github.com/allenai/Holodeck/blob/362b8ed948b867b69a72f1f9491f4caa88419bfc/ai2holodeck/main.py#L1",
+            "implementation": "Generation CLI."
+          }
+        ],
+        "commands": [],
+        "absence_evidence": "Complete current recursive tree inspected: generation, asset retrieval, render helpers and packaging. No human-study pipeline, rendered-room CLIP batch evaluator, or ObjectNav evaluation/training harness found in this pinned official tree.",
+        "limits": [
+          "Do not confuse retrieval CLIP with evaluation CLIP.",
+          "Human forms/raw comparisons and ObjectNav harness not present in checked repository.",
+          "Scope of absence is this pinned tree, not all possible public resources."
+        ]
+      },
+      "dependencies": [
+        "Python3.10; pinned AI2-THOR build 0+8524eadda94df0ab2dbb2ef5a577e4d37c712897.",
+        "Objathor/Objaverse asset, annotation and embedding bundles; simulator renderer; optional Unity build.",
+        "Generation needs an LLM API; no calls made."
+      ],
+      "task_applicability": {
+        "fit": "partial: actual-asset functional room generation; default creates floor plan and furniture inventory.",
+        "known_size_requirement": "User need not know sizes, but placement follows asset selection and uses retrieved actual asset bbox geometry.",
+        "adaptation": [
+          "Supply identical fixed shell/openings and required furniture inventory.",
+          "Separate real-asset-known-size track from joint unknown-size layout track, or define shared non-GT retrieval/size provider.",
+          "Create independent geometry/coverage/navigation evaluation and count asset/fallback failures."
+        ]
+      }
+    },
+    {
+      "name": "OptiScene",
+      "paper_url": "https://arxiv.org/abs/2506.07570",
+      "repo_url": "https://github.com/PolySummit/OptiScene",
+      "project_url": "https://polysummit.github.io/optiscene.github.io/",
+      "official_proof": "README line17 explicitly identifies official NeurIPS2025 repo and links paper/project. Author-project source PolySummit/optiscene.github.io master links old YxuanAr/OptiScene, now 404; canonical PolySummit/OptiScene accessible.",
+      "commit": "409f1317e1a8afe852f4cdc99dfefaed30aeb425",
+      "commit_date": "2026-03-25T15:08:38Z",
+      "tree_complete": true,
+      "blob_count": 24,
+      "official_proof_source": "https://raw.githubusercontent.com/PolySummit/optiscene.github.io/master/index.html",
+      "paper_evaluation": {
+        "source": "https://arxiv.org/html/2506.07570",
+        "metrics": [
+          {
+            "metric": "FID",
+            "kind": "rendered scene distribution"
+          },
+          {
+            "metric": "OOR",
+            "kind": "bounding-box intersection overlap ratio; exact threshold/denominator implementation not public here"
+          },
+          {
+            "metric": "GPT-4o judge",
+            "kind": "0–10 Functionality, Furniture Layout, Aesthetics"
+          },
+          {
+            "metric": "UR",
+            "kind": "human usable ratio; 50 scenes, 5 annotators each, at least 3 physically/semantically valid votes"
+          },
+          {
+            "metric": "editing OOR and ESR",
+            "kind": "20 edit cases"
+          },
+          {
+            "metric": "navigation SR and NE",
+            "kind": "object-centric navigation; success target within ±30-degree FOV and 2m, final distance error"
+          }
+        ]
+      },
+      "code_evaluation": {
+        "status": "sft_dpo_merge_inference_public_paper_evaluators_not_found",
+        "eval_files": [],
+        "related_files": [
+          {
+            "path": "main.py",
+            "line": 14,
+            "url": "https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/main.py#L14",
+            "implementation": "Only task choices sft/dpo/merge/inference."
+          },
+          {
+            "path": "scripts/inference.py",
+            "line": 1,
+            "url": "https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/scripts/inference.py#L1",
+            "implementation": "Inference writes model response; no scoring."
+          },
+          {
+            "path": "prompt.py",
+            "line": 2,
+            "url": "https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/prompt.py#L2",
+            "implementation": "Inputs Room Type, Room Area, Objects and Bounding Box Size."
+          },
+          {
+            "path": "default_prompt.txt",
+            "line": 9,
+            "url": "https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/default_prompt.txt#L9",
+            "implementation": "Per-object h/w/d known bbox dimensions."
+          },
+          {
+            "path": "README.md",
+            "line": 153,
+            "url": "https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/README.md#L153",
+            "implementation": "Final model weights table says Coming Soon at checked commit."
+          }
+        ],
+        "commands": [],
+        "absence_evidence": "Complete official recursive tree inspected: 24 blobs, train/DPO/merge/inference scripts, prompt/data pointers. No FID/OOR evaluator, scene renderer, GPT-4o scoring prompts, human study analysis, editing scorer or navigation simulator/evaluator found.",
+        "limits": [
+          "Exact OOR implementation, judge prompt/cameras, human annotations/forms and navigation evaluation cannot be reproduced from checked scripts.",
+          "Coming Soon is README state; no claim that weights cannot exist elsewhere.",
+          "Project Code link is stale; use canonical official repository."
+        ]
+      },
+      "dependencies": [
+        "Python3.12 with torch, transformers, trl, vLLM, PEFT, accelerate, flash-attn/modelscope etc.",
+        "HF training data linked; no data/weights downloaded.",
+        "Paper evaluation/render runtime not supplied in inspected files."
+      ],
+      "task_applicability": {
+        "fit": "known-size layout placement; not directly same unknown-size problem.",
+        "known_size_requirement": "Yes: numeric furniture bbox h/w/d are explicit prompt inputs.",
+        "adaptation": [
+          "Use shared non-GT size prior/provider for main-task adapted baseline; alternatively label known-size/oracle track.",
+          "Add actual shell polygon/openings instead of room area alone.",
+          "Preserve required IDs/counts and score final realized meshes.",
+          "Implement independent clearly specified metrics without claiming original paper scorer reproduction."
+        ]
+      }
+    },
+    {
+      "name": "ReSpace",
+      "paper_url": "https://arxiv.org/abs/2506.02459",
+      "repo_url": "https://github.com/GradientSpaces/respace",
+      "project_url": "https://respace.mnbucher.com/",
+      "official_proof": "Author project Code links GradientSpaces/respace. Project says ICLR2026 ES-Reasoning workshop, not ICLR main conference.",
+      "commit": "b1a4b32b5fe0a547342dd37063002010c06224dd",
+      "commit_date": "2026-09-15T09:51:23Z",
+      "tree_complete": true,
+      "blob_count": 83,
+      "paper_evaluation": {
+        "source": "https://arxiv.org/html/2506.02459",
+        "metrics": [
+          {
+            "metric": "VBL",
+            "kind": "actual mesh voxel occupancy outside room + pairwise furniture intersections"
+          },
+          {
+            "metric": "FID, CLIP-FID, KID",
+            "kind": "top-down image distribution vs reference renders; CLIP-FID is image distribution, not instruction VLM judging"
+          },
+          {
+            "metric": "PMS",
+            "kind": "prompt-word/stem recall in retrieved asset description, lexical rather than physical relation correctness"
+          },
+          {
+            "metric": "human paired preference",
+            "kind": "blinded pairwise scene comparison + Bradley-Terry aggregation"
+          },
+          {
+            "metric": "delta geometry losses",
+            "kind": "before/after OOB, mesh overlap and sum for edits"
+          }
+        ]
+      },
+      "code_evaluation": {
+        "status": "substantial_public_quantitative_evaluator_human_study_analysis_not_found",
+        "eval_files": [
+          {
+            "path": "src/eval.py",
+            "line": 665,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L665",
+            "implementation": "eval_scene default voxel pitch 0.05m and loss threshold 0.1; full geometry."
+          },
+          {
+            "path": "src/eval.py",
+            "line": 417,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L417",
+            "implementation": "Mesh OOB occupied volume."
+          },
+          {
+            "path": "src/eval.py",
+            "line": 467,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L467",
+            "implementation": "Mesh intersection occupied volume."
+          },
+          {
+            "path": "src/eval.py",
+            "line": 519,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L519",
+            "implementation": "PMS regex words + Porter stemming."
+          },
+          {
+            "path": "src/eval.py",
+            "line": 901,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L901",
+            "implementation": "Seed aggregate metrics, JSON validity denominator, FID/CLIP-FID/KID."
+          },
+          {
+            "path": "src/eval.py",
+            "line": 1059,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L1059",
+            "implementation": "Eval driver seeds 1234/3456/5678; fullscene/edit tasks."
+          },
+          {
+            "path": "src/utils.py",
+            "line": 90,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/utils.py#L90",
+            "implementation": "clean-fid image metrics."
+          },
+          {
+            "path": "src/scripts/eval/respace_eval_full.sh",
+            "line": 1,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/scripts/eval/respace_eval_full.sh#L1",
+            "implementation": "Fullscene generation/evaluation template."
+          },
+          {
+            "path": "src/scripts/eval/respace_eval_instr.sh",
+            "line": 1,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/scripts/eval/respace_eval_instr.sh#L1",
+            "implementation": "Instruction eval template."
+          },
+          {
+            "path": "src/viz.py",
+            "line": 1,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/viz.py#L1",
+            "implementation": "Public renderer."
+          }
+        ],
+        "commands": [
+          "xvfb-run -a python src/eval.py --pth-input=<scene_json_dir> --pth-output=<render_dir> --env=.env --room-type=all --do-metrics --n-test-scenes=500 --is-full-scene",
+          "./src/scripts/eval/respace_eval_full.sh",
+          "./src/scripts/eval/respace_eval_instr.sh"
+        ],
+        "limits": [
+          "Meshes/voxelization errors caught and set to 0.0 at src/eval.py:710–712 and 726–728, potentially understating violations. Reuse must record failed/unknown, not zero.",
+          "Default 5cm pitch cannot certify fine contact/support/clearance.",
+          "do_pms_full_scene defaults false and scores last object, not complete required inventory.",
+          "total_pbl_loss is code name for mesh OOB + overlap volume; values use pitch cubed (m^3), not raw voxel counts.",
+          "Fullscene script defaults BON_LLM=1 BON_SHUFFLING=8 with shuffling/rotation candidate selection; match test-time budget.",
+          "Configure MODEL_ID/checkpoints/.env; shell templates are not one-click ready.",
+          "Human raw comparisons/forms/Bradley-Terry analysis not found in pinned tree.",
+          "No independent support stability/opening accessibility or required-ID completeness metric."
+        ]
+      },
+      "dependencies": [
+        "3D-FUTURE real assets, processed SSR-3DFRONT, embedding cache, reference-render ZIP and configured .env.",
+        "README Sept2026 warns Alibaba hosting may be gone and suggests Kaggle mirror; mirror not downloaded/verified.",
+        "Python3.9/CUDA12.2 tested in README; torch2.5.1+cu121, transformers4.49, vLLM0.7.3, trimesh, clean-fid, pyrender/OpenGL/Xvfb.",
+        "HF checkpoints/base model access; NLTK PorterStemmer imported but nltk not explicitly listed in checked requirements."
+      ],
+      "task_applicability": {
+        "fit": "closest of these four: text-conditioned predicted size/layout, arbitrary boundary, retrieved real meshes and mesh metric. Fullscene mode still plans its own object inventory.",
+        "known_size_requirement": "No exact user size required; predicted text/size drive retrieval, sampled asset identity/size retained. Distinguish predicted bbox from realized catalog mesh.",
+        "adaptation": [
+          "Bypass inventory planner and sequentially place exactly required furniture IDs into observed shell/openings.",
+          "Convert axis/unit/origin conventions and measure predicted-vs-realized mesh sizes.",
+          "Add support/contact, doors/windows, no-placeholder completeness and final RoomGenBench asset/assembly success.",
+          "Strictly count retrieval, renderer and voxelization failures over all requested scenes.",
+          "Match catalog access/pretraining data and candidate compute budget; use VBL as additional metric."
+        ],
+        "source_files": [
+          {
+            "path": "src/sample.py",
+            "line": 271,
+            "url": "https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/sample.py#L271",
+            "implementation": "create_sampled_obj retains sampled_asset_jid and sampled_asset_size from retrieval."
+          }
+        ]
+      }
+    }
+  ],
+  "recommendations": [
+    "Reuse ReSpace mesh VBL with strict failure counting plus LayoutGPT bbox OOB; record pitch/tolerances/units separately.",
+    "OptiScene needs exact sizes; Holodeck places after retrieving actual-size assets. Label these task differences instead of silently giving GT dimensions.",
+    "With fixed exact inventory category KL is trivial; report exact ID/count coverage, mesh fit and all-input end-to-end success.",
+    "CLIP-FID, room-type CLIP, GPT judge and lexical PMS measure different things and do not certify support/access/navigation.",
+    "Generation-only code release is not full paper evaluation reproduction."
+  ],
+  "receipts": [
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/README.md",
+      "sha256": "bb4da6af5e98e67f3682e4adc21b1124705d7ce072db8da74c6410832702db3a",
+      "bytes": 4122
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/ai2holodeck/generation/holodeck.py",
+      "sha256": "078d3abc02fc1dbe267e9d08de37932ced7761daa9dc6879106c85c169b1cf72",
+      "bytes": 17592
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/ai2holodeck/generation/objaverse_retriever.py",
+      "sha256": "d7e2be1ce57e4cfbdd5a1f4b384f3387c51bb0f6d095caded3cd3fc554a98193",
+      "bytes": 5203
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/ai2holodeck/generation/utils.py",
+      "sha256": "5caa52195b600ae91433462baa608248b6f15b7d67f7a93b78ac7beea10e3349",
+      "bytes": 15270
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/ai2holodeck/main.py",
+      "sha256": "0111f562c19da2e6e4ed686a1430e106d68c59110df3b76d0e3f3d512c42a013",
+      "bytes": 6876
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck/requirements.txt",
+      "sha256": "0e9bcfca0d950aa1adeb10ee4d95b83e7aad11cac19f31183d023bc1f1908dc1",
+      "bytes": 313
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/Holodeck-snapshot.json",
+      "sha256": "725adacb1250b638093908aa1c0ddfd20a502aba6b4055165a7c3d15304be733",
+      "bytes": 11122
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/ATISS/config/bedrooms_eval_config.yaml",
+      "sha256": "9fc5c6b074bc4329e59abbcc2851e2f12f995eb874d28fbb8933372ad8605be8",
+      "bytes": 1213
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/ATISS/scripts/compute_fid_scores.py",
+      "sha256": "417cbcd44e801facdccbd97060b54f90639070322cdeb310b1247a59eecb9ad6",
+      "bytes": 3290
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/ATISS/scripts/evaluate_kl_divergence_object_category.py",
+      "sha256": "5a4779866c2d7981e9c92edd7eada0b46dad9eecf55578a274b1f1ca46cb63b5",
+      "bytes": 6142
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/ATISS/scripts/render_from_files.py",
+      "sha256": "6215f982191ee97a08b0da2ab7d89a05061055b8a92388bdc2d8bf7e294370b9",
+      "bytes": 12968
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/README.md",
+      "sha256": "14d8116f8df4adf9e076b1e21333c972f285c633eb14f611668e08c738ab8f96",
+      "bytes": 8769
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/eval_scene_layout.py",
+      "sha256": "0d3a9d09f5525c7def6124d3437489bf4d167df6f220ecd5a26ebf5d48cdb8a1",
+      "bytes": 6890
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/requirements.txt",
+      "sha256": "20d970e0e863cda456b87e6bc1f2128b306161e7deaafbeb53fd3e59248fc61f",
+      "bytes": 359
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT/run_layoutgpt_3d.py",
+      "sha256": "8aab0891a1cf60aab64b184f04170a42c7cee2832f299643ecb88a7c38048c24",
+      "bytes": 19127
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/LayoutGPT-snapshot.json",
+      "sha256": "f6c5ef6ac658107ac4b85821e9503f4a69b8c20cb3cd1754e296999d787bedcd",
+      "bytes": 174864
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/README.md",
+      "sha256": "4a489c398b28745793d4b729a55703cd24c4c3e3cf109d36b8fd9e6dfe1c32f7",
+      "bytes": 6152
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/default_prompt.txt",
+      "sha256": "39cd6c2331bc74b76bec7e87e62365e5d86b1947b9a5660c22fed0a92444ad55",
+      "bytes": 1534
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/environment.yml",
+      "sha256": "490ed14240ee7b21bbc46124dac2eceefd59b714874f37722f6b0f96565ce950",
+      "bytes": 254
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/main.py",
+      "sha256": "3e5a46ca05e1623a47f93cb3e7cb0735f30b0e3e9eb5eab2b6b16ea5f035bea1",
+      "bytes": 3706
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/prompt.py",
+      "sha256": "dff6e81dfe8013975f29722780759ba3cff9fcc93e917b862ca8cc7cfd63eb56",
+      "bytes": 5968
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene/scripts/inference.py",
+      "sha256": "36c259b1d7f8ea6615482116d9adff61d0b211208ae48765b6a8d3d313966c19",
+      "bytes": 1762
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene-project-index.html",
+      "sha256": "05c248aa7b2d5b7bdadfd62e4deb02c2c1b48a4b81d2d8b61fc44b0b27d87681",
+      "bytes": 15500
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/OptiScene-snapshot.json",
+      "sha256": "3963b3e0ec86cb2aef0c2609444c218e81ac3c6a329994a42b8917c57ab7dd28",
+      "bytes": 8675
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/README.md",
+      "sha256": "572c75a267925105b80c61cbbece02e03892c9923bf11426866dc73e0ef8978a",
+      "bytes": 14559
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/requirements.txt",
+      "sha256": "525c8f3e46565c3273ebee153de237d474c8342c352798192b29a2491b65e678",
+      "bytes": 3729
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/eval.py",
+      "sha256": "c1b074af61f43d68b6f6f8f2992e74ba126934b597c4882486420bc70e9ef57e",
+      "bytes": 54188
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/main.py",
+      "sha256": "d5240351c73b948ff33ebf5f1477960897ddad7e6390d2afc47064715637b807",
+      "bytes": 12016
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/plot.py",
+      "sha256": "8a84270bff9ea2c1fab9c4bd4d66d415e203e3f8df50f7d513c440fca2bc78c8",
+      "bytes": 115949
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/respace.py",
+      "sha256": "31a085616576daca3b9d043e133a90b243685937b297efa31f6648f39fb968df",
+      "bytes": 47523
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/sample.py",
+      "sha256": "79c4fc2ee4f960ff8dd99a424880b0321d61ca3cd195b70c2c4192031405b39e",
+      "bytes": 37070
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/scripts/eval/respace_eval_full.sh",
+      "sha256": "ebd0b5e94903502e3577c8c89cd16c6cfe27edcdbd6fb5272d2c6f5e6acbfeb3",
+      "bytes": 4160
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/scripts/eval/respace_eval_instr.sh",
+      "sha256": "fb7711ad6aee58df019bf7acf64df6976bdf82b82276df0f45a297d3951b074f",
+      "bytes": 3525
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/utils.py",
+      "sha256": "025c4aab5594500548b08cba296b16d4673cfe22e3a04d00c81df88572e60b13",
+      "bytes": 30752
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace/src/viz.py",
+      "sha256": "3e90322c6a3518a6b2fbf0f04d504de86ae43dfb71c10687b59bc31e5e681377",
+      "bytes": 64442
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/ReSpace-snapshot.json",
+      "sha256": "6de49e9f36276acd59f200e2a012f0e5649d12778393502b34fbbb254b00bc8e",
+      "bytes": 30174
+    },
+    {
+      "path": "/tmp/fastfill-paper-code-llm-20261026/download-receipts.json",
+      "sha256": "5626f530523429224e267261466bd4e6d2c4a321972e9e16d95bbec1345ac6b9",
+      "bytes": 1797
+    }
+  ]
+}

@@ -1,0 +1,886 @@
+{
+  "title": "四篇生成式室内布局论文的官方评估源码核查",
+  "reviewed_at": "2026-10-26",
+  "task": "真实空壳/边界/可用门窗＋指定文字家具清单（未给尺寸则预测）→完整布局→共同RoomGenBench下游",
+  "scope": {
+    "method": "论文/作者项目核官方仓库；固定2026-10-26读取时HEAD；读实际metric实现、argparse、调用点、依赖和README，不以README存在推断可复现。",
+    "download": "只把公开文本和Git tree放到/tmp。未clone模型/大数据，未安装、执行评估、训练、调用付费API或改项目。",
+    "pinning": "ATISS/DiffuScene/InstructScene经GitHub REST固定commit；MiDiffusion/ThreedFront因匿名REST rate limit改用git ls-remote HEAD固定commit，随后raw SHA下载。不把rate limit当仓库不可用。",
+    "coverage_limit": "此处只负责4篇；静态代码核查证明入口与机制，不能证明所有论文数字或依赖在当前机器端到端可复现。未下载验证权重/数据外链。",
+    "evidence_grade": "官方性/源码存在：高；已读路径的静态机制：高；运行兼容性与论文数值复现：未验证。"
+  },
+  "papers": [
+    {
+      "name": "ATISS",
+      "title": "ATISS: Autoregressive Transformers for Indoor Scene Synthesis",
+      "year": 2021,
+      "paper_url": "https://arxiv.org/html/2110.03675",
+      "repo_url": "https://github.com/nv-tlabs/ATISS",
+      "official_proof": {
+        "url": "https://research.nvidia.com/labs/toronto-ai/ATISS/",
+        "locus": "作者官方项目页 Code 链接直达 nv-tlabs/ATISS；论文 A.4 描述评估。"
+      },
+      "commit": "0909ce0000e52bf1bf300a6a558109f7f8383fd9",
+      "commit_date": "2022-11-23T05:58:25Z",
+      "code_public": true,
+      "read_level": "论文§4/A.4；完整FID/KL/SCA脚本；generation/按类别摆放调用点；environment/setup/README。",
+      "eval_files": [
+        {
+          "path": "scripts/compute_fid_scores.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/compute_fid_scores.py#L41",
+          "role": "FID入口、3个位置参数；L93–105对fake重采样10次并计算mean/std",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/scripts/compute_fid_scores.py"
+        },
+        {
+          "path": "scripts/evaluate_kl_divergence_object_category.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/evaluate_kl_divergence_object_category.py#L28",
+          "role": "category KL；L138–156按对象累计类别频率，不是per-scene清单正确率",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/scripts/evaluate_kl_divergence_object_category.py"
+        },
+        {
+          "path": "scripts/synthetic_vs_real_classifier.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/synthetic_vs_real_classifier.py#L80",
+          "role": "AlexNet真假分类；L168–268构造数据、训练、统计",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/scripts/synthetic_vs_real_classifier.py"
+        },
+        {
+          "path": "scripts/generate_scenes.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/generate_scenes.py#L1",
+          "role": "floor-conditioned generation与渲染",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/scripts/generate_scenes.py"
+        },
+        {
+          "path": "scene_synthesis/networks/autoregressive_transformer.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scene_synthesis/networks/autoregressive_transformer.py#L243",
+          "role": "给定class后预测translation/yaw/size；add_object接口",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/scene_synthesis/networks/autoregressive_transformer.py"
+        },
+        {
+          "path": "environment.yaml",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/environment.yaml#L1",
+          "role": "原始Python3.8/PyTorch1.6环境",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/environment.yaml"
+        },
+        {
+          "path": "setup.py",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/setup.py#L45",
+          "role": "实际install_requires",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/setup.py"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/README.md#L1",
+          "role": "官方使用说明；没有专门metric命令段",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ATISS/README.md"
+        }
+      ],
+      "metrics": {
+        "paper": "256²俯视图FID↓、类别KL↓、真假分类SCA接近50%为好；FID/SCA重复10次；另人工比较错误和真实性。定位：§4和A.4。",
+        "code_verified": [
+          "FID使用clean-fid；test split真实渲染；每轮从synthetic images用np.random.choice默认有放回抽N个，重复10次。",
+          "KL=Σp(log(p+1e-6)−log(q+1e-6))，类别分布按对象总数归一化；脚本会实际加载模型生成场景。",
+          "SCA是ImageNet pretrained AlexNet二分类；真实train+val/test，synthetic图片按文件排序切两半；代码循环10轮但model/optimizer在外面创建，因此不是10个独立重新初始化的分类器。"
+        ],
+        "missing_for_fastfill": "未见本仓库提供当前任务的ExactInventory、门窗clearance、入口可达、动态physics、统一mesh COL完整评估。人工研究没有一键重跑脚本。"
+      },
+      "commands": [
+        {
+          "kind": "README generation command，补实际scripts路径",
+          "command": "python scripts/generate_scenes.py CONFIG OUTPUT FUTURE_PICKLE FLOOR_TEXTURES --weight_file WEIGHTS",
+          "source": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/README.md#L144"
+        },
+        {
+          "kind": "从argparse核出的FID命令，README未给metric命令",
+          "command": "python scripts/compute_fid_scores.py REAL_RENDER_DIR SYN_RENDER_DIR SPLITS_CSV",
+          "source": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/compute_fid_scores.py#L46"
+        },
+        {
+          "kind": "从argparse核出的KL命令",
+          "command": "python scripts/evaluate_kl_divergence_object_category.py CONFIG --weight_file WEIGHTS --splits validation",
+          "source": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/evaluate_kl_divergence_object_category.py#L38"
+        },
+        {
+          "kind": "从argparse核出的SCA命令",
+          "command": "python scripts/synthetic_vs_real_classifier.py REAL_RENDER_DIR SYN_RENDER_DIR SPLITS_CSV",
+          "source": "https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/synthetic_vs_real_classifier.py#L120"
+        }
+      ],
+      "dependencies": {
+        "datasets": "3D-FRONT/3D-FUTURE、预处理boxes/room_mask/渲染图、split CSV、模型checkpoint；generation retrieval依赖FUTURE pickle。",
+        "software": "torch/torchvision、numpy、scene_synthesis package；simple-3dviz/ModernGL等渲染；FID实际import cleanfid。",
+        "caveats": "clean-fid未出现在environment.yaml或setup.py依赖清单，需补装；原始PyTorch1.6环境兼容性未测试。FID固定/tmp/test_real和test_fake且不清空旧图，复跑/并发必须隔离。"
+      },
+      "fit_to_empty_shell_fixed_inventory": {
+        "native": "room type＋floor mask→自由决定家具类别数量；不原生消费逐对象文字描述/门窗语义。",
+        "feasible_adapter": "已有autoregressive_decode_with_class_label可对request类别逐一预测未知尺寸/pose；外层控制数量/停止符和顺序，需要公开为适配baseline，不能称现成全清单CLI。",
+        "forbidden_advantage": "不能把GT尺寸/pose塞到partial scene去当纯清单baseline；墙门窗无法表达的输入限制要注明。"
+      },
+      "reproducibility_status": "官方源码公开；3个主要自动metric实现已核；存在环境/采样/临时目录细节；尚未端到端复现论文。",
+      "what_not_verified": [
+        "权重链接可下载性/完整性",
+        "数据许可证及当前下载状态",
+        "实际渲染/clean-fid数值",
+        "人评及所有论文表格可复现性"
+      ],
+      "recommendation": {
+        "level": "中",
+        "use": "经典floor-conditioned自回归baseline；可做类别清单适配。其分布metric只作补充，不能当本任务唯一评价。"
+      }
+    },
+    {
+      "name": "DiffuScene",
+      "title": "DiffuScene: Denoising Diffusion Models for Generative Indoor Scene Synthesis",
+      "year": 2024,
+      "paper_url": "https://arxiv.org/html/2303.14207v2",
+      "repo_url": "https://github.com/tangjiapeng/DiffuScene",
+      "official_proof": {
+        "url": "https://tangjiapeng.github.io/projects/DiffuScene/",
+        "locus": "作者官方项目页Code直链；repo README说明为该论文source。"
+      },
+      "commit": "d78a2890c6b806b61279463b1dbe7701f286a024",
+      "commit_date": "2025-04-02T13:34:52Z",
+      "code_public": true,
+      "read_level": "论文Evaluation Metrics段；FID/KID完整；precision/recall实现关键段；generation、bbox/symmetry函数、arrangement输入、配置、依赖。",
+      "eval_files": [
+        {
+          "path": "scripts/compute_fid_scores.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/compute_fid_scores.py#L41",
+          "role": "FID/KID脚本；L71–118 split、硬编码临时目录及实际调用",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scripts/compute_fid_scores.py"
+        },
+        {
+          "path": "scripts/improved_precision_recall.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/improved_precision_recall.py#L55",
+          "role": "VGG16 manifold precision/recall；L371起CLI",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scripts/improved_precision_recall.py"
+        },
+        {
+          "path": "scripts/generate_diffusion.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/generate_diffusion.py#L394",
+          "role": "--compute_intersec输出IoU/交叠率/对象数/对称数，位于render_top2down分支",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scripts/generate_diffusion.py"
+        },
+        {
+          "path": "scripts/utils.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/utils.py#L665",
+          "role": "默认axis-aligned bbox交叠、pair分母与symmetry启发式",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scripts/utils.py"
+        },
+        {
+          "path": "scripts/completion_rearrange.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/completion_rearrange.py#L309",
+          "role": "arrangement从dataset获取固定class/size/shape",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scripts/completion_rearrange.py"
+        },
+        {
+          "path": "scene_synthesis/networks/diffusion_scene_layout_ddpm.py",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scene_synthesis/networks/diffusion_scene_layout_ddpm.py#L270",
+          "role": "arrange condition固定size＋class/shape；预测位置/角度",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/scene_synthesis/networks/diffusion_scene_layout_ddpm.py"
+        },
+        {
+          "path": "config/rearrange/diffusion_bedrooms_instancond_lat32_v_rearrange.yaml",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/config/rearrange/diffusion_bedrooms_instancond_lat32_v_rearrange.yaml#L13",
+          "role": "默认room_mask_condition:false、room_arrange_condition:true",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/config/rearrange/diffusion_bedrooms_instancond_lat32_v_rearrange.yaml"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/README.md#L101",
+          "role": "generation/evaluation命令",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/README.md"
+        },
+        {
+          "path": "environment.yaml",
+          "url": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/environment.yaml#L1",
+          "role": "原始依赖",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/DiffuScene/environment.yaml"
+        }
+      ],
+      "metrics": {
+        "paper": "统一256²语义俯视图FID/KID/SCA、类别CKL；对象数、对称对象对、pairwise bbox IoU与GT统计比较。定位正文Evaluation Metrics；不是逐实例GT pose误差。",
+        "code_verified": [
+          "FID/KID调用clean-fid，默认真实参考为train+val，--compare_all改为train+val+test；不能未经说明直接与ATISS默认test-reference数值混比。",
+          "compute_intersec默认将retrieved mesh的bounding_box.bounds转成axis-aligned bbox；IoU/交叠指示在全部i<j对象对平均，不是SceneEval参与碰撞对象率，也不是默认mesh intersection。",
+          "symmetry默认要求同类别及同retrieved model ID，AABB半尺寸差<.1，且x或z中心差<.1；是启发式，不是通用对称性感知质量。",
+          "另有VGG16特征近邻manifold improved precision/recall脚本；不是inventory precision/recall。"
+        ],
+        "not_found": "检索固定commit完整Git tree，未见独立SCA或category-KL eval入口；不因此断言论文指标无法重写，但不能说官方发布覆盖全部论文metric。"
+      },
+      "commands": [
+        {
+          "kind": "README",
+          "command": "bash run/generate.sh",
+          "source": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/README.md#L108"
+        },
+        {
+          "kind": "README；run文件/配置须改本机路径",
+          "command": "bash run/generate_rearrange.sh",
+          "source": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/run/generate_rearrange.sh#L1"
+        },
+        {
+          "kind": "README metric；在scripts目录或用scripts/前缀",
+          "command": "python scripts/compute_fid_scores.py REAL_RENDER_DIR SYN_RENDER_DIR SPLITS_CSV",
+          "source": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/README.md#L117"
+        },
+        {
+          "kind": "README metric",
+          "command": "python scripts/improved_precision_recall.py REAL_RENDER_DIR SYN_RENDER_DIR SPLITS_CSV",
+          "source": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/README.md#L124"
+        },
+        {
+          "kind": "README选项；需与--render_top2down一起实际走到统计分支",
+          "command": "给generate_diffusion.py的参数加 --compute_intersec --render_top2down",
+          "source": "https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/generate_diffusion.py#L355"
+        }
+      ],
+      "dependencies": {
+        "datasets": "预处理3D-FRONT、3D-FUTURE几何/latent shape features、shape autoencoder及任务模型checkpoint；README有Drive外链，未下载核实。",
+        "software": "Python3.8/PyTorch1.13/CUDA11.3、simple-3dviz、PyVista、Open3D；FID需clean-fid；PR脚本VGG16硬用.cuda()。",
+        "caveats": "FID/PR和配置包含/cluster/balrog/jtang固定路径；脚本会在自身固定临时路径删除目录，因此须先重定向隔离（本次未运行）。clean-fid、Open3D未见在所读environment/setup依赖完整声明。"
+      },
+      "fit_to_empty_shell_fixed_inventory": {
+        "native": "无条件生成或partial text描述→全场景；arrangement给class＋尺寸＋shape，不等于未知尺寸清单。",
+        "stronger_input": "公开arrangement演示取dataset既有size及shape，并且所读rearrangement配置未用floor mask；不能当同条件门窗/尺寸预测baseline。",
+        "adaptation": "要参与主榜须明确改为class-only＋真实边界输入；若保留已知size/asset，则放增强榜。自然语言inventory直接输入text模型时仍需测遗漏和extras，不能默认严格保持数量。"
+      },
+      "reproducibility_status": "公开模型与部分metric源码确实存在；存在硬路径、依赖及未找到的论文metric入口，不是开箱全指标复现包。",
+      "what_not_verified": [
+        "Drive weights/data能否下载",
+        "SCA/CKL是否另藏未识别实现或作者外部脚本",
+        "实际渲染和所有指标数值",
+        "安装运行和GPU兼容性"
+      ],
+      "recommendation": {
+        "level": "中低（未知尺寸主榜）；中（已知尺寸/asset增强榜）",
+        "use": "代表性diffusion baseline；可参考其分布metric，bbox交叠实现须明确AABB和pair分母。"
+      }
+    },
+    {
+      "name": "MiDiffusion",
+      "title": "Mixed Diffusion for 3D Indoor Scene Synthesis",
+      "year": 2024,
+      "paper_url": "https://arxiv.org/html/2405.21066v2",
+      "repo_url": "https://github.com/MIT-SPARK/MiDiffusion",
+      "official_proof": {
+        "url": "https://arxiv.org/abs/2405.21066",
+        "locus": "作者提交arXiv页面Comments的Code released链接直达MIT-SPARK/MiDiffusion；该repo README明确链接同组织ThreedFront评估仓库。"
+      },
+      "commit": "25b594338a29b31c6783b4b1ea87eeeb0ce12bbe",
+      "evaluation_repo_url": "https://github.com/MIT-SPARK/ThreedFront",
+      "evaluation_repo_commit": "de929ef80e1678bf95bb0369afa6e0d854b291ad",
+      "pin_method": "git ls-remote HEAD；未取得commit date，勿据搜索相对时间补写。",
+      "code_public": true,
+      "read_level": "论文§5/指标/家具约束；完整feature-mask和generate_results；ThreedFront FID/KID、bbox、KL实现和CA核心循环、依赖。",
+      "eval_files": [
+        {
+          "path": "scripts/generate_results.py",
+          "url": "https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/scripts/generate_results.py#L39",
+          "role": "CLI experiments；generation→ThreedFrontResults pickle→KL",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/MiDiffusion/scripts/generate_results.py"
+        },
+        {
+          "path": "midiffusion/evaluation/utils.py",
+          "url": "https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/midiffusion/evaluation/utils.py#L11",
+          "role": "关键：object_conditioned仅固定class；furniture_arrangement还固定size",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/MiDiffusion/midiffusion/evaluation/utils.py"
+        },
+        {
+          "path": "scripts/compute_fid_scores.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/compute_fid_scores.py#L19",
+          "role": "读取results.pkl，FID/KID",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/scripts/compute_fid_scores.py"
+        },
+        {
+          "path": "scripts/evaluate_kl_divergence_object_category.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/evaluate_kl_divergence_object_category.py#L13",
+          "role": "读取results.pkl，category KL",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/scripts/evaluate_kl_divergence_object_category.py"
+        },
+        {
+          "path": "scripts/synthetic_vs_real_classifier.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/synthetic_vs_real_classifier.py#L130",
+          "role": "10次采样/训练分类器；低于50时翻转",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/scripts/synthetic_vs_real_classifier.py"
+        },
+        {
+          "path": "scripts/bbox_analysis.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/bbox_analysis.py#L22",
+          "role": "默认erosion=.1m、area_tol=1e-5；OOB对象分母与scene-mean bbox IoU",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/scripts/bbox_analysis.py"
+        },
+        {
+          "path": "threed_front/evaluation/utils.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/threed_front/evaluation/utils.py#L204",
+          "role": "真实OOB polygon/rotated bbox IoU实现",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/threed_front/evaluation/utils.py"
+        },
+        {
+          "path": "scripts/render_results.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/render_results.py#L1",
+          "role": "共同格式结果的simple-3dviz渲染",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/scripts/render_results.py"
+        },
+        {
+          "path": "threed_front/evaluation/__init__.py",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/threed_front/evaluation/__init__.py#L6",
+          "role": "结果容器与dataset依赖",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/threed_front/evaluation/__init__.py"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/README.md#L56",
+          "role": "官方generation和评估仓库指引",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/MiDiffusion/README.md"
+        },
+        {
+          "path": "requirements.txt",
+          "url": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/requirements.txt#L1",
+          "role": "完整环境pins",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/ThreedFront/requirements.txt"
+        }
+      ],
+      "metrics": {
+        "paper": "随机1000 test floor plans，FID/KID、category KL、CA；另对象数、OOB对象比例、bbox IoU；纹理less统一俯视图。论文称OOB容许边界0.1m。定位§5指标和附录D。",
+        "code_verified": [
+          "object_conditioned feature mask只把class维设True，尺寸/pose不固定；数量通过包含empty状态的类别slots固定。furniture_arrangement另把size设True。",
+          "OOB实际用旋转xz footprint，bbox半尺寸先减erosion（script默认.1m），越界面积>1e-5记一个OOB；输出OOB对象/全部对象。这个实现是缩bbox容差，不是对任意异形floor作严格等距dilation。",
+          "compute_bbox_iou在全i<j对象对产生值、bbox_analysis先per-scene平均再跨scene平均；同时报平均正IoU对数。几何不是mesh。",
+          "FID/KID使用clean-fid；CA使用预训练AlexNet，10轮中每轮重新建模型；返回低于50%的准确率会翻转为100−score，再报mean/std；不同于未翻转SCA。",
+          "KL聚合类别频率，固定class inventory时通常由条件强制匹配，不能当布局改善的主要证据。"
+        ],
+        "static_cautions": [
+          "bbox IoU中vertical_overlap写为halfheight_i+halfheight_j−center_distance，未对完全包含的高度区间裁成较小高度；有不同高度包含时不能直接当精确3D交体积，需另核/修并公开。",
+          "CA抽synthetic使用np.random.choice默认有放回后再切train/test，可能将同一源生成图复制到两半；此协议不等于严格独立synthetic划分。"
+        ]
+      },
+      "commands": [
+        {
+          "kind": "README generation加已核CLI选项",
+          "command": "python scripts/generate_results.py WEIGHTS --result_tag NAME --experiment object_conditioned",
+          "source": "https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/README.md#L56"
+        },
+        {
+          "kind": "README",
+          "command": "python ../ThreedFront/scripts/render_results.py output/predicted_results/NAME/results.pkl",
+          "source": "https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/README.md#L70"
+        },
+        {
+          "kind": "官方ThreedFront README指引＋argparse确认",
+          "command": "python ../ThreedFront/scripts/compute_fid_scores.py RESULTS_PKL --no_texture",
+          "source": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/compute_fid_scores.py#L24"
+        },
+        {
+          "kind": "argparse确认",
+          "command": "python ../ThreedFront/scripts/compute_fid_scores.py RESULTS_PKL --compute_kid --no_texture",
+          "source": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/compute_fid_scores.py#L28"
+        },
+        {
+          "kind": "官方eval入口",
+          "command": "python ../ThreedFront/scripts/bbox_analysis.py RESULTS_PKL --erosion 0.1 --area_tol 0.00001",
+          "source": "https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/bbox_analysis.py#L22"
+        }
+      ],
+      "dependencies": {
+        "datasets": "threed_front package＋3D-FRONT/3D-FUTURE预处理数据、配置、权重；bbox需fpbpn采样边界点；result pickle含dataset对象，迁移FastFill需结果adapter，不是把任意JSON直接传入。",
+        "software": "原说明Python3.8/PyTorch1.12.1/CUDA11.3；MiDiffusion另einops/wandb；评估clean-fid、shapely、simple-3dviz、trimesh等。",
+        "caveats": "ThreedFront requirements将torch/torchvision标cu113、torchaudio标cu102；未实际解决安装环境。CA/AlexNet可自动下载模型权重；本次未下载。"
+      },
+      "fit_to_empty_shell_fixed_inventory": {
+        "native": "4篇里最接近主任务的现成语义入口：floor＋固定class/count→预测未知size/pose。原CLI从benchmark dataset读类别，需adapter替换为用户清单。",
+        "limitations": "不原生理解逐对象长描述/开放类别/门窗功能几何；closure类词表及最大slots有限。不能声称已满足FastFill完整输入。",
+        "track": "优先object_conditioned主榜适配；furniture_arrangement固定尺寸另为增强榜；固定geometry以外信息公平一致。"
+      },
+      "reproducibility_status": "公开model＋单独官方通用eval仓库，主要自动metric入口覆盖较全；已核静态机制但存在几何/抽样细节，未运行，不能标全论文已复现。",
+      "what_not_verified": [
+        "官方示例权重外链可用性",
+        "WACV2026最终版与所读arXiv v2评估是否变化",
+        "依赖安装、训练结果和渲染分数",
+        "任意用户边界/清单adapter是否有效"
+      ],
+      "recommendation": {
+        "level": "高（需类别清单/边界adapter）",
+        "use": "当前固定清单未知尺寸任务优先的非LLM生成基线。ThreedFront可借鉴结果格式与metric结构，几何实现需逐项校准，不能照抄为真值。"
+      }
+    },
+    {
+      "name": "InstructScene",
+      "title": "InstructScene: Instruction-Driven 3D Indoor Scene Synthesis with Semantic Graph Prior",
+      "year": 2024,
+      "paper_url": "https://arxiv.org/html/2402.04717",
+      "repo_url": "https://github.com/chenguolin/InstructScene",
+      "official_proof": {
+        "url": "https://chenguolin.github.io/projects/InstructScene/",
+        "locus": "作者项目页Code直达chenguolin/InstructScene；README自述ICLR2024官方实现。"
+      },
+      "commit": "a9097a62c484c56ac7be5ec2928ef497cbbaaf24",
+      "commit_date": "2026-02-25T15:56:30Z",
+      "code_public": true,
+      "read_level": "论文§5.2；iRecall生成调用/关系计算；FID/CLIP-FID/KID全脚本；SCA数据与统计；README/settings/config和Blender说明。",
+      "eval_files": [
+        {
+          "path": "src/generate_sg.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/generate_sg.py#L319",
+          "role": "模板instruction→graph→layout；L430–535关系匹配；L626起保存iRecall",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/generate_sg.py"
+        },
+        {
+          "path": "src/data/utils_text.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/data/utils_text.py#L11",
+          "role": "bbox关系几何定义compute_loc_rel",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/data/utils_text.py"
+        },
+        {
+          "path": "src/compute_fid_scores.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/compute_fid_scores.py#L182",
+          "role": "FID、CLIP-FID、KID",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/compute_fid_scores.py"
+        },
+        {
+          "path": "src/synthetic_vs_real_classifier.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/synthetic_vs_real_classifier.py#L280",
+          "role": "SCA训练与最终保存max_val_acc",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/synthetic_vs_real_classifier.py"
+        },
+        {
+          "path": "scripts/inference_sg_vq_objfeat.sh",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/scripts/inference_sg_vq_objfeat.sh#L22",
+          "role": "默认n_scenes=0遍历评估；渲染开关说明",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/scripts/inference_sg_vq_objfeat.sh"
+        },
+        {
+          "path": "src/rearrange_sg.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/rearrange_sg.py#L1",
+          "role": "下游rearrangement，不等于空壳主任务",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/rearrange_sg.py"
+        },
+        {
+          "path": "src/utils/visualize.py",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/utils/visualize.py#L1",
+          "role": "Blender渲染桥接",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/src/utils/visualize.py"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/README.md#L169",
+          "role": "官方inference/eval命令；注意示例config名拼写差异",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/README.md"
+        },
+        {
+          "path": "settings/setup.sh",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/settings/setup.sh#L4",
+          "role": "torch2.1/cu121和nltk cmudict",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/settings/setup.sh"
+        },
+        {
+          "path": "settings/requirements.txt",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/settings/requirements.txt#L1",
+          "role": "clean-fid/transformers/diffusers等",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/settings/requirements.txt"
+        },
+        {
+          "path": "configs/bedroom_sg_diffusion_vq_objfeat.yaml",
+          "url": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/configs/bedroom_sg_diffusion_vq_objfeat.yaml#L1",
+          "role": "实际config文件名",
+          "local_copy": "/tmp/fastfill-generative-code-audit-20261026/InstructScene/configs/bedroom_sg_diffusion_vq_objfeat.yaml"
+        }
+      ],
+      "metrics": {
+        "paper": "iRecall=输入关系triplets在合成场景实现的比例；FID、CLIP-FID、KID、SCA；SCA接近50%为好。正文§5.2。非完整exact inventory标准。",
+        "code_verified": [
+          "generate_sg分别计算图关系和实际layout关系recall，按全部selected relation条目累计；同类别triplet匹配后remove一次限制重复；另有忽略closely距离档的easy版本。",
+          "layout关系从bbox corners/位置计算，并用retrieved asset尺寸obj_sizes；不只是预测graph自评，也不是实际mesh接触/功能检查。",
+          "FID/CLIP-FID/KID由clean-fid计算，test Blender topdown真实图对生成topdown；CLIP特征为clip_vit_b_32。",
+          "SCA程序中的max_val_acc在每个validation batch上更新，最后保存跨batch/epoch最大值；不是完整验证集平均准确率。此为静态可见行为，未运行证明论文表格如何产生。",
+          "原generate_sg的layout调用不带真实floor；可视化floor由生成mesh范围现造rectangle。不能据此宣称评估真实空壳边界遵守。"
+        ],
+        "missing_for_fastfill": "官方主要评估不含固定全清单准确率、真实边界/门窗通行和physics；只有部分关系prompt协议。"
+      },
+      "commands": [
+        {
+          "kind": "README官方inference",
+          "command": "bash scripts/inference_sg_vq_objfeat.sh bedroom bedroom_sgdiffusion_vq_objfeat 0 -1 threedfront_objfeat_vqvae bedroom_sg2scdiffusion_objfeat 1.0 1.0",
+          "source": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/README.md#L169"
+        },
+        {
+          "kind": "按仓库实际config名校正README命令",
+          "command": "python3 src/compute_fid_scores.py configs/bedroom_sg_diffusion_vq_objfeat.yaml --tag bedroom_sgdiffusion_vq_objfeat --checkpoint_epoch EPOCH",
+          "source": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/compute_fid_scores.py#L20"
+        },
+        {
+          "kind": "按仓库实际config名校正；SCA统计行为须先处理",
+          "command": "python3 src/synthetic_vs_real_classifier.py configs/bedroom_sg_diffusion_vq_objfeat.yaml --tag bedroom_sgdiffusion_vq_objfeat --checkpoint_epoch EPOCH",
+          "source": "https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/synthetic_vs_real_classifier.py#L1"
+        }
+      ],
+      "command_caveats": [
+        "README eval命令写configs/bedroom_sgdiffusion_vq_objfeat.yaml，而tree实际为bedroom_sg_diffusion_vq_objfeat.yaml，须用真实文件名。",
+        "README eval用--checkpoint_epoch -1；FID程序直接构造epoch_-0001路径，generation则load_checkpoints解析最新真实epoch后保存epoch_{load_epoch:05d}。应传实际生成epoch目录号；本次未执行端到端验证。",
+        "inference要加--visualize才产FID/SCA需要的图片；只算iRecall无需Blender渲染，但仍需模型/数据。"
+      ],
+      "dependencies": {
+        "assets": "3D-FRONT/FUTURE预处理＋OpenShape量化特征；semantic graph模型、layout decoder、fVQ-VAE三套权重；README官方仅释放fVQ-VAE，其他权重链接标unofficial contributed checkpoints。",
+        "software": "setup示例torch2.1/torchvision.16/cu121；clean-fid、transformers、diffusers、nltk/cmudict、trimesh/shapely；Blender3.3.1作图像指标。",
+        "caveats": "部分依赖版本未pin；CLIP/AlexNet或HF模型需下载；非官方权重与paper是否完全一致未验证。"
+      },
+      "fit_to_empty_shell_fixed_inventory": {
+        "native": "描述部分关系和外观→自由生成整场景semantic graph→size/pose；固定清单/真实room shell不是该CLI的主约束。",
+        "useful": "iRecall源码是可复用的关系满足率参考，必须区分category级triplet和request-instance约束；用统一asset/坐标约定。",
+        "adaptation": "主榜需固定request类别/数量并给真实边界；若无边界输入只能标该能力不支持，不能用依据输出自造floor绕过OOB。"
+      },
+      "reproducibility_status": "公开完整主推理/主要metric入口，但官方权重覆盖、README命令和SCA统计存在明显复现注意点；未运行，不可说全部论文指标开箱复现。",
+      "what_not_verified": [
+        "unofficial权重是否与原文相同",
+        "实际checkpoint目录/所有README例程运行",
+        "SCA代码行为是否对应论文原始实验版本",
+        "安装兼容和全部论文数值"
+      ],
+      "recommendation": {
+        "level": "高（iRecall评估参考）；中（文字条件对照）；低（未经适配的真实空壳主榜）",
+        "use": "借鉴关系满足率＋统一多视渲染；先校正命令和SCA，另加固定清单/真实几何评估。"
+      }
+    }
+  ],
+  "cross_paper_conclusions": [
+    "四篇都有可确认的官方GitHub源码；MiDiffusion评估在另一个官方ThreedFront仓库，不能只看model仓库找不到eval就称未公开。",
+    "公开代码≠全部论文指标已复现：本次只证明脚本/调用/依赖与静态机制，未实际运行；SCA、reference split、采样和几何proxy细节会改变数字。",
+    "主任务优先MiDiffusion object_conditioned作为固定class/count、未知size/pose基线；其余需不同程度适配，并公开原方法输入缺口。",
+    "FID/KID/SCA/CKL是集合分布评价；固定清单往往令category KL趋近由输入决定；不能代替ExactInventory、真实floor OOB、门窗可用与完整布局成功率。",
+    "统一FastFill evaluator评所有baseline，同时另报其原论文metric供对照；禁止把AABB、OBB、mesh或physics同名数字混排。"
+  ],
+  "search_queries": [
+    "ATISS autoregressive transformers indoor scene synthesis official github evaluation",
+    "DiffuScene official github evaluation CVPR 2024",
+    "MiDiffusion mixed diffusion indoor scene synthesis official github",
+    "InstructScene official github evaluation scene synthesis"
+  ],
+  "local_source_dir": "/tmp/fastfill-generative-code-audit-20261026",
+  "no_models_or_metrics_executed": true,
+  "downloaded_text_manifest": [
+    {
+      "path": "ATISS/README.md",
+      "bytes": 14404,
+      "sha256": "9392c742fad840b28787e26b22046718bc1855f3acfb6ea22acf5d848d6e86f4"
+    },
+    {
+      "path": "ATISS/config/bedrooms_eval_config.yaml",
+      "bytes": 1255,
+      "sha256": "a5786b0d229fd9c385ee85cde0dba0766719b528347b015edb6606efa0dcc105"
+    },
+    {
+      "path": "ATISS/environment.yaml",
+      "bytes": 402,
+      "sha256": "56f93dd47e1aecfb5f0c52228eb2aaa954679903a94582c4492b8c1bcd6f18a4"
+    },
+    {
+      "path": "ATISS/metadata.json",
+      "bytes": 259,
+      "sha256": "1fe7d18ea690c4334ad26c6e1a289fb0c98a415da6899a37875c6975e9900d55"
+    },
+    {
+      "path": "ATISS/scene_synthesis/networks/autoregressive_transformer.py",
+      "bytes": 23234,
+      "sha256": "fc53c91333a750f7f58f122056b8468037c296ca9773c1ea34b5bd1e7ce007d3"
+    },
+    {
+      "path": "ATISS/scripts/compute_fid_scores.py",
+      "bytes": 3258,
+      "sha256": "1fda62138e437f37ce240a13c43f4b09cc4c50af4b35df69d845a67f70b57d79"
+    },
+    {
+      "path": "ATISS/scripts/evaluate_kl_divergence_object_category.py",
+      "bytes": 6142,
+      "sha256": "5a4779866c2d7981e9c92edd7eada0b46dad9eecf55578a274b1f1ca46cb63b5"
+    },
+    {
+      "path": "ATISS/scripts/generate_scenes.py",
+      "bytes": 8905,
+      "sha256": "88a3aac150ca0f6f3b89675ed039ffe6c3fedc074a9c3b82a9255530231bf16d"
+    },
+    {
+      "path": "ATISS/scripts/scene_completion.py",
+      "bytes": 8335,
+      "sha256": "20d68a9a10ce1d5acb2171e7d4bc54e0286e696b86a57a31923c647ad8c0291a"
+    },
+    {
+      "path": "ATISS/scripts/synthetic_vs_real_classifier.py",
+      "bytes": 7899,
+      "sha256": "8c61d8a634b4417acd6e585a87d1682a83502db43f48b0bd0e13c5a3f44cde0e"
+    },
+    {
+      "path": "ATISS/setup.py",
+      "bytes": 2459,
+      "sha256": "9ac281455de5be86a89cad8a7835691f6d8ae9fe285571085a8377b32339872b"
+    },
+    {
+      "path": "ATISS/tree.json",
+      "bytes": 18257,
+      "sha256": "f4c91ac3880f315778b9fb8bcbc169a307d33a473f955b419c313b9a77f169e5"
+    },
+    {
+      "path": "DiffuScene/README.md",
+      "bytes": 9770,
+      "sha256": "d9cbc5e2eff7d1233701e84b141ac7e19bc0800da7c26507aa9772c54a532156"
+    },
+    {
+      "path": "DiffuScene/config/rearrange/diffusion_bedrooms_instancond_lat32_v_rearrange.yaml",
+      "bytes": 2527,
+      "sha256": "a95922f8f33cbf9228af3706e4e10734c57dbd8026132426e90ca68c0bcb0d9f"
+    },
+    {
+      "path": "DiffuScene/environment.yaml",
+      "bytes": 670,
+      "sha256": "0dda1ac13f72a7e6ab68d7573d7ac580fc07092060b953939ad3913c4c0eedf1"
+    },
+    {
+      "path": "DiffuScene/metadata.json",
+      "bytes": 267,
+      "sha256": "4901779431c807142dc87541224129ecf6a9401c98cb47e6d13d9d76bb78f823"
+    },
+    {
+      "path": "DiffuScene/run/generate.sh",
+      "bytes": 1773,
+      "sha256": "47abc75395ec723a59a7eef110678bd5d83e0470babd9640ed67c62f8447849c"
+    },
+    {
+      "path": "DiffuScene/run/generate_rearrange.sh",
+      "bytes": 1342,
+      "sha256": "44ab5ca7eb98e631df85d0f0249e963bb465da4ef2abf63b27dce48b6faef731"
+    },
+    {
+      "path": "DiffuScene/run/generate_text.sh",
+      "bytes": 1770,
+      "sha256": "cb23ebd64040cdb70875fa7311a2670645272ca993a2fe33ed9e63be66479e2f"
+    },
+    {
+      "path": "DiffuScene/scene_synthesis/networks/diffusion_scene_layout_ddpm.py",
+      "bytes": 24506,
+      "sha256": "cfecd6d7ab019146d6a86d83809014c7ad0048f98ddb16de25bf0ca184ab495d"
+    },
+    {
+      "path": "DiffuScene/scene_synthesis/utils.py",
+      "bytes": 8700,
+      "sha256": "fa29e25d27e95be62a460adeb7b26a4837ee6005eb953099437ba198b1abd8d7"
+    },
+    {
+      "path": "DiffuScene/scripts/completion_rearrange.py",
+      "bytes": 21478,
+      "sha256": "47972a6b4d424dee9faa7181faedb82d2e5b155b058969d236ea28c35adaca1b"
+    },
+    {
+      "path": "DiffuScene/scripts/compute_fid_scores.py",
+      "bytes": 4940,
+      "sha256": "bd9686b96950adff716a7f8d1059e1717e8e0d37c7dcd79fe145860c1325bc4b"
+    },
+    {
+      "path": "DiffuScene/scripts/generate_diffusion.py",
+      "bytes": 18775,
+      "sha256": "5275479f727001646dd7326edc10fb08bf7ffe9b8b230e42e0f6e503b42af37f"
+    },
+    {
+      "path": "DiffuScene/scripts/improved_precision_recall.py",
+      "bytes": 18713,
+      "sha256": "ed9ca5a1e5f425295962d44bdbe83ddc356926a99160d393f65f9dddd8652a8c"
+    },
+    {
+      "path": "DiffuScene/scripts/utils.py",
+      "bytes": 26515,
+      "sha256": "e4a23dff06f4f472cc0b0d70afa5ebc8cbcee0d2551a2867a2aba5a6c3af6514"
+    },
+    {
+      "path": "DiffuScene/setup.py",
+      "bytes": 2314,
+      "sha256": "1c0d7b8e0e01d717080497bf5ca7a2397ded4349d4df9af16d0304227f614c96"
+    },
+    {
+      "path": "DiffuScene/tree.json",
+      "bytes": 29283,
+      "sha256": "2fa12defa82484ddbc4f0a73277f354f2df2b0ff8fdc9d3bd4bd4dbe3022a4d4"
+    },
+    {
+      "path": "InstructScene/README.md",
+      "bytes": 11245,
+      "sha256": "72a28f596cb3adc21c50db9e5d2679e9dcf5674e59d5fffcf14de5051e8e22ff"
+    },
+    {
+      "path": "InstructScene/blender/README.md",
+      "bytes": 872,
+      "sha256": "ae5549c2e6da1927295a9727dbaf488120b19d1a4d1054e2f51be73c739fd69d"
+    },
+    {
+      "path": "InstructScene/configs/bedroom_sg_diffusion_vq_objfeat.yaml",
+      "bytes": 1288,
+      "sha256": "ae4699a8be0ba2d1cd332a37d3233abee96cde172fbddd7a89857e0b0d31d021"
+    },
+    {
+      "path": "InstructScene/dataset/README.md",
+      "bytes": 3645,
+      "sha256": "5a7ebb097c23cb555afb5493d1ae1ed0ac3ec90e104f9e1e0ffb61a009f21244"
+    },
+    {
+      "path": "InstructScene/metadata.json",
+      "bytes": 318,
+      "sha256": "dfa75bdb81ecef1263140b29f3454ff1d51db174817d7a767d474b4885195ed2"
+    },
+    {
+      "path": "InstructScene/scripts/inference_sg_vq_objfeat.sh",
+      "bytes": 882,
+      "sha256": "886671731c61c13f0ad1139d7bb9cb180d89d8d05fb5764f7680503fe2cb9af4"
+    },
+    {
+      "path": "InstructScene/settings/requirements.txt",
+      "bytes": 87,
+      "sha256": "8b2b11eaa75017fae593c35c7028f4998ab878f20e3bc8940a6db1d8a6d5d189"
+    },
+    {
+      "path": "InstructScene/settings/setup.sh",
+      "bytes": 278,
+      "sha256": "c24bb10f8438427154e1a548929c51f4703c32c980bfeede75deb78034083a89"
+    },
+    {
+      "path": "InstructScene/src/compute_fid_scores.py",
+      "bytes": 8034,
+      "sha256": "649b4854a5a953c4de51aa9bbea08e9de887079721a7b1b4c661ff0dd549c93a"
+    },
+    {
+      "path": "InstructScene/src/data/utils_text.py",
+      "bytes": 12795,
+      "sha256": "3cafdca0515cf0dba8fec4eed9146cfa4c2c321f1199ba6cd27765527a6ab6d2"
+    },
+    {
+      "path": "InstructScene/src/generate_sg.py",
+      "bytes": 28488,
+      "sha256": "ea6f532d12a7d511902e6e72d84e0c9e61ddee8b632061b518327bc8956753cd"
+    },
+    {
+      "path": "InstructScene/src/generate_sg2sc.py",
+      "bytes": 16731,
+      "sha256": "57d420b6cf79db29eb494c2782c1f8992f6b12ef8596611dd79f4453b203d051"
+    },
+    {
+      "path": "InstructScene/src/rearrange_sg.py",
+      "bytes": 30379,
+      "sha256": "77054d5527dc52866d15634742e511c059704b92e1a7839c0cb5c867ccd81340"
+    },
+    {
+      "path": "InstructScene/src/synthetic_vs_real_classifier.py",
+      "bytes": 10668,
+      "sha256": "dfeeb1977afa55fd21c2b53385ed77a5571251ee6249e3605416b35b38a62d4c"
+    },
+    {
+      "path": "InstructScene/src/utils/__init__.py",
+      "bytes": 67,
+      "sha256": "b70a67df70e1de51e40689ab159851a47a6d34b976853db6c3aceacdbb2c280a"
+    },
+    {
+      "path": "InstructScene/src/utils/util.py",
+      "bytes": 4445,
+      "sha256": "0b3ee82c2434264e9480cd978d82b4f072aee291ae5a58b65723d2945d4eac5c"
+    },
+    {
+      "path": "InstructScene/src/utils/visualize.py",
+      "bytes": 18196,
+      "sha256": "301846fd94ec0344e0048d9cfc7cbf8c55ee833074efb53d144f7703b7a19039"
+    },
+    {
+      "path": "InstructScene/tree.json",
+      "bytes": 21599,
+      "sha256": "782bb6e4f64fc07f37f61ee0cb225422573c53b2e3bba5023c3206ec0671287a"
+    },
+    {
+      "path": "MiDiffusion/README.md",
+      "bytes": 7479,
+      "sha256": "d1db089bdd3b471317a9302894152da939ac85b29cf54b0d4f081f22398f38f4"
+    },
+    {
+      "path": "MiDiffusion/metadata.json",
+      "bytes": 192,
+      "sha256": "f212fefe27b4980bba392c2cabc21c08a93e5e6c4182458773808a698420b86e"
+    },
+    {
+      "path": "MiDiffusion/midiffusion/evaluation/utils.py",
+      "bytes": 5505,
+      "sha256": "32d2250d1c51af8bc2c56d77a817fa0586cfd3847334eb520b98c6aa04053263"
+    },
+    {
+      "path": "MiDiffusion/midiffusion/networks/__init__.py",
+      "bytes": 7243,
+      "sha256": "cfa5517edebd70f01a29e9887d5ac4f354c0e7be40b1fb569716277f71bbf070"
+    },
+    {
+      "path": "MiDiffusion/scripts/generate_results.py",
+      "bytes": 5724,
+      "sha256": "f615a7d7998097a2a3285d82e353a2931927c7ee466059d07b6563b8d9d09a91"
+    },
+    {
+      "path": "MiDiffusion/scripts/utils.py",
+      "bytes": 3896,
+      "sha256": "6d40b63a484a36931e9961d42fbcddbdfd37e867621c13364257297df78c175f"
+    },
+    {
+      "path": "MiDiffusion/setup.py",
+      "bytes": 1103,
+      "sha256": "14c330dc734a414799e0602cc7b04b3b484137f241b5ac8ed0c0b0e1aef3a87b"
+    },
+    {
+      "path": "ThreedFront/README.md",
+      "bytes": 8749,
+      "sha256": "d1fdfed937d4f9f3a4ce4ab35edbecedaccf5a0003510aa975a5cc007b8e3574"
+    },
+    {
+      "path": "ThreedFront/metadata.json",
+      "bytes": 192,
+      "sha256": "7c75cbf7f5c50a7ec09939c6e411f18722a875e7cbd511256ce137838135de94"
+    },
+    {
+      "path": "ThreedFront/requirements.txt",
+      "bytes": 279,
+      "sha256": "18a653ba81e4c32e0ce38c3ad27ec32aea74c8fa41643060ebd0c4ea29ff0d79"
+    },
+    {
+      "path": "ThreedFront/scripts/bbox_analysis.py",
+      "bytes": 4536,
+      "sha256": "4333aaf16ed408d219d6082598b0cfaa4bdcca6088b683d405e1e3aeaf0edd84"
+    },
+    {
+      "path": "ThreedFront/scripts/compute_fid_scores.py",
+      "bytes": 4136,
+      "sha256": "cbdfb4fd3763d1308b74874a5cf15b793c808deb5f24b9411c1006457bd3757b"
+    },
+    {
+      "path": "ThreedFront/scripts/evaluate_kl_divergence_object_category.py",
+      "bytes": 2232,
+      "sha256": "7485b8398c07fd3a9bc78d41cfc4511af424d18d68f77d3573446953f89f5c2d"
+    },
+    {
+      "path": "ThreedFront/scripts/render_results.py",
+      "bytes": 6322,
+      "sha256": "9d4c5cabb910bf96ff31133f9a20a54eb215a1b971de4e22c12a4145678dec32"
+    },
+    {
+      "path": "ThreedFront/scripts/synthetic_vs_real_classifier.py",
+      "bytes": 6540,
+      "sha256": "c8bda2eccf002fcc47af647618f0602492b35bdf8df0af4c11374bb9defdaf6d"
+    },
+    {
+      "path": "ThreedFront/scripts/utils.py",
+      "bytes": 2136,
+      "sha256": "8293bfd9bb786f44e5a4a9ab2d7bdcf9cc2689165135b26d6c925df8ff1ceebc"
+    },
+    {
+      "path": "ThreedFront/setup.py",
+      "bytes": 754,
+      "sha256": "6e0c6cc7ea78a8dce1dae19c2c5de912c581ff6940bc72a49e252d3e9771e582"
+    },
+    {
+      "path": "ThreedFront/threed_front/evaluation/__init__.py",
+      "bytes": 3808,
+      "sha256": "2bfd569bae36ffe72feb3541b9e25e38439be4418445868a20f46cd616740412"
+    },
+    {
+      "path": "ThreedFront/threed_front/evaluation/utils.py",
+      "bytes": 9680,
+      "sha256": "dfeb3542ab814fd8b9b59466def26cadfefc70f93aa961cd9993479cdca1ff25"
+    }
+  ]
+}

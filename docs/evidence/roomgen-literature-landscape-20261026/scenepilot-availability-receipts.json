@@ -1,0 +1,120 @@
+[
+  {
+    "name": "project",
+    "url": "https://zjw-louie.github.io/ScenePilot/",
+    "status": 200,
+    "bytes": 35184,
+    "sha256": "bd5705db3dd32297a2163227ce5174747f1e92c57d3b105e4d36777f3cee3dae",
+    "local_copy": "/tmp/fastfill-scenepilot-source-check-20261026/project.html",
+    "outgoing_links": [
+      "#",
+      "https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
+      "https://github.com/Zjw-Louie",
+      "https://github.com/Zjw-Louie/ScenePilot",
+      "https://github.com/eliahuhorwitz/Academic-project-page-template",
+      "https://nerfies.github.io",
+      "static/css/bulma.min.css",
+      "static/css/fontawesome.all.min.css",
+      "static/css/index.css",
+      "static/images/favicon.ico"
+    ]
+  },
+  {
+    "name": "repo_api",
+    "url": "https://api.github.com/repos/Zjw-Louie/ScenePilot",
+    "status": 404,
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "repo_web",
+    "url": "https://github.com/Zjw-Louie/ScenePilot",
+    "status": 404,
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "author_repos",
+    "url": "https://api.github.com/users/Zjw-Louie/repos?per_page=100",
+    "status": 200,
+    "bytes": 57108,
+    "sha256": "29dee9ad39842150792cfc27884793fffdb60d52d82b92dbe91da568e08c55d5",
+    "local_copy": "/tmp/fastfill-scenepilot-source-check-20261026/author_repos.json",
+    "repos": [
+      {
+        "name": "CosyVoice",
+        "url": "https://github.com/Zjw-Louie/CosyVoice",
+        "default_branch": "main"
+      },
+      {
+        "name": "gitskills",
+        "url": "https://github.com/Zjw-Louie/gitskills",
+        "default_branch": "main"
+      },
+      {
+        "name": "learngit",
+        "url": "https://github.com/Zjw-Louie/learngit",
+        "default_branch": "master"
+      },
+      {
+        "name": "nofx",
+        "url": "https://github.com/Zjw-Louie/nofx",
+        "default_branch": "dev"
+      },
+      {
+        "name": "PatternRecognition",
+        "url": "https://github.com/Zjw-Louie/PatternRecognition",
+        "default_branch": "main"
+      },
+      {
+        "name": "respace",
+        "url": "https://github.com/Zjw-Louie/respace",
+        "default_branch": "master"
+      },
+      {
+        "name": "valuescan",
+        "url": "https://github.com/Zjw-Louie/valuescan",
+        "default_branch": "master"
+      },
+      {
+        "name": "watchlist",
+        "url": "https://github.com/Zjw-Louie/watchlist",
+        "default_branch": "master"
+      },
+      {
+        "name": "xiaozhi-esp32",
+        "url": "https://github.com/Zjw-Louie/xiaozhi-esp32",
+        "default_branch": "main"
+      },
+      {
+        "name": "xiaozhi-esp32-server",
+        "url": "https://github.com/Zjw-Louie/xiaozhi-esp32-server",
+        "default_branch": "main"
+      },
+      {
+        "name": "Zjw-Louie",
+        "url": "https://github.com/Zjw-Louie/Zjw-Louie",
+        "default_branch": "main"
+      }
+    ]
+  },
+  {
+    "name": "hf_models",
+    "url": "https://huggingface.co/api/models?search=ScenePilot&limit=100",
+    "status": 200,
+    "bytes": 231,
+    "sha256": "be3e672f3a10f91f9a770f55a3e53ae4541365a4f27d993df9ccfb9e3eaa086d",
+    "local_copy": "/tmp/fastfill-scenepilot-source-check-20261026/hf_models.json",
+    "matches": [
+      "Alexislhb/ScenePilot-release"
+    ]
+  },
+  {
+    "name": "hf_datasets",
+    "url": "https://huggingface.co/api/datasets?search=SceneReverse&limit=100",
+    "status": 200,
+    "bytes": 2,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "local_copy": "/tmp/fastfill-scenepilot-source-check-20261026/hf_datasets.json",
+    "matches": []
+  }
+]

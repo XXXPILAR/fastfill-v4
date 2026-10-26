@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-26",
+  "scope": "Only research docs/HTML/evidence; no business source or dependencies changed",
+  "generation_catalog_entries": 56,
+  "downstream_supplement_rows": 8,
+  "json_files_parsed": 29,
+  "secret_pattern_findings": 0,
+  "html_security_static": "pass",
+  "local_links_missing": [],
+  "js_syntax": "pass",
+  "isolated_cpu_reproductions": "Previously executed and recorded; not full benchmark or model/policy test",
+  "full_downstream_experiments_executed": false,
+  "pip_audit": "Attempted: python -m pip_audit --version; unavailable (module not installed). No dependency changes.",
+  "browser_visual_check": "Not completed; file:// auto-review rejected preview; no bypass attempted.",
+  "independent_review": "Agency Code Reviewer found no required security corrections; Model QA reviewed downstream priorities and primary paper/task evidence."
+}

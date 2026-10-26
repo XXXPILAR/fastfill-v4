@@ -1,0 +1,273 @@
+{
+  "title": "FastFill新增最近邻：轻量房间布局方法的创新边界",
+  "date": "2026-10-26",
+  "scope": "只读2024–2026代表最近邻；主任务为真实空壳＋指定文字家具清单、未知尺寸→完整布局→共同RoomGenBench。沿用上一轮14篇审计，不重复评估框架调研。不声称穷尽新颖性检索。",
+  "retrieval": "检索arXiv正文、作者项目页、官方GitHub；3个可定位仓库用git ls-remote HEAD固定commit，只下载少量文本。未改项目、未安装、未调用付费模型或跑生成。",
+  "papers": [
+    {
+      "name": "LayoutVLM",
+      "title": "LayoutVLM: Differentiable Optimization of 3D Layout via Vision-Language Models",
+      "date_and_status": "arXiv首发2024-12；已读v3 2025-03-11；CVPR2025。",
+      "paper_url": "https://arxiv.org/html/2412.02193",
+      "project_url": "https://cs.stanford.edu/~sunfanyun/layoutvlm/",
+      "repo_url": "https://github.com/sunfanyunn/LayoutVLM",
+      "commit": "85d06b4cd2478551188a0b4a47cd658c85c41315",
+      "official_proof": "论文链接作者Stanford页；该作者GitHub README回链作者项目和同篇CVPR2025引用；上轮SceneEval官方README亦指定此仓库。本次Stanford live fetch超时，不能据此说项目消失。",
+      "read_level": "论文§4、§5.1、A.2/A.3及官方README/main和布局调用关键段。",
+      "paper_facts": {
+        "source": "https://arxiv.org/html/2412.02193",
+        "loci": [
+          "§4.1–4.3",
+          "§5.1",
+          "Appendix A.2 Optimization Details",
+          "Appendix A.3"
+        ],
+        "facts": "Given actual 3D assets and floor boundaries, a VLM predicts poses plus differentiable relations: distance, on-top, alignment, pointing and wall attachment. Visual marks supply scale and front directions. Self-consistency retains relations compatible with proposed poses; it is not ordinary majority voting. Adam with boundary projection runs 400 steps. For 40 assets the paper reports 1–5 GPU minutes and 5–10 GPT-4o calls, roughly one per group. Evaluation uses 33 cases across 11 room types, up to 80 assets, common preprocessed assets, CF/IB and GPT-4o positional/rotational coherence; PSA weights semantic rating by physical validity. Missing placements receive random placements. This tests asset-given arrangement, not unknown-size inventory generation."
+      },
+      "code_facts": [
+        {
+          "claim": "官方main当前固定mode='one_shot'；论文分组预算和此CLI默认模式要区分。one_shot仍有可微优化，不能等于纯GPT一次直接坐标。",
+          "url": "https://github.com/sunfanyunn/LayoutVLM/blob/85d06b4cd2478551188a0b4a47cd658c85c41315/main.py#L109"
+        },
+        {
+          "claim": "实际布局代码存在one_shot/group模式、程序解析/执行重试；调用预算必须含失败重试，未实测API次数。",
+          "url": "https://github.com/sunfanyunn/LayoutVLM/blob/85d06b4cd2478551188a0b4a47cd658c85c41315/src/layoutvlm/layoutvlm.py#L433"
+        },
+        {
+          "claim": "README要求实际asset mesh/boundingBox；未给尺寸的文字家具清单需另做尺寸/asset入口。",
+          "url": "https://github.com/sunfanyunn/LayoutVLM/blob/85d06b4cd2478551188a0b4a47cd658c85c41315/README.md#L31"
+        }
+      ],
+      "already_covered": [
+        "VLM产生布局＋关系约束",
+        "视觉坐标/物体front标注",
+        "可微碰撞和边界优化",
+        "分组布局与自一致关系过滤"
+      ],
+      "limitations_for_our_task": "已知asset几何比主榜多信息；代理几何与真实可用性仍须分别检查。主表的VLM观感及PSA不能替代精确清单/尺度约束。关系过滤依赖初始化，可排掉真实但初始pose未满足的要求（机制推论，非独立实验）。",
+      "implication": "不能把“加关系图/加梯度solver/画front箭头”单独当新意；它是必要强基线。直接GPT输出若已更好，应先确认我们解码或repair是否降低语义质量，而不是默认堆更多反馈轮次。",
+      "reproduction_limit": "未运行仓库、权重、评估或API，未验证论文计时；官方README不是全部实验可复现证明。"
+    },
+    {
+      "name": "PhyScene",
+      "title": "PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI",
+      "date_and_status": "CVPR2024 Highlight；arXiv2404.09465。",
+      "paper_url": "https://arxiv.org/html/2404.09465",
+      "project_url": "https://physcene.github.io/",
+      "repo_url": "https://github.com/PhyScene/PhyScene",
+      "commit": "50a32af9b114448d89e002b2d06e86bccdcec202",
+      "official_proof": "作者项目Code链接与官方仓库互链。",
+      "read_level": "论文§3.2–3.3、§4 Metric、A.2、E–G；官方README和test_livingroom launcher。",
+      "paper_facts": {
+        "source": "https://arxiv.org/html/2404.09465",
+        "loci": [
+          "§3.3",
+          "§4 Metric",
+          "Appendix A.2",
+          "Appendix E/F/G"
+        ],
+        "facts": "Floor-conditioned diffusion predicts layout and shape features; guidance handles collisions, boundaries and agent reachability. A* paths between walkable components produce agent boxes for gradient penalties. Articulated assets use expanded motion envelopes. Evaluation reports CAD-mesh collision object/scene rates, outside-object rate, random-start object reachability, largest-component/free-space ratio and FID/KID/SCA/CKL. Guidance uses bbox proxies while finer occupancy evaluation is considered separately. The authors report occupancy-gated guidance as 55 times slower and warn that optimizing size for feasibility shrinks objects; guidance therefore updates position/orientation. No per-scene API budget applies to its learned denoiser; exact total inference latency was not verified here."
+      },
+      "code_facts": [
+        {
+          "claim": "官方launcher显式生成1000场景，开启floor condition，overlap_type='mesh'；统计实现与具体mesh remeshing仍未逐行重审。",
+          "url": "https://github.com/PhyScene/PhyScene/blob/50a32af9b114448d89e002b2d06e86bccdcec202/run/test_livingroom.sh#L3"
+        },
+        {
+          "claim": "README给geometry生成、render、FID/KID/SCA入口，存在实际公开仓库；不能仅据此声称所有数值已复现。",
+          "url": "https://github.com/PhyScene/PhyScene/blob/50a32af9b114448d89e002b2d06e86bccdcec202/README.md#L35"
+        }
+      ],
+      "already_covered": [
+        "physics/legality guidance",
+        "agent宽度适配与连通通道引导",
+        "家具开启包络约束",
+        "bbox优化与更细mesh/occupancy验证分层"
+      ],
+      "limitations_for_our_task": "标准输入是floor-conditioned分布采样，不原生严格遵从逐对象开放文字清单；含多步diffusion及资产检索，不是一次布局前向。碰撞、边界、通行目标会相互冲突，不能只优化一项再称全部提高。",
+      "implication": "可借鉴代理检查与尺度防作弊。若我们预测未知尺寸，要同时报尺度合理性，防止repair/训练通过缩家具换低碰撞。不能把“补可通行loss/门柜可打开”笼统当首次创新。",
+      "reproduction_limit": "只核公开文本与launcher；未取模型、未跑CAD碰撞、A*或仿真。"
+    },
+    {
+      "name": "RoboLayout",
+      "title": "RoboLayout: Differentiable 3D Scene Generation for Embodied Agents",
+      "date_and_status": "2026预印本；arXiv页面记v1 2026-02-18、v2 2026-03-09，编号2603.05522；未核实正式会议接收。",
+      "paper_url": "https://arxiv.org/html/2603.05522v2",
+      "repo_url": "https://github.com/alishams21/robolayout",
+      "commit": "2db9a7fb58eed3b5dfc26e521dfedb630c115ff7",
+      "official_proof": "论文首页脚注直接给该作者仓库。",
+      "read_level": "论文IV-B3/IV-C4、V/VI；官方README/main及LayoutVLM调用关键段。",
+      "evidence_weight": "机制的先前公开证据；效果证据较弱，不能与有量化大规模benchmark的方法视为同等级。",
+      "paper_facts": {
+        "source": "https://arxiv.org/html/2603.05522v2",
+        "loci": [
+          "IV-B3 Reachability Constraint",
+          "IV-C4 Refinement",
+          "V Experiments",
+          "VI Future Work"
+        ],
+        "facts": "Extends LayoutVLM with planar robot-radius clearance and selective cleanup. Reachability is a pairwise center-distance penalty using half the smaller footprint dimension as object radius, not motion planning. Cleanup freezes acceptable objects and optimizes overlapping movable objects; an example budget is 40 cleanup steps. Experiments describe GPT-4o, 5–10 objects, qualitative layouts and loss curves; no broad quantitative benchmark or measured API/latency advantage was found in the inspected section. Full motion planning and vertical reach are explicitly future work."
+      },
+      "code_facts": [
+        {
+          "claim": "one_shot是单组布局；名为finetuned的模式是LLM先分组再逐组摆放，不能据模式名说做了模型权重微调。",
+          "url": "https://github.com/alishams21/robolayout/blob/2db9a7fb58eed3b5dfc26e521dfedb630c115ff7/main.py#L23"
+        },
+        {
+          "claim": "robot_radius默认.3m；实际输入读取已处理asset metadata和bbox尺寸。",
+          "url": "https://github.com/alishams21/robolayout/blob/2db9a7fb58eed3b5dfc26e521dfedb630c115ff7/main.py#L17"
+        },
+        {
+          "claim": "README自述每组只要一个constraint program，解析/执行失败重试；不是多个候选majority-vote。",
+          "url": "https://github.com/alishams21/robolayout/blob/2db9a7fb58eed3b5dfc26e521dfedb630c115ff7/README.md#L28"
+        }
+      ],
+      "already_covered": [
+        "只修违规物体并冻结其余",
+        "固定预算局部几何cleanup",
+        "按agent radius加clearance约束"
+      ],
+      "limitations_for_our_task": "实际asset/尺寸已给；圆盘两两间距不是门口可达或操作可行证明。公开实验支撑有限，不宜借其描述推出性能确定优于LayoutVLM。",
+      "implication": "“轻量局部repair”本身已有公开近邻；若采用，只能把更好的错误定位、未知尺寸一致性及实测质量/延迟收益作为待验证贡献。",
+      "reproduction_limit": "未运行代码；未核精确全局优化步数/请求次数和wall-clock。"
+    },
+    {
+      "name": "LayoutDreamer",
+      "title": "LAYOUTDREAMER: Physics-guided Layout for Text-to-3D Compositional Scene Generation",
+      "date_and_status": "首发2025-02-04，已读arXiv v2 2025-03-22；arXiv登记Pattern Recognition 178 (2026), 113427。",
+      "paper_url": "https://arxiv.org/html/2502.01949v2",
+      "journal_url": "https://doi.org/10.1016/j.patcog.2026.113427",
+      "repo_url": null,
+      "official_code_status": "本次针对性搜索及原论文中未找到可确认的官方公开GitHub；不能据此断言永不公开。ThreeStudio/GaussianDreamer是依赖，不是LayoutDreamer官方实现。",
+      "read_level": "论文§3.1–3.4、§4.1–4.2；arXiv元数据确认年份和期刊版。",
+      "paper_facts": {
+        "source": "https://arxiv.org/html/2502.01949v2",
+        "loci": [
+          "§3.4",
+          "§4.1",
+          "§4.2",
+          "§5"
+        ],
+        "facts": "Text becomes a directed graph guiding disentangled 3D Gaussians. Gravity, nonpenetration, anchors and semantic layout energies optimize poses after object generation. It uses Llama3-8B and GaussianDreamer; one object requires 2000 optimization iterations. A three-object, fifteen-constraint layout example converges in 300 steps. Section 4.1 reports roughly twenty minutes per asset and total time 21M+2 choose(M,2) minutes, whereas the conclusion says layout within fifteen minutes; these are different/incompletely aligned scopes. Evaluation follows T3Bench quality/text alignment, not a floor-shell exact-inventory room benchmark."
+      },
+      "already_covered": [
+        "文本→有向关系图",
+        "物理能量＋语义能量分阶段权衡",
+        "可编辑、解耦多对象场景"
+      ],
+      "limitations_for_our_task": "这是组合text-to-3D生成，不是只做空壳家具布局；资产优化成本很重。T3Bench高分不证明固定inventory、门窗或真实房间边界满足。不可把结尾15分钟当端到端耗时，也不可把能量代理叫真实刚体稳定性。",
+      "implication": "可引用以限制“关系图＋物理loss”的新颖性，但不建议移植3DGS生成pipeline。我们的轻量下游后续由用户提供，应保持模块边界。",
+      "reproduction_limit": "未找到官方源码，未运行；2026期刊全文相对arXiv变更未逐项核。"
+    }
+  ],
+  "prior_work_claim_boundaries": [
+    {
+      "candidate_claim": "加VLM critic或多agent形成研究创新",
+      "verdict": "不能单独这样宣称。",
+      "evidence": "上一轮已读SceneSmith明确有designer/critic/orchestrator；这些四篇里LayoutVLM主要是VLM规划＋solver，不要误称它本身有独立critic loop。",
+      "sources": [
+        "https://arxiv.org/html/2602.09153",
+        "https://arxiv.org/html/2412.02193"
+      ]
+    },
+    {
+      "candidate_claim": "加关系图/可微约束/物理repair形成研究创新",
+      "verdict": "已有大量直接前例。",
+      "evidence": "LayoutVLM已用pose＋关系DSL＋projected gradient；PhyScene已用碰撞/边界/可达guidance；LayoutDreamer已用关系图到物理/语义energy。",
+      "sources": [
+        "https://arxiv.org/html/2412.02193",
+        "https://arxiv.org/html/2404.09465",
+        "https://arxiv.org/html/2502.01949v2"
+      ]
+    },
+    {
+      "candidate_claim": "只修冲突对象，其余冻结",
+      "verdict": "RoboLayout已经明确做过；不能只换名字当新意。",
+      "sources": [
+        "https://arxiv.org/html/2603.05522v2"
+      ]
+    },
+    {
+      "candidate_claim": "全局验证关系图再优化",
+      "verdict": "另有2026高度近邻，已交root进一步核查，不在此处声称读完。",
+      "evidence": "Global Graph-Validated Optimization for VLM-based 3D Indoor Scene Generation，arXiv2608.03064；本轮只读官方摘要，根agent负责正文。",
+      "sources": [
+        "https://arxiv.org/abs/2608.03064"
+      ]
+    }
+  ],
+  "hypotheses_for_a_lightweight_method": [
+    {
+      "idea": "先保留强一次生成作为可检验上界，再定位我们丢失质量的阶段。",
+      "status": "实验建议，不是新颖性主张。",
+      "minimum_test": "同一request/shell、同样有无尺寸/asset信息、相同decode后处理和下游；保存一次生成原布局、我们raw、我们remask后、我们repair后。分别量inventory/size/关系/几何/人评及latency，找出下降从哪一步开始。",
+      "failure_criterion": "若我们在相同信息和预算下各项均被一次生成支配，当前方法没有质量-成本优势；先修模型/目标/推理，不包装pipeline创新。"
+    },
+    {
+      "idea": "学习从文字清单联合预测尺度和布局，在严格固定延迟/步数内逼近强单次GPT。",
+      "status": "研究假设；蒸馏/直接布局并非新概念，须对NaLA/SceneNAT及其他近期直接方法比较。",
+      "minimum_test": "只用既有离线teacher outputs或人工可行替代；对单参考pose监督与可行替代监督做小规模对比，报告同质量所需成本和有效率，而不是只报更低GT坐标误差。",
+      "failure_criterion": "尺度被缩小、语义关系降低，或必须多次昂贵VLM回路才能追平，则不支持轻量主张。"
+    },
+    {
+      "idea": "针对实际下游尺度/前向约定的不确定性做小预算适配。",
+      "status": "工程和研究分开；普通asset-layout alignment/repair已有前人，不是首次。",
+      "minimum_test": "待用户提供轻量workflow后，固定inventory不变，对实际mesh尺寸/语义front变化分层测交付前后失真；只改少数变量且预先限定预算，与共同deterministic repair比较。",
+      "failure_criterion": "收益来自更多asset检索/更多API调用或更宽松评估而非布局机制，则不能当模型创新。"
+    }
+  ],
+  "conclusions": "强一次GPT领先时，最有价值的工作是找出当前学习目标、remask或几何repair导致的具体损失，并建立可重复的质量/成本对照。文献已经覆盖关系图、critic、多agent、physical guidance和局部cleanup；轻量是需要实测的约束，不是增加agent数量。",
+  "search_queries": [
+    "LayoutVLM 3D scene layout official github paper",
+    "PhyScene 3D scene generation official github",
+    "RoboLayout room layout official github paper",
+    "LayoutDreamer 3D scene generation official github",
+    "\"RoboLayout\" scene generation paper github",
+    "\"LayoutDreamer\" arxiv github",
+    "\"Global Graph-Validated Optimization\" 3D Indoor Scene Generation github"
+  ],
+  "local_source_dir": "/tmp/fastfill-roomgen-neighbors-src-20261026",
+  "no_execution": true,
+  "source_receipts": [
+    {
+      "file": "LayoutVLM/README.md",
+      "bytes": 2072,
+      "sha256": "7577a9ad4fe93d4ce5648024cf5af7cf417fb7047aa61eba9a9e7fbb08eaadde"
+    },
+    {
+      "file": "LayoutVLM/main.py",
+      "bytes": 5237,
+      "sha256": "8d53d1374628ccd6bab57d2707c4a57d3685ecfacb4403e269e263bed61ff831"
+    },
+    {
+      "file": "LayoutVLM/src/layoutvlm/layoutvlm.py",
+      "bytes": 30856,
+      "sha256": "108f5e2e8c5d48ab7dc3dd2d4daf01cded35e44a55f35b7bec7bb7aab699f9d7"
+    },
+    {
+      "file": "PhyScene/README.md",
+      "bytes": 4052,
+      "sha256": "75ee642cd12eb416b0a72b2afbf86d1ea70c6cf65ce9b64741e70cd9286e9fb8"
+    },
+    {
+      "file": "PhyScene/run/test_livingroom.sh",
+      "bytes": 848,
+      "sha256": "7a79764693f82aea2ea6025c79ec898ba47dea5598e3a0008db607ec3552eb87"
+    },
+    {
+      "file": "RoboLayout/README.md",
+      "bytes": 8856,
+      "sha256": "41bed326ae24ab84c222c687558899c147fab8b89804f017fe10174e26c9b8fa"
+    },
+    {
+      "file": "RoboLayout/main.py",
+      "bytes": 5832,
+      "sha256": "96294f1c7e11732e4537f1cf611708897c88a43e351a923042d3827752281043"
+    },
+    {
+      "file": "RoboLayout/src/layoutvlm/layoutvlm.py",
+      "bytes": 31625,
+      "sha256": "7955e682471a11b178d09a9bc597f80e6b10d9bdfb18811273ad566d5079cf11"
+    }
+  ]
+}

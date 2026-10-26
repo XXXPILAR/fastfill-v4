@@ -1,0 +1,128 @@
+Room generation：文献全景、ScenePilot启发与FastFill可验证方向
+2026-10-26｜范围调研＋源码边界＋研究假设
+
+先看结论
+
+本项目服务下游执行任务。主目标是：固定房间空壳和完整家具清单，在有限推理预算内产生能被下游消费、装配并实际使用的场景；美观与通用VLM观感评分只作辅助。
+关系图、多agent、VLM critic、RAG、分组生成、物理solver、局部repair、RL修复各有直接前例。它们可作为组件，但仅增加这些组件不足以证明创新。
+研究结论必须同时说明输入信息、资产访问、调用/候选预算、评估口径和失败分母。当前没有一个已被本项目实验验证成立的新创新点；下文给的是可以被否证的候选。
+
+任务：空壳＋必须摆放的文字家具列表（未给尺寸/mesh时由方法预测）→每个request的尺寸/pose/支撑候选→RoomGenBench生成/装配真实mesh。
+用户已明确：RoomGenBench资产生成与装配、机器人下游任务两者都要。具体导航/操作任务、仿真器、机器人和策略仍需在实验前冻结；不能用可加载或静态几何通过代替任务成功。
+用户提供的GPT一次生成领先排名是当前改方法的警示。本次按用户要求不继续追索或重建截图实验文件，也不把源码中已知问题认定为该批排名原因。
+
+一、阅读入口与覆盖边界
+
+已整理56个去重条目：50项2024–2026方法/相邻工作，2项早期基础ATISS/LayoutGPT，3项评估框架/benchmark，1篇综述。每条阅读深度不等，不能据数量宣称逐篇源码全读。
+
+交互目录：docs/roomgen-literature-landscape-20261026.html，可搜索方法、筛主题、筛公开状态。
+机器目录：docs/evidence/roomgen-literature-landscape-20261026/paper-catalog.json。
+原14篇逐项评估源码表：docs/fastfill-paper-evaluation-code-survey-20261026.txt。
+检索策略/来源边界：新evidence目录search-strategy.json。
+概念图：新evidence目录figures/method-map.png。它只表示可重叠的方法家族，不是全部论文清单、继承图或性能排名。
+
+这是范围调研，不是全部论文逐文件通读或完整复现。每条记录标出实际阅读深度，不能把“找到GitHub”写成“官方评估完整公开”。
+参考CGF2026作者综述 https://3dlg-hcvc.github.io/Comp3DSceneGen/ 的159条总目录，其中68条标2024/2025，作为查漏候选。未逐篇原文核查的seed不计入已核目录。
+
+本项目应优先使用的下游评估口径
+
+1. 接口与清单：请求ID、类别、数量和已观测空壳保持一致；尺寸/位置/朝向/单位合法，支撑字段可解释。缺物、额外物体、代理box与真实mesh分别记录。
+2. 下游执行：以全部请求实例和房间为分母，统计资产生成、检索、装配成功率、真实mesh覆盖率及错误原因；fallback不与实际成功混称。报告整个流程的延迟和成本。
+3. 装配后的可用性：用实际mesh重新检查越界、穿透、支撑/悬浮与任务要求的通路；分开bbox代理、真实mesh与物理仿真证据。保留native/fitted尺寸和缩放畸变，不能靠缩小/拉伸或丢物换通过。
+4. 具体任务与训练收益：先固定机器人/策略、任务目标和起始状态分布，测导航成功率/路径效率、操作目标与动作成功率；再按需要比较相同数据量/训练预算下，用各生成器场景训练后在未见场景的策略表现。SPL、开柜/放置成功等只能在对应任务、资产和仿真器明确后采用，不能把普通mesh直接当作有关节的可操作资产。
+
+ScenePilot的LC/SPA/FC以及其他论文的美观、CLIP或VLM分数，描述各自论文的评估，不能直接当本项目下游任务成功率。先报告上述分层结果，不把它们混为一个通用美观总分。静态可达、仿真可加载、评审判断可用、固定策略实际成功、训练后迁移提升是不同证据层，需逐层区分。
+优先参考PhyScene的可交互性/可达评估、SceneSmith与SceneCode的模拟/任务接口、Infinigen的场景约束与导出，再用SceneEval做几何和要求满足诊断。各自输入、资产信息和任务条件仍需在共同协议下对齐；目录并未声称覆盖所有机器人任务文献。
+
+调研完成范围：56项文献/工具的本轮范围调研和公开代码边界已整理；尚未完成的是新输入协议下的RoomGenBench端到端实测，以及具体导航/操作任务实验。这两类执行验证不能由文献调研替代。
+
+下游专题补核（2026-10-26；用户确认两者都要）
+
+补核8项证据：PhyScene、SceneSmith、SceneCode、Infinigen、HSSD、GRScenes/GRUtopia、RoboCasa、RoboCasa365。其中前4项已在56项目录，后4项作为下游基准/数据来源另列，不当作同输入的layout基线。
+  PhyScene：可达/连通和简化交互proxy。边界：不能当作抓取或开柜rollout成功；仿真前准备与任务成功分开。
+  来源：https://arxiv.org/abs/2404.09465
+  SceneSmith：100场景、4类pick/place实际执行。边界：成功判定含状态与视觉评审；当前mean>=0.9不等于每项硬目标全满足；非不同生成器的成功率对比。
+  来源：https://arxiv.org/abs/2602.09153
+  SceneCode：MuJoCo接触开合/滑动demo。边界：该操作展示未给任务episode分母与总成功率；模块存在不能升级为量化任务实验。
+  来源：https://arxiv.org/abs/2605.19587
+  Infinigen Indoors：去阴影、遮挡边界等视觉下游；场景导出。边界：导出Isaac/Unreal不等于原论文已测导航/操作任务成功。
+  来源：https://arxiv.org/abs/2406.11824
+  HSSD / HSSD-Habitat：ObjectNav训练、跨域rollout、SR/SPL。边界：原论文导航证据不能扩成Manip成功；当前关节/支撑面准备能力另列。
+  来源：https://arxiv.org/abs/2306.11290
+  GRScenes / GRUtopia：Object/SocialNav与Loco-Manip任务基准。边界：论文规模与当前公开数据不同；paper所测Loco-Manip基线SR=0；不能把可加载当任务已解决。
+  来源：https://arxiv.org/abs/2407.10943
+  RoboCasa：厨房操作任务、仿真资产与policy评测。边界：只适合有相应关节/交互区域的厨房任务；普通静态mesh需转换和任务编译。
+  来源：https://arxiv.org/abs/2406.02523
+  RoboCasa365：多任务/未见任务与target-kitchen迁移设置。边界：未见任务不等于未见房间；原文30trials与现文档50scenarios及horizon更新需锁版本。
+  来源：https://arxiv.org/abs/2603.04356
+
+主终点应至少并列：全请求资产装配有效率、同机器人/策略/任务配置下全请求任务成功率，以及有效装配条件下任务成功率。若用于策略训练，还要比较等数据量/算力下的未见场景或任务表现，明确“未见”的具体split。
+任务编译需要把目标request ID绑定到实际物体/部件、坐标、关节/支撑面/交互区域和goal predicate。缺失能力、无效初始状态、规划失败、执行失败和验证未知各自记录，不能静默删掉后只算幸存场景。
+硬目标应逐项满足；partial reward、需求平均分或VLM评审另作诊断。不要把同一任务基准不同版本的horizon、trial数、controller或split直接比较。
+专题索引：docs/evidence/roomgen-literature-landscape-20261026/downstream-evidence-index.json。原文/当前官方接口/commit及未核边界分别在downstream-*-evidence.json；未运行仿真、策略或下游实验。
+
+二、五条已有路线及其边界
+
+1. 学习式布局：DiffuScene、MiDiffusion、DeBaRA、InstructScene、FreeScene、SemLayoutDiff。类别/数量条件生成和未知size/pose预测已有先例；闭集、floor信息、关系与尺寸条件不能混比。
+2. 语言/视觉语义＋solver：Holodeck、I-Design、FlairGPT、LayoutVLM、Reason-3D、全局/局部树搜索。直接GPT坐标、LLM推约束和几何优化要分别作为强基线。
+3. 程序与可复用先验：SceneMotifCoder、HSM、The Scene Language、HDSL。功能motif、anchor局部坐标、支撑层级、可寻址局部编辑已有直接前例。
+4. 过程监督与修复：SceneWeaver、MetaSpatial、SceneReVis、ScenePilot、Agentic Designer。多轮训练、单轮推理、视觉反思、structured actions及局部纠错均不能单独称首创。
+5. 资产与场景实现：ArtiScene、Imaginarium、Scenethesis、Infinigen Indoors、SceneCode、OpenAsset。不同输出为mesh/program/3DGS，不能只按“room generation”名称同榜。
+
+三、ScenePilot究竟有什么启发
+
+准确论文：ScenePilot: Grow-and-Repair Policy for Text-Driven 3D Indoor Scene Generation，2026-08-31预印本。
+https://arxiv.org/abs/2608.30307
+
+最值得借鉴的是“检索功能组的空间统计”，不是搜完整房间后复制坐标。论文存room/group/anchor先验，用软提示辅助规划，不把检索文本直接当评分真值。
+它把分组插入、局部repair、最终全局协调结合起来；动作限制为move/rotate/scale，执行后比较物理、关系和功能评分。
+训练侧是SceneReverse-17k逆扰动轨迹、Qwen3-VL-8B、SFT＋GRPO；推理还包含局部候选搜索与确定性cleanup。不能把整个系统称为无训练轻量prompt方案。
+作者消融表中更强GPT修复对照仍更好；正文未提供可据此确认的端到端延迟收益。本次未复现这些结果。
+当前作者项目Code链接 https://github.com/Zjw-Louie/ScenePilot 返回404，未确认可用代码/权重/SceneReverse数据。不要误用驾驶领域同名GitHub。
+这些方法与可用性事实分别见scenepilot-source-check.json、scenepilot-design-review.json；本次没有声称它完全优于一次GPT。
+
+借到我们这里需要改变：
+  - 用原始request ID划分家具组，每个ID只出现一次；RAG不能自行增加“典型”物件或补齐数量。
+  - 先按house/source拆训练/验证/测试，再挖group先验及缓存；聚合统计也必须排除测试来源。
+  - 整房间先保留门口/主通路与各组占地，局部通过之后仍做全局检查，避免后加入组无处可放。
+  - 用多视图和真实高度检查支撑；scale必须有类别合理范围，单独做禁scale对照，防止靠缩家具消碰撞。
+  - 修复验收先保证完整清单、边界/门口等硬要求，再比较软功能质量；改善加权分数不代表每一硬要求都改善。
+
+另需验证：逆扰动学到的“回到某个参考布局”是否覆盖真实GPT错误；功能组/检索/模型editor/搜索cleanup各贡献多少；RAG和修复训练是否独立于测试；物理评分是否由独立checker复核。
+
+四、当前代码确实存在的4个问题
+
+1. 目标缺口。fastfill/v2/ops/llm_hybrid.py:65 在draft无hard问题时直接保留；repair主要按问题条数选择，同时锁定FF尺寸。CPU例子中椅子离餐桌中心2m仍零问题、零调用保留。它遵守当前显式几何检查，但不能证明功能布局合理。
+2. 实验身份。fastfill/v2/ops/llm_probe.py:57、llm_hybrid.py:137 的room缓存未验证输入/模型/方法绑定，可能复用旧结果。这是实际复现的缓存行为，不证明截图用过这些路径。
+3. 失败统计。fastfill/v2/ops/layout_quality.py:295 跳过None；[有效布局,None]与仅[有效布局]得到相同metric值。必须同时报告所有请求的完成率/成功率和条件均值。
+4. 支撑交接。fastfill/v2/runtime.py:162 会用请求中的未知支撑覆盖预测支撑；E head缓存又未存完整support预测。在线、缓存重放和真实mesh交接可能不一致。
+
+详细机制、行号、输入和小CPU复现见current-code-diagnosis.json/current-code-cpu-repros.json。
+这些是要修正的工程/实验基础，不是新论文贡献，也尚不能解释用户截图中的具体排名。新轻量workflow尚未提交，本次没有重构或启动训练。外观若影响视觉策略识别，应通过任务鲁棒性验证，而非仅优化审美偏好。
+
+五、候选创新与否证标准
+
+A. 对真实资产实现风险稳健的布局（优先证明痛点）
+问题：规划阶段的支撑面、功能朝向、可操作空间与实际mesh不一致时，如何保住完整清单并最少改动？
+最近邻：I-Design已承认bbox比例失配，DirectLayout已有asset-layout alignment，FirePlace做真实交互面，Scenethesis/SceneCode已有物理/资产闭环。新意必须比“接mesh再repair”更具体。
+关键限制：当前RoomGenBench精确anisotropic fit会消掉原生bbox尺寸变化；如果真实mesh完全位于两个互不相交OBB内，shape变化也不会凭空产生新静态碰撞。应先测真实支撑/功能面/动态开启空间与畸变；若新workflow保原始/近等比尺寸，再研究尺寸不确定性。
+最小实验：30–50验证房间、复用已有资产、无训练；检查bbox通过→真实可用性失败的发生率及原因，再比较统一padding、类别margin、采样solver和风险方法。
+否证：该类失败极少、exact-fit消除问题、简单padding/等预算solver已同样好，或者收益靠缩家具/丢物/额外GT输入。此时停止把它立为主创新。
+
+B. 同预算下保持功能语义的学习修复（先作为工程对照）
+问题：保留强GPT初稿，只用少量计算处理真实失败，是否能胜过通用solver而不毁掉功能分组？
+最近邻：LayoutVLM、RoboLayout、SceneReVis、MetaSpatial、VIGOR、ScenePilot已做相关部分。学习修复/局部冻结本身并不新。
+最小实验：同一份GPT初稿分别无修复、greedy投影、local Adam、冲突组搜索、候选学习修复；全流程按相同walltime/check次数比较，统计真实几何、功能、清单与语义退化率。
+否证：等预算简单solver相同或更好；增益全来自GPT初稿/确定性后处理；新house/类别/物体数上消失。则保留工程收益，不包装成新生成算法。
+
+C. 拥挤清单的可核验证据与预算分流（次要评测方向）
+区分有可行witness、限定条件下已证不可行、预算内尚未解出。未知尺寸能任意缩小时，不能直接判清单不可行；面积下界也可能被堆叠/桌下容纳打破。
+可先用小型合成证明例与反例检查，不建议一开始做通用mesh不可行性证明。
+完整假设、最近邻、实验、消融、失败标准和成本估计见innovation-redteam.json。
+
+六、先做的最小对照
+
+先为同一批输入记录布局→资产→装配→任务的逐层失败、fallback与未知状态，找出真实瓶颈。然后固定一个共同GPT基座/输入契约，比较flat/group与无RAG/训练集先验的2×2。编辑器先固定，用相同硬检查并记录实际调用预算；随后再独立比较no repair/简单solver/学习editor。
+先验证功能先验是否比当前staged流程更有效，再决定是否训练。训练规模、耗时和收益均不从论文图中推断；新workflow到来后再冻结具体接口。
+
+本次没有宣称某方法全球SOTA、没有给FastFill新分数、没有跑付费API/模型训练/完整数据集评测。

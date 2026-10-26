@@ -1,0 +1,257 @@
+FastFill：其他论文如何评估、公开源码覆盖到哪里
+2026-10-26｜14篇论文＋RoomGenBench｜Research Synthesist / Code Reviewer / Model QA Specialist 并行核查
+
+任务边界：房间空壳＋必须摆放的文字家具清单；尺寸/mesh未给时由方法预测；输出交RoomGenBench生成/装配真实资产。多种合理摆法均可成立。
+完成范围：核对一手论文/作者页面、公开仓库固定commit、完整目录树及选定评估源码。没有逐文件通读这15个上游仓库，也没有复现论文表格。
+执行范围：未运行模型、完整数据集、渲染、Drake批量评测或付费VLM；只执行了SceneNAT一个隔离CPU几何函数反例。
+公开源码≠完整评估公开≠已复现。下列“未找到”仅指所查固定commit目录树与源码，不代表全网不存在。
+
+一、直接采用的结论
+
+1. baseline优先试MiDiffusion object_conditioned：固定类别/数量而继续预测尺寸和pose；需要把benchmark数据入口换成同一份用户清单。
+2. ReSpace适合作为文字＋真实mesh对照；固定清单、修正失败记0，并统一候选选择预算之后再比。
+3. SceneEval可提供主要几何与可用性模块；同时用request ID确定性检查完整清单，并加从入口出发、按实际agent宽度的可达检查。
+4. 借鉴LEGO-Eval的逐要求满足率与全部要求同时满足率；VLM评委本身需小规模人工校准。FID/CKL/单GT pose误差是辅助。
+5. RoomGenBench负责最终真实mesh层：既看资产描述和coverage，也重测碰撞/越界/接触/门窗。NaLA、OptiScene原生已知asset/尺寸的条件需单独标注。
+
+二、快速对照（每组最多4项；所有GitHub链接均在后文逐项列出）
+
+Classic generative layouts
+  ATISS：FID、类别KL、真假分类SCA；人工偏好。代码：已核FID/KL/SCA脚本。
+  DiffuScene：FID/KID/SCA/CKL；bbox交叠与对称统计。代码：已核FID/KID/PR及AABB统计；未找到独立SCA/CKL入口。
+  MiDiffusion：FID/KID/KL/分类CA；OOB、bbox IoU。代码：模型库＋官方ThreedFront评估库。
+  InstructScene：iRecall；FID/CLIP-FID/KID/SCA。代码：已核关系、图像指标脚本；SCA聚合需审查。
+
+LLM scene/layout methods
+  LayoutGPT：矩形房间OOB、类别KL、渲染FID。代码：已核OOB/KL＋vendored ATISS FID。
+  Holodeck：人工偏好、场景CLIP、下游ObjectNav SR/SPL。代码：公开生成/检索/渲染；当前树未找到论文完整评分器。
+  OptiScene：FID、OOR、GPT评分、UR人评、编辑/导航。代码：公开SFT/DPO/merge/inference；当前树未找到评分器。
+  ReSpace：mesh体素OOB/碰撞VBL；FID/CLIP-FID/KID；PMS；人评。代码：已核src/eval.py和full/instr脚本；未找到完整人评分析。
+
+Recent generation systems
+  SceneNAT：iRecall、FID/CLIP-FID/KID、DOS、交叠和时间。代码：已核入口及部分指标；当前IoMin实现有归一化反例。
+  NaLA：加权voxel碰撞、加权OOB、floating、AI/人评。代码：有train/infer；当前树未找到论文评分器。
+  SceneSmith：要求满足、COL/OOB/NAV/ACC；Drake稳定性；人评。代码：主库导出/任务验证；作者SceneEval fork有自动评估。
+
+Evaluation/architecture/downstream frameworks
+  SceneEval：数量/属性/关系满足＋碰撞/支撑/导航/可达/OOB/开口。代码：已核实际metric模块和无VLM运行计划。
+  LEGO-Eval：逐约束Partial SR、全部约束Holistic SR；人类一致性。代码：已核21工具框架、入口与成功率聚合。
+  SemLayoutDiff：FID/KID/SCA/CKL、中心点OOB；SceneEval补充。代码：已核统一eval入口和4类metric模块。
+  RoomGenBench：资产VQA/SigLIP/R@5、coverage、支撑；参考mesh诊断。代码：已核render/geom/VLM/aggregate。
+
+三、逐篇来源、真实入口与复现限制
+
+1. ATISS
+论文：https://arxiv.org/html/2110.03675
+公开仓库：https://github.com/nv-tlabs/ATISS
+固定commit：0909ce0000e52bf1bf300a6a558109f7f8383fd9
+输入与公平性：房间类型/地板mask条件，自行决定家具类别和数量；有类别控制API，但没有现成的用户完整清单CLI。
+论文与代码：俯视图FID、类别频率KL、真假图分类SCA，另有人评。公开3个自动指标入口；SCA代码十轮共享model/optimizer，不能称十次独立重置实验。
+复用限制：需3D-FRONT/FUTURE、split、权重、统一渲染。可适配为经典baseline；固定清单之后，KL不能主要反映布局质量。
+已核评分/评估入口：https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/compute_fid_scores.py#L41
+源码参考：https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/evaluate_kl_divergence_object_category.py#L28
+源码参考：https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/synthetic_vs_real_classifier.py#L80
+源码参考：https://github.com/nv-tlabs/ATISS/blob/0909ce0000e52bf1bf300a6a558109f7f8383fd9/scripts/generate_scenes.py#L1
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json
+
+2. DiffuScene
+论文：https://arxiv.org/html/2303.14207v2
+公开仓库：https://github.com/tangjiapeng/DiffuScene
+固定commit：d78a2890c6b806b61279463b1dbe7701f286a024
+输入与公平性：自由/文字条件生成；公开arrangement配置给定类别、尺寸和shape，不能直接作为未知尺寸清单主榜。
+论文与代码：公开FID/KID、manifold precision/recall和生成时AABB交叠/对称统计；当前完整树未定位独立SCA/CKL评分入口。PR不是清单准确率。
+复用限制：默认FID真实参考是train+val，与ATISS默认test不同；交叠默认是检索mesh的轴对齐包围盒、全对象对分母。需统一split、render和几何实现。
+已核评分/评估入口：https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/compute_fid_scores.py#L41
+源码参考：https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/improved_precision_recall.py#L55
+源码参考：https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/generate_diffusion.py#L394
+源码参考：https://github.com/tangjiapeng/DiffuScene/blob/d78a2890c6b806b61279463b1dbe7701f286a024/scripts/utils.py#L665
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json
+
+3. MiDiffusion
+论文：https://arxiv.org/html/2405.21066v2
+公开仓库：https://github.com/MIT-SPARK/MiDiffusion
+固定commit：25b594338a29b31c6783b4b1ea87eeeb0ce12bbe
+输入与公平性：object_conditioned只固定类别slots（含empty，因此固定数量），继续预测尺寸/位置/朝向；需将dataset类别输入替换为用户清单。furniture_arrangement另固定尺寸。
+论文与代码：模型库之外，作者另有MIT-SPARK/ThreedFront：FID/KID、KL、真假分类CA、OOB及bbox IoU。OOB采用旋转footprint与默认0.1m的bbox收缩容差。
+复用限制：优先非LLM baseline候选。闭集类别、最大slots、门窗/长描述能力需注明。CA协议和IoU高度包含实现需校准，不能直接把现有几何代码当真值。
+另一个官方评估库：https://github.com/MIT-SPARK/ThreedFront @ de929ef80e1678bf95bb0369afa6e0d854b291ad
+已核评分/评估入口：https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/bbox_analysis.py#L22
+源码参考：https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/scripts/generate_results.py#L39
+源码参考：https://github.com/MIT-SPARK/MiDiffusion/blob/25b594338a29b31c6783b4b1ea87eeeb0ce12bbe/midiffusion/evaluation/utils.py#L11
+源码参考：https://github.com/MIT-SPARK/ThreedFront/blob/de929ef80e1678bf95bb0369afa6e0d854b291ad/scripts/compute_fid_scores.py#L19
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json
+
+4. InstructScene
+论文：https://arxiv.org/html/2402.04717
+公开仓库：https://github.com/chenguolin/InstructScene
+固定commit：a9097a62c484c56ac7be5ec2928ef497cbbaaf24
+输入与公平性：部分文字关系/外观→semantic graph→整场景。原generate_sg不输入真实floor，展示地板由生成范围构造；不等于遵守实际空壳。
+论文与代码：iRecall衡量要求的关系triplet满足率；另FID/CLIP-FID/KID/SCA。关系由layout/检索asset几何计算，优于只对预测graph自评，但仍非真实接触与功能检查。
+复用限制：SCA当前保存跨validation batch/epoch最大准确率，不是完整验证集mean；README config/epoch目录也需校正。可参考关系满足率，主榜需完整清单和真实边界adapter。
+已核评分/评估入口：https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/generate_sg.py#L319
+源码参考：https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/data/utils_text.py#L11
+源码参考：https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/compute_fid_scores.py#L182
+源码参考：https://github.com/chenguolin/InstructScene/blob/a9097a62c484c56ac7be5ec2928ef497cbbaaf24/src/synthetic_vs_real_classifier.py#L280
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/generative-code-audit.json
+
+5. LayoutGPT
+论文：https://arxiv.org/abs/2305.15393
+公开仓库：https://github.com/UCSB-AI/LayoutGPT
+固定commit：fc31954962553e5b65bf267a904a6930d50b1f5e
+输入与公平性：预测size/pose，不要求用户预先给精确尺寸；原3D协议主要是矩形bedroom/livingroom，并自行决定清单。
+论文与代码：eval_scene_layout.py公开OOB和类别KL；ATISS子目录公开渲染与FID。OOB按旋转footprint检查矩形，允许0.1m容差，汇总有任一越界的场景比例。
+复用限制：2D GLIP/count/spatial脚本不能当3D物理评估。主榜需固定ID/数量与真实polygon/门窗；类别KL在固定清单条件下信息有限。
+已核评分/评估入口：https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L56
+源码参考：https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L102
+源码参考：https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/eval_scene_layout.py#L148
+源码参考：https://github.com/UCSB-AI/LayoutGPT/blob/fc31954962553e5b65bf267a904a6930d50b1f5e/ATISS/scripts/compute_fid_scores.py#L46
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json
+
+6. Holodeck
+论文：https://arxiv.org/abs/2312.09067
+公开仓库：https://github.com/allenai/Holodeck
+固定commit：362b8ed948b867b69a72f1f9491f4caa88419bfc
+输入与公平性：从文字生成房间/清单，先检索真实assets再摆放；placement可访问实际asset尺寸。需统一固定空壳和清单，注明asset阶段的额外几何信息。
+论文与代码：论文用人工偏好、场景图像CLIP及下游ObjectNav Success/SPL。当前官方完整树公开生成、检索、渲染工具，未找到对应论文完整评分器。
+复用限制：检索器中的CLIP不是场景CLIP评估；导航policy成功率也不是直接的layout成功率。可输出结果交统一外部evaluator；不能宣称官方评分套件已齐。
+生成入口（不是论文评分器）：https://github.com/allenai/Holodeck/blob/362b8ed948b867b69a72f1f9491f4caa88419bfc/ai2holodeck/main.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json
+
+7. OptiScene
+论文：https://arxiv.org/abs/2506.07570
+公开仓库：https://github.com/PolySummit/OptiScene
+固定commit：409f1317e1a8afe852f4cdc99dfefaed30aeb425
+输入与公平性：prompt明确包含每件家具bbox h/w/d和房间面积。原生属于已知尺寸摆放任务；主榜需共同的非GT尺寸提供器或另设已知尺寸榜。
+论文与代码：论文报告FID、bbox OOR、GPT-4o功能/布局/美学评分、可用率人评及编辑/导航。当前24-blob仓库只有SFT、DPO、merge、inference，没有找到论文评分实现。
+复用限制：PolySummit/OptiScene README声明官方；作者项目Code旧链接YxuanAr/OptiScene失效。归属证据和旧链接问题已记录，README权重表仍有Coming Soon，未据此推断全网无权重。
+生成入口（不是论文评分器）：https://github.com/PolySummit/OptiScene/blob/409f1317e1a8afe852f4cdc99dfefaed30aeb425/main.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json
+
+8. ReSpace
+论文：https://arxiv.org/abs/2506.02459
+公开仓库：https://github.com/GradientSpaces/respace
+固定commit：b1a4b32b5fe0a547342dd37063002010c06224dd
+输入与公平性：文字条件预测尺寸/摆放，支持边界并检索真实mesh；fullscene会自行规划清单，需绕过planner、严格保留用户request IDs。
+论文与代码：src/eval.py公开mesh体素OOB/交叠体积VBL，FID/CLIP-FID/KID和PMS；有full/instr脚本及renderer。人评原始数据与Bradley-Terry分析未找到。
+复用限制：默认5cm体素；mesh/voxel异常被记0会低估失败；默认PMS只算最后对象且仅词匹配。fullscene模板使用8个shuffle候选选择，必须匹配推理预算。
+已核评分/评估入口：https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L665
+源码参考：https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L417
+源码参考：https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L467
+源码参考：https://github.com/GradientSpaces/respace/blob/b1a4b32b5fe0a547342dd37063002010c06224dd/src/eval.py#L519
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/llm-code-audit.json
+
+9. SceneNAT
+论文：https://arxiv.org/abs/2601.07218
+公开仓库：https://github.com/lojol2327/SceneNAT-official
+固定commit：45379ca53d76045b11d275884b412771e2601d52
+输入与公平性：文字关系条件生成；given_lengths仅提供数量，不保证完整指定类别/ID。需固定清单和真实空壳adapter。
+论文与代码：公开src/tasks/eval.py、evaluator与collision模块：iRecall、FID/CLIP-FID/KID、描述DOS、OBB交叠和生成调用时间。当前树未找到NAV/ACC/地板穿透评分器。
+复用限制：唯一实际执行项是CPU碰撞函数反例：两个完全重叠half-extent=1立方体，IoMin约4（正确pair IoMin应1），vol_sum把有序对计两次。证明当前commit口径有问题，不能推出论文结果错误。
+已核评分/评估入口：https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/tasks/eval.py#L180
+源码参考：https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/scripts/eval.sh#L70
+源码参考：https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/scripts/eval_ours.sh#L29
+源码参考：https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/tasks/eval.py#L204
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json
+
+10. NaLA
+论文：https://arxiv.org/abs/2606.29395
+公开仓库：https://github.com/adamcwan/NaLA-code
+固定commit：ebf3ca1948c25fa2d5d3c01960257745647b3103
+输入与公平性：论文比较60场景，各方法拿相同空壳与真实asset集合；模型接收点云和asset描述。它比“文字清单、未知尺寸”获得更多输入，适合已知资产榜。
+论文与代码：论文碰撞是按(Vi+Vj)加权的voxel碰撞pair指示，OOB是体积加权footprint越界比例；另floating、AI/人评。官方NaLA-code确有训练和推理。
+复用限制：完整公开树未找到这些论文评分器；eval_defaults.py是配置常量。不能说NaLA无源码，也不能说论文evaluation完整公开。具体contact阈值/voxel/judge协议需另冻结。
+生成入口（不是论文评分器）：https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/scripts/infer.py#L148
+源码参考：https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/scripts/infer.py#L233
+源码参考：https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/src/nala/eval_defaults.py#L1
+源码参考：https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/src/nala/post_processing/post_process.py#L977
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json
+
+11. SceneSmith
+论文：https://arxiv.org/abs/2602.09153
+公开仓库：https://github.com/nepfaff/scenesmith
+固定commit：67cc408fd38334b4a926efef45e284302ed5055b
+输入与公平性：开放词汇text-to-scene，论文210 prompts，允许加入上下文物品。我们的固定清单榜必须显式限制extras。
+论文与代码：主库提供SceneEval exporter和robot任务validator；第一作者nepfaff/SceneEval fork含210场景计划、语义/几何及Drake COL/STB。不是只有生成代码。
+复用限制：fork尚未被paper/project认证为精确论文实验commit；仍有SceneAgent命名和私有annotations路径。STB为5秒重力，wall/ceiling焊接，≤1cm/0.1rad判稳定；aggregate只统计未焊接物体。勿混用另一个combined-welding版本。
+作者公开评估fork：https://github.com/nepfaff/SceneEval @ 34afe64a692f47327f162de82efbdde9d550cf85（论文精确版本关系未证实）
+已核评分/评估入口：https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/main.py#L1
+源码参考：https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/conversion/scene_agent/convert_SceneEval.py#L55
+源码参考：https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/scripts/run_parallel_all_scene_agent.sh#L1
+源码参考：https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/drake_collision.py#L88
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/recent-code-audit.json
+
+12. SceneEval
+论文：https://arxiv.org/abs/2503.14756v3
+公开仓库：https://github.com/3dlg-hcvc/SceneEval
+固定commit：116881e7945dcf7dbc58f7c64590a4c0b99c5cf5
+输入与公平性：评价框架，输入生成SceneState、真实assets及用户要求；不负责生成baseline。
+论文与代码：细分数量/属性/物物关系/建筑关系；碰撞、支撑、NAV、ACC、OOB和门窗clearance。公开main、metric模块和no_llm_plan。COL/NAV/OOB/开口可不使用VLM。
+复用限制：NAV是最大连通可走面积/全部可走面积，不保证从门口能进；ACC/SUP部分依赖VLM功能面/支撑分类。建议复用模块并新增确定性清单与door-seeded可达性，保留指标原名/分母。
+已核评分/评估入口：https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/main.py
+源码参考：https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/configs/evaluation_plan/no_llm_plan.yaml
+源码参考：https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py
+源码参考：https://github.com/3dlg-hcvc/SceneEval/blob/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json
+
+13. LEGO-Eval
+论文：https://arxiv.org/abs/2511.03001v3
+公开仓库：https://github.com/gyeomh/LEGO-EVAL
+固定commit：9463757b56f686e0b5ce6f77bdb959468fd241c5
+输入与公平性：评价框架，将用户文字拆成原子约束，经21种场景/几何/图像/文本工具获取证据，再判满足。需AI2THOR/Objathor/Xorg及模型端点。
+论文与代码：Holistic SR=全部要求满足的场景比例；Partial SR=约束满足比例。源码总partial为Σ正确/Σ约束；论文按约束类型报告并平均，不能把micro/macro混称。
+复用限制：论文对judge的F1/κ是“评委与人类是否一致”，不是生成模型分数。适合借鉴逐项+全满足成功率；外观/含糊语义用VLM，确定性清单和几何用程序。
+已核评分/评估入口：https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/main.py
+源码参考：https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/scripts/run.sh
+源码参考：https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/eval.py
+源码参考：https://github.com/gyeomh/LEGO-EVAL/blob/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/functions.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json
+
+14. SemLayoutDiff
+论文：https://arxiv.org/abs/2508.18597v2
+公开仓库：https://github.com/3dlg-hcvc/SemLayoutDiff
+固定commit：6b12bc4c42aa8377445af108093539073f0495c1
+输入与公平性：architecture/floor mask及room type→语义图→每物体size/pose，支持门窗条件；原生不严格消费用户家具清单。
+论文与代码：公开scripts/eval.py及配置，含FID/KID/SCA/CKL/OOB；实际OOB只测bbox中心XY是否严格位于首个floor polygon，边界上的中心也判外。
+复用限制：该OOB不能代表footprint/mesh越界；无floor JSON仍进入场景分母却跳过对象统计。SCA十轮复用模型。README有真实HF权重/数据链接，示例wget仍为占位符；未验证下载内容。
+已核评分/评估入口：https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/scripts/eval.py
+源码参考：https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/configs/evaluation_config.yaml
+源码参考：https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/calculate_oob.py
+源码参考：https://github.com/3dlg-hcvc/SemLayoutDiff/blob/6b12bc4c42aa8377445af108093539073f0495c1/eval/fid_metric.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json
+
+15. RoomGenBench
+论文：项目benchmark；本次未认定为论文
+公开仓库：https://github.com/WorldEdge-Lab/RoomGenBench
+固定commit：30f2e059d046ccd4aa928d0109a09a52f11693b5
+输入与公平性：本地流程下游：给定对象boxes/描述/layout→生成或检索并装配mesh。原benchmark为5房间、313实例、184唯一type-description资产；不是从未知layout开始的任务。
+论文与代码：公开render_eval、score_geom、score_vlm、score_aggregate。资产四视图VQA、SigLIP/R@5、coverage和支撑；support通过条件为hit率≥0.5且|median gap|≤2cm。
+复用限制：当前scorer固定5场景/路径；缺mesh支撑pair会从分母减少，fallback算coverage。需适配动态FastFill输出，分开真实/缺失/fallback，并保存native与fitted尺寸，避免拉伸掩盖尺寸错误。
+已核评分/评估入口：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py
+源码参考：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/render_eval.py
+源码参考：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py
+源码参考：https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py
+全部文件、官方归属证明、命令、依赖和未核项：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/framework-code-audit.json
+
+四、不能直接混到同一列的指标
+
+1. “碰撞”：DiffuScene默认AABB全pair统计、MiDiffusion的bbox IoU、SceneEval mesh参与碰撞对象率、NaLA体积加权pair指示、ReSpace体素交体积，各自分子/分母/几何不同。保留原口径，并另跑统一evaluator。
+2. “越界”：SemLayoutDiff中心点、LayoutGPT矩形+10cm容差、MiDiffusion旋转bbox收缩容差、SceneEval mesh射线、NaLA体积加权越界面积，不能只写OOB后合榜。
+3. “分类准确率”：不同SCA/CA代码有持续训练、最优batch、独立重置、低于50%翻转等不同协议；不是家具类别正确率。
+4. “遵循指令”：iRecall通常是要求的类别关系triplets，PMS是描述词命中，LEGO是逐约束判定；都不能自动替代完整request ID/类别/数量检查。
+5. “成功/耗时”：单物件平均通过不能替代整房间全要求通过；batch生成时间不能替代batch=1完整流程延迟。多候选筛选、repair、检索、资产生成与失败均需记录。
+
+五、孤立CPU反例与证据索引
+
+SceneNAT当前commit的碰撞函数收到两个完全重叠、半尺寸1的立方体：真实交体积8、pair IoMin=1；返回vol_sum=16、返回inter_vol_mean=4（对角置零后的矩阵按M²平均）、IoMin=3.999996。half-size体积归一化与有序pair聚合不同于常用pair定义。
+这只证明所核当前公开代码行为；没有证明论文原始实验使用同一版本、也没有据此否定论文结果。
+结果：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/scenenat-collision-repro.json
+重跑脚本接受显式上游源码路径，并校验SHA256；先取得固定commit的collision_metric.py（其URL/hash在recent-code-audit.json），再执行：
+  python docs/evidence/fastfill-paper-evaluation-code-survey-20261026/scenenat-collision-repro.py /path/to/collision_metric.py
+脚本在自身目录写反例JSON；需要numpy、shapely、matplotlib；未将第三方源码vendoring进项目。
+
+总索引：docs/evidence/fastfill-paper-evaluation-code-survey-20261026/survey-index.json
+各组原始审计：generative-code-audit.json、llm-code-audit.json、recent-code-audit.json、framework-code-audit.json
+上游源码收据：各审计中的SHA256/固定blob URL，以及framework-source-receipts.json；/tmp路径是本次阅读缓存，不是长期复现依赖。
+已有完整协议与RoomGenBench接口审计：docs/fastfill-v4-evaluation-20261025.txt；本文件补充逐篇源码覆盖，不重复实现协议。
+
+下一项工程工作（尚未执行）：为主任务建立同一份empty-shell＋text-inventory数据入口，先接MiDiffusion object_conditioned与FastFill，用同一组确定性几何检查比较；再接真实mesh和语义评委。

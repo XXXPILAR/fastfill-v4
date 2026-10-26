@@ -1,0 +1,138 @@
+{
+  "date": "2026-10-26",
+  "role": "Independent Agency Model QA Specialist",
+  "scope": "Read-only 3-minute review of docs/roomgen-literature-research-20261026.txt plus existing 56-entry catalogue; no new literature survey, code edits, training or paid calls.",
+  "user_steering": "User says the system serves downstream tasks and aesthetics may not be the objective. The specific downstream endpoint remains under clarification. Until then, anchor the primary objective to the established RoomGenBench asset generation and assembly chain; do not assume robotic navigation/manipulation is the task.",
+  "overall_finding": "The current explanation already emphasizes functional validity rather than beauty, but its opening objective and first experiment do not explicitly separate interface completion, asset/assembly success, true geometry/support and optional task success. Make that hierarchy explicit before judging planner/editor improvements.",
+  "priority_layers": [
+    {
+      "tier": 0,
+      "name": "Input/output and exact inventory contract",
+      "primary_metrics": [
+        "All requested scene completion rate",
+        "Exact request-ID and instance-count preservation; no dropped/extra/merged duplicates",
+        "Finite dimensions/poses; units, axes, pivots and support provenance valid; no hidden GT support or symmetry input"
+      ],
+      "limits": "Syntactic correctness or complete JSON is necessary but not asset-generation or task success."
+    },
+    {
+      "tier": 1,
+      "name": "RoomGenBench asset generation and assembly",
+      "primary_metrics": [
+        "Per-required-instance real-mesh generation/retrieval and assembly coverage, with all requests in denominator",
+        "Separate genuine generated/retrieved meshes, placeholders, fallback assets, missing meshes, failed exports and unknown checks",
+        "All-ID scene assembly success; measurable OOB/collision/contact/support validity on final realized geometry",
+        "Description/category or required affordance consistency; size/aspect-ratio distortion under bbox fitting",
+        "End-to-end latency, asset/model calls, repair and verification costs"
+      ],
+      "limits": "Report unique generated assets and instantiated object count separately because reuse can improve cache coverage. Existing RoomGenBench available-pair support scores do not replace all-request coverage. Exact-fit dimensions do not establish correct support surfaces or valid physical properties."
+    },
+    {
+      "tier": 2,
+      "name": "Specific downstream task success, only once task is specified",
+      "primary_metrics": [
+        "If navigation is the task: fixed agent geometry, starts/goals and policy; episode success/SPL or task-relevant path feasibility under common conditions",
+        "If manipulation is the task: fixed objects/goals/controller, articulated joint and collision properties; execution/task success, not merely scene load or static stability"
+      ],
+      "limits": "Do not invent task definitions now. Simulatability, NAV largest free component, static contact and task success are distinct. Use an identical task policy/evaluator so policy changes do not masquerade as environment quality."
+    },
+    {
+      "tier": 3,
+      "name": "Auxiliary visual and reference similarity",
+      "primary_metrics": [
+        "Aesthetic preference only if product downstream needs it",
+        "Visual category/identity and perception fidelity when it affects the downstream use",
+        "Single-GT pose/SG/FID/VLM scores reported as reference or proxy measures with scope"
+      ],
+      "limits": "Appearance may matter to a vision policy, but beauty is not the default objective. A high subjective functional-completeness score is not proof an agent can accomplish a task."
+    }
+  ],
+  "recommended_text_changes": [
+    {
+      "priority": "Must clarify under latest user steering",
+      "lines": "6 and10",
+      "change": "Replace the single broad goal with an explicit chain: correct interface and exact list -> real asset generation/assembly coverage and geometric/support validity -> success on the specified downstream task when defined. Treat beauty as auxiliary.",
+      "suggested_chinese": "主目标是让下游流程完整、可靠地消费布局：先满足接口与指定清单，再提高真实资产生成、装配及几何/支撑有效率；若下游包含导航或操作，再以明确任务的成功率检验。美观不设为默认主目标。当前已确认的下游是RoomGenBench生成/装配，具体机器人任务尚待确认。"
+    },
+    {
+      "priority": "Must avoid proxy/task equivalence",
+      "lines": "40–44 and53",
+      "change": "Add explicit boundary that ScenePilot LC/SPA/FC are VLM-judge scores and human ratings, rather than measured navigation/manipulation or RoomGenBench end-to-end success.",
+      "suggested_chinese": "ScenePilot的LC/SPA/FC是视觉评审对布局、语义与功能完整性的评分，不等于资产全部生成/装配成功，也不等于机器人完成导航或操作任务。它们可作辅助，不应直接替代我们的下游主指标。"
+    },
+    {
+      "priority": "First experiment should follow downstream objective",
+      "lines": "71 and85–88",
+      "change": "Before flat/group×RAG ablation, use existing assets/results to measure the current interface->asset->assembly failure funnel. Only then test planning/repair components on the failure mode that actually limits the downstream endpoint.",
+      "suggested_chinese": "先复用现有结果统计每个request从布局、资产生成到装配的完成/失败/回退/未知状态，并检查真实mesh的碰撞、支撑和用途相关属性。明确瓶颈后，再用同一GPT初稿、同一资产策略和预算做flat/group×RAG或修复消融，主要比较下游完成/可用率与成本。"
+    },
+    {
+      "priority": "Clarify catalogue boundary",
+      "lines": "15–24",
+      "change": "Keep the verified56 count, but add that it is a heterogeneous selected indoor scene/layout catalogue with varying evidence depths, not a systematic survey of all robotic downstream tasks or a common leaderboard.",
+      "suggested_chinese": "这56项覆盖选定室内布局/场景生成方法、相邻任务和评估框架，并非机器人导航、操作、仿真训练或所有下游应用的完整调研；各项输入协议与阅读深度不同。"
+    }
+  ],
+  "most_relevant_existing_entries": [
+    {
+      "name": "RoomGenBench",
+      "source": "https://github.com/WorldEdge-Lab/RoomGenBench",
+      "role": "Current primary endpoint. Asset semantic fidelity, generation/assembly coverage and support consistency are more direct than scene beauty. Existing scorer dynamic-scene and missing-pair denominator adapters remain necessary.",
+      "evidence": "Already audited selected scoring and assembly source; no full benchmark replication."
+    },
+    {
+      "name": "PhyScene",
+      "source": "https://arxiv.org/html/2404.09465",
+      "role": "Relevant to true collision, floor constraints, agent-width reachability and articulated opening space. It does not establish exact textual inventory or the specific user task success.",
+      "evidence": "Existing paper/appendix plus README/launcher audit; finer metric code and complete inference not rerun."
+    },
+    {
+      "name": "SceneSmith",
+      "source": "https://arxiv.org/html/2602.09153",
+      "role": "Separates static physical collision/stability from actual robot-policy evaluation. Most useful distinction for avoiding simulatability=task-success claims. Must adapt open-set inventory.",
+      "evidence": "Existing selected main repo/source and author SceneEval fork audit; no robot experiments reproduced."
+    },
+    {
+      "name": "SceneCode",
+      "source": "https://arxiv.org/abs/2605.19587",
+      "role": "Executable articulated asset programs, simulator properties and robot-interaction examples are close to downstream realization. Does not make asset pipeline integration itself new.",
+      "evidence": "Existing method/experiment paragraphs and repo availability/README catalogue; complete metric source equivalence not audited."
+    },
+    {
+      "name": "Infinigen Indoors",
+      "source": "https://arxiv.org/abs/2406.11824",
+      "role": "Procedural asset/scene generation, constraint solving and downstream data tasks; relevant to usability/diversity and exporter contracts. Not a native fixed-text-list layout baseline.",
+      "evidence": "Existing paper/README/tree review; no complete downstream experiment replication."
+    },
+    {
+      "name": "ScenePilot",
+      "source": "https://arxiv.org/html/2608.30307v1",
+      "role": "A planning/repair mechanism reference. Its judge LC/SPA/FC and voxel physical losses are proxies, not evidence the requested downstream task succeeds.",
+      "evidence": "Existing paper review and public-artifact availability audit; official advertised code currently404, weights/data not confirmed."
+    }
+  ],
+  "catalogue_boundary_verified": {
+    "path": "docs/evidence/roomgen-literature-landscape-20261026/paper-catalog.json",
+    "entries": 56,
+    "kind_counts": {
+      "paper": 52,
+      "benchmark": 3,
+      "survey": 1
+    },
+    "reading_depth": "Varies from title/abstract or author survey seed to selected evaluator source; not all full text/code read.",
+    "not_claimed": [
+      "Exhaustive2024–2026robotics literature coverage",
+      "Allnavigation/manipulation/sim-to-real/tasksbenchmarksaudited",
+      "Sharedtaskorinputconditionsacrossall56entries",
+      "PhysicalvalidityortasksuccesscertifiedbyVLMbeauty/functionscore",
+      "Newworkflowalreadyimplemented"
+    ]
+  },
+  "preserve_existing_correct_boundaries": [
+    "Exact-fit removes native bbox-dimension variation; fixed-contained disjoint OBBs cannot gain static mesh collision solely by within-box shape changes.",
+    "Current bugs are engineering/evaluation prerequisites, not a demonstrated cause of screenshot rankings.",
+    "User new lightweight workflow has not yet been supplied or implemented.",
+    "No need to pivot to heavy robotics pipeline before specific downstream task confirmation."
+  ],
+  "no_project_edits": true
+}

@@ -1,0 +1,386 @@
+{
+  "date": "2026-10-26",
+  "role": "Agency Code Reviewer",
+  "repo": "/Users/slian/Desktop/3D/Worldedge/fastfill-v4",
+  "commit": "66207f1247b7864379d75a191cf4ab98714a5980",
+  "scope": "Read-only diagnosis. No project modifications, paid calls, model inference, asset generation or remote jobs. Local tiny CPU tests used existing imports and deterministic tensors/fixtures; temporary files only.",
+  "screenshot_claim_as_received": "I-Design ~20 rooms, three GPT judgments/layout, GPT once > LayoutVLM > staged/c_final; c_final has19 rooms. Actual screenshot numeric values/raw JSON unavailable to this subagent.",
+  "current_cohorts": {
+    "probe20": {
+      "row_count": 20,
+      "prediction_rows": 20,
+      "missing_layouts": 0,
+      "rows_with_constraints": 19,
+      "rows_with_openings": 18,
+      "rows_with_fixed_objects": 0,
+      "rows_with_support_declarations": 9,
+      "rows_sha256": "e23e5115dae6c0a7797d794fd3bdf3199a052b9cf038b02547caf9fb395c4641",
+      "path": "fastfill/v2/ops/probe20"
+    },
+    "test300": {
+      "row_count": 300,
+      "prediction_rows": 300,
+      "missing_layouts": 16,
+      "rows_with_constraints": 285,
+      "rows_with_openings": 246,
+      "rows_with_fixed_objects": 32,
+      "rows_with_support_declarations": 115,
+      "rows_sha256": "c2a6afb4cb783e59f279367311c153a9a8acffc4dcd275f574d72af2f1458a8c",
+      "path": "fastfill/v2/ops/test300",
+      "manifest_rows_hash_matches": true
+    }
+  },
+  "audit_checks": {
+    "artifact_location": {
+      "screenshot_run_found": false,
+      "reason": "No I-Design/LayoutVLM/c_final string or corresponding result/manifests found in current fastfill-v4 checkout (including hidden-source enumeration). No outputs directory. probe20/test300 exist but have different method names/protocol; they cannot be assumed to be screenshot data.",
+      "graph_attempts": "fastfill-v4 is not indexed; legacy fastfill graph returns unrelated DPO judge. worldedge graph matched design-name functions only; OptiScene-RoomGenBench graph returned none. File fallback used."
+    },
+    "condition_fairness": {
+      "verified": "Existing probe/test300 GPT uses full room polygon/openings/fixed objects/support/constraints and one call. Existing hybrid freezes FastFill sizes and may repair. Exact screenshot inputs unavailable.",
+      "required_fields": [
+        "room ID and shell/door/window hash",
+        "required inventory ID/category/text hash",
+        "size source: unknown/predicted/retrieved/GT",
+        "support declarations source",
+        "same assets/camera/render pipeline",
+        "model endpoint/version, temperature, seed and candidate/repair budget"
+      ]
+    },
+    "missing_one_room": {
+      "verified": "Screenshot is described by parent as 19 c_final vs 20 elsewhere; local corresponding per-room manifest not found.",
+      "cannot_infer": [
+        "Which room missing",
+        "Whether failed generation, filtering or judge error",
+        "Direction and magnitude of ranking change"
+      ],
+      "required_analysis": "Both common-room paired comparison and all-request success with missing failure category; no silent dropping. If score range is [0,100], one missing room can move the full-20 mean relative to mean19 by at most 5 points, so it is not automatically a sufficient explanation for a larger gap."
+    },
+    "judge_scale_and_bias": {
+      "verified": "Local ops/vlm_judge.py is CPU box rendering/anchors/handoff/contact only, not I-Design/GPT judge. It hashes filenames and omits method names from panels; operator manifest/contact expose them. No screenshot judge prompt/raw calls/calibration found.",
+      "unverified": [
+        "GPT model/version/prompt/temperature",
+        "what three reviews vary",
+        "scale anchors and score saturation",
+        "method blinding/order",
+        "whether two evals reuse same judge/render evidence",
+        "human agreement"
+      ],
+      "interpretation": "Three repeated judgments of each layout estimate judge variability conditional on the same room, not three independent room samples. Two implementations agreeing strengthens observed ranking but may share judge/prompt/render/task biases; it does not by itself localize the cause."
+    },
+    "render_inputs": {
+      "verified_locations": [
+        "fastfill/v2/ops/vlm_judge.py:13",
+        "fastfill/v2/ops/vlm_judge.py:164",
+        "fastfill/v2/ops/vlm_judge.py:413",
+        "fastfill/v2/roomgenbench.py:115"
+      ],
+      "verified": "Local renderer uses identical box style/request ordering, top + two corner views and description legend truncated to 80 chars. RoomGenBench assembly can emit target_bbox_proxy/placeholder_bbox/fallback_mesh and logs geometry_kind.",
+      "scope": "No evidence screenshot uses these renders. Need check its mesh/native-size/fitted-size and failure manifests before attributing preference to actual layouts."
+    },
+    "stage_improvement": {
+      "verified": "No staged/c_final per-room output linkage found. Existing hybrid selects by hard problem count, and deterministic tidy moves near contacts/wall crossings. Existing remask always attaches supports after final round (remask.py:292).",
+      "required_analysis": "Pair base->raw model->tidy/support attachment->LLM candidate->selected final per room using identical evaluator; log geometry deltas, hard/functional/judge metrics and reasons. Gains cannot be assigned to a learned stage when deterministic changes also vary."
+    },
+    "speed_complexity": {
+      "verified_locations": [
+        "fastfill/v2/ops/llm_hybrid.py:73",
+        "fastfill/v2/ops/llm_hybrid.py:123",
+        "fastfill/v2/ops/llm_hybrid.py:147",
+        "fastfill/v2/llm_workflow.py:249"
+      ],
+      "verified": "Existing hybrid timer begins after reading saved FastFill drafts, so latency excludes earlier model inference. Default repairs=2 permits up to3 LLM calls. Lower problem count alone does not prove improved semantic quality. No screenshot latency/cost data found.",
+      "required_analysis": "Report batch=1 end-to-end latency including input preparation, FastFill, every LLM call/retry, repair, retrieval, mesh generation/assembly and evaluation separately; median/p95/failure rate and tokens/cost on same machines/endpoints. Compare quality-vs-cost Pareto, do not infer speed benefit from complexity."
+    }
+  },
+  "priority_findings": [
+    {
+      "id": "repair_optimizes_geometric_problem_count_not_semantic_quality",
+      "priority": "P1_for_diagnosis",
+      "status": "current_code_and_cpu_reproduced",
+      "locations": [
+        "fastfill/v2/ops/llm_hybrid.py:61",
+        "fastfill/v2/ops/llm_hybrid.py:65",
+        "fastfill/v2/ops/llm_hybrid.py:77",
+        "fastfill/v2/ops/llm_hybrid.py:83",
+        "fastfill/v2/llm_workflow.py:208",
+        "fastfill/v2/llm_workflow.py:217"
+      ],
+      "mechanism": "Both hybrid modes lock FastFill sizes. Repair skips the LLM whenever the tidied draft has zero workflow_problems; later selection only accepts strictly fewer problem messages. These checks cover supplied constraints and geometric violations, not general implicit furniture-group function/appearance or a VLM quality objective. A functionally better equal-count layout is discarded in repair mode.",
+      "evidence": {
+        "executed": true,
+        "condition": {
+          "room_type": "dining",
+          "room_size_m": [
+            5.0,
+            4.0,
+            3.0
+          ],
+          "objects": [
+            {
+              "id": "table",
+              "category": "dining table",
+              "support_parent": "floor"
+            },
+            {
+              "id": "chair",
+              "category": "chair",
+              "support_parent": "floor"
+            }
+          ]
+        },
+        "layout": {
+          "table": {
+            "size": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              1.5,
+              2.0,
+              0.0
+            ],
+            "yaw": 0.0
+          },
+          "chair": {
+            "size": [
+              0.5,
+              0.5,
+              1.0
+            ],
+            "position": [
+              3.5,
+              2.0,
+              0.0
+            ],
+            "yaw": 0.0
+          }
+        },
+        "interpretation": "Chair is 2m from table centre and faces away. No user relation is supplied; simple geometric constraints pass. Actual solve({},NO_MODEL,None,condition,layout,repair,2) returns before chat.",
+        "workflow_problems": [],
+        "record": {
+          "turns": [],
+          "usage": [],
+          "kept": true,
+          "fallback": false,
+          "draft_problems": 0
+        },
+        "same_layout": true
+      },
+      "relevance": "Can retain poor chair/table/sofa/TV arrangements after a stage labelled repair and spend extra calls without selecting semantic improvement. This is a concrete local mechanism, not established cause of screenshot staged/c_final scores because those run IDs are unavailable.",
+      "minimal_action": "Expose raw, tidy-only, size-locked placement, hard-constraint repair as separate stages; add explicit functional tests and preserve Pareto candidate records. First compare size-free one-call and size-locked one-call on identical requests to determine whether size freezing creates the gap."
+    },
+    {
+      "id": "cached_llm_results_not_bound_to_model_input_method",
+      "priority": "P1_experiment_integrity",
+      "status": "current_code_and_cpu_reproduced_without_network",
+      "locations": [
+        "fastfill/v2/ops/llm_probe.py:57",
+        "fastfill/v2/ops/llm_hybrid.py:117",
+        "fastfill/v2/ops/llm_hybrid.py:137"
+      ],
+      "mechanism": "Successful room_k cache is reused based only on file existence/error, without validating rows/model/method/draft binding; hybrid writes a new RUN.json before reuse.",
+      "evidence": {
+        "hybrid": {
+          "input_source": "new-source",
+          "cached_source": "old-source",
+          "result_layout_reused": true,
+          "run_manifest": {
+            "method": "sizes",
+            "model": "new-model",
+            "repairs": 2,
+            "rows": "/var/folders/0y/wqvrsf41449_9w1pp5j05db00000gn/T/ff-engineering-8d0km6tl/rows.jsonl",
+            "fastfill": "/var/folders/0y/wqvrsf41449_9w1pp5j05db00000gn/T/ff-engineering-8d0km6tl/draft.jsonl",
+            "fastfill_sha256": "4a988a18784ce793ed78798628922cdd11c86fabb4327f993a60cb96c674d619",
+            "rows_sha256": "27f08b06dc7b6a6f7749446e46c7b3b30e06ac5edaded7fa4dfe6d2cb6115be2"
+          }
+        },
+        "probe": {
+          "input_source": "new-source",
+          "cached_source": "old-source",
+          "result_layout_reused": true,
+          "run_manifest": {
+            "model": "old-model",
+            "rows_sha256": "old-hash",
+            "method": "repair"
+          }
+        }
+      },
+      "relevance": "If the screenshot experiment reused these scripts/directories, rows can be attributed to a new configuration even though generated previously. No claim that this happened to the screenshot.",
+      "minimal_action": "Audit cache request/model/hash bindings before any rerun; require immutable run manifest and new directory on mismatch. Re-score existing raw outputs after establishing identities, no paid rerun needed."
+    },
+    {
+      "id": "metric_aggregation_conditions_on_surviving_layouts",
+      "priority": "P1_comparison_integrity",
+      "status": "current_code_and_cpu_reproduced",
+      "locations": [
+        "fastfill/v2/ops/layout_quality.py:291",
+        "fastfill/v2/ops/layout_quality.py:295",
+        "fastfill/v2/ops/layout_quality.py:304",
+        "fastfill/v2/ops/remask_ablation.py:75",
+        "fastfill/v2/ops/remask_ablation.py:78"
+      ],
+      "mechanism": "layout_quality skips None before computing NAV and per-object relation/access/collision aggregates; support_accuracy likewise skips missing predictions. The reported room count remains visible but metric means are conditional, unlike an all-request success measure.",
+      "evidence": {
+        "executed": true,
+        "input": "two copies of first probe20 row, layouts=[target,None]",
+        "reported_rooms": 1,
+        "requested_rooms": 2,
+        "exactly_equals_success_only_result": true,
+        "reported_metrics": {
+          "NAV": 0.6005627877892104,
+          "ACC": 0.625,
+          "COL": 0.47619047619047616,
+          "OPC": 0.0,
+          "SG": 1.0
+        }
+      },
+      "relevance": "Cannot treat 19-room c_final and 20-room methods as directly paired means. This proves the local scorer behavior only; screenshot scorer and missing reason not found.",
+      "minimal_action": "Publish all-request completion/success plus common-19 paired score and full-20 conditional score. Identify missing room/reason. Average repeated judges within room and estimate uncertainty across rooms, not across 60 correlated calls."
+    },
+    {
+      "id": "predicted_support_not_consumed_by_actual_runtime",
+      "priority": "P2_main_task_interface",
+      "status": "current_code_and_cpu_reproduced",
+      "locations": [
+        "fastfill/v2/evaluate.py:348",
+        "fastfill/v2/runtime.py:155",
+        "fastfill/v2/runtime.py:162",
+        "fastfill/v2/validation.py:350",
+        "fastfill/v2/validation.py:379"
+      ],
+      "mechanism": "Decoder/export retains predicted parent, but runtime reconcile overwrites it with request support; validator also uses request support. For unknown-support inventory, predicted floor parent becomes None and support remains unknown.",
+      "evidence": {
+        "raw_support": "floor",
+        "reconciled_support": null,
+        "export_support": "predicted",
+        "target_unknown": [
+          "support_unknown",
+          "mesh_unchecked",
+          "physics_unchecked",
+          "solver_unchecked"
+        ],
+        "runtime_ok": false,
+        "final_unknown": [
+          "support_unknown",
+          "mesh_unchecked",
+          "physics_unchecked",
+          "solver_unchecked"
+        ]
+      },
+      "relevance": "The user task omits mesh/support ground truth. A support head cannot establish operational end-to-end support through this path even if predicted correctly. Conservative rejection is safer than false acceptance, but capability claim must be restricted.",
+      "minimal_action": "Use one declared/predicted candidate-support contract with provenance, verify against real geometry, retain unknown where verification missing."
+    }
+  ],
+  "additional_conditional_risks": [
+    {
+      "id": "support_head_missing_from_saved_head_cache",
+      "locations": [
+        "fastfill/v2/evaluate.py:414",
+        "fastfill/v2/evaluate.py:423",
+        "fastfill/v2/evaluate.py:452"
+      ],
+      "status": "current_code_and_cpu_reproduced",
+      "evidence": {
+        "online": {
+          "id": "a",
+          "target_size_local_m": [
+            0.20000000298023224,
+            1.0,
+            0.6000000238418579
+          ],
+          "bottom_center_m": [
+            0.10000000149011612,
+            1.0,
+            1.2000000476837158
+          ],
+          "yaw_rad": 0.0,
+          "support_parent": "wall"
+        },
+        "replay": {
+          "id": "a",
+          "target_size_local_m": [
+            0.20000000298023224,
+            1.0,
+            0.6000000238418579
+          ],
+          "bottom_center_m": [
+            1.0,
+            1.0,
+            0.0
+          ],
+          "yaw_rad": 0.0
+        },
+        "same": false,
+        "stored_keys": [
+          "position_normalized",
+          "size",
+          "yaw_logits",
+          "yaw_residuals",
+          "position_cell_logits",
+          "position_cell_residuals",
+          "slot_mask",
+          "ids"
+        ]
+      },
+      "scope": "If screenshot stages use --from-head-outputs on E, cache replay changes geometry; exact screenshot path not known.",
+      "action": "Do not mix online E with re-decoded cached E until support_logits is serialized/versioned."
+    },
+    {
+      "id": "native_benchmark_request_has_gt_support_and_drops_shell_details",
+      "locations": [
+        "fastfill/v2/roomgenbench.py:253",
+        "fastfill/v2/roomgenbench.py:263"
+      ],
+      "status": "current_code_static",
+      "scope": "Only benchmark_request(scene) path, not all request entry points.",
+      "mechanism": "Reconstructs request from room dimensions and furniture descriptions plus GT place_id support_parent, omitting source doors/windows/polygon. This is not empty observed shell plus unknown support as specified.",
+      "action": "Use canonical observed shell with openings and only authorizable furniture data; label GT support as privileged/oracle track."
+    }
+  ],
+  "local_reproduction_file": "/tmp/fastfill-current-roomgen-repro-20261026.json",
+  "source_receipts": [
+    {
+      "path": "fastfill/v2/ops/llm_hybrid.py",
+      "sha256": "0574510dcb32d21c40a7a7d8a8b124b3c1ac9ffe6406eca12128e2f79d27b5b2"
+    },
+    {
+      "path": "fastfill/v2/ops/llm_probe.py",
+      "sha256": "4031e1ca04ebfcd4d00f238ff48b0b3c9b221c010c895b298435da2cb53ae873"
+    },
+    {
+      "path": "fastfill/v2/ops/layout_quality.py",
+      "sha256": "188dff03821e39ed7f73390becd0772660ff549ab42429fffe4579a142429be6"
+    },
+    {
+      "path": "fastfill/v2/ops/vlm_judge.py",
+      "sha256": "eb0ae5ec79880bbed1918b74b9a9600da6631c03d5487055cfa160a8ab431718"
+    },
+    {
+      "path": "fastfill/v2/evaluate.py",
+      "sha256": "795a4b60fcca896f61a38f4f6d5cc06bebdb033f8ef37493f29b99b81fdf61de"
+    },
+    {
+      "path": "fastfill/v2/runtime.py",
+      "sha256": "8bd0c2d7e12531fd6805ce0caaa348be94402e950cf91465ffc22f8ddb4f0993"
+    },
+    {
+      "path": "fastfill/v2/validation.py",
+      "sha256": "87ed462441f1a74a0da4c6a16cdca45ee5e6dfd7155239f0a348179e26c99f59"
+    },
+    {
+      "path": "fastfill/v2/roomgenbench.py",
+      "sha256": "e3cdc050fd86c02243e600bfbd5dfb9c3c57af17c028887647d126dcaf47aea8"
+    },
+    {
+      "path": "fastfill/v2/remask.py",
+      "sha256": "bcbe9105827652f67b01fdb364254eab68f3587d87937574ac0e0617fa76a636"
+    },
+    {
+      "path": "fastfill/v2/llm_workflow.py",
+      "sha256": "155aff6ec182c169f098651e68b5a767e23389328c6cbe990ab06907bc59255f"
+    }
+  ],
+  "conclusion": "Do not dismiss the observed ranking as judge bias. Treat it as a real warning for the tested protocol while separating data/aggregation/engineering errors from remaining model/task quality. Current checkout cannot establish screenshot ranking cause; it does establish repair objective mismatch, unbound caches, survivor-only metrics and support contract gap."
+}

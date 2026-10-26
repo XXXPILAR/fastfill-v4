@@ -1,0 +1,486 @@
+{
+  "audit_date": "2026-10-26",
+  "scope": "Supplement to earlier14-paper code audit. Primary papers/author pages + reachable author-linked GitHub trees and selected text files only; not a systematic exhaustive survey or full-source read. No dependencies/assets/model downloads, inference, evaluation, paid API calls, external mutations or project code edits.",
+  "target_task": "Observed empty room shell + exact required textual furniture inventory without per-object sizes -> layout/dimensions -> RoomGenBench realization.",
+  "naming_correction": "SceneCraft-LLM (Hu, ICML2024), SceneCraft-layout (Yang, NeurIPS2024), and Open-Universe-2024 (Aguina-Kang et al.) are THREE distinct papers. Open-Universe is not a SceneCraft subtitle.",
+  "entries": [
+    {
+      "name": "AnyHome",
+      "title": "AnyHome: Open-Vocabulary Generation of Structured and Textured 3D Homes",
+      "paper_url": "https://arxiv.org/abs/2312.06644",
+      "paper_html": "https://arxiv.org/html/2312.06644",
+      "first_arxiv_date": "2023-12-11",
+      "venue": {
+        "name": "ECCV 2024",
+        "evidence": "https://ivl.cs.brown.edu/research/anyhome.html",
+        "date_note": "2024 conference, 2023 preprint; do not label first introduced in 2024."
+      },
+      "project_url": "https://ivl.cs.brown.edu/research/anyhome.html",
+      "primary_official_proof": "Author Brown IVL project explicitly links FreddieRao/anyhome_github.",
+      "code": {
+        "url": "https://github.com/FreddieRao/anyhome_github",
+        "reachable": true,
+        "commit": "6bd964b9e3ec0e96d2e3f41482098bffb537357c",
+        "commit_date": "2024-07-08T03:05:46Z",
+        "tree_truncated": false,
+        "snapshot": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/FreddieRao__anyhome_github-snapshot.json"
+      },
+      "input": {
+        "text": true,
+        "observed_shell": "Default generates house floor plan, not fixed observed shell.",
+        "inventory": "LLM elaborates free-form scene request.",
+        "sizes": "Structured representation predicts geometry; retrieves CAD assets."
+      },
+      "method": "LLM templates -> hierarchical house/room/object representation -> constrained layout + CAD retrieval -> SDS layout refinement -> egocentric texture inpainting.",
+      "paper_evaluation": [
+        "OOB (paper mixes boundary/intersection wording; freeze exact definition before borrowing).",
+        "Caption similarity, CLIP text-content and style similarity; rendered-view perturbations."
+      ],
+      "code_evaluation_evidence": [
+        {
+          "url": "https://github.com/FreddieRao/anyhome_github/blob/6bd964b9e3ec0e96d2e3f41482098bffb537357c/README.md#L4",
+          "observed": "Gradual release statement."
+        },
+        {
+          "url": "https://github.com/FreddieRao/anyhome_github/blob/6bd964b9e3ec0e96d2e3f41482098bffb537357c/main.py#L1",
+          "observed": "Floorplan/layout entry."
+        }
+      ],
+      "fixed_inventory_unknown_size_gap": "Need bypass floor-plan/inventory expansion, enforce exact required IDs, preserve observed polygon/openings, separate bbox vs realized mesh.",
+      "innovation_claims_excluded": [
+        "Open-vocabulary text-to-house and hierarchical intermediate representation.",
+        "Combining structured layout, asset retrieval and texturing; multistage generation itself."
+      ],
+      "limits": [
+        "Current public tree has only18 blobs; README explicitly promises gradual module release.",
+        "main.py calls floorplan and layout generators; no standalone paper scorer or SDS/texture implementation identified in scanned tree.",
+        "Repository availability does not mean complete paper pipeline reproduced."
+      ]
+    },
+    {
+      "name": "SceneTeller",
+      "title": "SceneTeller: Language-to-3D Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2407.20727",
+      "paper_html": "https://arxiv.org/html/2407.20727",
+      "first_arxiv_date": "2024-07-30",
+      "venue": {
+        "name": "ECCV 2024",
+        "evidence": "https://sceneteller.github.io/"
+      },
+      "project_url": "https://sceneteller.github.io/",
+      "primary_official_proof": "Author project Code links sceneteller/SceneTeller.",
+      "code": {
+        "url": "https://github.com/sceneteller/SceneTeller",
+        "reachable": true,
+        "commit": "4e481f944c6dfe5fc0211a39a9c375aad6ba62ce",
+        "commit_date": "2024-12-16T23:49:20Z",
+        "tree_truncated": false,
+        "snapshot": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/sceneteller__SceneTeller-snapshot.json"
+      },
+      "input": {
+        "text": true,
+        "observed_shell": "Room dimensions in layout-generation prompt; README defaults regular floor plan.",
+        "inventory": "Text describes placements/orientations; not exact canonical request IDs.",
+        "assets": "Retrieves 3D-FUTURE CAD after bbox layout."
+      },
+      "method": "Language ICL/CoT layout generation -> CAD assembly -> Gaussian splatting -> instruction-guided global/object stylization.",
+      "paper_evaluation": [
+        "Category-count precision/recall and exact-scene accuracy; bbox mIoU and OOB.",
+        "Style-only CLIP; FID against ScanNet rendered images.",
+        "Human realism/text alignment/geometric fidelity/compositional plausibility."
+      ],
+      "code_evaluation_evidence": [
+        {
+          "url": "https://github.com/sceneteller/SceneTeller/blob/4e481f944c6dfe5fc0211a39a9c375aad6ba62ce/README.md#L65",
+          "observed": "Generation/assembly/stylization instructions."
+        },
+        {
+          "url": "https://github.com/sceneteller/SceneTeller/blob/4e481f944c6dfe5fc0211a39a9c375aad6ba62ce/LayoutGen/ATISS/scripts/compute_fid_scores.py#L1",
+          "observed": "Vendored FID evaluator, not proof of all paper scoring."
+        },
+        {
+          "url": "https://github.com/sceneteller/SceneTeller/blob/4e481f944c6dfe5fc0211a39a9c375aad6ba62ce/instruct-gs2gs/metrics/clip_metrics.py#L1",
+          "observed": "CLIP helper."
+        }
+      ],
+      "fixed_inventory_unknown_size_gap": "Need observed shell/opening and exact-ID adapter; single-GT mIoU is auxiliary because many layouts satisfy plain inventory. Style score does not measure functional layout.",
+      "innovation_claims_excluded": [
+        "Text-to-layout -> retrieval ->3DGS stylization pipeline.",
+        "Natural-language placement and orientation control."
+      ],
+      "limits": [
+        "Full tree1047 blobs includes vendored rendering/GS frameworks; selected source/README checked, not all source read.",
+        "Tree contains ATISS FID/KL and CLIP helper; standalone paper layout precision/recall/mIoU/OOB scoring entry not identified in LayoutGen tree.",
+        "No complete human-study reproduction established."
+      ]
+    },
+    {
+      "name": "DeBaRA",
+      "title": "DeBaRA: Denoising-Based 3D Room Arrangement Generation",
+      "paper_url": "https://arxiv.org/abs/2409.18336",
+      "paper_html": "https://arxiv.org/html/2409.18336",
+      "first_arxiv_date": "2024-09-26",
+      "venue": {
+        "name": "NeurIPS 2024 main conference",
+        "evidence": "https://papers.nips.cc/paper_files/paper/2024/hash/c55aeaa3a85954615319a7e55c81197a-Abstract-Conference.html"
+      },
+      "project_url": null,
+      "primary_official_proof": "NeurIPS proceedings + author Maks Ovsjanikov publication page confirm paper; no official Code link identified. Author page https://www.lix.polytechnique.fr/~maks/publications.html search result lists paper only; direct fetch timed out.",
+      "code": {
+        "url": null,
+        "reachable": null,
+        "status": "Official repository not verified; do not infer no code exists anywhere."
+      },
+      "input": {
+        "text": "Uses object semantic categories and optional external LLM to propose category sets.",
+        "observed_shell": "Floor plan conditioning, including complex room boundaries.",
+        "inventory": "Given object category set for layout generation.",
+        "sizes": "Predicts spatial attributes including sizes; re-arrangement can fix dimensions."
+      },
+      "method": "Lightweight spatially-aware conditional score model; floor encoder and object attributes; iterative denoising; Self Score Evaluation selects LLM semantic sets.",
+      "paper_evaluation": [
+        "Top-down FID/KID/SCA.",
+        "Accumulated outside-boundary object area OBA in m².",
+        "Completion/re-arrangement and efficiency analyses."
+      ],
+      "code_evaluation_evidence": [],
+      "fixed_inventory_unknown_size_gap": "Close task match at category-list + floor-plan level. Needs text-description/open-vocabulary/door/support adapter and official implementation access; fixed-category unknown-size layout is established prior work.",
+      "innovation_claims_excluded": [
+        "Fixed object categories while jointly predicting size/position/orientation.",
+        "Lightweight conditional room-aware arrangement model.",
+        "Using learned scene score to choose external LLM proposals."
+      ],
+      "limits": [
+        "No official repo verified after paper, author-page and targeted GitHub search; code availability remains unconfirmed.",
+        "Do not convert paper equations into a claim released scorer exists."
+      ]
+    },
+    {
+      "name": "EchoScene",
+      "title": "EchoScene: Indoor Scene Generation via Information Echo over Scene Graph Diffusion",
+      "paper_url": "https://arxiv.org/abs/2405.00915",
+      "paper_html": "https://arxiv.org/html/2405.00915",
+      "first_arxiv_date": "2024-05-02",
+      "venue": {
+        "name": "ECCV 2024; 3DV2025 Nectar Track presentation",
+        "evidence": "https://sites.google.com/view/echoscene"
+      },
+      "project_url": "https://sites.google.com/view/echoscene",
+      "primary_official_proof": "Author project Code links ymxlzgy/echoscene.",
+      "code": {
+        "url": "https://github.com/ymxlzgy/echoscene",
+        "reachable": true,
+        "commit": "fdc78e87fa88be6de744674c28fa86d1edd78f66",
+        "commit_date": "2024-06-03T16:28:51Z",
+        "tree_truncated": false,
+        "snapshot": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/ymxlzgy__echoscene-snapshot.json"
+      },
+      "input": {
+        "text": "Native input semantic scene graph, not free-form inventory only.",
+        "observed_shell": "Room node/scene graph conditions; fixed detailed observed shell not established here.",
+        "inventory": "Graph nodes specify objects; edges supply relationships.",
+        "sizes": "Generates layout and object shapes; EchoLayout variant uses retrieval."
+      },
+      "method": "Dual layout/shape diffusion branches; graph convolution aggregates and echoes per-node denoising information each step; graph editing.",
+      "paper_evaluation": [
+        "Scene FID/CLIP-FID/KID.",
+        "Graph-constraint accuracy/mean scene graph constraint score.",
+        "Shape MMD/COV/1-NNA, Chamfer inter-object consistency."
+      ],
+      "code_evaluation_evidence": [
+        {
+          "url": "https://github.com/ymxlzgy/echoscene/blob/fdc78e87fa88be6de744674c28fa86d1edd78f66/scripts/eval_3dfront.py#L1",
+          "observed": "Public eval entry (not executed)."
+        },
+        {
+          "url": "https://github.com/ymxlzgy/echoscene/blob/fdc78e87fa88be6de744674c28fa86d1edd78f66/scripts/compute_fid_scores_3dfront.py#L1",
+          "observed": "Public image-distribution score entry."
+        },
+        {
+          "url": "https://github.com/ymxlzgy/echoscene/blob/fdc78e87fa88be6de744674c28fa86d1edd78f66/helpers/metrics_3dfront.py#L1",
+          "observed": "Public geometry/graph metric module; full behavior not audited here."
+        }
+      ],
+      "fixed_inventory_unknown_size_gap": "Requires external text->graph compiler with no GT relations and canonical IDs; preserve actual shell/openings. SG is stronger relation input than an unstructured mandatory inventory.",
+      "innovation_claims_excluded": [
+        "Joint layout and shape generation conditioned on a scene graph.",
+        "Iterative graph-wide communication during denoising.",
+        "Editing layouts by graph manipulation."
+      ],
+      "limits": [
+        "README has eval_3dfront and FID commands, assets/models links.",
+        "Some README-mentioned object-fidelity/consistency filenames were not located in scanned current tree; not all reported evaluators proven released.",
+        "Textures are a separate downstream method; code README says paper prevails on discrepancies."
+      ]
+    },
+    {
+      "name": "HSM",
+      "title": "HSM: Hierarchical Scene Motifs for Multi-Scale Indoor Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2503.16848",
+      "paper_html": "https://arxiv.org/html/2503.16848",
+      "first_arxiv_date": "2025-03-21",
+      "venue": {
+        "name": "3DV 2026",
+        "evidence": "https://arxiv.org/abs/2503.16848",
+        "date_note": "2025 first preprint; current author project and arXiv explicitly identify 3DV2026."
+      },
+      "project_url": "https://3dlg-hcvc.github.io/hsm/",
+      "primary_official_proof": "Author project Code links 3dlg-hcvc/hsm.",
+      "code": {
+        "url": "https://github.com/3dlg-hcvc/hsm",
+        "reachable": true,
+        "commit": "17d108fa321c1c4489374c0e737917a71044deff",
+        "commit_date": "2025-12-02T08:05:32Z",
+        "tree_truncated": false,
+        "snapshot": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/3dlg-hcvc__hsm-snapshot.json"
+      },
+      "input": {
+        "text": true,
+        "observed_shell": "Optional room boundary as vertices.",
+        "inventory": "Text decomposed into objects at each hierarchy level.",
+        "assets": "HSSD retrieval and geometric support-region extraction; actual asset geometry available."
+      },
+      "method": "Hierarchical support regions + learned reusable scene-motif programs + spatial optimization; same motif machinery arranges furniture and small objects across scales.",
+      "paper_evaluation": [
+        "SceneEval count/attribute/object-object/object-architecture fidelity; collision/support/NAV/ACC/OOB plausibility.",
+        "BLIP-2/Long-CLIP/VQA alignment; human scene/small-object preferences.",
+        "Support-region IoU/F1 at region matching threshold."
+      ],
+      "code_evaluation_evidence": [
+        {
+          "url": "https://github.com/3dlg-hcvc/hsm/blob/17d108fa321c1c4489374c0e737917a71044deff/README.md#L174",
+          "observed": "SceneEval export and warning against GLB evaluation."
+        },
+        {
+          "url": "https://github.com/3dlg-hcvc/hsm/blob/17d108fa321c1c4489374c0e737917a71044deff/README.md#L180",
+          "observed": "External SceneEval evaluator."
+        }
+      ],
+      "fixed_inventory_unknown_size_gap": "Close open-vocabulary, boundary-aware functional comparison; must bypass item invention and preserve requested IDs; separate retrieval-known geometry from unknown-size layout-first track.",
+      "innovation_claims_excluded": [
+        "Large+small objects in one hierarchy.",
+        "Support-surface extraction and recursive population.",
+        "Reusable relational arrangement/motif programs across scales."
+      ],
+      "limits": [
+        "README exports stk_scene_state.json and delegates evaluation to SceneEval.",
+        "README explicitly warns not to evaluate debug GLB because room origin misaligned.",
+        "Needs licensed HSSD and API endpoint; no data/weights generation run."
+      ]
+    },
+    {
+      "name": "SceneCraft-LLM",
+      "title": "SceneCraft: An LLM Agent for Synthesizing 3D Scenes as Blender Code",
+      "paper_url": "https://arxiv.org/abs/2403.01248",
+      "paper_html": "https://arxiv.org/html/2403.01248",
+      "first_arxiv_date": "2024-03-02",
+      "venue": {
+        "name": "ICML 2024",
+        "evidence": "https://proceedings.mlr.press/v235/hu24g.html",
+        "note": "First author page additionally labels Oral."
+      },
+      "project_url": "https://acbull.github.io/",
+      "primary_official_proof": "PMLR proceedings identify exact title/authors/venue; first-author page lists PDF and ICML Oral, but no Code link for this entry.",
+      "code": {
+        "url": null,
+        "reachable": null,
+        "status": "Official repository not verified; do not infer no code exists anywhere."
+      },
+      "input": {
+        "text": true,
+        "observed_shell": "General 3D scenes, not specifically fixed indoor shell.",
+        "inventory": "Synthetic constrained text queries; Sintel experiment supplies fixed assets.",
+        "sizes": "Constraint script/solver chooses size, pose and composition; asset conditions vary by experiment."
+      },
+      "method": "LLM scene graph -> executable Blender Python constraints -> solver/render -> GPT-V critique and script refinement; outer loop learns reusable spatial-skill library.",
+      "paper_evaluation": [
+        "CLIP and human-authored constraint score on synthetic queries.",
+        "Human text fidelity/composition/aesthetics.",
+        "Sintel layout-matrix similarity/CLIP and downstream FVD/relative matching."
+      ],
+      "code_evaluation_evidence": [],
+      "fixed_inventory_unknown_size_gap": "General program-synthesis prior art, not a drop-in mandatory-furniture room baseline. Need fixed shell/inventory, unified asset conditions and scripts that export actual instance poses.",
+      "innovation_claims_excluded": [
+        "Plan/scene-graph -> code -> geometric solver.",
+        "Render/VLM critique/revise loop.",
+        "Reusable skill/program library and improvement without parameter tuning."
+      ],
+      "limits": [
+        "No official repo verified from PMLR, arXiv, author page or targeted search; do not substitute unrelated OrangeSodahub repo.",
+        "Paper includes prompts/algorithm but this is not proof of released executable evaluator."
+      ]
+    },
+    {
+      "name": "SceneCraft-layout",
+      "title": "SceneCraft: Layout-Guided 3D Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2410.09049",
+      "paper_html": "https://arxiv.org/html/2410.09049",
+      "first_arxiv_date": "2024-10-11",
+      "venue": {
+        "name": "NeurIPS 2024",
+        "evidence": "https://arxiv.org/abs/2410.09049"
+      },
+      "project_url": "https://orangesodahub.github.io/SceneCraft/",
+      "primary_official_proof": "Author project and arXiv Code links OrangeSodahub/SceneCraft.",
+      "code": {
+        "url": "https://github.com/OrangeSodahub/SceneCraft",
+        "reachable": true,
+        "commit": "33cc5f8bdbcb4f425a323ba7393fc1a2c3762a77",
+        "commit_date": "2025-07-07T14:32:19Z",
+        "tree_truncated": false,
+        "snapshot": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/OrangeSodahub__SceneCraft-snapshot.json"
+      },
+      "input": {
+        "text": "Appearance/style/content prompt.",
+        "observed_shell": "Full provided bounding-box scene and camera trajectory.",
+        "inventory": "Object categories and shapes/layout already encoded in union-of-boxes BBS.",
+        "sizes": "Already provided by layout; does not solve unknown layout."
+      },
+      "method": "Render semantic/depth proxy maps from BBS -> layout-conditioned diffusion images -> NeRF scene via distillation, supporting complex multi-room trajectories.",
+      "paper_evaluation": [
+        "CLIP Score and Inception Score.",
+        "32-person 1–5 human 3D-consistency/visual-quality ratings.",
+        "Paper explicitly does not use FID for its primary cross-method comparison."
+      ],
+      "code_evaluation_evidence": [
+        {
+          "url": "https://github.com/OrangeSodahub/SceneCraft/blob/33cc5f8bdbcb4f425a323ba7393fc1a2c3762a77/scripts/compute_metrics.py#L729",
+          "observed": "Metric dispatch CS/IS/FID/KID; selected source read only, unexecuted."
+        },
+        {
+          "url": "https://github.com/OrangeSodahub/SceneCraft/blob/33cc5f8bdbcb4f425a323ba7393fc1a2c3762a77/README.md#L162",
+          "observed": "Layout/image/NeRF inference instructions."
+        }
+      ],
+      "fixed_inventory_unknown_size_gap": "Downstream appearance/geometry realization module after layout, not competing unknown-size layout predictor. Input privileges must not be hidden.",
+      "innovation_claims_excluded": [
+        "Box-layout-conditioned photorealistic scene generation.",
+        "Semantic/depth proxy rendering and multi-view scene distillation."
+      ],
+      "limits": [
+        "Public metrics source contains CS/IS plus FID/KID implementations; code presence does not mean FID/KID were headline paper metrics.",
+        "No human-study raw-data reproduction established; model/data/renderer dependencies substantial."
+      ]
+    },
+    {
+      "name": "Open-Universe-2024",
+      "title": "Open-Universe Indoor Scene Generation using LLM Program Synthesis and Uncurated Object Databases",
+      "paper_url": "https://arxiv.org/abs/2403.09675",
+      "paper_html": "https://arxiv.org/html/2403.09675",
+      "first_arxiv_date": "2024-02-05",
+      "venue": {
+        "name": "2024 arXiv preprint; venue not asserted",
+        "evidence": "https://rioak.github.io/"
+      },
+      "project_url": "https://rioak.github.io/",
+      "primary_official_proof": "First-author publications page lists exact paper as Arxiv preprint2024 with PDF only. This paper is distinct from both SceneCraft papers.",
+      "code": {
+        "url": null,
+        "reachable": null,
+        "status": "Official repository not verified; do not infer no code exists anywhere."
+      },
+      "input": {
+        "text": true,
+        "observed_shell": "Optional room size/fullness; fixed arbitrary observed polygon not established.",
+        "inventory": "Program synthesizer expands description into open-vocabulary object list.",
+        "assets": "Uncurated Objaverse retrieval; bbox size preferences and VLM orientation."
+      },
+      "method": "LLM scene-description DSL -> gradient layout optimization/error correction -> category/single-object/size-aware retrieval -> multistep asset orientation.",
+      "paper_evaluation": [
+        "Two-alternative forced-choice preference for closed/open-universe scenes.",
+        "Component studies for program synthesis/retrieval/orientation; timing."
+      ],
+      "code_evaluation_evidence": [],
+      "fixed_inventory_unknown_size_gap": "Relevant program/retrieval prior art; needs exact furniture IDs, observed shell/openings, and size/asset verification. Do not name this SceneCraft.",
+      "innovation_claims_excluded": [
+        "Open-universe LLM layout-language program synthesis.",
+        "Joint semantic/size-aware uncurated retrieval and geometry-based layout optimization.",
+        "Orientation verification using rendered views/VLM."
+      ],
+      "limits": [
+        "Original official repo not verified. Related coauthor repository mxgmn/ImperativeScene links DeclarativeScene, but target https://github.com/mxgmn/DeclarativeScene returns404 in this check.",
+        "ImperativeScene is follow-up code, not evidence original2024 evaluation release.",
+        "First-arXiv date follows actual arXiv metadata Feb5 despite2403 identifier."
+      ]
+    }
+  ],
+  "takeaways": [
+    "DeBaRA directly rules out claiming fixed-category unknown-size room arrangement or lightweight conditional layout generation as wholly new. Official code still unverified.",
+    "HSM rules out broad novelty claims around hierarchical large/small furniture, support regions, motif/program reuse and recursive dense arrangements.",
+    "SceneTeller/AnyHome/SceneCraft-LLM/Open-Universe establish staged language planning, structured programs, layout refinement, retrieval and stylization; an additional stage alone is not innovation.",
+    "SceneCraft-layout belongs in downstream layout-to-realized-scene family, not the same layout-prediction main table.",
+    "A defensible FastFill contribution needs concrete advantage under equal fixed-inventory inputs: e.g. lower compute with independent constraint/mesh success, explicit uncertainty/repair/calibration, or a new verifiable interface; this is a research hypothesis, not established novelty."
+  ],
+  "receipts": [
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/3dlg-hcvc__hsm-README.md",
+      "sha256": "5d4370dec48c23494b31b311cf0c7a7539e4158cf66cced0ffa75c6fe189a43d",
+      "bytes": 8347
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/3dlg-hcvc__hsm-snapshot.json",
+      "sha256": "740c75382165367c2aae4b6135973dfb4432d9fa48b869003a11f9b1c4f3b34f",
+      "bytes": 57776
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/FreddieRao__anyhome_github-README.md",
+      "sha256": "78ebd3aaa75bdc349ec8bbe1185086d9ce965b5ce44006fae972732bf68d7370",
+      "bytes": 1110
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/FreddieRao__anyhome_github-main.py",
+      "sha256": "287fb5eefae99560052742ac437192ebd39c2055b7941ced0c2d99465c7fb13b",
+      "bytes": 819
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/FreddieRao__anyhome_github-snapshot.json",
+      "sha256": "bb2b4569bfc13fa610a9df1c91741cc7918e18abc805e82ce95dfd03c958e191",
+      "bytes": 7822
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/OrangeSodahub__SceneCraft-README.md",
+      "sha256": "34c97d1238caad232f56157f6930b812a0ae86fa5e2e580f50b101ac1f718abc",
+      "bytes": 8287
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/OrangeSodahub__SceneCraft-scripts_compute_metrics.py",
+      "sha256": "c922cdaa8717326f239158ebd214f4a5f71f9fc121ca2f173036f49e8cd16093",
+      "bytes": 29850
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/OrangeSodahub__SceneCraft-snapshot.json",
+      "sha256": "415f159761cc00879c61ffcaf5bf987b9685a5348fa6ae051ede01e1bd141581",
+      "bytes": 25723
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/repo-reachability.json",
+      "sha256": "c0078c2a1f6918f6c8cb1458fb7d74aa168f6fdd5500bd39818c3f40538315a3",
+      "bytes": 6935
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/sceneteller__SceneTeller-README.md",
+      "sha256": "dcf71340c1075e948aee10618e9ca16d0c9dfb5f2dd2a6420e63c24c0f5fdbb9",
+      "bytes": 5839
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/sceneteller__SceneTeller-instruct-gs2gs_metrics_clip_metrics.py",
+      "sha256": "83af399823f3c06210e4f771af07a964b18273c14b793000b946d21fcb39046b",
+      "bytes": 2171
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/sceneteller__SceneTeller-snapshot.json",
+      "sha256": "12cc6c981df89435e4d77c9705a4ab0931646b539cc29e32cba1c2d05be766af",
+      "bytes": 439188
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/ymxlzgy__echoscene-README.md",
+      "sha256": "7e34675958499521933d5fa53ad97a6812a5b7a7e40d5c60a8f94a842e562d3c",
+      "bytes": 7142
+    },
+    {
+      "path": "/tmp/fastfill-roomgen-catalog-2024-2025-20261026/ymxlzgy__echoscene-snapshot.json",
+      "sha256": "689da38547b257f67539993d9f408c9cf5ccc541f59cea9170a177cc3ac752f2",
+      "bytes": 34968
+    }
+  ]
+}

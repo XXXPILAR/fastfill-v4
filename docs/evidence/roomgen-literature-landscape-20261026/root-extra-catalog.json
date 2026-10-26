@@ -1,0 +1,338 @@
+{
+  "date": "2026-10-26",
+  "scope": "Selected primary paper method/experiment sections plus explicit weaker-tier entries; no benchmark/model execution",
+  "entries": [
+    {
+      "name": "Infinigen Indoors",
+      "title": "Infinigen Indoors: Photorealistic Indoor Scenes using Procedural Generation",
+      "paper_url": "https://arxiv.org/abs/2406.11824",
+      "year_note": "CVPR2024",
+      "topic": "procedural_assets",
+      "input": "约束DSL/程序规则；生成房间与家具，非文字清单原生输入",
+      "method": "程序化资产库＋房间/对象约束solver，可导出simulator场景",
+      "evaluation": "solver收敛/速度消融；shadow removal和occlusion-boundary等下游任务。不是固定文字清单质量榜",
+      "repo_url": "https://github.com/princeton-vl/infinigen",
+      "code_status": "公开实质程序系统/资产与solver代码；完整论文评估未核",
+      "commit": "224598d4a2ff95b4fc928e72c222598b7122c698",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "可作资产生成/约束solver参考；不能将其全场景流程当同条件轻量布局baseline",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/princeton-vl/infinigen/blob/224598d4a2ff95b4fc928e72c222598b7122c698/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/princeton-vl/infinigen/README.md",
+        "sha256": "ff6802bfdbd3ce2f95d34480ade6cf98fa173b7383db1ce1b10ee93df6ff2bc8"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2406.11824.html",
+        "sha256": "06cc623d37d24f5db3e7e33c8f880a04282fc21c979d2fd9b896261785e73c89"
+      }
+    },
+    {
+      "name": "SceneMotifCoder",
+      "title": "SceneMotifCoder: Example-driven Visual Program Learning for Generating 3D Object Arrangements",
+      "paper_url": "https://arxiv.org/abs/2408.02211",
+      "year_note": "2024预印本；3DV2025 Oral",
+      "topic": "programs_motifs",
+      "input": "示例arrangements＋描述，推理输入描述；依赖HSSD资产",
+      "method": "LLM从少样本学可复用motif meta-program，检索＋几何优化实例化",
+      "evaluation": "GPTEval3D alignment/plausibility/overall，人工数量/布局/可行性验证和偏好；多视render",
+      "repo_url": "https://github.com/3dlg-hcvc/smc",
+      "code_status": "实现/learn/inference和数据链接公开；未在本轮定位完整论文评估runner",
+      "commit": "45ba2f8cad9821b332abdbaf0b3137cf7b289476",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "功能组先验复用的直接前例；不是整间固定空壳完整清单的现成baseline",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/3dlg-hcvc/smc/blob/45ba2f8cad9821b332abdbaf0b3137cf7b289476/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/3dlg-hcvc/smc/README.md",
+        "sha256": "3f5fe3d7d9d5ae0af5869ee2e68a4f44c62d493545b7f6b114fc977562141e69"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2408.02211.html",
+        "sha256": "4d4d22745581ee82552ee34ac4659c7ec32fc992e459cfc550fcce45c745ce12"
+      }
+    },
+    {
+      "name": "The Scene Language",
+      "title": "The Scene Language: Representing Scenes with Programs, Words, and Embeddings",
+      "paper_url": "https://arxiv.org/abs/2410.16770",
+      "year_note": "2024预印本；CVPR2025 Highlight",
+      "topic": "programs_motifs",
+      "input": "text或image；通用3D/4D场景",
+      "method": "program结构＋自然语言类别＋visual embeddings，训练free程序生成/编辑",
+      "evaluation": "CLIP多视图相似度、对象数量正确率、103人用户选择；不等价精确室内几何可用性",
+      "repo_url": "https://github.com/zzyunzhi/scene-language",
+      "code_status": "程序与render等实现公开；存在impl_eval.py但未审读指标等价性",
+      "commit": "0942b1a72ac340583d5dfa692061a56c82bf1c86",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "可借表示/局部编辑；增加DSL本身不是新意，真实空壳/清单需约束",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/zzyunzhi/scene-language/blob/0942b1a72ac340583d5dfa692061a56c82bf1c86/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/zzyunzhi/scene-language/README.md",
+        "sha256": "8063dd6037d36edb887d4a0ffc728ea97b37e73b2cf574ac09f9408f1d961b0f"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2410.16770.html",
+        "sha256": "3e7c8666716b41c51ca86d0db6591110fb43a50eb38d1f5bb1dc9bc4892fb334"
+      }
+    },
+    {
+      "name": "ArtiScene",
+      "title": "ArtiScene: Language-Driven Artistic 3D Scene Generation Through Image Intermediary",
+      "paper_url": "https://arxiv.org/abs/2506.00742",
+      "year_note": "CVPR2025",
+      "topic": "image_asset_bridge",
+      "input": "text→2D中间图→生成对象与layout；原生不要求已观测floor大小",
+      "method": "图像生成、检测/去遮挡、单目深度估3D boxes、生成对象与scene assembly",
+      "evaluation": "OOR排除chair-desk overlap，类别筛选；end-to-end用户/GPT偏好；不能把少OOB报告当遵守指定shell",
+      "repo_url": "https://github.com/NVlabs/ArtiScene",
+      "code_status": "公开分步生成与装配脚本；未核完整evaluation；README仍有内部git clone示例",
+      "commit": "c75f7f74168eccd130c8f8cc2ec2c67e2624ff9c",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "与RoomGenBench相邻的生成资产/布局桥接先例，固定清单和空壳并非原始评测",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/NVlabs/ArtiScene/blob/c75f7f74168eccd130c8f8cc2ec2c67e2624ff9c/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/NVlabs/ArtiScene/README.md",
+        "sha256": "cd38fb39b59da25fe977e2245c11d3f506148a8dc3ccb8feafd9503831af6bd9"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2506.00742.html",
+        "sha256": "4e64e98fd0d8902de1e86c332e7de099cf6bebb505125bfb71d68ad36ef2b25b"
+      }
+    },
+    {
+      "name": "FreeScene",
+      "title": "FreeScene: Mixed Graph Diffusion for 3D Scene Synthesis from Free Prompts",
+      "paper_url": "https://arxiv.org/abs/2506.02781",
+      "year_note": "CVPR2025",
+      "topic": "learned_layout",
+      "input": "free text/image/sketch→部分scene graph；闭集3D-FRONT/FUTURE",
+      "method": "VLM Graph Designer＋混合离散连续graph diffusion联合生成类别/关系/size/pose",
+      "evaluation": "FID/CLIP-FID/KID/SCA、iRecall；另Graph Designer对象召回/关系准确率",
+      "repo_url": null,
+      "code_status": "所查paper无官方Code链接，常见作者项目URL404；未建立可用官方repo，不等于全网无代码",
+      "commit": null,
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "受控采样可固定部分变量；固定完整IDs与真实边界要验证，不能将rearrangement已知尺寸当主榜",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": null,
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2506.02781.html",
+        "sha256": "796ab6e79c944f821a50fc9abce36f4069f2bce7200634b9e76283d7ee6b12c8"
+      }
+    },
+    {
+      "name": "HDSL",
+      "title": "HDSL: A Hierarchical Domain-Specific Language for Structured 3D Indoor Scene Generation and Localized Editing with LLM Agents",
+      "paper_url": "https://arxiv.org/abs/2606.09738",
+      "year_note": "2026预印本",
+      "topic": "programs_motifs",
+      "input": "文字scene brief/编辑；层级room/region/object/support tree",
+      "method": "XML/CSS式局部坐标DSL，agents生成子树，检索assets＋force-directed repair；HRAG子树编辑/三方merge",
+      "evaluation": "NObj、OOB对象率、bbox PIoU、CLIP、全流程Time；layout-only复现单独几何比较",
+      "repo_url": null,
+      "code_status": "原文与定向搜索未找到已验证官方repo；不声称不存在",
+      "commit": null,
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "局部结构检索与少token编辑已有前例；不是只改可读JSON便有新意",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": null,
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2606.09738.html",
+        "sha256": "6f220bc076636b91ad962e783126db7cef1d73e3dcf8a306da8777cc3f867472"
+      }
+    },
+    {
+      "name": "SDesc3D",
+      "title": "SDesc3D: Towards Layout-Aware 3D Indoor Scene Generation from Short Descriptions",
+      "paper_url": "https://arxiv.org/abs/2604.01972",
+      "year_note": "2026预印本，当前arXiv v3",
+      "topic": "retrieval_planning",
+      "input": "短提示＋room-boundary；shared HSSD资产，非固定完整清单",
+      "method": "多视prior retrieval＋功能区域/anchor grounding＋reflection/rectification",
+      "evaluation": "50场景每场10次；collision/OOB、Gemini/GPT judges、functional completeness、richness；单提示消融",
+      "repo_url": null,
+      "code_status": "原文说Code will be publicly available；本轮未建立已发布官方代码",
+      "commit": null,
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "与ScenePilot相邻的retrieval/group/anchor/critic先例；清单/尺寸预测主协议仍需适配",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": null,
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2604.01972.html",
+        "sha256": "cb57d3ee570803aeb82e62adbeb166e732ea463f015619dbdecc98fd3f437114"
+      }
+    },
+    {
+      "name": "SceneCode",
+      "title": "SceneCode: Executable World Programs for Editable Indoor Scenes with Articulated Objects",
+      "paper_url": "https://arxiv.org/abs/2605.19587",
+      "year_note": "2026预印本",
+      "topic": "procedural_assets",
+      "input": "文字scene brief，生成房间和每object的AssetRequest",
+      "method": "agentic room planning＋part-wise Blender程序生成/执行修复＋SDF/关节编译＋persistent scene-state",
+      "evaluation": "SceneEval fidelity/plausibility、mesh/material资产质量、人评、机器人交互",
+      "repo_url": "https://github.com/wangpuyi/SceneCode",
+      "code_status": "实质代码与SceneEval exporter/COL/STB模块存在；本轮只核目录与README，不标全部评分器已核",
+      "commit": "1c8e972d24c960a319b5df936ae552ad410beb85",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "生成新mesh＋布局＋simulator闭环直接先例；可研究轻量交接，但不是“接下游”本身新",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/wangpuyi/SceneCode/README.md",
+        "sha256": "ad0c76407d81d1eebef7ef7a31e3d38e63f6376679ed8bb25180f2f9375f6956"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2605.19587.html",
+        "sha256": "54a43b51c034b0cc0cf2f49920d7cf5bf86409e3e225af149cefd1f865385f61"
+      }
+    },
+    {
+      "name": "GuidedSceneGen",
+      "title": "Scene Generation at Absolute Scale: Utilizing Semantic and Geometric Guidance From Text for Accurate and Interpretable 3D Indoor Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2603.13910",
+      "year_note": "2026；作者项目标ECCV2026",
+      "topic": "image_asset_bridge",
+      "input": "text→metric global layout proxy→panorama/video→3DGS",
+      "method": "绝对坐标下语义/深度引导全景与轨迹生成、多视3DGS融合",
+      "evaluation": "CLIP-IQA+/Q-Align/IS/CLIP、MEt3R、NVS与人评；非mesh inventory达标榜",
+      "repo_url": "https://github.com/d3ixi/GuidedSceneGen",
+      "code_status": "repo可访问但当前树仅README/docs/figures，无实现证据",
+      "commit": "89f4243db24cf177fd76c6115e6522d6bf0858da",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "layout→visual生成桥接相关；产物为3DGS，不能直接当RoomGenBench可交互单体mesh",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/d3ixi/GuidedSceneGen/blob/89f4243db24cf177fd76c6115e6522d6bf0858da/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/d3ixi/GuidedSceneGen/README.md",
+        "sha256": "93c80618681aeca53ffefcbb271f121c847c0e278c5b607fb91eb51a18b4570d"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2603.13910.html",
+        "sha256": "c5f49199939a7e1fe9274e93b2f84a3ada7d6d298290030a1a6c56d270f814e9"
+      }
+    },
+    {
+      "name": "FlairGPT",
+      "title": "FlairGPT: Repurposing LLMs for Interior Designs",
+      "paper_url": "https://arxiv.org/abs/2501.04648",
+      "year_note": "Eurographics2025",
+      "topic": "semantic_solver",
+      "input": "文字设计要求；提取room/door/window/socket，LLM推断尺寸及清单",
+      "method": "功能zone→对象优先级→约束graph/代数cost→层级优化→retrieval",
+      "evaluation": "medial-axis路径0.6m成本、OOR/OOB面积/房间面积、generation error/time统计",
+      "repo_url": "https://github.com/gabriellelittle1/FlairGPT",
+      "code_status": "生成/优化与Metrics.py存在；README明言object retrieval未实现，不能当完整资产pipeline",
+      "commit": "debc87931dbe84c302862c97e9129fa5f78f9cd7",
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "更接近未知尺寸与门窗功能要求；需冻结用户清单，适合作strong solver baseline",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": {
+        "url": "https://github.com/gabriellelittle1/FlairGPT/blob/debc87931dbe84c302862c97e9129fa5f78f9cd7/README.md",
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/repos/gabriellelittle1/FlairGPT/README.md",
+        "sha256": "2ae03b51d6a719f3fab7642ed1f8ba2366d39cf87d69d2271b1e0d499764c588"
+      },
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2501.04648.html",
+        "sha256": "b31dce94bbcd64f901f845fd1e3843924264f7d3f73f2a545cbbe9c5df7c15a6"
+      }
+    },
+    {
+      "name": "FirePlace",
+      "title": "FirePlace:\nGeometric Re fi nements of LLM Common Sense Re asoning for 3D Object Place ment",
+      "paper_url": "https://arxiv.org/abs/2503.04919",
+      "year_note": "2025；作者论文",
+      "topic": "semantic_solver",
+      "input": "已有真实scene＋待放1个真实object＋语言要求",
+      "method": "MLLM提约束、分批视觉选择定位实例/interaction surface，求几何解，再视觉合理性筛选",
+      "evaluation": "50scene共266单物摆放任务；min/mean GT L2、energy、Gemini plausibility、visibility、human preference",
+      "repo_url": null,
+      "code_status": "作者项目无GitHub链接；未建立官方实现，不把同名仓库当本篇代码",
+      "commit": null,
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "最直接的细粒度真实支撑/功能surface prior art，但不是整房间未知size from scratch",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": null,
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2503.04919.html",
+        "sha256": "3b2007ed8dbc1e5501de608fad9a0e18f7bfd18cee8bdc3926c10a9569f2a05e"
+      }
+    },
+    {
+      "name": "Scenethesis",
+      "title": "Scenethesis : A Language and Vision Agentic Framework for 3D Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2505.02836",
+      "year_note": "2025预印本；ICLR2026",
+      "topic": "image_asset_bridge",
+      "input": "text→图像/scenegraph/检索assets；可室内外",
+      "method": "语言planning＋vision grounding＋pose/size/物理优化＋judge触发重规划",
+      "evaluation": "CLIP/BLIP/VQA、layout judge、mesh COL、sim instability、Reach/Walk",
+      "repo_url": null,
+      "code_status": "作者NVIDIA项目可读，无GitHub链接；本轮未找到已验证实现",
+      "commit": null,
+      "evidence_level": "方法与实验段落已核；存在仓库时仅核目录/README，未运行",
+      "task_fit": "support/物理/可达与layout-asset偏差已有先例；不能直接宣称我们的真实mesh闭环首创",
+      "source_audit": "root-extra-catalog.json",
+      "readme_receipt": null,
+      "paper_receipt": {
+        "local_path": "/tmp/fastfill-roomgen-root-research-20261026/papers/2505.02836.html",
+        "sha256": "0f6532de9aa66676539724ec45c6f4e61bb16c52fa2740eeb32217ff88b5080d"
+      }
+    },
+    {
+      "name": "Global-Local Tree Search",
+      "title": "Global-Local Tree Search in VLMs for 3D Indoor Scene Generation",
+      "paper_url": "https://openaccess.thecvf.com/content/CVPR2025/html/Deng_Global-Local_Tree_Search_in_VLMs_for_3D_Indoor_Scene_Generation_CVPR_2025_paper.html",
+      "year_note": "CVPR2025",
+      "topic": "semantic_solver",
+      "input": "text；room/region/floor/supported层次生成",
+      "method": "全局逐对象搜索候选＋局部合理性选择，层级拆解树深",
+      "evaluation": "论文实验未在本次额外卡中复核全部指标；需与2026扩展分开",
+      "repo_url": "https://github.com/dw-dengwei/TreeSearchGen",
+      "code_status": "官方README明确对应CVPR2025及2026扩展；public source存在，尚未固定commit/审读evaluator",
+      "evidence_level": "CVF摘要/官方README核查",
+      "task_fit": "分层搜索/逐对象候选已有；现发布repo默认MCTS不能直接叫2025论文原版",
+      "source_audit": "root-extra-catalog.json"
+    },
+    {
+      "name": "Global-Local MCTS 2026",
+      "title": "Global-Local Monte Carlo Tree Search in Vision-Language Models for Text-to-3D Indoor Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2606.06002",
+      "year_note": "2026预印本；2025TreeSearch扩展",
+      "topic": "semantic_solver",
+      "input": "text→分层scene生成",
+      "method": "PRM-guided MCTS＋retexture；作者提出3DTindo-Bench",
+      "evaluation": "本次只核官方README；paper具体metric/样本数未核，不复述性能数字",
+      "repo_url": "https://github.com/dw-dengwei/TreeSearchGen",
+      "code_status": "与2025共享官方实现；本次未审读metric代码",
+      "evidence_level": "作者官方README/题名级核查",
+      "task_fit": "过程reward/树搜索/逐步验证不再足够新；额外调用预算必须计入",
+      "source_audit": "root-extra-catalog.json"
+    }
+  ],
+  "project_link_checks": [
+    {
+      "url": "https://cangmushui.github.io/FreeScene-io/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://fireplace3d.github.io/",
+      "github_links": []
+    },
+    {
+      "url": "https://research.nvidia.com/labs/dir/scenethesis/",
+      "github_links": []
+    },
+    {
+      "url": "https://d3ixi.github.io/GuidedSceneGen/",
+      "github_links": [
+        "https://github.com/NVlabs/SegFormer",
+        "https://github.com/d3ixi/GuidedSceneGen",
+        "https://github.com/nerfies/nerfies.github.io"
+      ]
+    }
+  ]
+}

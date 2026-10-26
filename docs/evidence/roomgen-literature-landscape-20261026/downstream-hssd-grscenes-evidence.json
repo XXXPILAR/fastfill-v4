@@ -1,0 +1,251 @@
+{
+  "date": "2026-10-26",
+  "scope": "Read-only primary paper, author project, official data cards, pinned repository trees/README and four small config/task/metric files. No environment installation, model/policy training, simulator execution, paid calls or project edits.",
+  "task": "Observed empty shell + exact furniture text inventory with unknown sizes -> FastFill layout/size -> RoomGenBench assets/assembly -> navigation AND manipulation validation.",
+  "entries": [
+    {
+      "name": "HSSD-200 / HSSD-Habitat",
+      "paper_title": "Habitat Synthetic Scenes Dataset (HSSD-200): An Analysis of 3D Scene Scale and Realism Tradeoffs for ObjectGoal Navigation",
+      "paper_url": "https://arxiv.org/abs/2306.11290",
+      "paper_primary_venue_url": "https://openaccess.thecvf.com/content/CVPR2024/papers/Khanna_Habitat_Synthetic_Scenes_Dataset_HSSD-200_An_Analysis_of_3D_Scene_CVPR_2024_paper.pdf",
+      "first_arxiv_date": "2023-06-20",
+      "venue": "CVPR 2024; 2023 initial preprint (not first introduced in2024)",
+      "author_project": "https://3dlg-hcvc.github.io/hssd/",
+      "official_proof": "Author project Code link explicitly resolves to 3dlg-hcvc/hssd; dataset linked from project and Habitat documentation.",
+      "official_repo": "https://github.com/3dlg-hcvc/hssd",
+      "commit": "7fcc13489ce7c790eb64f66be988763e2df74bb5",
+      "commit_date": "2024-05-16T06:30:42Z",
+      "data_url": "https://huggingface.co/datasets/hssd/hssd-hab",
+      "type": "Human-authored synthetic scene/asset dataset with actual navigation experiments, not a text-to-layout generator.",
+      "data_scope": "211 scenes;18,656 original object models. Current HSSD-Hab data additionally contains collision meshes/receptacles, uncluttered scenes and articulated v0.3.0 variants.",
+      "navigation_evidence": {
+        "status": "reported_real_rollouts_training_and_cross_dataset_evaluation_not_only_loadability",
+        "paper_section": "https://arxiv.org/html/2306.11290#S5",
+        "reported_protocol": "DDPPO/VER pixels-to-actions ObjectNav agents; train/val/test scene split60/20/20;1K train episodes/scene for HSSD;30val episodes/scene. Three independent training runs; best-val-SPL checkpoints. Cross-domain zero-shot HM3DSem/MP3D and fine-tuning comparisons.",
+        "metrics": [
+          "Success",
+          "SPL"
+        ],
+        "result_example": "HSSD-122 pretraining -> HM3DSem19.15%Success/7.71SPL, vs ProcTHOR10K12.53%/5.26 (paper Table5).",
+        "scope_limit": "Result is policy generalization under that simulator/agent/training protocol; not an automatic score for every new generated layout."
+      },
+      "manipulation_evidence": {
+        "original_paper_status": "No manipulation-task success benchmark established by original HSSD paper in this check; original paper is ObjectNav.",
+        "current_data_status": "Official HSSD-Hab dataset card v0.3.0 reports202fully articulated scenes,161public; remaining scenes/assets internal test. Includes receptacles, URDF/articulated configs and accessibility filters, plus uncluttered scenes for rearrangement episode generation.",
+        "source": "https://huggingface.co/datasets/hssd/hssd-hab/blob/main/README.md",
+        "boundary": "Manipulation-ready data/episode-generation support is stronger than a staticGLB, but not evidence the original paper ran manipulation success evaluation or that FastFill outputs are manipulation-ready."
+      },
+      "code_evidence": [
+        {
+          "url": "https://github.com/3dlg-hcvc/hssd/blob/7fcc13489ce7c790eb64f66be988763e2df74bb5/README.md#L56",
+          "observed": "Paper results use habitat-sim/lab v0.2.5; current compatibility is not exact paper protocol."
+        },
+        {
+          "url": "https://github.com/3dlg-hcvc/hssd/blob/7fcc13489ce7c790eb64f66be988763e2df74bb5/README.md#L129",
+          "observed": "Actual Habitat ObjectNav evaluate command."
+        },
+        {
+          "url": "https://github.com/3dlg-hcvc/hssd/blob/7fcc13489ce7c790eb64f66be988763e2df74bb5/README.md#L143",
+          "observed": "Zero-shot evaluation configuration and checkpoint link."
+        },
+        {
+          "url": "https://github.com/3dlg-hcvc/hssd/blob/7fcc13489ce7c790eb64f66be988763e2df74bb5/configs/task/hssd-200_objectnav_hssd-hab.yaml#L10",
+          "observed": "500step horizon,RGB-D256x256,79degHFOV,0.88m camera/agent height,0.18m radius,sliding disabled; selectedconfig read."
+        },
+        {
+          "url": "https://github.com/3dlg-hcvc/hssd/blob/7fcc13489ce7c790eb64f66be988763e2df74bb5/configs/hm3d_zero-shot_eval/hssd-200_eval_zeroshot_hssd-hab_to_hm3d.yaml#L1",
+          "observed": "Concrete zero-shot experiment config."
+        }
+      ],
+      "command": "python -u -m habitat_baselines.run --config-name=objectnav/hssd-200_ver_clip_hssd-hab.yaml habitat_baselines.evaluate=True",
+      "dependencies": [
+        "Habitat simulator/lab and appropriate pinned version, assets, semantics, navmesh, taskepisodes, pretrainedpolicy.",
+        "CC-BY-NC4.0 gated data access; no data downloaded."
+      ],
+      "fastfill_relation": {
+        "role": "Asset/catalog and observed-shell/task-source provider plus ObjectNav evaluation reference. It is not a competing fixed-inventory unknown-size layout generator.",
+        "required_adapter": [
+          "Extract shell and required inventory without leaking GT sizes/poses/support; keep dataset split and canonical instance IDs.",
+          "Convert assembled meshes/transforms to Habitat configs with collision and semantic goal metadata; rebuild agent-specific navmesh.",
+          "Existing episodes refer to native object locations and cannot be reused blindly after FastFill rearrangement. Generate matched tasks/seeds/goal categories and report task-generation failures.",
+          "Keep real asset size known track separate from unknown-size predicted-layout track."
+        ],
+        "not_proven": "No model/runtime run in this audit; no claim FastFill/RoomGenBench is already Habitat compatible or has improved ObjectNav."
+      }
+    },
+    {
+      "name": "GRScenes / GRUtopia (current InternUtopia)",
+      "paper_title": "GRUtopia: Dream General Robots in a City at Scale",
+      "paper_url": "https://arxiv.org/abs/2407.10943",
+      "first_arxiv_date": "2024-07-15",
+      "venue": "2024 arXiv preprint; no conference venue asserted here.",
+      "author_project": "https://internrobotics.github.io/user_guide/internutopia/",
+      "official_proof": "Paper explicitly links OpenRobotLab/GRUtopia; it currently redirects to InternRobotics/InternUtopia. Official HF dataset also redirects OpenRobotLab -> InternRobotics.",
+      "original_repo_url": "https://github.com/OpenRobotLab/GRUtopia",
+      "official_repo": "https://github.com/InternRobotics/InternUtopia",
+      "commit": "b0a9520c586317c2743023c153cbf7c4f04f4732",
+      "commit_date": "2025-09-03T09:02:56Z",
+      "data_url": "https://huggingface.co/datasets/InternRobotics/GRScenes",
+      "type": "Scene/robot/NPC simulator platform and GRBench tasks, not fixed-inventory text-to-layout baseline.",
+      "data_scope": "Paper claims100k scene prototypes across89categories. Current official released GRScenes data card states99environments (69home+30commercial). Do not claim100kpublic downloadable full scenes.",
+      "navigation_evidence": {
+        "status": "paper_reports_actual_task_trials_not_only_USD_loading",
+        "paper_section": "https://arxiv.org/html/2407.10943#S4",
+        "tasks": [
+          "Object Loco-Navigation",
+          "Social Loco-Navigation"
+        ],
+        "embodiment": "UnitreeH1 RGB-D humanoid; explicit locomotion/fall-reset control.",
+        "metrics": [
+          "SR",
+          "PL",
+          "SPL",
+          "RT(reset count)",
+          "ECR for social ambiguity resolution"
+        ],
+        "success": "Target inFOV and<3m,agentSTOPwithin14,400physical simulation steps.",
+        "episodes": "300per benchmark:100validation+200test in paper.",
+        "boundary": "Paper locomotion uses explicit fall/reset mechanism; navigation success without reset statistics can hide physical failures."
+      },
+      "manipulation_evidence": {
+        "status": "paper_reports_actual_Loco_Manipulation_trials_and_failure_analysis",
+        "task": "AlienGo mobile base + UnitreeZ1 arm picks handheld object and places in target receptacle satisfying up to2conditions; multiple valid placements allowed.",
+        "metrics": [
+          "SR",
+          "SCR(satisfied-condition ratio)",
+          "PL",
+          "RT"
+        ],
+        "reported_result": "Paper§4.4 reports Loco-Manipulation SR=0 for studied baselines, with collision/locomotion/planning failures; existence of evaluation is not proof reliable manipulation.",
+        "extra_control_experiment": "PaperTable3 separately compares flat vs furnished environments and reports manipulation controller success drop100%->8%; distinct from end-to-endGRBench0%.",
+        "boundary": "Do not merge controller and full-task results or call scene loading successful manipulation."
+      },
+      "current_code_evidence": [
+        {
+          "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L29",
+          "observed": "Current platform links separate InternNav and InternManip benchmark documentation."
+        },
+        {
+          "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L69",
+          "observed": "Pinned README requires IsaacSim4.5.0 and NVIDIA runtime."
+        },
+        {
+          "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L103",
+          "observed": "GRScenes-100 distribution; not full100kclaim."
+        },
+        {
+          "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/internutopia_extension/metrics/traveled_distance_metric.py#L34",
+          "observed": "Actual current distance metric calc implementation."
+        },
+        {
+          "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/internutopia_extension/tasks/manipulation_task.py#L20",
+          "observed": "Current manipulation task delegates episode finish and configured metric calculation; this is not a complete paper SR/SCR evaluator by itself."
+        }
+      ],
+      "code_publication_boundary": "Complete current platform tree and selected tiny task/metric files checked. Current README delegates benchmarks to InternNav/InternManip; their complete evaluators and exact correspondence to2024paper runs were not audited. Do not assert full original benchmark reproduction.",
+      "benchmark_docs": [
+        "https://internrobotics.github.io/user_guide/internnav/",
+        "https://internrobotics.github.io/user_guide/internmanip/"
+      ],
+      "scene_format_docs": "https://internutopia.github.io/usage/get_started/explore-grscenes.html",
+      "scene_format": "Separate raw USD, navigation USD and interaction USD plus interactive-object metadata. One USD variant is not automatically interchangeable across tasks.",
+      "dependencies": [
+        "IsaacSim/physics runtime, robot/controllers, task configs, benchmark metadata and semantic goal/condition annotations.",
+        "Data usage agreement and CC-BY-NC-SA4.0 scenes; no assets downloaded."
+      ],
+      "fastfill_relation": {
+        "role": "Existing scene/asset/robot/task source and possible physics evaluation backend after assembly.",
+        "required_adapter": [
+          "Compile RoomGenBench GLB/object instances into relocatable USD with units/up-axis/transforms/materials, convex collision/inertia/mass/friction and contact settings.",
+          "Generate interactive-object lists/receptacles and articulated joints where task needs them; mesh shape alone lacks these.",
+          "Freeze one robot, gripper/controller, scene version, start/goal/task distribution and horizon for all methods.",
+          "Validate raw/nav/interaction conversions separately. Count missing assets, physics-settle failures, invalid episode generation and unreachable goals over original requests."
+        ],
+        "not_proven": "No simulator or robot rollout executed; no claim generated rooms already support manipulation."
+      }
+    }
+  ],
+  "acceptance_ladder": [
+    {
+      "stage": "A actual assembled assets",
+      "checks": [
+        "Exact IDs/counts and real-asset coverage",
+        "Native vs fitted extent error and axis transforms",
+        "Mesh collision/OOB, verified supports, openings and no-placeholder success"
+      ]
+    },
+    {
+      "stage": "B task compilation",
+      "checks": [
+        "Collision mesh/physics parameters, settle test",
+        "Agent-specific navmesh and door-seeded reachable start/goals",
+        "Manipulation receptacles/grasp workspace/arm swept-volume and goal-condition evaluability",
+        "All-input failure accounting; no silently dropped task-generation failures"
+      ]
+    },
+    {
+      "stage": "C fixed robot rollouts",
+      "checks": [
+        "Navigation SR/SPL/path length/collision/fall-reset counts over matched episodes",
+        "Manipulation pick/place task SR and per-conditionSCR, collision and stability after release",
+        "Fixed policy/robot/controller/horizon to separate scene quality from agent ability",
+        "Report oracle geometric/planning solvability separately from perception-policy performance"
+      ]
+    },
+    {
+      "stage": "D learning utility (later)",
+      "checks": [
+        "Train agents under matched scene/episode/training compute and evaluate held-out transfer",
+        "Do not infer trainability/generalization from one successful rollout or loadable file"
+      ]
+    }
+  ],
+  "core_conclusion": "HSSD offers real ObjectNav experiment/code evidence, while original HSSD manipulation claims should stay at current data-readiness level unless another benchmark is explicitly selected. GRUtopia reports both navigation and manipulation experiments but with weak end-to-end manipulation performance; current public data scale is99 environments and benchmark code has evolved. Neither is a direct same-input layout-generation baseline.",
+  "receipts": [
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/3dlg-hcvc__hssd-README.md",
+      "sha256": "b606ed2b3e85aa5f48dbd3f847b2e6795d4adc591771baca3ff9cdc078ed8b73",
+      "bytes": 9672
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/3dlg-hcvc__hssd-configs_hm3d_zero-shot_eval_hssd-200_eval_zeroshot_hssd-hab_to_hm3d.yaml",
+      "sha256": "9e8d07171be1c31af1b53b2183ee0733f3dbfa1854248db593c2ee6f1b980f9d",
+      "bytes": 2246
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/3dlg-hcvc__hssd-configs_task_hssd-200_objectnav_hssd-hab.yaml",
+      "sha256": "6a40f8cc8d145b02e073d112a6a5322a9bccc8d7648882da577e056248ba01a2",
+      "bytes": 863
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/3dlg-hcvc__hssd-snapshot.json",
+      "sha256": "7c51b9f14c391cda7a92a4e8916a0ff78e54c606fd9d0d947e5e3471e7909afc",
+      "bytes": 11017
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/OpenRobotLab__GRUtopia-README.md",
+      "sha256": "5eb9356791bb99ff89f3cc00484f34d928e7fa221998a9812aa65760dbac3e55",
+      "bytes": 11685
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/OpenRobotLab__GRUtopia-internutopia_extension_metrics_traveled_distance_metric.py",
+      "sha256": "c4220e35084b939b143703132271074a4de7a3daf81a37aa51f537ec245815b9",
+      "bytes": 1270
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/OpenRobotLab__GRUtopia-internutopia_extension_tasks_manipulation_task.py",
+      "sha256": "8f1d77536c8b681f340352a4ea5eb7298874cab6a84089381f449c771c2b0c4b",
+      "bytes": 1153
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/OpenRobotLab__GRUtopia-snapshot.json",
+      "sha256": "6695f30058d1dd88caf0a968aef44235fd12cc35efa9d0eff84b74129439a93f",
+      "bytes": 117249
+    },
+    {
+      "path": "/tmp/fastfill-downstream-hssd-grscenes-evidence-20261026/metadata-summary.json",
+      "sha256": "4dfadaba004cb6532fdc0a5506ae301b2fe37ddce21a9369bdcb2516fc901389",
+      "bytes": 2611
+    }
+  ]
+}

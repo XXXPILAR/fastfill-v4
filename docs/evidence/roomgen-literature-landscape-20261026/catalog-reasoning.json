@@ -1,0 +1,551 @@
+{
+  "title": "2025–2026房间生成全景补充：推理、学习与视觉引导五篇",
+  "date": "2026-10-26",
+  "scope": "补充已审14篇及新4篇之外的SceneWeaver、Reason-3D、MetaSpatial、DirectLayout、Imaginarium；主任务=真实空壳/门窗＋指定文字家具清单，未知尺寸由模型预测，交共同RoomGenBench。",
+  "method": "原论文方法/评估段＋作者项目/官方GitHub。用当前HEAD pin和完整Git tree核范围，下载选定文本；不是全论文/全源码复现，不声称穷尽2024–2026所有论文。",
+  "papers": [
+    {
+      "name": "SceneWeaver",
+      "title": "SceneWeaver: All-in-One 3D Scene Synthesis with an Extensible and Self-Reflective Agent",
+      "year": 2025,
+      "venue": "NeurIPS2025",
+      "paper_url": "https://arxiv.org/html/2509.20414",
+      "project_url": "https://scene-weaver.github.io/",
+      "repo_url": "https://github.com/Scene-Weaver/SceneWeaver",
+      "commit": "7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9",
+      "official_proof": "作者项目Code与论文同名仓库、机构/作者互证。",
+      "paper_facts": "An extensible ReAct-style agent selects scene tools, receives VLM reflections and uses an Infinigen/Blender physics-aware executor. The paper caps experiments at ten iterations, memory length one; reports mean 64 minutes per scene and about seven iterations, not a one-pass generator. Evaluation separates object count, outside-object count and colliding-pair count from GPT-4 visual realism/functionality/layout/completeness, with human and simulation checks. Main tests use common rooms and eight open-vocabulary types. This is free-composition prompt generation, not exact unknown-size inventory enforcement.",
+      "paper_loci": [
+        "§3.1–3.2",
+        "§4 Settings/Metrics",
+        "Appendix C.3–C.5",
+        "Appendix D"
+      ],
+      "mechanisms": [
+        "tool cards",
+        "planner memory and rollback/replan",
+        "VLM criticism/reflection",
+        "relation-aware mesh executor and physics post-optimization"
+      ],
+      "input_output": "prompt→tool-selected layout/assets/scene；tool可自行增加对象。公开主CLI未提供FastFill式完整inventory/shell协议。",
+      "public_scope": {
+        "status": "完整可见实现/工具/部分evaluation入口，仍需复杂依赖和资产。",
+        "files": [
+          {
+            "url": "https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/Pipeline/main.py#L7",
+            "role": "main→SceneDesigner.run"
+          },
+          {
+            "url": "https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/Pipeline/app/agent/scenedesigner.py#L62",
+            "role": "实际max_steps默认15；L508循环，不能当论文十步配置"
+          },
+          {
+            "url": "https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/Pipeline/evaluation_ours.py#L1",
+            "role": "评估入口静态读取"
+          },
+          {
+            "url": "https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/Pipeline/app/evaluation.py#L1",
+            "role": "评估工具"
+          },
+          {
+            "url": "https://github.com/Scene-Weaver/SceneWeaver/blob/7ae54b2ec3fc66147704faa7daf7b017ba8b1bd9/README.md#L221",
+            "role": "官方evaluation命令"
+          }
+        ],
+        "command": "在Pipeline目录配置后执行 python main.py --prompt 'Design me a bedroom.' --cnt 1 --basedir OUTPUT",
+        "dependencies": "AzureOpenAI/替代LLM endpoint、Blender/Infinigen、PhyScene/ATISS/DiffuScene/ACDC等工具可选路径、Objaverse/3D-FUTURE/MetaScenes。",
+        "artifacts": "有源码和示例scene/工具路径；未验证外部模型/资产包完整下载与全部实验复现。"
+      },
+      "evaluation_caveats": "#CN是碰撞对数量，不能替换参与碰撞对象率；自由增加物体会影响丰富度/碰撞数，不能与固定清单直接混排行。",
+      "relevance": "直接覆盖critic/反思/多工具工作流、物理repair。“加agent/critic”不是独立创新；约一小时流程不适合用户希望的轻量pipeline。",
+      "fit": "背景近邻高；轻量主baseline低。要做同输入对照需锁定清单/真实shell并限制工具与预算。",
+      "not_verified": [
+        "全部tool可执行性",
+        "当前repo默认15步与论文10步配置的准确复现",
+        "wall-clock/API独立重测",
+        "所有metric源码及人评复现"
+      ]
+    },
+    {
+      "name": "Reason-3D",
+      "title": "Text-to-Scene with Large Reasoning Models",
+      "year": 2025,
+      "venue": "AAAI2026（官方会议页面确认2026-03-14）",
+      "paper_url": "https://arxiv.org/html/2509.26091v2",
+      "publication_url": "https://ojs.aaai.org/index.php/AAAI/article/view/37229",
+      "repo_url": "https://github.com/ETH-DISCO/reason-3d",
+      "commit": "6940530c179ef1afcbbefe8856a10f9055909adc",
+      "official_proof": "AAAI原论文首页Code明确ETH-DISCO/reason-3d；repo作者和论文一致。",
+      "paper_facts": "Off-the-shelf Gemini 2.5 performs retrieval, priority planning, sequential pose generation and collision-aware revision without task-specific training. Placement uses names, asset sizes and rotated AABBs, with no rendered visual feedback; benign bbox overlaps can be retained semantically. Separate experiments test retrieval top-k, fixed-object placement and full text-to-scene generation, mainly with human comparisons. The fixed-placement comparison supplies identical objects to LayoutVLM. It assumes approximately correct relative asset scales and upright alignment, and does not generate architecture. Calls scale with objects, rather than one constant model call.",
+      "paper_loci": [
+        "§3 Methodology",
+        "§4 Implementation/Full scene/Retrieval/Object placement",
+        "§4 Limitations",
+        "Appendix C Additional metrics"
+      ],
+      "mechanisms": [
+        "physical/functional/contextual caption retrieval",
+        "LRM explicit constraints and ordering",
+        "sequential numeric placements",
+        "geometric collision list fed back to LRM"
+      ],
+      "input_output": "text+room dimensions+asset database→retrieved assets/positions/3-axis rotations；固定object placement子实验已给asset尺寸。",
+      "public_scope": {
+        "status": "公开preprocessing、retrieval、placement、rendering代码；未找到独立paper benchmark/human-study汇总脚本。",
+        "files": [
+          {
+            "url": "https://github.com/ETH-DISCO/reason-3d/blob/6940530c179ef1afcbbefe8856a10f9055909adc/README.md#L60",
+            "role": "入口说明"
+          },
+          {
+            "url": "https://github.com/ETH-DISCO/reason-3d/blob/6940530c179ef1afcbbefe8856a10f9055909adc/build_scene/PlaceObjects.py#L18",
+            "role": "constraints/order/逐对象placement及refinement API调用"
+          },
+          {
+            "url": "https://github.com/ETH-DISCO/reason-3d/blob/6940530c179ef1afcbbefe8856a10f9055909adc/build_scene/PlaceObjects.py#L229",
+            "role": "检测AABB交叠并逐对象修正"
+          }
+        ],
+        "command": "python build_scene/PlaceObjects.py --prompt PROMPT [--model MODEL] [--num-objects N] [--no-refinement]",
+        "dependencies": "Gemini API、embedding/caption资产预处理、Blender4.3.2；没有需训练的专用layout权重。",
+        "caution": "未执行API，不能将模型版本/推理tokens或N对象的成本等同一次GPT坐标输出。"
+      },
+      "evaluation_caveats": "检索top-k基于目标asset identity，布局人评另测；不要把选资产强项当相同家具布局强项。论文附录collision-free命名与描述需用发布实现另固定分母。",
+      "relevance": "应增加强reasoning baseline，不能只战胜旧LayoutGPT。直接数字布局＋collision feedback已有先例；其语义接受bbox overlap提醒我们避免过强盒子repair。",
+      "fit": "高：强off-the-shelf文本推理对照；主任务仍需显式固定inventory、真实polygon/door约束和未知尺寸处理。",
+      "not_verified": [
+        "Gemini当前版本效果",
+        "实际token/latency",
+        "完整官方评估pipeline",
+        "assets相对尺度假设在RoomGenBench的适配"
+      ]
+    },
+    {
+      "name": "MetaSpatial",
+      "title": "MetaSpatial: Reinforcing 3D Spatial Reasoning in VLMs for the Metaverse",
+      "year": 2025,
+      "venue": "ICLR2026（作者页和repo标注）",
+      "paper_url": "https://arxiv.org/html/2503.18470",
+      "author_url": "https://pzyseere.github.io/",
+      "repo_url": "https://github.com/PzySeere/MetaSpatial",
+      "commit": "a3c89c27674550d6517f790bc1d7435f148ace67",
+      "official_proof": "原论文直接给PzySeere/MetaSpatial；作者主页列ICLR2026。",
+      "paper_facts": "The current paper formulates given room image plus objects annotated with category, size and material, outputting object XYZ placements. Physics, format and GPT-4o rendering rewards train Qwen2.5-VL 3B/7B. Its 3D-SPO uses object-coordinate token modulation and training-only multi-turn trajectories; final comparisons use single-turn inference. Metrics include object collision/constraint violation ratios and five visual criteria. Thus learned spatial reasoning without heavy inference repair is already a direct prior, but predicting unknown dimensions and full pose is outside its stated XYZ formulation.",
+      "paper_loci": [
+        "§2.1",
+        "§2.4–2.6",
+        "§3.1",
+        "§3.5",
+        "Appendix C"
+      ],
+      "mechanisms": [
+        "RL rather than unique-reference pose supervision",
+        "object-level physics modulation",
+        "training-only refinement, single-turn inference",
+        "format/inventory-sensitive reward"
+      ],
+      "input_output": "room image+已给对象metadata和尺寸/偏好→固定对象XYZ；不等同文字清单未知size/yaw。",
+      "public_scope": {
+        "status": "公开GRPO训练框架、数据构造、渲染/physics reward和HF数据；未确认公开可下载的finetuned checkpoint，未验证当前commit覆盖最新论文全部3D-SPO。",
+        "files": [
+          {
+            "url": "https://github.com/PzySeere/MetaSpatial/blob/a3c89c27674550d6517f790bc1d7435f148ace67/examples/run_qwen2_5_vl_7b_3d_reasoning.sh#L1",
+            "role": "训练launcher"
+          },
+          {
+            "url": "https://github.com/PzySeere/MetaSpatial/blob/a3c89c27674550d6517f790bc1d7435f148ace67/examples/grpo_3d_reasoning.yaml#L1",
+            "role": "真实配置，通用GRPO与metaverse reward"
+          },
+          {
+            "url": "https://github.com/PzySeere/MetaSpatial/blob/a3c89c27674550d6517f790bc1d7435f148ace67/verl/utils/reward_score/metaverse.py#L262",
+            "role": "格式/GPT/碰撞/空间约束合成reward"
+          },
+          {
+            "url": "https://github.com/PzySeere/MetaSpatial/blob/a3c89c27674550d6517f790bc1d7435f148ace67/verl/trainer/core_algos.py#L130",
+            "role": "已读GRPO核心路径，不自动等同最新3D-SPO"
+          }
+        ],
+        "dataset_url": "https://huggingface.co/datasets/zhenyupan/3d_layout_reasoning",
+        "dataset_commit": "6f2151de5840f2080cf0c6ad4100f37e411c9a5f",
+        "dataset_status": "HF API200且ungated；train/test parquet和subset_data存在，未下载。",
+        "dependencies": "EasyR1/verl、Qwen2.5(-VL)、多GPU训练、Blender服务、GPT-4o reward、OpenShape/I-Design资产；推理期可单轮。",
+        "caution": "仓库HEAD为2025-05-05的代码；所读当前论文已明确3D-SPO。不能仅凭repo公开断言全部新算法与权重已发布。"
+      },
+      "evaluation_caveats": "已给asset sizes及room metadata有条件优势；奖励中的format对象匹配不是未知size/pose质量。训练成本与单轮推理成本必须分开。",
+      "relevance": "“RL学会空间布局/把多轮修复蒸馏进单次推理”已有直接工作；适合轻量推理方向的强近邻，需在未知尺寸及更严格shell任务上定义区别。",
+      "fit": "研究定位高；直接same-input baseline需补尺寸/朝向输出和shell接口，checkpoint可用性待定。",
+      "not_verified": [
+        "最新3D-SPO完整实现",
+        "专用权重发布",
+        "模型数据隔离和总训练成本",
+        "paper全部评估结果复现"
+      ]
+    },
+    {
+      "name": "DirectLayout",
+      "title": "Direct Numerical Layout Generation for 3D Indoor Scene Synthesis via Spatial Reasoning",
+      "year": 2025,
+      "venue": "NeurIPS2025（作者项目页）",
+      "paper_url": "https://arxiv.org/html/2506.05341",
+      "project_url": "https://directlayout.github.io/",
+      "repo_url": "https://github.com/rxjfighting/DirectLayout",
+      "commit": "4430535304124dbc8d48f6bb0ea5891e92267986",
+      "official_proof": "作者项目Code与同篇repo互链。",
+      "paper_facts": "Text and room dimensions produce BEV layouts, lifted 3D poses/sizes and asset prompts. A Qwen2.5-32B BEV generator is CoT-trained and preference-optimized with VLM plus reasoning-LLM feedback. Iterative asset-layout alignment later adjusts size, pose and orientation using rendered assets. Evaluation covers 15 categories/three prompts, object OOB/collision rates, positional/rotational coherence, PSA, CLIP and anonymized expert ratings. The inference timing section includes Trellis asset generation, so it must be separated from layout-only cost. Joint numeric size prediction and asset-aware refinement are already present.",
+      "paper_loci": [
+        "§3.1–3.5",
+        "§4.1",
+        "§4.4",
+        "Appendix D"
+      ],
+      "mechanisms": [
+        "BEV-to-3D decomposition",
+        "CoT activation",
+        "spatial/quantitative dual evaluators",
+        "preference training",
+        "asset-layout alignment"
+      ],
+      "input_output": "描述+矩形room dimensions→预测size/position/orientation+asset prompts；比asset-given方法更接近未知尺寸任务，但未原生处理完整异形空壳/门窗。",
+      "public_scope": {
+        "status": "流程代码公开；论文训练的专用模型明确不发布，因此发布版不是可复现论文trained-model数字的开箱baseline。",
+        "explicit_model_release_note": "https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/README.md#L27",
+        "files": [
+          {
+            "url": "https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/demo.py#L8",
+            "role": "CLI/retries与默认max_iterations=1"
+          },
+          {
+            "url": "https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/services/pipeline.py#L52",
+            "role": "generation/render/optimization流程"
+          },
+          {
+            "url": "https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/services/optimization.py#L1",
+            "role": "反馈优化实现"
+          },
+          {
+            "url": "https://github.com/rxjfighting/DirectLayout/blob/4430535304124dbc8d48f6bb0ea5891e92267986/config/settings.py#L16",
+            "role": "当前默认gpt-5.4 API模型，非论文Qwen2.5-32B权重"
+          }
+        ],
+        "command": "python demo.py --input ./eval_test.json --output-dir OUTPUT --assets-dir ASSETS --render-dir RENDERS",
+        "weights": "官方README说因个人原因无法发布specialized model；无论文BEV训练checkpoint可核。",
+        "dependencies": "外部LLM/VLM API、输入描述/room dimensions、asset library和render；未运行。",
+        "eval_scope": "完整tree未见独立paper metric/human-study训练复现包，现有核心是inference demo。"
+      },
+      "evaluation_caveats": "应把论文trained-model、论文general reasoning ablation、当前GPT API demo分成不同baseline。不同年代API模型不能借论文标题当成同一个系统。",
+      "relevance": "不能把“LLM直接numeric layout＋未知size＋真实asset反馈”当新意；它是最关键对照之一。最重要的可复现限制是专用模型未放出。",
+      "fit": "主任务概念近邻高；复现trained baseline低；当前API demo可另标适配版对照。",
+      "not_verified": [
+        "论文训练权重与DPO数据",
+        "当前API版本的效果",
+        "全部指标实现和延迟对照",
+        "非矩形边界/完整清单硬约束"
+      ]
+    },
+    {
+      "name": "Imaginarium",
+      "title": "Imaginarium: Vision-guided High-Quality 3D Scene Layout Generation",
+      "year": 2025,
+      "venue": "SIGGRAPH Asia2025 / ACM TOG",
+      "paper_url": "https://arxiv.org/html/2510.15564",
+      "project_url": "https://ydove0324.github.io/Imaginarium/",
+      "repo_url": "https://github.com/HiHiAllen/Imaginarium",
+      "commit": "c02b3159889015d2a7fa8f0d3c50bb56a8ff1eb3",
+      "official_proof": "作者项目/作者博客与原文指向HiHiAllen/Imaginarium。",
+      "paper_facts": "A library-aligned image generator expands text, then semantic/geometric image parsing retrieves assets and estimates transformations. Scene-graph local refinement, global translation optimization and Blender physics produce a coherent scene. The paper reports about 240 seconds on one A100. Evaluation separates art-student preferences, professional richness ratings and reconstruction from rendered reference images. Reconstruction uses object/category recovery, rotation/translation AUC, graph relations and visual similarity; it is distinct from free plausible layout quality. The method is image-guided asset-library synthesis, not fixed textual inventory with a given true shell.",
+      "paper_loci": [
+        "§3 Problem/3.1–3.4",
+        "§4.1",
+        "§4.2.1–4.2.3",
+        "§4.4"
+      ],
+      "mechanisms": [
+        "fine-tuned FLUX prior",
+        "Grounding/segmentation/depth",
+        "asset retrieval/pose",
+        "scene graph/global optimization",
+        "Blender physical settling"
+      ],
+      "input_output": "text→image→3D layout，或image→3D layout；从预定义asset library选物体。输入真实shell/精确inventory需额外约束。",
+      "public_scope": {
+        "status": "实际CLI、模块、数据、FLUX LoRA和derived weights都有可见发布；不是只有README。",
+        "files": [
+          {
+            "url": "https://github.com/HiHiAllen/Imaginarium/blob/c02b3159889015d2a7fa8f0d3c50bb56a8ff1eb3/run_imaginarium_T2I.py#L1",
+            "role": "文本转图CLI"
+          },
+          {
+            "url": "https://github.com/HiHiAllen/Imaginarium/blob/c02b3159889015d2a7fa8f0d3c50bb56a8ff1eb3/run_imaginarium_I2Layout.py#L1",
+            "role": "图转layout CLI→pipeline"
+          },
+          {
+            "url": "https://github.com/HiHiAllen/Imaginarium/blob/c02b3159889015d2a7fa8f0d3c50bb56a8ff1eb3/scripts/eval_lpips.py#L1",
+            "role": "已见LPIPS实现；不代表全部paper指标"
+          }
+        ],
+        "command": "python run_imaginarium_T2I.py --prompt PROMPT --num 4；随后 python run_imaginarium_I2Layout.py IMAGE --clean",
+        "dataset_url": "https://huggingface.co/datasets/HiHiAllen/Imaginarium-Dataset",
+        "dataset_commit": "1c49a7221ea25513fdf0f134029c6e8ed91b6cb0",
+        "derived_url": "https://huggingface.co/datasets/binicey/Imaginarium-3D-Derived-Dataset",
+        "derived_commit": "11150c4d0ba5c48c2bbc15c142403fd4321d8d36",
+        "visible_artifacts": "HF API200/ungated：scene archives、assets/internal spaces、flux_lora_rank32_4000step.pt；derived repo有DINOv2/AENet/DepthAnything权重、pose renders/embeddings/voxels；只核目录未下载。",
+        "caveats": "README记2025-12-23修正asset/scene尺度并有重制版权相关素材的后续更新说明；当前数据未必等同论文版。部分template embeddings须本地生成，依赖LLM/Grounding DINO API及Blender。",
+        "full_reproduction": "没有验证所有paper人评/几何指标脚本与数据版本配套。"
+      },
+      "evaluation_caveats": "参考image重建分数不等于指定清单全布局质量；人工比较未能替换全部trained baseline资产库。移植前须统一assets/rendering，不能只比最终图像丰富度。",
+      "relevance": "对资产和视觉质量有价值，是RoomGenBench下游/资产库近邻；多视觉模型加优化较重，不适合直接替换FastFill轻量布局head。",
+      "fit": "布局/资产联合视觉背景高；固定inventory、未知尺寸、真实shell主榜需明显适配。",
+      "not_verified": [
+        "数据下载/权重运行",
+        "版权重制后与论文版的一致性",
+        "完整eval脚本",
+        "240秒的独立端到端复测"
+      ]
+    }
+  ],
+  "synthesis": [
+    "VLM critic/自反思/多工具闭环已有SceneWeaver；无需再把“加入critic/agent”包装成新意。",
+    "不用专门训练的强推理模型已有Reason-3D；轻量方法必须与现代reasoning baseline比较，而不只旧LayoutGPT/Holodeck。",
+    "训练期多轮修正→推理期单轮已有MetaSpatial；未知尺寸、完整pose和实际shell约束才是需要明确检验的任务区别。",
+    "DirectLayout已做直接数字size/pose、CoT学习和asset-layout alignment；但专用模型不发布，当前GitHub是API替代流程。",
+    "Imaginarium提供真实数据/权重/模块，但其视觉引导和重建评估与固定家具全布局协议不同。"
+  ],
+  "read_limit": "读的是指定方法/评估段和源码关键入口，不声称全部源码已读。所有效果/耗时均为作者报告，未独立重现。公开不等于全部实验可复现。",
+  "source_dir": "/tmp/fastfill-roomgen-catalog-reasoning-src-20261026",
+  "queries": [
+    "SceneWeaver indoor scene generation github paper",
+    "Reason-3D scene generation github",
+    "MetaSpatial scene generation github",
+    "DirectLayout 3D scene generation github",
+    "Imaginarium 3D scene generation github paper",
+    "Text-to-Scene with Large Reasoning Models github official"
+  ],
+  "no_paid_calls_models_or_metrics_executed": true,
+  "receipts": [
+    {
+      "file": "DirectLayout/README.md",
+      "bytes": 2171,
+      "sha256": "7e9441a24365e7275c98cd55f35f3f4314d63971a50c7e6bbb3354e0ba2c0808"
+    },
+    {
+      "file": "DirectLayout/config/settings.py",
+      "bytes": 1176,
+      "sha256": "1bcf9fb17fa186edd7add81b9329db85e273d324b9a46c78f1251ed9ed757f1a"
+    },
+    {
+      "file": "DirectLayout/demo.py",
+      "bytes": 1976,
+      "sha256": "6c7f167ba8a9fcc9f4f2027112603a884d9e03b960814afd9419f6203528a362"
+    },
+    {
+      "file": "DirectLayout/metadata.json",
+      "bytes": 180,
+      "sha256": "9ee5f78c8c13d294816ab57b0a0853ec111581ceaa9f23bffd9f76e49f57de18"
+    },
+    {
+      "file": "DirectLayout/paper-extracted.txt",
+      "bytes": 37391,
+      "sha256": "9f8ec8f9feac4d28174e65eeaaf87ed61459fe9a095fcce1351d84ee4e599e1f"
+    },
+    {
+      "file": "DirectLayout/paper.html",
+      "bytes": 798038,
+      "sha256": "dad8956ccee280d98df661b47a0da33ca98a1387864401a71c575def5b17ae79"
+    },
+    {
+      "file": "DirectLayout/services/optimization.py",
+      "bytes": 11775,
+      "sha256": "954443728cacd1570ce00c8e0605db9fcf4f565f3a5a085003a21b74b1565682"
+    },
+    {
+      "file": "DirectLayout/services/pipeline.py",
+      "bytes": 5642,
+      "sha256": "9a91493b166e8b0bbbb7e5b62d49a4380411a7bb08ad085ec3572ae28d01c48b"
+    },
+    {
+      "file": "DirectLayout/tree.json",
+      "bytes": 10283,
+      "sha256": "0a6adeeadc6d14dd45062cd6e64d7d07420d9b4bc3c2f54d3a2d881d43c6a73f"
+    },
+    {
+      "file": "Imaginarium/README.md",
+      "bytes": 15060,
+      "sha256": "4542380ea8a492b4127453f34169911df044934a400b403342869d6d115a8eb6"
+    },
+    {
+      "file": "Imaginarium/metadata.json",
+      "bytes": 177,
+      "sha256": "e86b1156578f2730a097b2f7210d6acb1dcc884f409cb7120d3ed17d0bd8775d"
+    },
+    {
+      "file": "Imaginarium/paper-extracted.txt",
+      "bytes": 60780,
+      "sha256": "78fad68574128c3c92272d097354003cd07c8572d8de751d776b5bc7918cbe88"
+    },
+    {
+      "file": "Imaginarium/paper.html",
+      "bytes": 660307,
+      "sha256": "9aeb96f68de38002485f0c4014f8ff555afaf1c2ebf049398a865c7ea57894dd"
+    },
+    {
+      "file": "Imaginarium/run_imaginarium_I2Layout.py",
+      "bytes": 3894,
+      "sha256": "c6cbccfa58eb2787af0e27e6dc3ed3b3e7727b78e821e7c4be8599c4dd936f95"
+    },
+    {
+      "file": "Imaginarium/run_imaginarium_T2I.py",
+      "bytes": 5593,
+      "sha256": "915b3c2e1b67acbd09a0893eaf8ccbf045c4335723638f7cd1ca008a27920861"
+    },
+    {
+      "file": "Imaginarium/scripts/eval_lpips.py",
+      "bytes": 5314,
+      "sha256": "211898ebac70cb09949e795404c99b77f042f61ab8f901a9b0b4267cfa05072e"
+    },
+    {
+      "file": "Imaginarium/tree.json",
+      "bytes": 26040,
+      "sha256": "549bd8b42a250f1dd5d3b80187fe8792b243284b861976a9a8b6e8388b647c3f"
+    },
+    {
+      "file": "MetaSpatial/README.md",
+      "bytes": 11997,
+      "sha256": "e8c4d9307b7a66bd34be29bbf95d56d9ded125c1c91ff65463752fbbc94bdbe7"
+    },
+    {
+      "file": "MetaSpatial/examples/grpo_3d_reasoning.yaml",
+      "bytes": 1715,
+      "sha256": "10db541347d730aae8ba805c24bcf964c1b236a491c430424882789734517ac7"
+    },
+    {
+      "file": "MetaSpatial/examples/run_qwen2_5_vl_7b_3d_reasoning.sh",
+      "bytes": 813,
+      "sha256": "b044b235d43d3bd1a81d62a2e38abbcdba0147409a4ad4b8746a9185fe6be1aa"
+    },
+    {
+      "file": "MetaSpatial/metadata.json",
+      "bytes": 176,
+      "sha256": "c0abda47caa9b33612a4444b6ad30aff21541bd612194b018a5850fdb91791c2"
+    },
+    {
+      "file": "MetaSpatial/paper-extracted.txt",
+      "bytes": 44333,
+      "sha256": "bf5599f6c7705e62d429050b2c56f933ec1b7e6a25f026ec6937ace69d71a40a"
+    },
+    {
+      "file": "MetaSpatial/paper.html",
+      "bytes": 294624,
+      "sha256": "e66663ec263241c4271e5a9aba93b072c444606f9ef2c9c6f2113d9a9bf16820"
+    },
+    {
+      "file": "MetaSpatial/tree.json",
+      "bytes": 41349,
+      "sha256": "a56ae71f77a8a16fa58ef8b8c7b27378f320b7e94da477fcabb548106fd85843"
+    },
+    {
+      "file": "MetaSpatial/verl/trainer/core_algos.py",
+      "bytes": 14718,
+      "sha256": "6c642a11a632769050ed1214c8003ed0592447be2cdefbf4a41340bb1444194d"
+    },
+    {
+      "file": "MetaSpatial/verl/utils/reward_score/metaverse.py",
+      "bytes": 16847,
+      "sha256": "b4c1b39f85d232637afa8310d4c77614cff4b99d92d4825a15cb26e41c09cd93"
+    },
+    {
+      "file": "MetaSpatial/verl/utils/reward_score/metaverse_constraint_functions.py",
+      "bytes": 23208,
+      "sha256": "a5d45621e277676008cacb783a29f7ef17192a3cbe1b58cc7aa8835a6c20d0d2"
+    },
+    {
+      "file": "SceneWeaver/Pipeline/app/agent/scenedesigner.py",
+      "bytes": 23925,
+      "sha256": "b61dc19e3b9cddcdc31cc017385fb859459d4953769a6d1d4b97f2ed5bc97d55"
+    },
+    {
+      "file": "SceneWeaver/Pipeline/app/evaluation.py",
+      "bytes": 10412,
+      "sha256": "cdfdf0fa7c6aa25cdfa2a75f8731700dca58a31f9ed8c140d6a307179eec015b"
+    },
+    {
+      "file": "SceneWeaver/Pipeline/evaluation.py",
+      "bytes": 10586,
+      "sha256": "8b427d792c09bb82aa111c25442f6e6cb2018b5e284417c6464eeeb2464ab1f1"
+    },
+    {
+      "file": "SceneWeaver/Pipeline/evaluation_ours.py",
+      "bytes": 12617,
+      "sha256": "a5a5dcaffb0f501e8e330dcb20ae8cf027d42537f214afe967095b695c70aa93"
+    },
+    {
+      "file": "SceneWeaver/Pipeline/main.py",
+      "bytes": 2408,
+      "sha256": "ae4a7eb0f838ce3002a77d89bdea52de99181916419ca85714d65c22dce98fa8"
+    },
+    {
+      "file": "SceneWeaver/README.md",
+      "bytes": 10217,
+      "sha256": "39e110ac1d87e341b5755af456f950316b97d7ae08549b5fe748aa6379a0e94c"
+    },
+    {
+      "file": "SceneWeaver/metadata.json",
+      "bytes": 180,
+      "sha256": "cfc020f2c134c72c6fbdec8ac3a35f1b18aa5227edd93bb3ea38e7c56015370a"
+    },
+    {
+      "file": "SceneWeaver/paper-extracted.txt",
+      "bytes": 45227,
+      "sha256": "b7dee0c485f51e539b0a8e5f7cf4b85da6af0dab8538de9af44d3673c0fbcfbb"
+    },
+    {
+      "file": "SceneWeaver/paper.html",
+      "bytes": 407966,
+      "sha256": "75d2c6237c380ed9d8bd7c04a9373b5ac7f8e4b441b4ad7ad9e71b9deb163292"
+    },
+    {
+      "file": "SceneWeaver/tree.json",
+      "bytes": 578759,
+      "sha256": "0f8fbc43ecdd1d9a443d35504be8e53ff86d4e6a6b0fad04e9b3440ac70123a6"
+    },
+    {
+      "file": "hf-artifact-receipts.json",
+      "bytes": 2116,
+      "sha256": "c9af252776d5e3d0413fd9ed5366e9cf0e36053a6d967b28c84b41bc64db6875"
+    },
+    {
+      "file": "reason-3d/README.md",
+      "bytes": 2143,
+      "sha256": "b036ddeccb133f20c9311b97668a0c3d989d9dc6e4019b4caac75e91c3c1aeea"
+    },
+    {
+      "file": "reason-3d/build_scene/PlaceObjects.py",
+      "bytes": 16432,
+      "sha256": "a709ba763dbb421258ff6d343a5479b39f1e693a3624d2593fd2531fa64efc41"
+    },
+    {
+      "file": "reason-3d/config.py",
+      "bytes": 976,
+      "sha256": "293cd98a0f821c2adfa52b93d3754cc1765c00e4aabadc5e3d64361dca2d07ec"
+    },
+    {
+      "file": "reason-3d/metadata.json",
+      "bytes": 175,
+      "sha256": "9dfe9052b9643efbf0adc04a44af72c55b1f607b68eb28d1d621691a4f2d5026"
+    },
+    {
+      "file": "reason-3d/paper-extracted.txt",
+      "bytes": 31532,
+      "sha256": "48cd3f08db8c834a14791e550015a17e56a7e733c488b9ebe18a37d2f2fe72d4"
+    },
+    {
+      "file": "reason-3d/paper.html",
+      "bytes": 200034,
+      "sha256": "fd31c6bbb588302de67976f42e99d3639560efb6fe2b19465dd32e7915ad9981"
+    },
+    {
+      "file": "reason-3d/tree.json",
+      "bytes": 9558,
+      "sha256": "b500fb7cc4ffd85c863e761ecaf69554ee520d11ddbe7e5d9c40c8e9eba4b32d"
+    }
+  ]
+}

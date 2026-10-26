@@ -1,0 +1,629 @@
+{
+  "audit_date": "2026-10-26",
+  "role": "Independent Agency Model QA Specialist; read-only source and evaluation audit",
+  "user_task": "Canonical empty room shell with doors/windows + fixed furniture text inventory (asset dimensions unknown) -> FastFill layout -> RoomGenBench",
+  "global_scope": {
+    "repository_source_modified": false,
+    "dependencies_installed": false,
+    "model_or_large_dataset_downloaded": false,
+    "paid_calls": false,
+    "full_model_or_dataset_evaluation_executed": false,
+    "isolated_cpu_metric_reproduction_executed": true,
+    "isolated_cpu_receipt": "/tmp/fastfill-paper-code-recent-20261026/scenenat-collision-repro.json",
+    "source_fetch": "Official paper/project links, GitHub REST default-branch commit and complete recursive trees, pinned raw text sources. Trees are not truncated. GitHub auth used only through existing gh; no credentials output."
+  },
+  "papers": [
+    {
+      "name": "SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis",
+      "paper": "https://arxiv.org/abs/2601.07218",
+      "paper_html": "https://arxiv.org/html/2601.07218",
+      "official_repo": "https://github.com/lojol2327/SceneNAT-official",
+      "official_link_evidence": [
+        "https://arxiv.org/html/2601.07218 (paper links lojol2327/SceneNAT-official)",
+        "https://scenenat.github.io/"
+      ],
+      "commit": "45379ca53d76045b11d275884b412771e2601d52",
+      "tree_entries": 85,
+      "license": "CC BY-NC 4.0 per pinned README; observe noncommercial restriction before reuse",
+      "paper_evaluation_summary": "Language-conditioned scenes: instruction-relation recall, rendered FID/CLIP-FID/KID, physical and intersection measures. Instruction recall scores specified triplets, not all relations in one reference layout. Intersection prose uses unordered pairs and averages over colliding pairs.",
+      "actual_evaluation_entry": {
+        "path": "src/tasks/eval.py",
+        "commit": "45379ca53d76045b11d275884b412771e2601d52",
+        "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/tasks/eval.py#L25",
+        "line": 25,
+        "purpose": "GPU generation plus evaluation entry; constructs text from sampled annotated relations/descriptions, decodes layout, invokes evaluator",
+        "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/tasks/eval.py",
+        "sha256": "d20d35358b0a53c9e9f363e3da2359e8f34ddbd7ae422a366decf05fd26ed2ac"
+      },
+      "commands": [
+        {
+          "command": "bash scripts/eval.sh <model_version> [checkpoint] [room_type]",
+          "status": "documented wrapper; not run",
+          "details": "Invokes python -m src.tasks.eval with --given_lengths --timesteps 50 --temperature 0 --visualize; CUDA_VISIBLE_DEVICES=1 hardcoded in wrapper."
+        },
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 MPLBACKEND=Agg python /tmp/fastfill-paper-code-recent-20261026/scenenat-collision-repro.py",
+          "status": "executed successfully; isolated CPU metric toy only"
+        }
+      ],
+      "eval_files": [
+        {
+          "path": "scripts/eval.sh",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/scripts/eval.sh#L70",
+          "line": 70,
+          "purpose": "documented evaluation CLI wrapper",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/scripts/eval.sh",
+          "sha256": "70acf9df32dd78e717fa5b6ef060e2c9c85459c8307adb18136463315633da5f"
+        },
+        {
+          "path": "scripts/eval_ours.sh",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/scripts/eval_ours.sh#L29",
+          "line": 29,
+          "purpose": "author experimental evaluation wrapper; defaults need local path/config adaptation",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/scripts/eval_ours.sh",
+          "sha256": "67987672cbf4e0d11ea2e5efad6ef2a51d9bbfa55cd6fce6ce591dedc6c71e6e"
+        },
+        {
+          "path": "src/tasks/eval.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/tasks/eval.py#L180",
+          "line": 180,
+          "purpose": "construct relation/description-conditioned text; --given_lengths supplies GT object count",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/tasks/eval.py",
+          "sha256": "d20d35358b0a53c9e9f363e3da2359e8f34ddbd7ae422a366decf05fd26ed2ac"
+        },
+        {
+          "path": "src/tasks/eval.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/tasks/eval.py#L204",
+          "line": 204,
+          "purpose": "timer covers generate_samples call, before VQ decode, retrieval and rendering",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/tasks/eval.py",
+          "sha256": "d20d35358b0a53c9e9f363e3da2359e8f34ddbd7ae422a366decf05fd26ed2ac"
+        },
+        {
+          "path": "src/utils/evaluator.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/evaluator.py#L91",
+          "line": 91,
+          "purpose": "epoch aggregation and denominators",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/evaluator.py",
+          "sha256": "91caa829247162d41f2c034313a427266ec993bd47f9271884ca1fcaac0e4d60"
+        },
+        {
+          "path": "src/utils/evaluator.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/evaluator.py#L387",
+          "line": 387,
+          "purpose": "instruction-relation multiset matching",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/evaluator.py",
+          "sha256": "91caa829247162d41f2c034313a427266ec993bd47f9271884ca1fcaac0e4d60"
+        },
+        {
+          "path": "src/utils/evaluator.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/evaluator.py#L481",
+          "line": 481,
+          "purpose": "DOS variants",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/evaluator.py",
+          "sha256": "91caa829247162d41f2c034313a427266ec993bd47f9271884ca1fcaac0e4d60"
+        },
+        {
+          "path": "src/utils/evaluator.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/evaluator.py#L532",
+          "line": 532,
+          "purpose": "cleanfid FID, CLIP-FID, KID over rendered topdown images",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/evaluator.py",
+          "sha256": "91caa829247162d41f2c034313a427266ec993bd47f9271884ca1fcaac0e4d60"
+        },
+        {
+          "path": "src/utils/collision_metric.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/collision_metric.py#L6",
+          "line": 6,
+          "purpose": "OBB intersection matrix and normalization",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/collision_metric.py",
+          "sha256": "4376451e2dc7ab2527566df8c10e11a26e27eb6df06bc6524e68dfead1dcc485"
+        },
+        {
+          "path": "src/utils/evaluator.py",
+          "commit": "45379ca53d76045b11d275884b412771e2601d52",
+          "immutable_url": "https://github.com/lojol2327/SceneNAT-official/blob/45379ca53d76045b11d275884b412771e2601d52/src/utils/evaluator.py#L276",
+          "line": 276,
+          "purpose": "call site passes predicted decoded boxes directly",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/lojol2327__SceneNAT-official/src/utils/evaluator.py",
+          "sha256": "91caa829247162d41f2c034313a427266ec993bd47f9271884ca1fcaac0e4d60"
+        }
+      ],
+      "code_metrics": [
+        {
+          "metric": "iRecall",
+          "definition": "Pooled count of satisfied requested category-relation-category triples / pooled number of requested triples across scenes. Predicted relations generated from object geometry; duplicate requested triples consume generated matching triples one at a time. Easy variant relaxes closely relation.",
+          "denominator": "Requested instruction triples, not object count or all possible/reference relations",
+          "source": "src/utils/evaluator.py:105-114,387-444"
+        },
+        {
+          "metric": "FID / CLIP-FID / KID",
+          "definition": "cleanfid feature-distribution comparison of generated topdown PNGs versus held-out real rendered scene PNGs; CLIP-FID uses clip_vit_b_32; displayed KID multiplied by 1000.",
+          "denominator": "Distribution of generated/reference rendered images; cannot infer per-room validity",
+          "source": "src/utils/evaluator.py:532-565"
+        },
+        {
+          "metric": "DOS variants",
+          "definition": "For each requested description, best same-category generated asset CLIP cosine(image,description) minus cosine(image,class). DOS clamps >=0, missing=0; DOS_fixed missing=-2; DOS_recall uses unclamped score with missing=0. Aggregates requested descriptions then scenes.",
+          "denominator": "Requested descriptions / evaluated scenes; missing behavior differs by variant",
+          "source": "src/utils/evaluator.py:481-530"
+        },
+        {
+          "metric": "Current public OBB intersections",
+          "definition": "inter_vol from half-extent footprints and vertical intervals. Current iomin normalizer is sx*sy*sz, then mean over whole M*M matrix after zeroing diagonal. Current vol_mean averages whole M*M; vol_sum sums ordered off-diagonal pairs. Epoch vol_avg/iomin are scene means; vol_total sums scenes.",
+          "denominator": "M*M including zeroed diagonal and noncolliding entries; iomin uses half-volume product",
+          "source": "src/utils/collision_metric.py:20,26-31,39-45,60-72; evaluator.py:93-95"
+        },
+        {
+          "metric": "Time",
+          "definition": "perf_counter duration of generate_samples per batch, then mean recorded batch duration; excludes output decode, asset retrieval and rendering. No explicit CUDA synchronization observed around timer.",
+          "denominator": "Recorded generation calls/batches, not verified end-to-end per-scene latency",
+          "source": "src/tasks/eval.py:204-224; evaluator.py:124"
+        }
+      ],
+      "coverage_verdict": "PARTIAL public evaluation coverage. Official evaluation entry implements iRecall, visual distribution metrics, DOS, OBB intersections and generation-call timing. NAV/ACC/floor-penetration scorer not found in reviewed official eval files or remaining 85-entry tree; do not label all paper metrics reproduced.",
+      "confirmed_source_mismatch": {
+        "severity": "High for reuse of metric as named IoMin; does not establish published result error",
+        "observation": "Two identical half-extent-1 cubes have physical intersection volume 8 and pair IoMin=1; public function reports vol_sum=16, vol_mean=4, iomin=3.999996. IoMin can exceed 1.",
+        "cause": "Geometry uses half extents but volume denominator omits factor 8; matrix means/sums also differ from paper colliding/unordered-pair prose.",
+        "receipt": "/tmp/fastfill-paper-code-recent-20261026/scenenat-collision-repro.json",
+        "script": "/tmp/fastfill-paper-code-recent-20261026/scenenat-collision-repro.py",
+        "paper_result_inference_boundary": "No claim that original paper experiments used this exact commit or these exact current outputs. Requires author clarification/version matching."
+      },
+      "directly_reusable": [
+        "Instruction-triplet multiset scoring if explicit relations are actually in user input; preserve denominator",
+        "Rendered FID/CLIP-FID/KID calls with frozen render/reference pipeline"
+      ],
+      "adaptation_needed": [
+        "Canonical inventory/empty-shell input adapter: --given_lengths fixes count only; current texts sampled from annotated scene descriptions/relations do not enforce immutable inventory",
+        "Replace/test collision normalization against analytic geometry before borrowing metric names",
+        "Convert coordinate system/half versus full extents; common rendering/assets/reference split; inventory exactness and failure accounting external to current script",
+        "Measure model+decode+retrieval/postprocess latency separately, with synchronized GPU timing if used"
+      ],
+      "not_run_or_missing": [
+        "No weights, data, Blender rendering or GPU inference run",
+        "Reviewed public entry does not expose NAV/ACC/floor penetration scorer",
+        "Original paper run manifest/checkpoint/config-to-table mapping not reconstructed"
+      ]
+    },
+    {
+      "name": "NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation",
+      "paper": "https://arxiv.org/abs/2606.29395",
+      "paper_html": "https://arxiv.org/html/2606.29395v2",
+      "official_repo": "https://github.com/adamcwan/NaLA-code",
+      "official_link_evidence": [
+        "https://arxiv.org/abs/2606.29395 (v2 Comments Code link)",
+        "https://adamcwan.github.io/NaLA/ (Code link)"
+      ],
+      "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+      "tree_entries": 142,
+      "license": "MIT per repo",
+      "paper_protocol": "60 scenes (20 types x3), about20 objects each. Compared methods receive the same empty room and asset set. NaLA receives native scene/asset point clouds and asset descriptions; this is asset-given, not unknown-size text-inventory generation. Main result is single-pass without post-optimization.",
+      "paper_metrics": [
+        {
+          "metric": "Voxel collision",
+          "definition": "sum over unordered pairs (Vi+Vj)*indicator[voxel intersection>0] / sum over unordered pairs (Vi+Vj). Binary pair collision weighted by participating volumes, not IoU.",
+          "denominator": "Sum pair volume weights; one colliding pair contributes regardless intersection magnitude."
+        },
+        {
+          "metric": "Out-of-bounds",
+          "definition": "sum_i Vi*(footprint area outside room / object footprint area) / sum_i Vi.",
+          "denominator": "Total evaluated object volume."
+        },
+        {
+          "metric": "Floating",
+          "definition": "Exclude wall/ceiling categories; recursively mark floor/contact-supported objects using vertical-distance threshold and horizontal overlap; count unsupported / retained objects.",
+          "denominator": "Retained non-wall/ceiling objects; exact numeric threshold not recovered from public scorer."
+        },
+        {
+          "metric": "AI/human quality",
+          "definition": "Physical/semantic/function-aesthetic Likert1-5 using topdown plus4oblique views; Gemini3.0FlashPreview and20graduate raters; tables use1000bootstrap standard errors.",
+          "denominator": "Rating scene/item distributions; judge nondeterminism and scene-level bootstrap must be frozen."
+        }
+      ],
+      "actual_evaluation_entry": null,
+      "actual_generation_entry": {
+        "path": "scripts/infer.py",
+        "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+        "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/scripts/infer.py#L130",
+        "line": 130,
+        "purpose": "Layout generation and GLB composition; not a paper metric scorer",
+        "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/scripts/infer.py",
+        "sha256": "3b1315f92b4ee453133d4b8ffe6f90dbb015c98107e464e93e96da57f894dc20"
+      },
+      "commands": [
+        {
+          "command": "python scripts/infer.py --checkpoint /path/checkpoint.pth --tokenizer /path/tokenizer --dataset_type imaginarium --scene_list '[\"scene/id\"]' --output_dir outputs/infer/runs --postprocess off",
+          "status": "documented inference only; not run"
+        }
+      ],
+      "eval_files": [
+        {
+          "path": "scripts/infer.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/scripts/infer.py#L148",
+          "line": 148,
+          "purpose": "asset/empty-scene inputs; collator; GPU inference",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/scripts/infer.py",
+          "sha256": "3b1315f92b4ee453133d4b8ffe6f90dbb015c98107e464e93e96da57f894dc20"
+        },
+        {
+          "path": "scripts/infer.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/scripts/infer.py#L233",
+          "line": 233,
+          "purpose": "postprocess off/full defaultoff",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/scripts/infer.py",
+          "sha256": "3b1315f92b4ee453133d4b8ffe6f90dbb015c98107e464e93e96da57f894dc20"
+        },
+        {
+          "path": "src/nala/eval_defaults.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/src/nala/eval_defaults.py#L1",
+          "line": 1,
+          "purpose": "configuration constants only; misleading filename if interpreted as eval implementation",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/src/nala/eval_defaults.py",
+          "sha256": "db40e4ab1ce1ec4296d808d056a62ec0964b28468eb957d35151d61910c7732f"
+        },
+        {
+          "path": "src/nala/post_processing/post_process.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/src/nala/post_processing/post_process.py#L977",
+          "line": 977,
+          "purpose": "post_validate changes placement to satisfy bounds; not a scene metric",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/src/nala/post_processing/post_process.py",
+          "sha256": "4cdb28929fc9b03ae4ba1407fa737fef631649831f733ec085cccc04bacab938"
+        },
+        {
+          "path": "src/nala/post_processing/post_process.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/src/nala/post_processing/post_process.py#L1091",
+          "line": 1091,
+          "purpose": "optional physics cleanup modifies layouts; not paper aggregate scorer",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/src/nala/post_processing/post_process.py",
+          "sha256": "4cdb28929fc9b03ae4ba1407fa737fef631649831f733ec085cccc04bacab938"
+        },
+        {
+          "path": "tools/build_support_graph.py",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/tools/build_support_graph.py#L188",
+          "line": 188,
+          "purpose": "support graph / training-order preprocessing, not floating-rate benchmark evaluation",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/tools/build_support_graph.py",
+          "sha256": "24676ea77323f4f7c413453bfeec210b2b8aaa74645ac45a04d406afdfe43f32"
+        },
+        {
+          "path": "README.md",
+          "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+          "immutable_url": "https://github.com/adamcwan/NaLA-code/blob/ebf3ca1948c25fa2d5d3c01960257745647b3103/README.md#L107",
+          "line": 107,
+          "purpose": "release checklist",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/adamcwan__NaLA-code/README.md",
+          "sha256": "89c6c46ad7ef9d3c23fec1dac40cb67a6b98ba5a59ebd165012f14f86f285146"
+        }
+      ],
+      "coverage_verdict": "Public training and inference code exists. No dedicated implementation/runner for paper weighted voxel collision, volume-weighted OOB, floating ratio, Gemini evaluation or human-study aggregation found in pinned complete public tree. eval_defaults.py is not an evaluator. Do not call this no code; do not call it full paper-evaluation release.",
+      "checkpoint_status": "Pinned README checklist still marks NaLA checkpoints and training data unreleased/planned September, despite current audit date. No separate release or model availability was established in this audit.",
+      "external_sceneeval_fork": "No SceneEval dependency/code link or paper scorer runner found in official README/complete tree; no evidence to attribute this benchmark to SceneEval.",
+      "directly_reusable": [
+        "Paper metric formulas as specifications for new independent scorers with toy tests",
+        "Inference adapter as an asset-given secondary experiment if required weights/data obtained"
+      ],
+      "adaptation_needed": [
+        "Do not compare asset-given native point-cloud input against FastFill text-only unknown-size input as the same protocol",
+        "For primary task, require common asset retrieval/size priors across all systems, or report asset-given task separately",
+        "Freeze voxel pitch, contact tolerance, excluded categories, annotation provenance, judge prompt/version, failure denominators; current public optional cleanup is not the scorer",
+        "Separate raw --postprocess off from cleanup full results"
+      ],
+      "not_run_or_missing": [
+        "No model/checkpoints/asset libraries/data downloaded",
+        "No inference or evaluation run",
+        "Paper scorers and evaluation commands not located; reported formulas cannot substitute for verified released implementation"
+      ]
+    },
+    {
+      "name": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+      "paper": "https://arxiv.org/abs/2602.09153",
+      "paper_html": "https://arxiv.org/html/2602.09153",
+      "official_repo": "https://github.com/nepfaff/scenesmith",
+      "official_link_evidence": [
+        "https://scenesmith.github.io/ (Code links nepfaff/scenesmith)",
+        "https://arxiv.org/html/2602.09153 (author project link)"
+      ],
+      "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+      "tree_entries": 683,
+      "license": "MIT per pinned README",
+      "paper_protocol": "Open-vocabulary text-to-scene:210 prompts,179room+31house; assets and contextual objects may be added. Different from fixed furniture inventory. Counts/attributes/relations use SceneEval. Baselines get V-HACD128hulls and uniform1000kg/m3; carpets excluded from physics. Human:205completers,3051valid pair judgments, realism and prompt faithfulness; binomial tests with BH-FDR.",
+      "paper_metrics_summary": "CNT/ATR/OOR/OAR requirement satisfaction; ACC VLM functional sides plus occupancy; NAV largest connected free-floor fraction; OOB objects with<99%surface-point downward rays hitting floor. COL object fraction penetrating>1mm; STB5s gravity,dt1ms, displacement<1cm and rotation<0.1rad, wall/ceiling welded using common VLM support labels. Scene means with95%tCI.",
+      "main_repo_evaluation_entry": {
+        "path": "scripts/robot_eval/validate.py",
+        "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+        "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scripts/robot_eval/validate.py#L38",
+        "line": 38,
+        "purpose": "Actual robot task-success validator; not scene-quality paper-batch evaluation",
+        "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scripts/robot_eval/validate.py",
+        "sha256": "4d1108cb79e976481776ce45d50d888aa0562ee94f63c683d5758d137c7b1516"
+      },
+      "eval_files": [
+        {
+          "path": "scenesmith/agent_utils/sceneeval_exporter.py",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/agent_utils/sceneeval_exporter.py#L34",
+          "line": 34,
+          "purpose": "SceneEval format export:Zup,Yforward,architecture/openings,objects4x4transforms,SDF paths",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scenesmith/agent_utils/sceneeval_exporter.py",
+          "sha256": "14b14b003f7a2fecf70e5c3167c27b8dc966a8c0c4a1d8d61b055cd19eb8636b"
+        },
+        {
+          "path": "scenesmith/agent_utils/sceneeval_exporter.py",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/agent_utils/sceneeval_exporter.py#L66",
+          "line": 66,
+          "purpose": "writes scene_states/final_scene/sceneeval_state.json",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scenesmith/agent_utils/sceneeval_exporter.py",
+          "sha256": "14b14b003f7a2fecf70e5c3167c27b8dc966a8c0c4a1d8d61b055cd19eb8636b"
+        },
+        {
+          "path": "scripts/robot_eval/validate.py",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scripts/robot_eval/validate.py#L85",
+          "line": 85,
+          "purpose": "calls VLM/state task validator",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scripts/robot_eval/validate.py",
+          "sha256": "4d1108cb79e976481776ce45d50d888aa0562ee94f63c683d5758d137c7b1516"
+        },
+        {
+          "path": "scenesmith/robot_eval/success_validation/validator_agent.py",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/robot_eval/success_validation/validator_agent.py#L1",
+          "line": 1,
+          "purpose": "robot task requirements/overall success logic",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scenesmith/robot_eval/success_validation/validator_agent.py",
+          "sha256": "841779f18ca16d7a8498c689f3339606ff8ac651505da7c9a61eb5992592c9d7"
+        },
+        {
+          "path": "scenesmith/agent_utils/physics_tools.py",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/agent_utils/physics_tools.py#L157",
+          "line": 157,
+          "purpose": "generation-time physics tool; not paper standardized batch scorer",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/scenesmith/agent_utils/physics_tools.py",
+          "sha256": "1d2ab13658301fdeab0ad171ada0f05bd11e6263688d89be79e2e50a7cf3516f"
+        },
+        {
+          "path": "README.md",
+          "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+          "immutable_url": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/README.md#L740",
+          "line": 740,
+          "purpose": "robot evaluation workflow",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__scenesmith/README.md",
+          "sha256": "38e153c78380988525f2cacc25d57c72f52fb99451016cce42475b98f80163a3"
+        }
+      ],
+      "commands": [
+        {
+          "command": "python scripts/robot_eval/validate.py --scene-state /path/house_state.json --dmd /path/final_robot_output.dmd.yaml --scene-dir /path/scene --task \"Put fruit on plate\"",
+          "status": "documented task-success command; not run; separate endpoint from scene-quality scoring"
+        }
+      ],
+      "author_sceneeval_fork": {
+        "repo": "https://github.com/nepfaff/SceneEval",
+        "parent": "https://github.com/3dlg-hcvc/SceneEval",
+        "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+        "commit_date": "2026-01-24T05:47:40Z",
+        "tree_entries": 192,
+        "tree_truncated": false,
+        "provenance": "Public fork owned by SceneSmith first author. README calls generation system SceneAgent with placeholder repo URL; converter matches current SceneSmith exported paths and plan enumerates210 scenes. This is substantive author evaluation code, but paper/project does not explicitly link this fork or certify the pinned commit as the exact published run. Treat as author-maintained evaluation implementation with unresolved paper-version linkage.",
+        "actual_evaluation_entry": {
+          "path": "main.py",
+          "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+          "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/main.py#L1",
+          "line": 1,
+          "purpose": "Hydra SceneEval metric runner",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/main.py",
+          "sha256": "16c60eeb1766dbbf879e9f4d726645a4f038959e30a22638624fb1245f71b55d"
+        },
+        "run_plan": {
+          "path": "configs/evaluation_plan/sceneagent_plan.yaml",
+          "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+          "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/configs/evaluation_plan/sceneagent_plan.yaml#L1",
+          "line": 1,
+          "purpose": "Semantic+geometry+Drake210-scene plan; support classification recomputed, private annotation absolute path needs replacement",
+          "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/configs/evaluation_plan/sceneagent_plan.yaml",
+          "sha256": "5b3989f01b9d0512e249787267e5c3b10db0f872023e737719d23a02e0264566"
+        },
+        "commands": [
+          {
+            "command": "python conversion/scene_agent/convert_SceneEval.py /path/scenesmith/outputs/run input/SceneAgent",
+            "status": "documented conversion command; not run"
+          },
+          {
+            "command": "python main.py evaluation_plan=sceneagent_plan",
+            "status": "documented author-fork batch eval; not run; paths/assets/annotations/VLM setup required"
+          },
+          {
+            "command": "./scripts/run_parallel_all_scene_agent.sh 4 /path/input/SceneAgent --output-path /path/eval",
+            "status": "documented parallel/retry wrapper; not run"
+          }
+        ],
+        "eval_files": [
+          {
+            "path": "conversion/scene_agent/convert_SceneEval.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/conversion/scene_agent/convert_SceneEval.py#L55",
+            "line": 55,
+            "purpose": "reads both old final_scene and new combined_house exports",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/conversion/scene_agent/convert_SceneEval.py",
+            "sha256": "f9ee98487a6f2e60dea40d518f056e4f89d3203593c8de5fbdfb6458b0e51eff"
+          },
+          {
+            "path": "scripts/run_parallel_all_scene_agent.sh",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/scripts/run_parallel_all_scene_agent.sh#L1",
+            "line": 1,
+            "purpose": "actual author parallel evaluation wrapper",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/scripts/run_parallel_all_scene_agent.sh",
+            "sha256": "a0694f53e196c9a77a3a72c368b96de0976d7ec53e4261fc5145953c5fbee89c"
+          },
+          {
+            "path": "metrics/drake_collision.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/drake_collision.py#L88",
+            "line": 88,
+            "purpose": "baseline Drake collision metric, excludes carpets, floor collisions reported separately",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/drake_collision.py",
+            "sha256": "e1069a71e68bc0534068465cecf8ac6440ce4d3a09d6114e7b4ea62127a11f9a"
+          },
+          {
+            "path": "metrics/drake_scene_agent.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/drake_scene_agent.py#L90",
+            "line": 90,
+            "purpose": "uses SceneSmith precomputed SDFs and physical properties for COL",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/drake_scene_agent.py",
+            "sha256": "591ba1857f1c9c3f26b3d899ff1e6f54c8ed5bbbcb2799a90f3a5145046adec5"
+          },
+          {
+            "path": "metrics/drake_scene_agent.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/drake_scene_agent.py#L746",
+            "line": 746,
+            "purpose": "architectural-welded stability; common support type labels; non-welded denominator",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/drake_scene_agent.py",
+            "sha256": "591ba1857f1c9c3f26b3d899ff1e6f54c8ed5bbbcb2799a90f3a5145046adec5"
+          },
+          {
+            "path": "metrics/drake_scene_agent.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/drake_scene_agent.py#L987",
+            "line": 987,
+            "purpose": "combined-welded variant also freezes penetrating objects; do not confuse with architectural-only paper STB",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/drake_scene_agent.py",
+            "sha256": "591ba1857f1c9c3f26b3d899ff1e6f54c8ed5bbbcb2799a90f3a5145046adec5"
+          },
+          {
+            "path": "configs/metrics.yaml",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/configs/metrics.yaml#L138",
+            "line": 138,
+            "purpose": "VHACD128,1mm; physics5s,dt1ms overrides",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/configs/metrics.yaml",
+            "sha256": "6984c0c4a154a9aa7adcd03acc74581c6930d52775fbfe00deff5a52240a9dfb"
+          },
+          {
+            "path": "metrics/navigability.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/navigability.py#L141",
+            "line": 141,
+            "purpose": "floor erosion based robot width and connected component navigability",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/navigability.py",
+            "sha256": "75e072018f2579c34af76bc2b4d4104bcd4c2265e20bb9d5524fab6fbaeda48c"
+          },
+          {
+            "path": "metrics/accessibility.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/accessibility.py#L408",
+            "line": 408,
+            "purpose": "VLM sides; per-object maximum of applicable-side scores",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/accessibility.py",
+            "sha256": "fb76a9c6dd2baa4f42d6a50246e7a478141667934b83c114ed238d601af43b4e"
+          },
+          {
+            "path": "metrics/out_of_bound.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/metrics/out_of_bound.py#L79",
+            "line": 79,
+            "purpose": "surface sampling, floor raycasts;default.99",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/metrics/out_of_bound.py",
+            "sha256": "6711ad8ca1f2248bbe2b483c18b7890109bcb2cd9e9f053d8331740244cbc745"
+          },
+          {
+            "path": "scripts/generate_metric_csv.py",
+            "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+            "immutable_url": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/scripts/generate_metric_csv.py#L99",
+            "line": 99,
+            "purpose": "summary metric denominators",
+            "local_copy": "/tmp/fastfill-paper-code-recent-20261026/nepfaff__SceneEval/scripts/generate_metric_csv.py",
+            "sha256": "727707046545bc418c22c91ae66ba87aff445681728ca9a6c6e2f3217c6f8270"
+          }
+        ],
+        "code_metrics": [
+          {
+            "metric": "NAV",
+            "definition": "Largest connected walkable pixel component / all walkable pixels (8connectivity); configured floor erosion and object projection.",
+            "denominator": "All free pixels after preprocessing; not door-seeded reachability",
+            "source": "metrics/navigability.py:141-146,217-264"
+          },
+          {
+            "metric": "ACC",
+            "definition": "VLM identifies functional sides. Compute free accessible area per side, take per-object maximum side score; scene-summary mean of max>=0 objects. No applicable sides=-1 excluded.",
+            "denominator": "Objects with applicable functional sides; max over sides rather than all-side mean",
+            "source": "metrics/accessibility.py:408-444; scripts/generate_metric_csv.py:99-110"
+          },
+          {
+            "metric": "OOB",
+            "definition": "Per-object surface sample count=max(OBBvolume*5000,1000); downward floor-ray hit fraction<.99 marks OOB; summary count/N.",
+            "denominator": "All scene objects; surface samples used within object, not area-weighted aggregate across scene",
+            "source": "metrics/out_of_bound.py:21-23,79-104; scripts/generate_metric_csv.py:120-125"
+          },
+          {
+            "metric": "Drake COL",
+            "definition": "Count objects participating in object-object penetration beyond1mm; floor penetration separate. SceneAgent implementation uses precomputed SDFs; baselineVHACD excludes carpets internally. Summary divides collision count by num_objects.",
+            "denominator": "Summary num_objects; must audit common carpet filtering because evaluator internals can exclude carpets while summary uses supplied total",
+            "source": "metrics/drake_collision.py:175-192,239-306; drake_scene_agent.py:186-241; scripts/generate_metric_csv.py:139-143"
+          },
+          {
+            "metric": "Architectural STB",
+            "definition": "Use support JSON to weld wall/ceiling; ground not welded unless requested. Simulate5s at1ms per config. Stable if finite translation<=.01m and rotation<=.1rad. Aggregates count stable/unstable among non-welded only; welded are listed stable but excluded aggregate. Summary reports unstable/(stable+unstable), so stable score=1-that.",
+            "denominator": "Non-welded simulated objects only; empty denominator becomes blank in CSV",
+            "source": "metrics/drake_scene_agent.py:764-785,855-939; configs/metrics.yaml:312-321; scripts/generate_metric_csv.py:145-149"
+          },
+          {
+            "metric": "CNT/ATR/OOR/OAR",
+            "definition": "Inherited SceneEval VLM/annotation metrics; author fork plan runs ObjCountMetric,ObjAttributeMetric,ObjObjRelationshipMetric,ObjArchRelationshipMetric.",
+            "denominator": "Applicable annotated requirements, not matched GT scene-layout error. Metric implementations not independently reread in this sub-audit; root framework audit supplies detailed definitions.",
+            "source": "configs/evaluation_plan/sceneagent_plan.yaml:1-13"
+          }
+        ],
+        "coverage_verdict": "Substantial public automatic evaluation code exists in author fork, beyond main repo exporter/task validator. Defaults include210scene plan, common VLM support classification and matching physics parameters. Full published-run equivalence not established: annotation path private, no frozen run manifest; architectural versus combined welding and denominator choices must be explicit."
+      },
+      "directly_reusable": [
+        "SceneEval exporter schema/coordinate conventions as template for RoomGenBench real-mesh conversion",
+        "Author fork architectural-only Drake simulation and common VLM support classification after meshes/physics properties exist",
+        "NAV/ACC/OOB metrics with full names and denominator disclosure; separate robot task validator for downstream interaction study"
+      ],
+      "adaptation_needed": [
+        "Exact inventory must be externally validated; SceneSmith open-set additions violate fixed-inventory primary protocol unless constrained",
+        "Freeze same shell,doors/windows,sceneheight and object identity for all methods; asset generation/retrieval cannot leak GT dimensions",
+        "Adapt floor/ceiling/wall supports, transforms,SDF/mesh ownership and annotation paths",
+        "Use architectural-only STB for free-body stability; combined welding can hide colliding object movement and measures a different condition",
+        "Declare ACC VLM and NAV proxy limitations; add door-seeded agent-width reachability for user task",
+        "Measure layout,asset retrieval/generation,repair,render/export and total latency separately"
+      ],
+      "not_run_or_missing": [
+        "No model,asset generation,Blender,Drake batch eval or paid VLM calls executed",
+        "Main repo alone is not full scene-quality metric reproduction; author fork is required for shown pipeline",
+        "No author-certified exact paper eval commit,210scene run artifacts,human rating rawdata or completeness/failure denominator reconstructed"
+      ]
+    }
+  ],
+  "bottom_line": {
+    "primary_protocol": "Neither relation-conditioned SceneNAT count-only mode, asset-given NaLA nor open-set SceneSmith automatically matches fixed-text-inventory unknown-size shell task. Use common input/asset policy or label secondary protocols.",
+    "metric_import_priority": [
+      "Tested independent inventory exactness and failure accounting first",
+      "Geometry/functional proxies with names,denominators and threshold fixtures",
+      "RoomGenBench/real-mesh collisions,stability and interaction only after asset realization",
+      "Single-reference pose/SG similarity only auxiliary"
+    ],
+    "evidence_limits": "Current pinned public code audit plus one isolated upstream CPU geometry reproduction; not verification of paper numerical rankings."
+  }
+}

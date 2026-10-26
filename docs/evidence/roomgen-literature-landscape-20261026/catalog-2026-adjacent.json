@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-26",
+  "scope": "Five supplementary 2026 or adjoining papers. This is a primary-source catalogue, not an exhaustive review or experimental replication.",
+  "user_protocol": "Observed fixed empty shell, openings and complete furniture text inventory; sizes and poses unknown; output layout goes to the same RoomGenBench realization.",
+  "audit_actions": {
+    "project_source_modified": false,
+    "models_or_large_datasets_downloaded": false,
+    "paid_APIs_or_training_or_benchmark_runs": false,
+    "small_text_downloads": "arXiv HTML converted to text, author/project pages, GitHub metadata, complete recursive trees and READMEs saved under /tmp.",
+    "InteriorAgent_full_pdf": "OpenReview returned HTTP 403 or a browser challenge. The author-hosted PDF reported a 41.4 MB content length and was not downloaded. Its row uses the primary abstract, coauthor publication pages, official documentation and current README.",
+    "metric_source_claim": "No new paper metric implementation was fully audited or executed in this supplement. Available generation code does not establish verified paper evaluation reproduction.",
+    "fetch_receipts": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/fetch-receipts.json"
+  },
+  "papers": [
+    {
+      "name": "Agentic Designer: Progressive Multi-Agent Collaboration for Structure-Aware Interior Layout Generation",
+      "arxiv": "2607.20866",
+      "paper": "https://arxiv.org/html/2607.20866v1",
+      "metadata": "https://arxiv.org/abs/2607.20866",
+      "publication": "TPAMI 2026 per arXiv comment and related DOI 10.1109/TPAMI.2026.3711762.",
+      "project": "https://haochengcop.github.io/Agentic-Designer/",
+      "primary_evidence": [
+        "The paper links the author project; its Code link points to haochengCop/Agentic-Designer.",
+        "Targeted reading: III-A, III-D, IV-C, IV-D, V-C and VI."
+      ],
+      "input": "Parametric walls, doors and windows as 2D architectural quadrilaterals. Generates furniture category, location, bounding box and orientation until End; exact supplied instance IDs are not established.",
+      "method": "Three independently role-finetuned Qwen2.5-Coder-7B models act as Generator, Evaluator and Refiner. Each proposal receives learned violation diagnosis and bounded refinement before commitment. Learned diagnosis is not a deterministic safety certificate.",
+      "evaluation": {
+        "dataset": "InStruct: 18,853 samples, comprising 10,795 living rooms and 8,058 bedrooms. Cross-dataset evaluation uses 300 living rooms and 300 bedrooms from adapted 3D-FRONT.",
+        "metrics": "ANF: mean furniture count. OR: total furniture area / room area. SVR: fraction of scenes with any boundary violation. BVC: mean violating objects per scene. CS: mean pairwise IoU multiplied by 10,000. Human CR/LR/PR assess circulation, placement and proportion on a 1–5 scale.",
+        "human": "31 participants evaluate anonymized 2D layouts for 30 test rooms.",
+        "code_verified": false
+      },
+      "limitations": [
+        "Author: concave boundaries and deep exterior recesses can create topological ambiguity.",
+        "2D footprint metrics do not establish mesh support, stability or door-seeded reachability.",
+        "ANF and OR do not establish exact inventory; mean pairwise IoU depends on object count."
+      ],
+      "relation_to_user_task": "Close architectural conditioning and dimension/pose prediction. Needs exact required IDs, 3D heights/support and the same RoomGenBench realization; architectural information must be equally available to baselines.",
+      "code": {
+        "repo": "https://github.com/haochengCop/Agentic-Designer",
+        "commit": "6d8297ad6a54d7720b373996fa4b94eb0fb3250a",
+        "tree_entries": 45,
+        "tree_truncated": false,
+        "snapshot_file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/haochengCop__Agentic-Designer-snapshot.json",
+        "status": "The official linked repository is accessible but contains presentation assets rather than implementation.",
+        "evidence": "The complete 45-entry tree contains README, index.html, framework.png and 40 SVG examples, plus directories. No Python, model or evaluator files.",
+        "readme": "https://github.com/haochengCop/Agentic-Designer/blob/6d8297ad6a54d7720b373996fa4b94eb0fb3250a/README.md#L1",
+        "eval_entry": null,
+        "metric_source_status": "No metric implementation in this pinned presentation tree. This is not a claim about every possible public resource."
+      },
+      "not_claimed": "No independent score, timing or model reproduction. A future release promise is not treated as current availability."
+    },
+    {
+      "name": "INTERIORAGENT: LLM Agent for Interior Design-Aware 3D Layout Generation",
+      "arxiv": null,
+      "arxiv_status": "No exact arXiv identifier was located or verified; none is invented.",
+      "paper": "https://openreview.net/pdf?id=ypBfokcXvA",
+      "publication": "3DV 2026, confirmed by primary coauthor publication pages.",
+      "author_evidence": [
+        "https://ishit.github.io/ (INTERIORAGENT3DV2026;Paperlinkhttps://ishit.github.io/static/papers/kunal_3dv26.pdf)",
+        "https://kunwang0129.github.io/publications"
+      ],
+      "project_docs": "https://interioragent.github.io/docs/",
+      "input": "Natural-language interior design brief. Current official software retrieves and registers actual assets and builds hierarchical groups. Default room and inventory creation differs from an immutable observed shell and furniture list.",
+      "method": "Paper: IDSDL design-aware scene language, synthesis/optimization tools and ergonomic constraint refinement. Current repository: asset retrieval, relative/around/grid/room groups, nested builds, geometric and VLM constraints, program authoring and render/critic loops. Current software may extend the published paper.",
+      "evaluation": {
+        "verified": "Primary abstract reports a user study. Exact participant/sample denominators and automatic metric definitions were not independently recovered in this sub-audit because full PDF access was limited.",
+        "code_verified": false,
+        "current_pipeline_judge": "Current README describes an internal 0–10 design judge. This is not automatically the published user study or an external benchmark."
+      },
+      "limitations": [
+        "Default creation can alter inventory and shell; constrain these for the user task.",
+        "Current pipeline needs actual assets, Blender and API-backed planning/critics; not inherently lightweight.",
+        "Published study details and exact paper-era implementation remain unverified."
+      ],
+      "relation_to_user_task": "Useful reference for group/anchor DSL and functional tools. Enforce canonical IDs, fixed shell/openings, shared asset information and bounded scales. Grouping, retrieval and feedback alone are established ingredients.",
+      "code": {
+        "repo": "https://github.com/KunalMGupta/interioragent",
+        "commit": "f72f1b675c5e9aea93af56e7cfe049c9b456a6b2",
+        "tree_entries": 622,
+        "tree_truncated": false,
+        "snapshot_file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/KunalMGupta__interioragent-snapshot.json",
+        "status": "Substantial public implementation is available.",
+        "official_evidence": "Repository description matches the paper title; README identifies Kunal Gupta research and links InteriorAgent documentation. Coauthor pages confirm authorship and title.",
+        "readme": "https://github.com/KunalMGupta/interioragent/blob/f72f1b675c5e9aea93af56e7cfe049c9b456a6b2/README.md#L1",
+        "generation_entry": "https://github.com/KunalMGupta/interioragent/blob/f72f1b675c5e9aea93af56e7cfe049c9b456a6b2/main.py#L1",
+        "relevant_paths": [
+          "IDSDL/scene.py",
+          "IDSDL/groups.py",
+          "IDSDL/constraints.py",
+          "IDSDL/lints.py",
+          "generator_core/pipeline.py",
+          "retriever_core/"
+        ],
+        "eval_entry": null,
+        "metric_source_status": "Complete 622-entry tree and README inspected. No dedicated published benchmark suite identified. Code bodies and metric implementations were not fully audited; tests.py is a feature gallery.",
+        "commands_readme": [
+          "python main.py \"a cozy ramen bar with counter seating\" --out results/ramen_bar",
+          "python tests.py all (feature tests; APIs and assets required)"
+        ],
+        "executed": false
+      }
+    },
+    {
+      "name": "Co-Layout: LLM-driven Co-optimization for Interior Layout",
+      "arxiv": "2511.12474",
+      "paper": "https://arxiv.org/html/2511.12474v2",
+      "publication": "AAAI 2026, volume 40(17), pages 14371–14379.",
+      "publisher": "https://ojs.aaai.org/index.php/AAAI/article/view/38452",
+      "doi": "https://doi.org/10.1609/aaai.v40i17.38452",
+      "project": "https://xccelephant.github.io/paper/co-layout/",
+      "input": "Text design brief. The LLM extracts room, furniture and constraint lists. It jointly designs room partitions/corridors and furniture placement. Furniture width/length are LLM-determined constants; orientation has four axis-aligned choices.",
+      "method": "Unified 2D grid integer program for room/corridor/furniture occupancy, exclusivity, connectivity, access and preferences, with coarse-to-fine solving. Paper uses Gurobi 12; current README recommends 13 and has revised runtime budgets.",
+      "evaluation": {
+        "quantitative": "Five examples; OOR overlap area percentage, OOB boundary violation rate, Q-Align IQA/IAA and CLIP text/render similarity. Holodeck and AnyHome outputs are rendered uniformly.",
+        "human": "71 participants, 64 valid responses; 1–5 semantic, layout and path ratings plus ranking MRR.",
+        "ablation": "Coarse-to-fine timing across grid resolutions, five repeats for a fixed prompt.",
+        "code_verified": false
+      },
+      "limitations": [
+        "Floor-based furniture only; wall and tabletop objects are future work.",
+        "LLM constraints may conflict; finite grid and four orientations restrict the layout domain.",
+        "Five quantitative examples do not establish broad ranking generalization or 3D support validity."
+      ],
+      "relation_to_user_task": "Strong adjacent packing/constraint reference. Disable architecture redesign for an observed shell. Its dimensions come from the LLM rather than necessarily GT; use a common non-GT size provider in a controlled comparison.",
+      "code": {
+        "repo": "https://github.com/xccElephant/co-layout",
+        "commit": "e847bfaf8523f57a94225a2490e2279330014b6d",
+        "tree_entries": 51,
+        "tree_truncated": false,
+        "snapshot_file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/xccElephant__co-layout-snapshot.json",
+        "status": "Official generation and optimization source is available.",
+        "official_evidence": "Author homepage, project and README identify the official AAAI repository.",
+        "readme": "https://github.com/xccElephant/co-layout/blob/e847bfaf8523f57a94225a2490e2279330014b6d/README.md#L1",
+        "generation_entry": "https://github.com/xccElephant/co-layout/blob/e847bfaf8523f57a94225a2490e2279330014b6d/run_e2e.py#L1",
+        "optimization_entry": "https://github.com/xccElephant/co-layout/blob/e847bfaf8523f57a94225a2490e2279330014b6d/run_optimization.py#L1",
+        "relevant_paths": [
+          "optimization/coopt_model.py",
+          "optimization/floorplan_model.py",
+          "optimization/grid_model.py",
+          "utils/connectivity.py",
+          "utils/blender_visualization.py"
+        ],
+        "eval_entry": null,
+        "metric_source_status": "Complete 51-entry tree and README inspected. No paper Q-Align/CLIP/OOR/OOB benchmark suite identified. Core optimization and rendering exist; metric code bodies were not audited.",
+        "commands_readme": [
+          "python run_optimization.py --session <session_id>",
+          "python run_e2e.py (required arguments documented in README)"
+        ],
+        "executed": false
+      }
+    },
+    {
+      "name": "OpenAsset: A Pipeline for Open-World Asset Integration into Indoor Scene Synthesis",
+      "arxiv": null,
+      "publication": "Electronics 2026, 15(17):3943; published 2 September 2026.",
+      "paper": "https://www.mdpi.com/2079-9292/15/17/3943",
+      "doi": "https://doi.org/10.3390/electronics15173943",
+      "authors": [
+        "Yichun Hong",
+        "Wei Li"
+      ],
+      "input": "Text concept plus user reference photo or target region; not text-only unknown-asset generation.",
+      "method": "SAM 3 segmentation, SAM 3D single-image reconstruction, orientation/scale/coordinate canonicalization, then ReSpace-compatible SSR placement/editing. Uses released component checkpoints; GPT-4o captions are constructed offline.",
+      "evaluation": {
+        "components": "Mask mIoU, Dice and boundary F-score; reconstruction metrics; canonical orientation and relative height errors on independently annotated subsets.",
+        "scenes": "FID, CLIP-FID, KID and 5 cm voxel OOB/mesh-boundary/VBL. Closed set: 500 test scenes per split; open set: 1,000 text/image pairs.",
+        "success": "All evaluated objects grounded, in bounds and noncolliding. Angular/scale errors use reliably annotated subsets, not all open-set samples.",
+        "code_verified": false
+      },
+      "limitations": [
+        "Depends on segmentation and single-view reconstruction; occlusion and complex geometry remain difficult.",
+        "Metric-specific GT subsets differ and their denominators need disclosure.",
+        "The grounded-on-floor criterion does not cover the full wall/ceiling/tabletop support task."
+      ],
+      "relation_to_user_task": "An adjacent asset-realization extension when photos are supplied. Not a direct text-inventory layout baseline; do not give only this competitor image information.",
+      "code": {
+        "repo": "https://github.com/hyc16481/OpenAsset",
+        "commit": "44765c95c502a8e95d07935d4c4cc195399b869a",
+        "tree_entries": 1,
+        "tree_truncated": false,
+        "snapshot_file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/hyc16481__OpenAsset-snapshot.json",
+        "status": "Paper-linked repository exists, but code is still marked coming soon.",
+        "official_evidence": "Publisher Data Availability Statement links hyc16481/OpenAsset.",
+        "readme": "https://github.com/hyc16481/OpenAsset/blob/44765c95c502a8e95d07935d4c4cc195399b869a/README.md#L1",
+        "evidence": "Complete pinned tree has only a 109-byte README: paper title and code coming soon.",
+        "eval_entry": null,
+        "metric_source_status": "No implementation or metrics in the pinned tree; paper formulas are not verified code."
+      },
+      "access_note": "Publisher content read through the web tool; direct urllib returned 403. No assets or models downloaded."
+    },
+    {
+      "name": "VIGOR: Verifiable Industrial Geometry Optimization and Repair in Scene Programs",
+      "arxiv": "2610.13145",
+      "paper": "https://arxiv.org/html/2610.13145v1",
+      "metadata": "https://arxiv.org/abs/2610.13145",
+      "publication": "Preprint submitted 9 October 2026; no accepted venue assigned here.",
+      "input": "Controlled industrial requirements with fixed geometry and an 11-instance inventory, workspace, parent/attachment relations and aisle/clearance parameters. Generates a 25-operation scene program.",
+      "method": "Qwen3-VL-8B LoRA SFT, greedy program generation, Python state execution/save/reload and deterministic verification, followed by local projection and conflict-graph joint beam repair that preserves attachments.",
+      "evaluation": {
+        "population": "2,754 candidate conditions; 1,749 constructible cases split into 1,399 train, 175 interpolation test and 175 compositional test. Unsuccessful construction does not prove mathematical infeasibility.",
+        "geometry": "94 atoms: 11 boundary, 36 collision, 36 equipment-clearance and 11 aisle checks. GVB averages failed atoms; complete feasibility requires structural and geometric validity.",
+        "visual": "20 fixed dual-view cards per method; OU/SO machine scores on 0–5 scale and three human raters.",
+        "code_verified": false
+      },
+      "limitations": [
+        "Controlled fixed schema/inventory and Python state semantics; not general real-mesh or live Unity physics validation.",
+        "Constructibility filtering selects known-feasible references; it does not evaluate arbitrary infeasible inventories.",
+        "Industrial scores belong in an adjacent-work table, not the same room-layout leaderboard."
+      ],
+      "relation_to_user_task": "Relevant prior art for complete verification and coupled repair, but known fixed asset geometry and executable programs differ from unknown-size text inventory to RoomGenBench.",
+      "code": {
+        "repo": null,
+        "status": "No official repository established from paper links and targeted title/arXiv searches.",
+        "search_boundary": "This means no official link was located in this audit, not proof code cannot exist elsewhere.",
+        "eval_entry": null,
+        "metric_source_status": "Appendix G definitions read; no metric implementation verified or executed."
+      }
+    }
+  ],
+  "synthesis": {
+    "closest_protocol": "Agentic Designer models architectural elements and predicts dimensions, but generates free inventory in 2D. Co-Layout infers dimensions from text but redesigns rooms on a grid. InteriorAgent requires substantial adaptation. OpenAsset and VIGOR are adjacent photo-asset and industrial tasks.",
+    "code_status_summary": {
+      "substantial_implementation": [
+        "InteriorAgent",
+        "Co-Layout"
+      ],
+      "presentation_or_placeholder_only": [
+        "Agentic Designer",
+        "OpenAsset"
+      ],
+      "official_repo_not_established": [
+        "VIGOR"
+      ],
+      "full_new_paper_metric_reproduction_verified": []
+    },
+    "paper_code_distinction": "Each row separates paper definitions, current source availability and unverified evaluation claims. Repository existence does not establish reproduction.",
+    "novelty_implications": [
+      "Stepwise agent verification before commitment already appears in Agentic Designer.",
+      "Group/anchor DSL, retrieval knowledge and render feedback already appear in InteriorAgent.",
+      "Text-driven connectivity/access co-optimization already appears in Co-Layout.",
+      "Photo-asset canonicalization/integration already appears in OpenAsset.",
+      "Complete verification and conflict-graph repair already appear in VIGOR, an industrial neighbor."
+    ],
+    "what_remains_for_user": "Use the same input, inventory, asset information and budget; retain the winning GPT one-shot baseline and independently check final RoomGenBench realizations. No ingredient alone establishes novelty."
+  },
+  "text_receipts": [
+    {
+      "file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/haochengCop__Agentic-Designer-README.md",
+      "bytes": 18,
+      "sha256": "1bcff2595470a905a80b91054bc2f05e415969ac546542a06a0794e6253f8234"
+    },
+    {
+      "file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/hyc16481__OpenAsset-README.md",
+      "bytes": 109,
+      "sha256": "af779550e543c8a9126d3596cce33cff6026196f8b13d63b4c4289ec83616586"
+    },
+    {
+      "file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/xccElephant__co-layout-README.md",
+      "bytes": 11505,
+      "sha256": "5b4ffdf93699eec34d9f151d1c0f0adb91c0d8d2b5633af5f5e933b1eeaacfea"
+    },
+    {
+      "file": "/tmp/fastfill-roomgen-catalog-2026-adjacent-20261026/KunalMGupta__interioragent-README.md",
+      "bytes": 19952,
+      "sha256": "fb014d10c4b11bfeebc50e9b72f308a2c586d8124504b5a07b3b47db40b3043e"
+    }
+  ]
+}

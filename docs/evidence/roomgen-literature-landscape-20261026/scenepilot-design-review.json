@@ -1,0 +1,204 @@
+{
+  "date": "2026-10-26",
+  "role": "Independent Agency Model QA Specialist",
+  "scope": {
+    "type": "Read-only design fit/red-team, not independent replication or full ScenePilot paper audit",
+    "source_of_architecture": "User diagram as relayed by parent: hierarchical room/group/anchor RAG priors; LLM group planner; sequential Grow with group-local repair; final layout-specific VLM uses annotated topview+JSON+history and proposes move/rotate/scale.",
+    "paper_url": "https://arxiv.org/html/2608.30307v1",
+    "project": "https://zjw-louie.github.io/ScenePilot/",
+    "primary_paper_status": "Parent separately reads exact paper/method/results; research agent checks official code. This sub-audit does not repeat full paper search.",
+    "additional_parent_verified_fact": "Parent reports abstract explicitly describes17k reverse trajectories and SFT+GRPO, so final specialized agent is not a training-free lightweight component. Exact runtime/training recipe/result values not independently inspected by this subagent.",
+    "source_changes": false,
+    "api_calls_or_training": false,
+    "new_benchmark_executed": false
+  },
+  "fit_summary": {
+    "user_task": "Observed empty shell incl openings,height + complete furniture text inventory, no known dimensions/poses -> exact complete layout -> common RoomGenBench realization.",
+    "best_borrowable_piece": "A planner can use room context plus optional train-only retrieval to assign every requested instance to one functional group and nominate anchors, then a deterministic verifier and bounded repair may correct geometry. First test this without specialized VLM training.",
+    "most_important_non_transfer": "Do not import open-set inventory creation, unconstrained scaling, hidden GT support relations or cross-test retrieval. Current RoomGenBench exact-fit asset scaling changes which downstream size/shape risks exist.",
+    "minimal_candidate_workflow": "One common planner call -> explicit per-ID group/anchor plan -> bounded geometric placement/repair -> independent global check -> optional one final general-VLM correction as an experiment. This is an ablation scaffold, not an assertion user new workflow is implemented or needs replacement.",
+    "novelty_status": "Hierarchical grouping,RAG priors,local geometric repair,history-aware VLM corrections and SFT/RL editors already have close precedents. Borrowing components is reasonable engineering; novelty must come from a controlled result or a sharper task/method claim."
+  },
+  "borrowable_modules": [
+    {
+      "module": "Room/group/anchor retrieval priors",
+      "potential_use": "Offer scale/spacing and functional grouping examples when text dimensions unknown; larger anchors give a useful coarse structure.",
+      "lightweight_form": "Small offline cache of training examples/statistics, fixed top-k, no renderer or new asset generation.",
+      "uncertainty": "Needs proof actual retrieval adds beyond generic LLM prior or per-class size statistics; retrieval can overconstrain novel inventory/rooms."
+    },
+    {
+      "module": "Group planner with stable instance IDs",
+      "potential_use": "Reduce long inventory bookkeeping and expose anchor/dependent structure for many-object rooms.",
+      "lightweight_form": "One structured plan partitions supplied IDs exactly once. Group is scheduling metadata; preserve full request IDs and count duplicates separately.",
+      "uncertainty": "A semantic group is not automatically a physically independent packing component; wall/floor/ceiling supports can cross groups."
+    },
+    {
+      "module": "Bounded local repair during Grow",
+      "potential_use": "Cheap geometry correction while group is small; deterministic checks can avoid repeated visual calls.",
+      "lightweight_form": "Reuse one common repair operator and explicitly cap iterations/checks/moved IDs; validate against all previously placed groups.",
+      "uncertainty": "Freezing earlier groups can create irrecoverable global packing/circulation traps; a timeout must remain failure/unknown."
+    },
+    {
+      "module": "Final annotated image+JSON correction",
+      "potential_use": "Can detect some semantic orientation,visual balance and crowded arrangement defects missed by coordinates alone.",
+      "lightweight_form": "At most one optional call to an already-available VLM in a controlled ablation; no assumption specialized ScenePilot weights available.",
+      "uncertainty": "Topview lacks support-height evidence; history increases context/cost; prompts and screenshots alone do not prove efficacy."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "High",
+      "kind": "Task-contract adaptation risk",
+      "observation": "LLM grouping and sequential growth can omit/duplicate requested instances or add room-essential objects.",
+      "impact": "A better render or lower collision obtained with a different inventory does not solve user task.",
+      "recommendation": "Canonical request IDs; disjoint group partition whose union equals inventory; verify IDs after every Grow/repair/final edit. Optional additions reported separately and not accepted in primary output.",
+      "minimum_check": "Compare multiset/category counts and exact instance IDs, not category-set membership; retain all-scene failure denominator."
+    },
+    {
+      "id": "F2",
+      "severity": "High",
+      "kind": "RAG leakage/design risk, not proven ScenePilot defect",
+      "observation": "Room,group and anchor caches could retrieve same house/scene or derived twins across train,test.",
+      "impact": "Retrieval can transmit reference placements/sizes/supports and inflate heldout performance.",
+      "recommendation": "Build cache only from training split; split by source+house/provenance group before extracting crops/groups/anchors. Deduplicate near-duplicate layouts across translation/rotation/reflection when appropriate. Freeze index and retrieval hyperparameters before final test.",
+      "audit_artifacts": "For each query log retrieved IDs,source,house,parent scene and split; hash cache manifest. Report same-source and unseen-source performance, overlap/near-duplicate audit and exact/near-neighbor exclusion ablation.",
+      "boundary": "Train-only reference layouts are legitimate learned information; using test/validation answers as retrieval exemplars is leakage. Known shell geometry and text are valid queries; hidden GTsupport or pose is not."
+    },
+    {
+      "id": "F3",
+      "severity": "High",
+      "kind": "Global feasibility limitation",
+      "observation": "Sequential group packing may optimize each group while exhausting circulation space or blocking doors between groups.",
+      "impact": "Low pairwise collision can coexist with unusable whole-room layout. Largest connected free-areaNAV can also miss door disconnection.",
+      "recommendation": "Check global door-seeded reachability at declared agent width and furniture functional approach areas after each group; preserve openings and observed shell. Compare simple corridor/anchor reservations and limited backtracking against pure frozen Grow.",
+      "minimum_check": "Cross-group collisions,opening clearance,door-connected component,required approach areas and all-ID coverage; test reversed/random group orders and deliberately narrow rooms.",
+      "boundary": "Pairwise spacing or independent group bounds are not proof of door-to-object paths. Conservative lane reservations can also waste space; report success-quality tradeoff."
+    },
+    {
+      "id": "F4",
+      "severity": "High",
+      "kind": "Scale shortcut risk",
+      "observation": "Final editor can scale objects; smaller boxes mechanically improve collisions/OOB/clearance.",
+      "impact": "The optimizer may turn a plausible sofa into an implausibly tiny object or cause severe asset deformation, while geometry metrics improve.",
+      "recommendation": "Because dimensions are unknown, do not globally forbid prediction. Instead use identical non-GT category/style size bounds and aspect-ratio rules for all methods, report every scale edit, and compare no-scale versus bounded-scale conditions. Track real dimensions and deformation; do not give GT sizes in main task.",
+      "current_roomgen_caveat": "Existing anisotropic bbox-fit can enforce any predicted dimensions and hide native asset size mismatch. Evaluate scale plausibility/deformation and support/function explicitly; confirm revised workflow before making a native-size-robustness claim.",
+      "minimum_check": "Per-ID log-scale change,aspect-ratio distortion,out-of-prior fraction,inventory success and blind scale plausibility; jointly report geometry gains and semantic/visual loss."
+    },
+    {
+      "id": "F5",
+      "severity": "High",
+      "kind": "Observation insufficiency",
+      "observation": "Annotated topview can reveal footprint overlap but not reliably floor/object support,height contacts,wall/ceiling mounting,or geometry inside an enclosingbbox.",
+      "impact": "A final VLM can move/scale a child or parent into a visually acceptable but unsupported/floating state.",
+      "recommendation": "Include structured z/height/support hypothesis and deterministic contact checks; at least an oblique view for a later visual experiment where needed. Infer supports from allowed inputs/meshes; do not feed GT support in primary test.",
+      "minimum_check": "Vertical gap,mesh contact or verified support surface,wall/ceiling mounting state; preserve support descendants during edits,report unknown contact rather than pass.",
+      "boundary": "BBox support approximation is a proxy and may fail on hollow/nonplanar surfaces. Extra views increase call/render budget and must be common across comparisons."
+    },
+    {
+      "id": "F6",
+      "severity": "Medium",
+      "kind": "Training/runtime cost and attribution",
+      "observation": "Diagram term reinforced or specialized agent alone cannot establish training details. Parent-confirmed abstract reports17k reverse trajectories,SFT+GRPO.",
+      "impact": "Training-free prompt baseline,trained layout agent and deterministic repair are different resource regimes; specialization could account for gains.",
+      "recommendation": "Separate inference workflow cost from offline trajectory generation,teacher/reward VLM,rendering andSFT/RL compute. Evaluate off-the-shelf same-budget editor and deterministic repair before considering training.",
+      "minimum_check": "LLM/VLM calls,tokens,prefill/history length,render count,repair/validator checks,p50/p95end-to-end latency; train data/teacher/model/hardware recorded when known.",
+      "boundary": "This subaudit gives no numeric training/runtime estimate for ScenePilot; paper figure or abstract cannot establish per-scene cost in user environment."
+    },
+    {
+      "id": "F7",
+      "severity": "Medium",
+      "kind": "Judge dependence",
+      "observation": "A specialized VLM may optimize the same cues/prompt family used by the evaluator,especially annotatedtopviews.",
+      "impact": "Improved VLM score may reflect evaluator alignment rather than independent geometry/function quality.",
+      "recommendation": "Hold independent geometry/contact/access checks and blinded quality evaluation separate; score final RoomGenBench realization with common cameras and schema. Do not treat two GPT scoring prompts as independent confirmation.",
+      "minimum_check": "Compare proxy improvements versus real-mesh failures and blind pair preferences; record unchanged/worsened cases,not just positive edits."
+    }
+  ],
+  "novelty_redteam": [
+    {
+      "claim": "RAG at room/group/anchor levels",
+      "assessment": "A useful structured retrieval engineering choice; hierarchy alone does not establish novel layout reasoning. Need true-vs-shuffled/no-retrieval controlled benefit on unseen sources and matched contexttokens.",
+      "prior_neighbors": [
+        "Holodeck retrieval",
+        "ATISS/set-conditioned scene priors",
+        "InstructScene graph priors",
+        "ScenePilot itself once paper confirmed"
+      ]
+    },
+    {
+      "claim": "Group Grow+localrepair",
+      "assessment": "Already close to Holodeck/LayoutVLM/RoboLayout local placement and VIGOR conflict-component repair; preserve-global-flow result would need direct evidence.",
+      "prior_sources": [
+        "https://arxiv.org/html/2603.05522",
+        "https://arxiv.org/html/2610.13145",
+        "https://arxiv.org/html/2608.03064"
+      ]
+    },
+    {
+      "claim": "Final trained self-reflective VLM edits",
+      "assessment": "SceneReVis already learns iterative image+state diagnose/act usingSFT+GRPO and mandatory-object verification; Function2Scene and DirectLayout have check-and-refine/asset alignment. Newtraining labels or move/rotate/scale API alone not enough.",
+      "prior_sources": [
+        "https://arxiv.org/html/2602.09432v1",
+        "https://arxiv.org/html/2605.30819v1",
+        "https://arxiv.org/html/2506.05341v2"
+      ]
+    },
+    {
+      "claim": "Complete fixed inventory at low budget with jointsize/pose",
+      "assessment": "Task-specific research opportunity only if same asset information,exact inventory,size plausibility,globalcirculation and budget constraints are enforced and a simple common-repair baseline is beaten. No global-first claim."
+    }
+  ],
+  "minimal_experiment": {
+    "prerequisite": "User supplies intended lightweight workflow. Freeze canonical input/output and common realization first; existing full-condition results cannot be relabeled as this protocol.",
+    "pilot": "30-50validation rooms stratified source,density; house/provenance groups separated. Reuse exact common GPTone-shot seed outputs and existing assets only where canonical protocol matches. No new paid calls/training authorized by this review.",
+    "core_2x2": [
+      {
+        "id": "A",
+        "plan": "Flat one-shot planner, noRAG",
+        "repair": "Same deterministicglobal verifier+bounded repair"
+      },
+      {
+        "id": "B",
+        "plan": "Group/anchor planner, noRAG",
+        "repair": "Same deterministicglobal verifier+bounded repair"
+      },
+      {
+        "id": "C",
+        "plan": "Flat planner +train-only retrieval",
+        "repair": "Same deterministicglobal verifier+bounded repair"
+      },
+      {
+        "id": "D",
+        "plan": "Group/anchor planner +same retrievalbudget",
+        "repair": "Same deterministicglobal verifier+bounded repair"
+      }
+    ],
+    "why_this_2x2": "Separates hierarchy benefit from extra retrieved prior information while holding repair common. Plan calls,tokens and retrievedcontext need matched caps; groupplanner should not quietly use moreLLMcalls.",
+    "final_editor_test": "Take same D outputs; compare no finaledit,one deterministicextra repair budget,andone generalVLM edit with image+JSON. Replay edits on exactIDs. Specialized-trainedVLM only becomes separate later experiment if available; do not attribute its result to hierarchy/RAG.",
+    "essential_negative_controls": [
+      "Replace retrieval with same-size shuffled/nonmatching trainingcontext to distinguish useful priors from extra tokens.",
+      "Try reverse/random grouporder on hardrooms to expose early-group lock-in.",
+      "Editor movement/rotation only versus boundedscale; report whether benefit survives removing shrinkage shortcut.",
+      "Globalchecks versus group-onlychecks; same final verifier for all methods."
+    ],
+    "primary_metrics": [
+      "All-request exact-IDinventoryandrealization success",
+      "Room boundary/opening/cross-groupcollision violations",
+      "Door-seeded reachable functionalareas at declared agentwidth",
+      "Size/aspectratio plausibility; supportingcontact stateandunknown rate",
+      "Blinded layout/semanticquality on common realasset renders",
+      "p50/p95total latency,calls,tokens,render/repaircheckcounts andcoverage"
+    ],
+    "statistics": "Paired room-level outcomes with house/source clustering; multiple grouporders/seeds nested within room. Pilot is hypothesis-screening; final claims need untouched test and frozen thresholds.",
+    "falsification": [
+      "Hierarchy/RAG gain vanishes at equalcall/token/context budget or after retrievedsamehouse/near-duplicate exclusion.",
+      "Uniform categorysizepriors or shuffledretrieval are as good as hierarchicalexamples.",
+      "Group-level improvement creates globaldoor/circulation failures.",
+      "Most editgain comes from invalidscales,missingIDs or using hiddenGTsupport.",
+      "Simple deterministicrepair on winningGPTinitialization matches specializedpipeline at lowercost.",
+      "FinalVLMjudge score improves while independentcontact/access/sizequality does not."
+    ]
+  },
+  "next_action": "Inspect user lightweight workflow,then run only the lowest-cost matching ablation. Do not build full ScenePilot,collect17ktrajectories or startGRPO from this diagram."
+}

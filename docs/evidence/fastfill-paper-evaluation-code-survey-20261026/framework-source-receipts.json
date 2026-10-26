@@ -1,0 +1,299 @@
+[
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "README.md",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/README.md",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/README.md",
+    "sha256": "da1efc9fee5b12a8d6af86a1a8a89eee7d5c34678d5be14e99648f6e59c36352",
+    "bytes": 9625
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "GUIDE.md",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/GUIDE.md",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/GUIDE.md",
+    "sha256": "a7fe731f5cb2ca7fcdc79a16b7b0d77314c9b84d5a04ec21b2f70dc80a149104",
+    "bytes": 11128
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "main.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/main.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/main.py",
+    "sha256": "5ca010690e74a19f389aa32fa9ed915678cf7089f450010072a73b93e8b4e41b",
+    "bytes": 14772
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "configs/evaluation_plan/no_llm_plan.yaml",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/configs/evaluation_plan/no_llm_plan.yaml",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/configs/evaluation_plan/no_llm_plan.yaml",
+    "sha256": "35405711dcb8ec6f0ee2f8f86fe32d6650a0724bab3467a730e0b4c5ce06022e",
+    "bytes": 1164
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "configs/metrics.yaml",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/configs/metrics.yaml",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/configs/metrics.yaml",
+    "sha256": "1117584294b75bfc5b31b5f193f453bfdfa7a727bcadedfe942cd08b544c455a",
+    "bytes": 4119
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "README.md",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/README.md",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/README.md",
+    "sha256": "4c566bcb281aebab43e4e30f824019aed7b681a03cbfa5e09510cbc155ee24e1",
+    "bytes": 5722
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "scripts/run.sh",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/scripts/run.sh",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/scripts/run.sh",
+    "sha256": "40051380190495f2dd71342528e9df97cedf51a3df12653901f91526cbd0d127",
+    "bytes": 2992
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "evaluation/main.py",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/main.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/evaluation/main.py",
+    "sha256": "d60e9a83a4c8929598280a5601b1acb5c3ad04d4e64dafcfea159d8a4df3935b",
+    "bytes": 11978
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "evaluation/eval.py",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/eval.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/evaluation/eval.py",
+    "sha256": "9e35da9b87da77b5b2e9307ad3b2bf28eecd644dd3362913a23d718da24a0eb9",
+    "bytes": 13590
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "evaluation/functions.py",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/functions.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/evaluation/functions.py",
+    "sha256": "f93a2c19684cd3877f15d4967ebb007d8c0c259cf2e972ec52c6ba0d2e3bc655",
+    "bytes": 34485
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "evaluation/toolrunner.py",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/toolrunner.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/evaluation/toolrunner.py",
+    "sha256": "f29ee247e042fe31aab7a7a08c632be77e3ca83708a0dec3610fb29088c28b5f",
+    "bytes": 17789
+  },
+  {
+    "repo": "gyeomh/LEGO-EVAL",
+    "path": "evaluation/instr_decompose.py",
+    "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+    "url": "https://raw.githubusercontent.com/gyeomh/LEGO-EVAL/9463757b56f686e0b5ce6f77bdb959468fd241c5/evaluation/instr_decompose.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/gyeomh__LEGO-EVAL/evaluation/instr_decompose.py",
+    "sha256": "28a13ee2858eb9fec6226ab17647ac98b421445338f9f28f15f3e917ab6798cf",
+    "bytes": 7619
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "README.md",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/README.md",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/README.md",
+    "sha256": "7abb6f9b72616caa3376462a731e92c6607e8bee1b068d7a29a19313cc5460ea",
+    "bytes": 13163
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "scripts/eval.py",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/scripts/eval.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/scripts/eval.py",
+    "sha256": "86f05903c89faf44a7c863d3ed63f0d3dc8271f80ea4517e6dd3fee512187d5c",
+    "bytes": 18082
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "configs/evaluation_config.yaml",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/configs/evaluation_config.yaml",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/configs/evaluation_config.yaml",
+    "sha256": "d93845502edb041b821e490d258f584e233297c161378124684b5ca18c14bd57",
+    "bytes": 1400
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "eval/calculate_oob.py",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/eval/calculate_oob.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/eval/calculate_oob.py",
+    "sha256": "4639436a29689508c05c766d402192a8a6f1e5a517c70f09c61293554e09399b",
+    "bytes": 4455
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "eval/fid_metric.py",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/eval/fid_metric.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/eval/fid_metric.py",
+    "sha256": "5949def1c33ba8d1260dfd377ead8986afca8c01cb4258eca26132d1f70f0d77",
+    "bytes": 5711
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "eval/kl_metric.py",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/eval/kl_metric.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/eval/kl_metric.py",
+    "sha256": "1c070224329f9998ed40788b4e850954c8f4ca965195d7fe310ecb3ce8b1adc7",
+    "bytes": 5363
+  },
+  {
+    "repo": "3dlg-hcvc/SemLayoutDiff",
+    "path": "eval/sca.py",
+    "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SemLayoutDiff/6b12bc4c42aa8377445af108093539073f0495c1/eval/sca.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SemLayoutDiff/eval/sca.py",
+    "sha256": "ed3df32d9cb59fedceeb5c819f12a3e237a2da8b4e5cf2559c35a93a0c90049e",
+    "bytes": 8567
+  },
+  {
+    "repo": "WorldEdge-Lab/RoomGenBench",
+    "path": "README.md",
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "url": "https://raw.githubusercontent.com/WorldEdge-Lab/RoomGenBench/30f2e059d046ccd4aa928d0109a09a52f11693b5/README.md",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/WorldEdge-Lab__RoomGenBench/README.md",
+    "sha256": "4cfc4695484c075a1188cd3a33100db1c5e486bb734cd34f2cdd520f5df18660",
+    "bytes": 12659
+  },
+  {
+    "repo": "WorldEdge-Lab/RoomGenBench",
+    "path": "bench/score_geom.py",
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "url": "https://raw.githubusercontent.com/WorldEdge-Lab/RoomGenBench/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_geom.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/WorldEdge-Lab__RoomGenBench/bench/score_geom.py",
+    "sha256": "ddef22d516019caa877efff77b4516906483122f20268f955a2912acc7dfdd16",
+    "bytes": 5508
+  },
+  {
+    "repo": "WorldEdge-Lab/RoomGenBench",
+    "path": "bench/score_vlm.py",
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "url": "https://raw.githubusercontent.com/WorldEdge-Lab/RoomGenBench/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_vlm.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/WorldEdge-Lab__RoomGenBench/bench/score_vlm.py",
+    "sha256": "83db24dd3d037b130c1c05caa0f4503200a04418c235f283da26d3a16e76dcf2",
+    "bytes": 9357
+  },
+  {
+    "repo": "WorldEdge-Lab/RoomGenBench",
+    "path": "bench/score_aggregate.py",
+    "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+    "url": "https://raw.githubusercontent.com/WorldEdge-Lab/RoomGenBench/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/score_aggregate.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/WorldEdge-Lab__RoomGenBench/bench/score_aggregate.py",
+    "sha256": "afac424e2e12eea64f59d4a89476b03ec9a1b07e59ef8528ed31eb8a554d256d",
+    "bytes": 7532
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/collision.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/collision.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/collision.py",
+    "sha256": "ac379ce0f34228c84dd462fb84e8c449bb73113eaed56bfa9f865b5ab66ac0a6",
+    "bytes": 4962
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/navigability.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/navigability.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/navigability.py",
+    "sha256": "ef336b29b23c88d6f2ff2fd94c603ea2b25ec334d2d30216697cf63d57af5e81",
+    "bytes": 10412
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/accessibility.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/accessibility.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/accessibility.py",
+    "sha256": "1f7ae41c7f2860d397d5b0152cf6d8804d05c3d2c822cac0ed88d864d38c266b",
+    "bytes": 14103
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/out_of_bound.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/out_of_bound.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/out_of_bound.py",
+    "sha256": "6711ad8ca1f2248bbe2b483c18b7890109bcb2cd9e9f053d8331740244cbc745",
+    "bytes": 4176
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/support.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/support.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/support.py",
+    "sha256": "589c2383ba447852dfa6223acfdca327d388034fb828375e60a51d38dda4aba1",
+    "bytes": 18701
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/opening_clearance.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/opening_clearance.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/opening_clearance.py",
+    "sha256": "14e39fb7e346d247851657f1d8227110843a73458453327d89e41577601bbf6e",
+    "bytes": 24901
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/obj_count.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_count.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/obj_count.py",
+    "sha256": "dfbb3bc0241142044409908d427fe91891dce49a7c94083626de24fe407ada96",
+    "bytes": 2464
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/obj_attribute.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_attribute.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/obj_attribute.py",
+    "sha256": "98d73298ac0aef48debb390c088e5f3d6595738e72ab01eea74e09a5bf8c8488",
+    "bytes": 5841
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/obj_obj_relationship.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_obj_relationship.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/obj_obj_relationship.py",
+    "sha256": "8f9624569add9dac3aa4b71038eb9859cd23c31e6e01472d48d3908143722176",
+    "bytes": 18972
+  },
+  {
+    "repo": "3dlg-hcvc/SceneEval",
+    "path": "metrics/obj_arch_relationship.py",
+    "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+    "url": "https://raw.githubusercontent.com/3dlg-hcvc/SceneEval/116881e7945dcf7dbc58f7c64590a4c0b99c5cf5/metrics/obj_arch_relationship.py",
+    "local_path": "/tmp/fastfill-paper-code-frameworks-20261026/3dlg-hcvc__SceneEval/metrics/obj_arch_relationship.py",
+    "sha256": "c506289ec5f8f7f28d5832acb013ab81ca82dccd7ca0ea1430f6dcba404b4178",
+    "bytes": 17645
+  }
+]

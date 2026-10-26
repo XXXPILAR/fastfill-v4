@@ -1,0 +1,479 @@
+{
+  "date": "2026-10-26",
+  "role": "Independent Agency Model QA Specialist; novelty red-team",
+  "status": "Usable evidence map, not proof of global novelty or publication readiness",
+  "task_contract": {
+    "input": "Observed empty shell incl doors/windows/height + exact required furniture IDs/counts/text. Sizes and poses unknown.",
+    "output": "Complete size/pose layout, then common RoomGenBench asset realization.",
+    "user_constraints": "Prefer lightweight workflow; user will provide revised workflow later. No assumption it is implemented.",
+    "reported_result": "User reports GPT one-shot > LayoutVLM > FastFill under two screenshot evaluations. Treat as evidence the strong baseline must be retained; sample size,protocol,budget and evaluator reliability not established here. Do not explain ranking away or claim statistical significance.",
+    "critical_realization_gate": "Current RoomGenBench anisotropic exact-fit rescales each asset into predicted bbox, removing native dimension variation. Native-size uncertainty is not automatically an actual failure mode of this pipeline. Require user workflow confirmation before choosing size robustness; exact-fit branch should study shape/contact/function differences or deformation, not native-dimension mismatch."
+  },
+  "scope": {
+    "read_only": true,
+    "project_source_modified": false,
+    "paid_calls": false,
+    "models_or_large_data_downloaded": false,
+    "new_experiments_run": false,
+    "prior_source_audits": [
+      "/tmp/fastfill-paper-code-generative-20261026.json",
+      "/tmp/fastfill-paper-code-llm-20261026.json",
+      "/tmp/fastfill-paper-code-recent-20261026.json",
+      "/tmp/fastfill-paper-code-frameworks-summary-20261026.json"
+    ],
+    "prior_source_audit_entries": [
+      {
+        "name": "ATISS",
+        "paper_url": "https://arxiv.org/html/2110.03675",
+        "repo": "https://github.com/nv-tlabs/ATISS",
+        "commit": "0909ce0000e52bf1bf300a6a558109f7f8383fd9",
+        "source_audit": "/tmp/fastfill-paper-code-generative-20261026.json"
+      },
+      {
+        "name": "DiffuScene",
+        "paper_url": "https://arxiv.org/html/2303.14207v2",
+        "repo": "https://github.com/tangjiapeng/DiffuScene",
+        "commit": "d78a2890c6b806b61279463b1dbe7701f286a024",
+        "source_audit": "/tmp/fastfill-paper-code-generative-20261026.json"
+      },
+      {
+        "name": "MiDiffusion",
+        "paper_url": "https://arxiv.org/html/2405.21066v2",
+        "repo": "https://github.com/MIT-SPARK/MiDiffusion",
+        "commit": "25b594338a29b31c6783b4b1ea87eeeb0ce12bbe",
+        "source_audit": "/tmp/fastfill-paper-code-generative-20261026.json"
+      },
+      {
+        "name": "InstructScene",
+        "paper_url": "https://arxiv.org/html/2402.04717",
+        "repo": "https://github.com/chenguolin/InstructScene",
+        "commit": "a9097a62c484c56ac7be5ec2928ef497cbbaaf24",
+        "source_audit": "/tmp/fastfill-paper-code-generative-20261026.json"
+      },
+      {
+        "name": "LayoutGPT",
+        "paper_url": "https://arxiv.org/abs/2305.15393",
+        "repo": "https://github.com/UCSB-AI/LayoutGPT",
+        "commit": "fc31954962553e5b65bf267a904a6930d50b1f5e",
+        "source_audit": "/tmp/fastfill-paper-code-llm-20261026.json"
+      },
+      {
+        "name": "Holodeck",
+        "paper_url": "https://arxiv.org/abs/2312.09067",
+        "repo": "https://github.com/allenai/Holodeck",
+        "commit": "362b8ed948b867b69a72f1f9491f4caa88419bfc",
+        "source_audit": "/tmp/fastfill-paper-code-llm-20261026.json"
+      },
+      {
+        "name": "OptiScene",
+        "paper_url": "https://arxiv.org/abs/2506.07570",
+        "repo": "https://github.com/PolySummit/OptiScene",
+        "commit": "409f1317e1a8afe852f4cdc99dfefaed30aeb425",
+        "source_audit": "/tmp/fastfill-paper-code-llm-20261026.json"
+      },
+      {
+        "name": "ReSpace",
+        "paper_url": "https://arxiv.org/abs/2506.02459",
+        "repo": "https://github.com/GradientSpaces/respace",
+        "commit": "b1a4b32b5fe0a547342dd37063002010c06224dd",
+        "source_audit": "/tmp/fastfill-paper-code-llm-20261026.json"
+      },
+      {
+        "name": "SceneNAT: Masked Generative Modeling for Language-Guided Indoor Scene Synthesis",
+        "paper_url": "https://arxiv.org/abs/2601.07218",
+        "repo": "https://github.com/lojol2327/SceneNAT-official",
+        "commit": "45379ca53d76045b11d275884b412771e2601d52",
+        "source_audit": "/tmp/fastfill-paper-code-recent-20261026.json"
+      },
+      {
+        "name": "NaLA: A 3D Native LLM Layout Agent for High-quality 3D Scene Generation",
+        "paper_url": "https://arxiv.org/abs/2606.29395",
+        "repo": "https://github.com/adamcwan/NaLA-code",
+        "commit": "ebf3ca1948c25fa2d5d3c01960257745647b3103",
+        "source_audit": "/tmp/fastfill-paper-code-recent-20261026.json"
+      },
+      {
+        "name": "SceneSmith: Agentic Generation of Simulation-Ready Indoor Scenes",
+        "paper_url": "https://arxiv.org/abs/2602.09153",
+        "repo": "https://github.com/nepfaff/scenesmith",
+        "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+        "source_audit": "/tmp/fastfill-paper-code-recent-20261026.json"
+      },
+      {
+        "name": "SceneEval",
+        "paper_url": "https://arxiv.org/abs/2503.14756v3",
+        "repo": "https://github.com/3dlg-hcvc/SceneEval",
+        "commit": "116881e7945dcf7dbc58f7c64590a4c0b99c5cf5",
+        "source_audit": "/tmp/fastfill-paper-code-frameworks-summary-20261026.json"
+      },
+      {
+        "name": "LEGO-Eval",
+        "paper_url": "https://arxiv.org/abs/2511.03001v3",
+        "repo": "https://github.com/gyeomh/LEGO-EVAL",
+        "commit": "9463757b56f686e0b5ce6f77bdb959468fd241c5",
+        "source_audit": "/tmp/fastfill-paper-code-frameworks-summary-20261026.json"
+      },
+      {
+        "name": "SemLayoutDiff",
+        "paper_url": "https://arxiv.org/abs/2508.18597v2",
+        "repo": "https://github.com/3dlg-hcvc/SemLayoutDiff",
+        "commit": "6b12bc4c42aa8377445af108093539073f0495c1",
+        "source_audit": "/tmp/fastfill-paper-code-frameworks-summary-20261026.json"
+      },
+      {
+        "name": "RoomGenBench",
+        "paper_url": null,
+        "repo": "https://github.com/WorldEdge-Lab/RoomGenBench",
+        "commit": "30f2e059d046ccd4aa928d0109a09a52f11693b5",
+        "source_audit": "/tmp/fastfill-paper-code-frameworks-summary-20261026.json"
+      }
+    ],
+    "count_note": "Prior combined artifacts contain15entries when SemLayoutDiff is included, rather than silently force a14count. RoomGenBench is a code framework without a verified standalone paper in prior audit.",
+    "targeted_primary_sources": [
+      {
+        "id": "DirectLayout",
+        "title": "Direct Numerical Layout Generation for 3D Indoor Scene Synthesis via Spatial Reasoning",
+        "url": "https://arxiv.org/html/2506.05341v2",
+        "read_level": "Primary abstract/method3.4-3.5/limitations",
+        "evidence": "Already handles asset-layout mismatch with iterative evaluator feedback; adjusts size/position/orientation. Generated assets are resized to predicted dimensions. Asset feedback itself is not new."
+      },
+      {
+        "id": "RoboLayout",
+        "title": "RoboLayout: Differentiable 3D Scene Generation for Embodied Agents",
+        "url": "https://arxiv.org/html/2603.05522",
+        "repo": "https://github.com/alishams21/robolayout",
+        "read_level": "Primary abstract and IV-C4 refinement",
+        "evidence": "Adds agent-aware reachability to LayoutVLM and reoptimizes problematic objects while freezing others. Local repair plus agent clearance is not new."
+      },
+      {
+        "id": "PhyScene",
+        "title": "PhyScene: Physically Interactable 3D Scene Synthesis for Embodied AI",
+        "url": "https://physcene.github.io/",
+        "paper": "https://arxiv.org/abs/2404.09465",
+        "read_level": "Official project method and supplementary reachability algorithm",
+        "evidence": "Diffusion guidance for collision, floor boundaries and agent-size-dependent reachability; articulated retrieval. Geometry guidance, path clearance and physics-aware synthesis are prior art."
+      },
+      {
+        "id": "GlobalGraph",
+        "title": "Global Graph-Validated Optimization for VLM-based 3D Indoor Scene Generation",
+        "url": "https://arxiv.org/html/2608.03064",
+        "date": "2026-08-04",
+        "read_level": "Primary abstract/method/limitations",
+        "evidence": "Rule-based semantic graph validation plus evolutionary search and gradient refinement already separate semantics and physical feasibility. Limitations already propose lightweight asset prechecks for oversized/render-failing assets."
+      },
+      {
+        "id": "VIGOR",
+        "title": "VIGOR: Verifiable Industrial Geometry Optimization and Repair in Scene Programs",
+        "url": "https://arxiv.org/html/2610.13145",
+        "date": "2026-10-09",
+        "read_level": "Primary abstract,3.4,4.1-4.2,5.1",
+        "evidence": "Local projection then coupled conflict-graph repair preserves attachments and stops on feasibility/budget. Uses complete instance IDs and94geometric checks. Dataset filters for constructible cases;1749retained scenarios each11instances. Industrial domain, not same room task, but invalidates generic verify+repair novelty."
+      },
+      {
+        "id": "Function2Scene",
+        "title": "Function2Scene: 3D Indoor Scene Layout from Functional Specifications",
+        "url": "https://arxiv.org/html/2605.30819v1",
+        "read_level": "Primary abstract/method outline",
+        "evidence": "Functional criteria and tool-augmented geometric/LLM/VLM check-and-repair already studied; functionality checker alone not new."
+      },
+      {
+        "id": "LEGO-Net",
+        "title": "LEGO-Net: Learning Regular Rearrangements of Objects in Rooms",
+        "url": "https://arxiv.org/abs/2301.09629",
+        "official_project": "https://ivl.cs.brown.edu/research/lego-net.html",
+        "read_level": "Prior primary-source audit; not fully reread this turn",
+        "evidence": "Learned iterative denoising of fixed object sets with floor-plan conditioning and limited movement predates a learned layout corrector."
+      },
+      {
+        "id": "Scenic",
+        "title": "Scenic scene generation documentation",
+        "url": "https://docs.scenic-lang.org/en/2.x/reference/scene_generation.html",
+        "read_level": "Official generation semantics and rejection/pruning behavior",
+        "evidence": "Declarative hard constraints, probabilistic scene parameters and pruning already exist. Sampling exhaustion is not proof no satisfying scene exists."
+      },
+      {
+        "id": "Spytial",
+        "title": "Diagramming Program Values by Spatial Refinement",
+        "url": "https://www.siddharthaprasad.com/papers/ptkns-spytial.pdf",
+        "date": "PLDI2026",
+        "read_level": "Primary5/5.1 excerpts",
+        "evidence": "Adjacent2Dprogram-diagram domain already has spatial satisfiability, irreducible infeasible subsystems and counterfactual diagnostics. UNSAT explanations are not a new general concept."
+      },
+      {
+        "id": "SceneReVis",
+        "title": "SceneReVis: A Self-Reflective Vision-Grounded Framework for 3D Indoor Scene Synthesis via Multi-turn RL",
+        "url": "https://arxiv.org/html/2602.09432v1",
+        "repo": "https://github.com/Runder-sun/SceneReVis",
+        "read_level": "Primary method/mandatory-object extraction+verification prompts and GRPO descriptions checked this turn; paper runtime numbers supplied by parent but not used as speed comparison.",
+        "evidence": "Already extracts mandatory object lists with repeated categories, verifies multiplicity and learns multi-turn visual diagnose/act with SFT+GRPO plus terminal physics optimization. Exact inventory checking, learned corrective agents or RL self-reflection alone cannot support novelty. Its mandatory object set includes inferred room essentials, whereas user task fixes explicit request IDs; that distinction is a protocol difference, not sufficient new algorithm."
+      }
+    ],
+    "search_boundary": "Targeted primary-source falsification as of2026-10-26; not systematic/exhaustive literature coverage. Public preprint claims used as prior art, not independently validated superiority.",
+    "sceneeval_author_fork_evidence": {
+      "repo": "https://github.com/nepfaff/SceneEval",
+      "commit": "34afe64a692f47327f162de82efbdde9d550cf85",
+      "plan": "https://github.com/nepfaff/SceneEval/blob/34afe64a692f47327f162de82efbdde9d550cf85/configs/evaluation_plan/sceneagent_plan.yaml",
+      "implication": "Current author code already supplies210scene verification+physics plan and common support type assessment. Reusing evaluators strengthens a study, but is not a method novelty. Exact original paper-version linkage remained unverified in prior audit."
+    },
+    "roomgen_assembly_evidence": {
+      "url": "https://github.com/WorldEdge-Lab/RoomGenBench/blob/30f2e059d046ccd4aa928d0109a09a52f11693b5/bench/assemble.py",
+      "source": "Parent source audit of anisotropic bbox fit; authoritative for current workflow gate. No claim revised workflow uses this realization."
+    }
+  },
+  "novelty_exclusions": [
+    "Multi-agent orchestration or VLM critique loop",
+    "LLM-generated scene/relation graph",
+    "Collision/boundary/clearance losses or physics postprocessing",
+    "Local-only reoptimization/freeze unaffected objects",
+    "Actual-asset feedback or generic size/pose adjustment",
+    "Semantic graph verification or global-plus-local search",
+    "Exact inventory checks and reporting unknown/failure states as an algorithmic novelty by themselves",
+    "Mandatory object extraction/quantity verification alone (SceneReVis)",
+    "SFT+RL/GRPO learning of reflective edit trajectories or final physics optimization alone (SceneReVis)"
+  ],
+  "first_gate": {
+    "name": "No-training pain-point probe before choosing a method",
+    "priority": "Required before any innovation claim",
+    "effort": "0.5-2 engineer days if existing mesh assets/results are locally available; otherwise blocked on asset evidence, not justification to download/generate large assets now.",
+    "design": [
+      "Freeze a canonical validation subset of30-50house-disjoint rooms, all requiredIDs and one available GPT one-shot result per room only if produced under same input protocol. Keep legacy full-condition GPT results labeled legacy, never relabel.",
+      "For each layout measure exact inventory, bbox geometry and door-seeded clearance at a declared agent width, then check existing realized meshes for true floor/object support and functional-side access. No new LLM critique calls.",
+      "If existing multiple assets/category available, reuse3-5realization seeds with identical matches across systems. Under exact-fit keep predicted bbox fixed; variation can test surface/contact/front/articulation, not native-size robustness. Under near-isotropic/native realization separately measure actual dimension mismatch and its consequences.",
+      "Record assembly/mesh/unknown failures in all-request denominator and categorize: semantic plan error, scale prediction error, shape/contact error, optimizer error, upstream data failure.",
+      "Cache measured outcomes; compare GPT raw, LayoutVLM raw and FastFill raw on same common geometry/realization, then identical deterministic repair on all."
+    ],
+    "go_no_go": [
+      "If bbox pass -> mesh/function failures are rare or are mainly corrupt assets/coordinate errors, fix engineering and do not frame as a new robust-layout research problem.",
+      "If identical deterministic repair closes most of the gap to GPT and a learned component adds no measurable equal-budget benefit, build the lightweight product improvement but do not claim a new learned method.",
+      "If shape/native-size shift substantially changes validity at fixed input and the effect survives common asset policy and unknown/failure accounting, consider candidate1.",
+      "Stop any proposed candidate whose premise requires a realization mode the user workflow does not use."
+    ],
+    "analytical_caveats": [
+      "Contained meshes with truly disjoint enclosingOBBs cannot gain object-object interpenetration solely from within-bbox shape change. Shape variation matters through support/contact, functional orientation, articulation, scale distortion or conservative false positives; identify which mechanism is real.",
+      "Identical bbox does not imply identical support surface: a hollow/open-top support can share the bbox with a solid top while failing to support a child at the center. This is a geometric reasoning example, not an executed real-mesh empirical result."
+    ]
+  },
+  "candidates": [
+    {
+      "id": "C1",
+      "rank": 1,
+      "title": "对实际资产实现风险稳健的完整清单布局",
+      "current_verdict": "Most task-specific potential, conditional on pain-point and realization-mode gates. Not yet established novel.",
+      "new_hypothesis": "With no per-instance asset geometry at planning time, a lightweight representation of category/description-conditioned realization uncertainty can improve all-object downstream support/access validity at a fixed compute budget, over point-size prediction plus safety margins or post-hoc repair.",
+      "nearest_neighbors": [
+        "DirectLayout",
+        "ReSpace",
+        "DiffuScene",
+        "Holodeck",
+        "NaLA",
+        "SceneSmith",
+        "PhyScene",
+        "GlobalGraph"
+      ],
+      "already_done": "Asset retrieval, asset-layout reconciliation, size/pose adjustment, geometric clearance and asset prechecks. NaLA starts with native assets, a different information regime.",
+      "possible_unproved_delta": "Plan before realizing asset shape with a calibrated risk/recourse objective; distinguish size-mode and exact-fit shape-mode; preserve all requiredIDs and semantics under a common asset distribution. Must demonstrate advantage over standard margin inflation/scenario optimization, not rename robust optimization.",
+      "lightweight_method_sketch": "Reuse one LLM scaffold. Use cached non-GT category/style size or support-surface statistics and a small number of cheap realization scenarios to reserve contact/access margins; optional tiny residual scorer chooses corrections. No additional VLM loop, multiagent runtime or new asset generator required. This is a design proposal, not claimed implementation.",
+      "realization_branches": {
+        "native_or_near_isotropic": "If workflow keeps native/aspect-ratio-constrained assets, predict size distributions from train/catalog data; evaluate dimension mismatch and same-inventory feasibility across real asset draws.",
+        "current_anisotropic_exact_fit": "Native dimension shift largely removed; study support-surface/front/articulation failure or deformation under fixed bbox. Without evidence these affect final success, do not pursue this candidate."
+      },
+      "minimum_experiment": {
+        "phase0": "First_gate probe using30-50validation rooms and3-5cached assets/seed draws where available.",
+        "phase1": "Use fixed initial GPT scaffold for all methods, same allowed asset information, same realization seeds and repair budget. Compare nominal point estimate, uniform margin inflation, per-class quantile margin, sampled/scenario deterministic repair and proposed risk method. Include actual-geometry oracle as labeled upper bound only.",
+        "phase2": "Freeze method on validation; final untouched source/house-disjoint set with density and source strata. Repeated assets/seeds nested within rooms, not independent rooms."
+      },
+      "metrics": [
+        "All-requiredID realized success / all requested rooms",
+        "True mesh support/contact and door-seeded function access;unknown rates",
+        "Validity-vs-semantic-quality Pareto curve, over-conservative wasted-area/clearance",
+        "Tail/CVaR or worst-decile violation under heldout realization shift; declare failure threshold",
+        "Expected/p95 total layout+repair time; asset calls held equal",
+        "Native mode only: dimension/aspect ratio error and amount of prohibited resizing"
+      ],
+      "ablations": [
+        "No uncertainty (point mean), same risk budget",
+        "Uniform versus category-calibrated margins",
+        "Shuffled priors and heldout catalog/style/source shifts",
+        "Risk-aware ordering versus same repairs with simple geometry ordering",
+        "Raw and repaired outputs for GPT/LayoutVLM/FastFill; equal common repair on each",
+        "Oracle actual shape/size labels a separate information upper bound"
+      ],
+      "falsification": [
+        "Exact-fit realization eliminates the claimed size failure mode.",
+        "Uniform padding or equal-budget scenario solver matches result.",
+        "Gain comes from enlarged rooms, dropping IDs, flattening/squashing assets, giving candidate GT geometry or extra expensive asset/VLM calls.",
+        "Support/access gains disappear on heldout actual meshes or are outweighed by semantic quality loss.",
+        "Risk calibration fails under catalog/style shift; do not advertise a guarantee outside tested distribution."
+      ],
+      "proposed_pilot_thresholds_not_facts": "Pre-register practical effect after probe; e.g.>=5percentage-point paired all-object success improvement over best equal-budget nonlearned baseline, with no meaningful blind-quality degradation. Small pilot is directional, not significance proof.",
+      "cost": {
+        "probe": "0.5-2days with assets already present",
+        "bbox/statistical proof-of-concept": "3-7engineer days after workflow/schema frozen",
+        "credible real-mesh study": "2-4weeks plus asset access and evaluation budget; depends on prevalence of failure",
+        "training": "None for first gate; tiny scorer optional only after deterministic controls"
+      }
+    },
+    {
+      "id": "C2",
+      "rank": 2,
+      "title": "一次LLM规划后的等预算学习修复与计算分配",
+      "current_verdict": "Strong engineering baseline, high novelty collision risk as a standalone paper. Do not lead with LLM+solver/local repair.",
+      "new_hypothesis": "A small learned policy can allocate a strict correction budget and preserve semantics better than deterministic/gradient/local-search repair when repairing dense, unknown-size-inventory layouts from a frozen one-shot planner.",
+      "nearest_neighbors": [
+        "LayoutVLM",
+        "RoboLayout",
+        "PhyScene",
+        "LEGO-Net",
+        "SceneNAT",
+        "ReSpace",
+        "Function2Scene",
+        "GlobalGraph",
+        "VIGOR",
+        "SceneReVis"
+      ],
+      "already_done": "Reachability+gradient optimization, local affected-object cleanup, learned fixed-set denoising, geometric guidance, conflict-group repair and verification are established. VIGOR even uses local projection then conflict-graph joint repair with attachment preservation. SceneReVis additionally covers mandatory-object multiplicity verification and SFT+GRPO learning of visual correction trajectories; simply learning an editor is insufficient.",
+      "possible_unproved_delta": "An empirically demonstrated amortization/generalization advantage for a learned budget policy over the best same-initialization deterministic repair under the exact user task. New architecture or relation graph alone is insufficient.",
+      "lightweight_method_sketch": "Freeze single-shot planner output; a small residual/order policy selects which coordinates/objects or conflict component to update. Deterministic verifier accepts only explicit geometry improvements while preserving inventory; distinguish user hard requirements from fallible LLM-inferred preferences. Do not require rendering or iterative VLM calls.",
+      "minimum_experiment": {
+        "factorial": "Cross2initializers (GPT one-shot, FastFill; add LayoutVLM when adapted) with raw/no repair, greedy projection, local Adam, conflict-component search and learned corrector. Reuse identical starting layouts.",
+        "budget": "Quality curves at1/2/4/8correction rounds plus measured equal walltime/check-count caps; count any full model call, occupancy rebuild and global validation. No fair comparison based only on iteration count.",
+        "data": "If training needed, synthetic corruptions of training layouts plus rollouts from frozen planner. Hold out source/house/catalog/count range; no test-tuned repair labels. Use existing supervised model only after correctness fixes.",
+        "upper_bounds": "Long-budget solver is an oracle quality/time reference, not an equal-budget baseline; direct learned one-shot tests whether planner scaffold is necessary."
+      },
+      "metrics": [
+        "All-input exact-inventory feasibility and semantic requirement satisfaction",
+        "Geometry/contact/access proxies plus real-mesh stage on same subset",
+        "Number moved objects/displacement, relation damage, size/aspect-ratio distortion",
+        "Quality-versus-p50/p95latency, memory, verifier calls and LLM tokens/API cost",
+        "Generalization by source,count,density and unseen asset/size regime"
+      ],
+      "ablations": [
+        "Same learner without planner, geometry-only input, and shuffled semantic scaffold",
+        "Deterministic ordering versus learned risk ranking with identical repair operator",
+        "Same learner with no warm start versus same solver with warm start",
+        "Support/dependency information available equally; no GT hidden supports/symmetry in main protocol",
+        "Train corruption diversity versus simple Gaussian pose noise; native-size/exact-fit task branch held fixed"
+      ],
+      "falsification": [
+        "Same simple greedy/Adam/conflict search equals or beats the learned corrector at equal end-to-end latency.",
+        "Benefit stems entirely from GPT scaffold or unchanged deterministic spread/projector.",
+        "Claimed savings exclude prefill/raster/postprocess/verification cost or use more API calls.",
+        "Learning gains vanish on new house/source/object counts or are only singleGT pose similarity.",
+        "Only improvement is a faster implementation of standard solver, without a substantive learned/generalization insight: call it engineering/efficiency contribution, not broad new scene-generation method.",
+        "Equal-budget non-VLM local repair or an adapted SceneReVis-style corrective baseline supplies the same improvement; extra self-reflection/RL labels are not a novelty argument."
+      ],
+      "proposed_pilot_thresholds_not_facts": "A meaningful target could be>=2xrepair speed at matched validity and blind-quality, or>=5percentage-point full-room success at matchedtime; choose one before evaluation. Neither threshold guarantees publishability.",
+      "cost": {
+        "deterministic control/probe": "1-3engineer days once new workflow and common protocol fixed",
+        "small learned corrector": "1-2weeks plus data/model availability",
+        "convincing multiple-source study": "2-4weeks; training compute unspecified until resources chosen"
+      },
+      "recommendation": "Run as a control and product improvement first. Advance to a paper candidate only if a clean learned-vs-solver effect survives the factorial and budget tests."
+    },
+    {
+      "id": "C3",
+      "rank": 3,
+      "title": "拥挤清单的可核验证据、失败分流与有限预算",
+      "current_verdict": "Potentially useful benchmark/reliability contribution; weakest claim is simply returning UNSAT explanations. Need narrow formal domain and evidence of practical value.",
+      "new_hypothesis": "A lightweight pipeline that distinguishes verified-feasible, conditionally-proved-infeasible and unresolved-within-budget cases can avoid false successful layouts and wasted repair compute on crowded fixed-inventory requests, while retaining a verifiable provenance trail.",
+      "nearest_neighbors": [
+        "Scenic",
+        "Spytial",
+        "VIGOR",
+        "GlobalGraph",
+        "RoomCraft",
+        "Function2Scene"
+      ],
+      "already_done": "Constraint satisfaction, pruning, unsat/IIS explanations, counterfactual repairs, geometric verification and finite-budget search are prior art. VIGOR screens for constructible examples, so hard/infeasible cases offer a different experimental population, not an automatic new algorithm.",
+      "possible_unproved_delta": "A benchmark/protocol with both feasible witnesses and sound limited-domain infeasibility certificates under unknown-size priors, coupled to a measured budget-allocation benefit for the complete text-inventory-to-realization task. Do not conflate this with proving arbitrary 3Dpacking impossible.",
+      "fundamental_limits": [
+        "If object dimensions are unconstrained and arbitrarily shrinkable, an overcrowded-room claim is often not identifiable. State a common catalog, allowed size bounds, aspect-ratio rules and support types first.",
+        "A failed heuristic or solver timeout is UNKNOWN, never proof of infeasibility.",
+        "A proof on a coarse grid or90degreeorientation set proves only that restricted model infeasible unless it is a valid relaxation whose infeasibility implies the full task.",
+        "OBB packing infeasibility does not imply arbitrary mesh packing infeasibility; chairs can fit under tables and supported objects may share projected area.",
+        "Cannot remove required furniture to claim success; propose relaxations as suggestions without applying them to the original request or counting them successful."
+      ],
+      "lightweight_method_sketch": "Use analytic necessary bounds and exact logical contradiction checks first; optionally bounded LP/SMT/MIP only for a small explicitly restricted subset, followed by an independent checker. Generator produces layouts or proof objects or UNKNOWN with budget spent. No formal assertion based on LLM confidence.",
+      "certificate_examples": [
+        {
+          "type": "Necessary area bound",
+          "valid_domain": "Fixed-height ground-blocking objects whose exact footprints must be disjoint and remain inside usable floor; known lower area bound perID.",
+          "proof": "If sum lower footprint areas exceeds usable floor area, no feasible packing in this domain. For stacked/under-table/wall/ceiling objects this argument is invalid unless exclusions proved.",
+          "strength": "Cheap but incomplete; no conclusion when bound does not fire."
+        },
+        {
+          "type": "Logical contradiction",
+          "valid_domain": "Only user-authorized hard constraints interpreted with fixed units/tolerances; e.g. same pair required distance<=a and>=b whereb>a.",
+          "proof": "Replay inequalities/unsat subset under canonical schema.",
+          "strength": "Not evidence LLM-inferred preferences make original user request impossible."
+        },
+        {
+          "type": "Finite catalog/restricted placements",
+          "valid_domain": "Declared finite asset choices and placement/orientation domain or valid continuous relaxation.",
+          "proof": "Independent certificate check; explicitly say restricted-domain UNSAT.",
+          "strength": "May be too costly or too weak for main continuous problem; do not escalate into heavy runtime pipeline without evidence."
+        }
+      ],
+      "minimum_experiment": {
+        "dataset": "Construct small paired scenes: feasible cases have replayable verified witness; infeasible cases have independent analytic/solver certificate; near-boundary harder cases include UNKNOWN. Include adversarial stack/under-table examples that break naive area tests.",
+        "size": "Start100-200synthetic restricted cases as correctness probe, plus50-100real validation room inventories for usefulness; synthetic proof accuracy does not establish real-room generalization.",
+        "controls": "Same planner/repair under fixed timeout; no precheck, simple area threshold, calibrated learned abstention, certified precheck+budget routing. For budget gains include all precheck/checker overhead.",
+        "replay": "Save request,assumptions,certificate/witness,checker version,tolerances,budget and retained inventory; independent checker can reject fabricated certificates."
+      },
+      "metrics": [
+        "Certificate soundness and domain coverage separately; zero observed false certificates is not proof of general soundness",
+        "Feasible-witness acceptance/rejection;False-UNSAT and False-success rates",
+        "Certified-infeasible recall on known-certified subset; UNKNOWN fraction over all inputs",
+        "Selective success/quality versus accepted coverage; all-request success and cost",
+        "Compute saved on actually-infeasible cases; cost/quality impact on feasible tight rooms",
+        "Correctness/minimality of suggested relaxations assessed separately from original task success"
+      ],
+      "ablations": [
+        "Area-only versus logical-only versus fullcertificatechecker",
+        "No uncertainty domain versus shared catalog/size bounds",
+        "Fixed versus adaptive budget at same total batchbudget",
+        "With/withoutstacking,wallsupport,under-table and openings; label scopes explicitly",
+        "Heuristic failure labels versus certified labels (do not use former as truth)"
+      ],
+      "falsification": [
+        "Certificates falsely reject any known-feasible witness because constraints/size bounds are unsound.",
+        "Coverage negligible on real requests, or precheck overhead exceeds saved runtime.",
+        "Value only from easier test distribution or silently discarding difficult requests.",
+        "A simple necessary-area bound gives same utility; then method novelty weak, though reporting protocol may remain useful.",
+        "Achieving useful coverage requires heavy exhaustive solvers inconsistent with desired workflow; retain offline benchmark/oracle only."
+      ],
+      "cost": {
+        "necessary-bound proof fixtures": "2-4engineer days",
+        "restricted proof/witness benchmark": "1-2weeks",
+        "useful continuous/mesh certificate coverage": "Uncertain/high; not recommended as first implementation",
+        "training": "None required for sound checks; learned budget estimator optional and never itself a proof"
+      },
+      "recommendation": "Treat initially as audit/benchmark side experiment and negative-control dataset. Do not make a universal impossibility claim."
+    }
+  ],
+  "shared_experimental_contract": {
+    "no_protocol_leakage": "Identical empty shell,openings,height,completeIDinventory,text and non-GT asset policy. Hide GT support/relations/symmetry except where explicitly user-provided. Legacy full-condition predictions stay separate.",
+    "strong_baseline": "Keep reported winning GPT one-shot as primary comparator, same model/prompt/output schema and actual allowed budget where possible. Evaluate common repair on it as well. Do not only compare weaker FastFill raw.",
+    "quality": "Separate inventory completeness, geometric validity,function/access,support/contact,realization success and blinded visual/semantic quality. GT pose/SG similarity auxiliary; two VLM scoring variants are not two independent human quality validations.",
+    "failure_denominators": "All requested scenes and requiredIDs retained. Failure/unknown/N/A counts separate; no evaluation exception converted to zero violation or success.",
+    "geometry": "OBB/2Drules labeled proxies. Real-mesh/physics claims need realizedassets/supportsurfaces and independent checks; NAVlargestcomponent is not door-connected agent reachability.",
+    "statistics": "Paired scene comparisons; group/source/house clustered CI. Multipleassets/seeds nested within rooms. Fit priors/calibrators/thresholds only ontrain/validation, freeze before untouchedtest. Pilot effects are hypothesis-generation, not powered finalclaims.",
+    "budget": "Report one-call versus multi-call,walltimep50/p95,candidatechecks,render/asset work and tokens; same hardware/cacheconditions. APIspend remainszero in this audit.",
+    "novelty_framing": "No global-first claim. A stronger baseline or cleaner evaluation can justify an engineering contribution, but does not automatically make a new algorithm."
+  },
+  "recommended_order": [
+    "Wait for/inspect user lightweight workflow; do not redesign it by assumption.",
+    "Run first_gate pain-point probe with existing assets/results and common protocol.",
+    "Build deterministic geometry control atop best one-shot planner; this gives both a cheap improvement path and a hard test of learned contribution.",
+    "PursueC1 only if actual realization gap survives exact-fit/native mode distinction; keepC2 as essential baseline;C3 as selective reliability side study unless certificate coverage proves substantial."
+  ],
+  "not_claimed": [
+    "Any candidate is globally novel or guaranteed publishable",
+    "Current FastFill loss correctness fixes are research innovations",
+    "The screenshot ranking proves one method globallysuperior",
+    "New lightweight user workflow already exists or is implemented",
+    "Current exact-fitRoomGenBench has native-size uncertaintyfailure",
+    "BBox/raster checks prove rigidbody stability",
+    "Published nearest-neighbor numerical results reproduced"
+  ]
+}

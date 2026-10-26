@@ -1,0 +1,25 @@
+{
+  "paper": "ScenePilot: Grow-and-Repair Policy for Text-Driven 3D Indoor Scene Generation",
+  "paper_url": "https://arxiv.org/html/2608.30307v1",
+  "date": "2026-10-26",
+  "reading": "Root inspected methods3.1-3.5, experiments4.1-4.3, algorithmB.3, trainingA, leakageE.5. No implementation or paper results reproduced.",
+  "task_input": "Text prompt, room boundary, asset pool. Planner chooses object groups/composition; not immutable complete-request inventory by default.",
+  "mechanism": {
+    "HRAP": "Room/group/anchor statistical prior documents mined from clean scenes; soft prompt augmentation, not copied complete layouts or hard score constraints.",
+    "RMR": "Annotated top+diagonal renders, scene JSON, history -> move/rotate/scale. After each group insertion, editable scope includes new objects and neighbor anchors. Text also describes local search and geometric cleanup beyond policy proposals.",
+    "Q": "Weighted physical PBL, relation REL and function FUNC; candidate accepted only if Q improves. Weighted improvement is not proof each hard constraint improves.",
+    "training": "SceneReverse-17k reverse perturbations; Qwen3-VL-8B; SFT then GRPO. Appendix describes4GPU SFT,2epochs; GRPO trains vision tower with language backbone frozen. Not a training-free prompt pipeline."
+  },
+  "paper_evaluation": {
+    "cohort": "100scenes,5types,75long prompts derived from selected scenes and25short room/count prompts",
+    "physical": "OOB+mesh-level collision MBL=PBL, voxel-based following ReSpace; VR uses a fixed PBL threshold whose exact operational reproduction was not established here.",
+    "semantic": "GPT-5.4 judge LC/SPA/FC plus human study with50validresponses; method-level agreement across3methods is auxiliary, not broad judge calibration.",
+    "main_results_as_reported": "ScenePilot PBL×1000=75.4,VR=.86,judgeAvg8.1; ReSpace186.2,.73,5.7; Reason3D162.2,.66,6.8. Reason3D has lower MBL alone, so do not say ScenePilot best at every component.",
+    "ablations_as_reported": "w/oHRAP PBL135.5,Avg7.0; w/ogroupwise131.2,7.4; w/olearnedRMR123.4,6.4; HRAPonly147.7,5.8. ExpertGPT5.2 repair53.5,.91,8.2 is stronger but only a reference under their setting.",
+    "uncertainty": "No independent runs/CI or same-budget end-to-end timing claim was validated. Do not rank against user screenshot from different protocol."
+  },
+  "leakage_boundary": "E.5 states evaluation IDs should be excluded before prior mining/indexing. No public split manifest established here; this is an unresolved verification requirement, not a finding that leakage occurred.",
+  "code_availability": "Author-linked GitHub404 as separately recorded in scenepilot-source-check.json; no accessible exact implementation/weights verified. Homonymous driving projects excluded.",
+  "for_fastfill": "Test train-only anchor statistics and exact-ID functional grouping without training first; freeze repair while2x2 flat/group and noRAG/RAG. Then compare editor/solver effects with equal compute. Integrate real mesh support/function checks after downstream workflow is known.",
+  "executed": false
+}

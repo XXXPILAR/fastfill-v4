@@ -1,0 +1,126 @@
+{
+  "title": "ScenePilot准确出处及官方代码/模型/数据公开范围核查",
+  "checked_at": "2026-10-26",
+  "scope": "只读一手来源；原论文方法/评测由root另读。本子任务核身份和公开artifact，不运行代码、不下载模型或数据。",
+  "identity": {
+    "match": "已确认准确匹配用户图中描述的room/group/anchor memory、retrieval-augmented Grow-and-Repair、move/rotate/scale repair。",
+    "title": "ScenePilot: Grow-and-Repair Policy for Text-Driven 3D Indoor Scene Generation",
+    "authors": [
+      "Jiawei Zhang",
+      "Hongsong Wang",
+      "Pan Zhou"
+    ],
+    "institutions": [
+      "Southeast University",
+      "Singapore Management University"
+    ],
+    "arxiv_id": "2608.30307",
+    "submitted": "2026-08-31",
+    "version": "v1",
+    "paper_url": "https://arxiv.org/abs/2608.30307",
+    "fulltext_url": "https://arxiv.org/html/2608.30307v1",
+    "project_url": "https://zjw-louie.github.io/ScenePilot/",
+    "status": "已核为arXiv预印本；本次未确认正式会议/期刊接收。",
+    "primary_evidence": "arXiv作者/提交记录及原文摘要直接列HRAP、RMR、SceneReverse-17k和执行动作；原文Project page直达同作者站点。"
+  },
+  "official_project": {
+    "http_status": 200,
+    "live_fetch_method": "urllib HTTPS GET成功；web工具初次显示不可访问，故没有将其等同404。",
+    "page_title": "ScenePilot: Retrieval-Augmented and Reinforcement-Guided 3D Indoor Scene Generation",
+    "relation_to_paper": "作者及HRAP/RMR/SceneReverse-17k完全对应，旧标题不代表另一篇。",
+    "direct_code_link": "https://github.com/Zjw-Louie/ScenePilot",
+    "other_artifact_links": "页面Paper Coming Soon/arXiv Coming Soon按钮仍指向#；href中无官方HuggingFace模型/数据发布链接。",
+    "provenance_receipt": "/tmp/fastfill-scenepilot-source-check-20261026/project.html",
+    "sha256": "bd5705db3dd32297a2163227ce5174747f1e92c57d3b105e4d36777f3cee3dae",
+    "caution": "项目页发布状态滞后于已存在的arXiv论文；不能用Coming Soon否认论文存在，也不能用Code按钮断言源码公开。"
+  },
+  "official_code": {
+    "advertised_url": "https://github.com/Zjw-Louie/ScenePilot",
+    "repo_web_check": {
+      "url": "https://github.com/Zjw-Louie/ScenePilot",
+      "http_status": 404
+    },
+    "repo_api_check": {
+      "url": "https://api.github.com/repos/Zjw-Louie/ScenePilot",
+      "http_status": 404
+    },
+    "author_public_repos_check": {
+      "url": "https://api.github.com/users/Zjw-Louie/repos?per_page=100",
+      "http_status": 200,
+      "count": 11,
+      "scenepilot_present": false,
+      "related_visible_repo": "https://github.com/Zjw-Louie/respace",
+      "caution": "作者fork的respace不能替代ScenePilot官方实现。"
+    },
+    "commit": null,
+    "public_tree": null,
+    "eval_files_verified": [],
+    "model_files_verified": [],
+    "data_files_verified": [],
+    "statement": "截至本次核查，官方宣传的GitHub仓库无法公开访问，因此无法固定实现commit、核查目录或证明训练/推理/评估源码发布。",
+    "unknown": "404不能区分private、删除、重命名或尚未公开；不得从404直接断言不存在或永久闭源。",
+    "reproducibility": "原论文与项目页可读；开源实现、checkpoint和SceneReverse-17k下载入口均未确认，不能称为可直接复现的公开baseline。"
+  },
+  "model_and_data_checks": {
+    "project_links": "官方项目页未给模型/数据下载入口。",
+    "hf_model_query": {
+      "url": "https://huggingface.co/api/models?search=ScenePilot&limit=100",
+      "http_status": 200,
+      "results": [
+        "Alexislhb/ScenePilot-release"
+      ]
+    },
+    "hf_dataset_query": {
+      "url": "https://huggingface.co/api/datasets?search=SceneReverse&limit=100",
+      "http_status": 200,
+      "results": []
+    },
+    "excluded_hf_model": {
+      "url": "https://huggingface.co/Alexislhb/ScenePilot-release",
+      "model_card_url": "https://huggingface.co/Alexislhb/ScenePilot-release/blob/34f7b8649db8dd6e526912fc607a46bfdd86549b/README.md",
+      "commit": "34f7b8649db8dd6e526912fc607a46bfdd86549b",
+      "files_listed": [
+        "README.md",
+        "ScenePilot_release_20260803.tar",
+        "ScenePilot_release_20260803.tar.sha256"
+      ],
+      "reason": "model card描述Wan2.2-TI2V-5B、camera/scene-time/joint-control/memory evaluation，训练脚本为recammaster；并非本篇室内Grow-and-Repair。没有下载tar/checkpoint。",
+      "official_relation": "未发现它与本篇作者/项目的官方关联，不能因同名将其当可用模型。"
+    },
+    "boundary": "公开HF搜索及项目外链未找到不等于所有托管渠道均无数据；不声称穷尽。"
+  },
+  "homonyms_excluded": [
+    {
+      "name": "ScenePilot: Controllable Boundary-Driven Critical Scenario Generation for Autonomous Driving",
+      "paper_url": "https://arxiv.org/abs/2605.21168",
+      "repo_url": "https://github.com/QiyuRuan/ScenePilot",
+      "reason": "自动驾驶/CARLA/SafeBench，作者和任务不同；不能用于本篇开源证明。"
+    },
+    {
+      "name": "Alexislhb/ScenePilot-release",
+      "reason": "视频相机和scene-time控制，与本篇房间布局方法不同。"
+    },
+    {
+      "name": "ScenePilot writing/video-editor/hackathon applications",
+      "reason": "同名写作或视频应用，不作为论文证据。"
+    }
+  ],
+  "minimal_mechanism_match": {
+    "source": "https://arxiv.org/html/2608.30307v1",
+    "read_level": "摘要、原文开头与项目页；其余方法和评测root负责。",
+    "checked": "HRAP检索room/group/anchor级prior，按functional group增量生成，RMR在组间和最后修复；SceneReverse-17k来自pose/scale扰动及逆操作轨迹；动作是move/rotate/scale。",
+    "not_claimed": "没有从二手页面搬用性能数字、wall-clock、训练budget或新颖性结论。"
+  },
+  "search_queries": [
+    "\"ScenePilot\" \"Grow\" \"Repair\"",
+    "\"ScenePilot\" \"layout\" memory",
+    "\"ScenePilot\" scene generation retrieval augmented",
+    "\"ScenePilot\" \"anchor\"",
+    "\"zjw-louie\" \"ScenePilot\"",
+    "\"ScenePilot\" \"SceneReverse-17k\" site:github.com",
+    "\"ScenePilot\" \"SceneReverse\" site:huggingface.co"
+  ],
+  "receipts_file": "/tmp/fastfill-scenepilot-source-check-20261026/availability-receipts.json",
+  "conclusion": "准确论文已确认，用户图并非无法检索的来源；官方项目页可访问，但官方Code链接当前404，模型和数据公开发布未确认。将“论文方法存在”和“实现可用”分开表述。",
+  "no_code_or_models_executed": true
+}

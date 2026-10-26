@@ -1,0 +1,50 @@
+{
+  "review_type": "scoping evidence map, not exhaustive PRISMA systematic review",
+  "search_date": "2026-10-26",
+  "question": "For observed empty-shell plus exact text furniture inventory and unknown dimensions feeding RoomGenBench, what room-generation methods/evaluations/code exist in 2024–2026 and what remains testable?",
+  "time_window": "2024-01-01 through2026-10-26; earlier foundations and 2023 preprints with2024 venues separately retained",
+  "sources": [
+    "arXiv primary full-text/metadata",
+    "CVF proceedings official pages",
+    "OpenReview paper/publisher records",
+    "Author/institution project pages",
+    "Official GitHub REST pinned commits and recursive trees",
+    "CGF2026 author survey paper and159-row candidate table"
+  ],
+  "queries_executed_examples": [
+    "\"ScenePilot\" \"Grow-and-Repair\"",
+    "\"indoor scene generation\" \"survey\" 2025 2026 text",
+    "site:arxiv.org \"indoor scene generation\" 2026 layout language",
+    "site:openaccess.thecvf.com \"scene generation\" \"language\" 2025 indoor",
+    "site:openreview.net \"indoor scene\" \"generation\" 2026",
+    "\"FirePlace\" indoor scene generation paper github",
+    "\"FlairGPT\" paper github",
+    "\"Scenethesis\" paper github",
+    "\"SceneMotifCoder\" github official",
+    "\"HDSL\" \"Structured 3D Indoor\" github"
+  ],
+  "citation_chaining": [
+    "Author CGF2026 survey ->68 rows marked2024/2025 used as candidate seed",
+    "ScenePilot references ->ReSpace/Reason3D/DirectLayout/PhyScene/SceneWeaver",
+    "SceneEval official converters/assets ->LayoutGPT/Holodeck/InstructScene/HSM",
+    "Recent method references and author projects ->2026 works"
+  ],
+  "inclusion": "Text/floor/scenegraph-conditioned compositional indoor layout or room generation, numerical placement/repair, functional priors, downstream assets and relevant evaluation. Retain close image/procedural/joint-floorplan/industrial neighbors as separately labeled profiles.",
+  "exclusion_or_separation": [
+    "Autonomous-driving ScenePilot/ScenePilot4K homonyms excluded",
+    "Pure image/video synthesis, single-image scene reconstruction, outdoor-only and generic 2D design not direct main baselines",
+    "Foundation ATISS/LayoutGPT and benchmark RoomGenBench explicitly separate from2024–2026 methods",
+    "Author seed titles not individually checked are candidates only, not counted as source-verified review entries"
+  ],
+  "reading_levels": "Actual metric implementation inspected; method/experiment sections plus repo status; weaker abstract/README records explicitly labeled. Isolated CPU functions are not full-paper reproduction.",
+  "code_policy": "Repository presence, actual implementation, published weights, benchmark scripts and paper result reproduction are independent fields. Absence limited to sources/commit searched.",
+  "deduplication": "arXiv base identifiers and normalized titles; preserve different SceneCraft papers and2025/2026 tree-search versions",
+  "limits": [
+    "Not every related paper on earth is guaranteed found.",
+    "No model training, asset generation, full-dataset inference or paid VLM runs.",
+    "Third-party AI summaries used only for discovery; claims rely on primary papers/author code.",
+    "parallel-cli was unavailable. Used available web tool plus direct primary source fetch; did not install/authenticate/pay for extra research service.",
+    "No paper ranking from incomparable published metrics; user screenshot raw file unavailable and user requested leaving it aside."
+  ],
+  "user_priority_update": "User explicitly confirmed BOTH RoomGenBench generation/assembly and robot downstream tasks; aesthetics auxiliary. Add targeted task evidence, not all policy/RL literature."
+}
