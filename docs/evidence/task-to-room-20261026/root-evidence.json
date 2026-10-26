@@ -1,0 +1,266 @@
+{
+  "date": "2026-10-26",
+  "role": "root synthesis and targetedprimary/sourceinspection",
+  "reading_scope": "Focused task-generation/evaluation sections and listed current source; no models, simulator, policy, or full evaluation run. Raw papers remain only in /tmp.",
+  "papers": [
+    {
+      "name": "SAGE",
+      "title": "SAGE: Scalable Agentic 3D Scene Generation for Embodied AI",
+      "year": "2026; CVPR 2026",
+      "paper": "https://arxiv.org/html/2602.10116v2",
+      "project": "https://research.nvidia.com/labs/cosmos-lab/sage/",
+      "repo": "https://github.com/NVlabs/sage",
+      "commit": "fe3966013a495dc1642710de93a83ddf66e534a0",
+      "tier": "direct-room",
+      "input": "User task + room/robot type; parser infers minimum objects and pick/place/navigate stages.",
+      "output": "New room shell, object meshes/poses/physical properties, Isaac Sim scenes, augmented scenes and action data.",
+      "method": "Agent calls floorplan/layout/asset tools; visual and simulator physics critics; task-preserving object/layout augmentation.",
+      "evaluation": "Paper Sec.4.2/4.2.2 Tables4–5: actual learned-policy rollout; 3 held-out scenes x90 random starts/configs. Test SR pick/place50.0%, mobile manipulation46.0%; planner57.7/52.8%. Pick/place >28k demos264 objects; mobile nearly50k demos50 scenes.",
+      "code_scope": "Generation client, backend solvers, IsaacLab action/rollout programs and robomimic source present. Selected entry/source inspected; not fully run or complete paper-checkpoint reproduction.",
+      "limit": "Baselines mimic SceneWeaver/Holodeck components within SAGE, not native repos unified. Shell size generated, minimum objects plus extras; not immutable given shell/exact IDs. Current selected placement detector checks target XY vs table grid and fallback bbox, not full 3D hard-goal conjunction; paper-run equivalence unproven.",
+      "source_sections": [
+        "Sec.3 and4",
+        "Sec.4.2/4.2.2 Tables4–5",
+        "Appendix B.1.2/B.3"
+      ],
+      "source_files": [
+        {
+          "path": "client/client_generation_robot_task.py",
+          "lines": "84–138",
+          "claim": "task/robot/room→parser, shell and minimum required objects"
+        },
+        {
+          "path": "client/scripts/generate_from_robot_task.sh",
+          "lines": "15–47",
+          "claim": "runnable task-conditioned CLI examples"
+        },
+        {
+          "path": "server/isaaclab/data_generation_mobile_manipulation_v7_eval_pose_aug_multi_step_from_parse.py",
+          "lines": "3238–3360",
+          "claim": "selected current detector XY-only placement check and fallback"
+        },
+        {
+          "path": "server/isaaclab/data_generation_mobile_manipulation_v7_eval_pose_aug_multi_step_from_parse.py",
+          "lines": "3930–3955",
+          "claim": "environment rate vs at-least-one-success test-case rate distinct"
+        }
+      ]
+    },
+    {
+      "name": "EmbodiedGenV2",
+      "title": "EmbodiedGen V2: An Agentic, Simulation-Ready 3D World Engine for Embodied AI",
+      "year": "2026-07-08; inspectedv3 2026-08-18 preprint",
+      "paper": "https://arxiv.org/html/2607.07459v3",
+      "project": "https://horizonrobotics.github.io/EmbodiedGen/",
+      "repo": "https://github.com/HorizonRobotics/EmbodiedGen",
+      "commit": "f0124197888c2b733e4eaa65acd81ad9cfda3b79",
+      "tier": "direct-room",
+      "input": "Natural-language manipulation/household task.",
+      "output": "Task scene graph with ROBOT/BACKGROUND/CONTEXT/TARGETS/DISTRACTORS; assets/physics/affordances/poses. Additional large-room/multiroom procedural backgrounds.",
+      "method": "Task parse→sim-ready asset generation→BFS placement with support/collision and robot-reach region→SAPIEN settling; large-room route selects Infinigen room type/complexity then export.",
+      "evaluation": "Sec.3.3: 150 task worlds, 778 interactive asset instances, manual final acceptance83.3%, 47.7±5.4min/world sequential RTX4090. Sec.3.4 real-robot21.7→75.0% (12scenes240trials) is explicitly summarized from companion study2603.18532, not an independent second robot experiment.",
+      "code_scope": "Task-driven layout CLI/models and room generation/router/export code public; selected docs/entry/router inspected. No full simulation or cross-engine consistency reproduction.",
+      "limit": "Acceptance is manual usability, not all-world policy SR. Current room router transmits discrete room/House+complexity, not full task predicates into room solver. Does not fix user shell/exact inventory; USD room export requires PhysicsUSDAdder postprocess per docs.",
+      "source_sections": [
+        "Sec.2.4",
+        "Sec.2.5",
+        "Sec.3.3 Table4",
+        "Sec.3.4 Table5"
+      ],
+      "source_files": [
+        {
+          "path": "docs/documentation/tutorials/layout_gen.md",
+          "lines": "1–62",
+          "claim": "task→layoutCLI and robot/scene schema"
+        },
+        {
+          "path": "embodied_gen/scripts/room_gen/route_room.py",
+          "lines": "31–80,103–127",
+          "claim": "task→room choice + complexity"
+        },
+        {
+          "path": "docs/documentation/tutorials/room_gen.md",
+          "lines": "81–100",
+          "claim": "room USD needs physics postprocessing"
+        }
+      ]
+    },
+    {
+      "name": "WEDGE",
+      "title": "From Failures to Learnable Worlds: Policy-Conditioned Environment Generation for Navigation Agents",
+      "year": "2026-10-14 preprintv1",
+      "paper": "https://arxiv.org/html/2610.19420v1",
+      "project": "https://zhangyuejoslin.github.io/WEDGE/",
+      "repo": "https://github.com/zhangyuejoslin/WEDGE",
+      "commit": "bd987196fd69c38308ed71f77a92a21fdbd6c163",
+      "tier": "policy-conditioned-navigation",
+      "input": "ObjectNav task, existing policy and logged successes/failures; measurable scene/path features.",
+      "output": "Repositioned target, new start state or new ProcTHOR layout in diagnosed weak regime; calibrated training episodes.",
+      "method": "LLM proposes executable weakness features validated statistically; vary relevant environment factor; keep candidate with2–3successful trials in5 frozen-policy rollouts; adapt and rediagnose.",
+      "evaluation": "Sec.4 Table1: Uni-NaVid ProcTHOR SR51.6→55.7; held-out HM3D69.2→73.4 aftertwo rounds. DD-PPO82.1→85.6 ProcTHOR. Matched adaptation budgets vs random/hard-mined; measured SR/SPL. Different agents use RL/finetuning/ICL, not one identical training algorithm.",
+      "code_scope": "Official repo public80tree entries: weakness-discovery Python and logged episode corpora. README and full tree inspected; generation/adaptation implementation not present among public source files.",
+      "limit": "Actual policy-conditioned curriculum already exists. Only indoor ObjectNav; no manipulation/fixedinventory guarantee. Training filter2–3/5 is deliberate curriculum selection, not generator acceptance SR; retain candidate counts/cost separately.",
+      "source_sections": [
+        "Sec.3.2–3.4",
+        "Sec.4.1/Table1",
+        "Table2",
+        "Appendix A.4"
+      ],
+      "source_files": [
+        {
+          "path": "README.md",
+          "lines": "9–56",
+          "claim": "public scope weaknessdiscovery+sixepisode corpora"
+        }
+      ]
+    },
+    {
+      "name": "EnvDreamer",
+      "title": "EnvDreamer: Large-Scale Multimodal-to-Environment Generation for Embodied AI",
+      "year": "2026-10-03 preprintv1",
+      "paper": "https://arxiv.org/html/2610.04301v1",
+      "project": null,
+      "repo": null,
+      "commit": null,
+      "tier": "prompt-and-task-program-environment",
+      "input": "Environment prompts/optionalimage; plan includes layout, assets and executable tasks.",
+      "output": "UE5 scene program/scene graph/task preconditions+success predicates/validation metadata; claimed20k accepted environments.",
+      "method": "Plan–compile–apply–validate with unit-like physics/playability/goal checks, deterministic seeds and scene editing.",
+      "evaluation": "PaperSec.5 Table2 reports pretraining transfer to ObjectNav SR/SPL, rearrangement and ArmPointNav;16k/2k/2k scene split stated. E.g.HM3D SR9.8 vsProcTHORpretrain9.0. Claim not independently reproduced.",
+      "code_scope": "Paper/author-publication link verified. No author-linked code/dataset URL established from paperHTML, authorpage and targetedqueries asof2026-10-26; paper release claims remain unverified.",
+      "limit": "ED20k vsP10k comparison differs in corpus count; use equal10k ablation for isolate scale. Precise benchmark transfer adapter/metric thresholds unavailable for source audit. Short10–50step tasks, single-agent, no fluids/deformables. Do not turn release claim into verified GitHub availability.",
+      "source_sections": [
+        "Sec.3–4",
+        "Sec.5 Tables2–3",
+        "Sec.6",
+        "Appendix8.6.3"
+      ],
+      "source_files": []
+    },
+    {
+      "name": "ScalingSimToRealGenerativeWorlds",
+      "title": "Scaling Sim-to-Real Reinforcement Learning for Robot VLAs with Generative 3D Worlds",
+      "year": "2026-03 preprint",
+      "paper": "https://arxiv.org/html/2603.18532v1",
+      "project": null,
+      "repo": null,
+      "commit": null,
+      "tier": "downstream-companion",
+      "input": "EmbodiedGen generated task scenes and pretrained VLA.",
+      "output": "RL-finetuned pick/place policy with simulation and realrobot transfer results.",
+      "method": "Online RL in generated task worlds; scene scaling and domain randomization.",
+      "evaluation": "Table2: overallrealSR.217→.750 over12realworldscene settings (240trials acrosspolicies). AppendixC generator100scenes, acceptance85%,46.8±5.0min distinctfromV2 150scene83.3%.",
+      "code_scope": "Companion paper read for provenance; public policytrainingrepo/checkpoints not source-audited.",
+      "limit": "Not an independenttask→fullroomgenerator. Do notdouble-countresults restatedbyEmbodiedGenV2 orassume tabletop pick/place proves full-roomnavigation.",
+      "source_sections": [
+        "Sec.4 Table2",
+        "AppendixC TableC.1",
+        "AppendixG"
+      ],
+      "source_files": []
+    }
+  ],
+  "source_receipts": [
+    {
+      "path": "WEDGE-README.md",
+      "bytes": 2916,
+      "sha256": "b41a45218bd304bcdafbc66dae245fb7d03aec8785ccd59e9f8cf3aa5cf2cc30"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/README.md",
+      "bytes": 17771,
+      "sha256": "1b787c0e7563ef9eba8bbe2e18d63f1a17a34da50d040dd41aec43594ae0eda9"
+    },
+    {
+      "path": "NVlabs__sage/README.md",
+      "bytes": 6953,
+      "sha256": "6214ca5c334c855aa2262736e9b553c836b31eeccb6defbbaa1a3f75b63702f2"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/models/layout.py",
+      "bytes": 22857,
+      "sha256": "1f32d1672a98080cb50e76494555806cd81fec9679d284af5cb6aebc6e3c2aee"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/scripts/eval_collision_success.py",
+      "bytes": 25874,
+      "sha256": "3d8615eb8f2023f8aaee239cc0ac35261f3fce76a6da9793466b1d39fc34aabe"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/scripts/gen_layout.py",
+      "bytes": 6055,
+      "sha256": "c02effaf7daefd7899ec6bf54080e9a3b4e30fb58a8f328a5f0d3e770810ec57"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/scripts/room_gen/run_generate_indoors.py",
+      "bytes": 1110,
+      "sha256": "0acc6edefe15d3eb2950d15165eae6a4615305cfcf229c658e7dc592ff505b55"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/scripts/room_gen/gen_room.py",
+      "bytes": 8962,
+      "sha256": "62f6842f3096712ae6c7a01f032792617f54ae22c42ea5488f920cdf3daa00bb"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/embodied_gen/scripts/room_gen/route_room.py",
+      "bytes": 4480,
+      "sha256": "fd0d232e5d0aada6a83c177704ee0fa5dbb901165c5cf5faf3794239cef6d592"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/docs/documentation/tutorials/scene_gen.md",
+      "bytes": 1972,
+      "sha256": "b8f23eabfd9624695282f7057b96e75463f7d5b12f3c5078b6fe379ae84ab449"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/docs/documentation/tutorials/room_gen.md",
+      "bytes": 5367,
+      "sha256": "36c89cf0493d9eeb999082f31750ef1f2075be3c0f09de0b5493e153758ff1e2"
+    },
+    {
+      "path": "HorizonRobotics__EmbodiedGen/docs/documentation/tutorials/layout_gen.md",
+      "bytes": 5483,
+      "sha256": "3fb5b7943bf52d4d489721a2f06c4dbbc6ba8689c04349c6126421a8a5589515"
+    },
+    {
+      "path": "NVlabs__sage/server/layout.py",
+      "bytes": 207964,
+      "sha256": "3b4e0972d523af3b9ddf50b6623f80fcf5d68f758506f653022cf768a0809018"
+    },
+    {
+      "path": "NVlabs__sage/server/README.md",
+      "bytes": 3658,
+      "sha256": "634fc62c50a77bf92ede215afc6320a2fa0b4234df52b93ac6ee8f299ab11ca4"
+    },
+    {
+      "path": "NVlabs__sage/client/README.md",
+      "bytes": 2960,
+      "sha256": "6c9ad2ccc8526dfadca167bb3ae1d3c7cd880b31432889ee6aebff72e75f821c"
+    },
+    {
+      "path": "NVlabs__sage/client/client_generation_robot_task.py",
+      "bytes": 68030,
+      "sha256": "eb74f10fc52770c046f307ff0cbf4394e6c2017e23a2f888ce2d95a16efff0c8"
+    },
+    {
+      "path": "NVlabs__sage/server/isaaclab/data_generation_mobile_manipulation_v7_pose_aug_and_scene_aug_motion_plan_eval.py",
+      "bytes": 81267,
+      "sha256": "732e7a901bef9212fc47ffa669ce9f4d2405c4c2adecadd9dee3dedf43390f29"
+    },
+    {
+      "path": "NVlabs__sage/server/isaaclab/data_generation_mobile_manipulation_v7_eval_pose_aug_multi_step_from_parse.py",
+      "bytes": 182864,
+      "sha256": "62f82a3faeacde4ba895976f5e6d2f2d597033f9ea1548ee22d9d512572415e1"
+    },
+    {
+      "path": "NVlabs__sage/client/scripts/generate_from_room_desc.sh",
+      "bytes": 1362,
+      "sha256": "26a23f361810c058c5c163558e60c0836ed27ca8021792c1c773d251734fc646"
+    },
+    {
+      "path": "NVlabs__sage/client/scripts/generate_from_robot_task.sh",
+      "bytes": 2798,
+      "sha256": "7f7883e4555ebe064cdd87cd4a8567d3793feae6b63d43f375c54ebb4804a651"
+    }
+  ],
+  "archive_note": "Original source-cache paths are ephemeral receipts, not archived dependencies. Public URLs and pinned commits are the replay references. Paper PDF/HTML full texts and model assets are excluded."
+}

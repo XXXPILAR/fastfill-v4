@@ -1,0 +1,29 @@
+{
+  "note": "Selected source line bodies excluded; URL/commit/hash retained. Metadata is not an execution log.",
+  "receipts": [
+    {
+      "repo": "Genesis-Embodied-AI/RoboGen",
+      "path": "gpt_4/adjust_size.py",
+      "url": "https://github.com/Genesis-Embodied-AI/RoboGen/blob/486612cd0baa40857b561419c5a42fbb7e67724f/gpt_4/adjust_size.py",
+      "sha256": "ce2aa4c836259338e180abf5b18191787ce9aad88c3c58715867a1b69732a1c8"
+    },
+    {
+      "repo": "liruiw/GenSim",
+      "path": "cliport/tasks/task.py",
+      "url": "https://github.com/liruiw/GenSim/blob/1a203b7259ac8af840e8db8f17a69ec8a1cd255c/cliport/tasks/task.py",
+      "sha256": "fe0fe34694e7de60c268974b72ad504cfb1d35044430e696f34cf041742c8d81"
+    },
+    {
+      "repo": "GenSim2/GenSim2",
+      "path": "gensim2/env/task/origin_tasks/open_box.py",
+      "url": "https://github.com/GenSim2/GenSim2/blob/4c3a5da3b515a9e772e73a93f0a315732af1c937/gensim2/env/task/origin_tasks/open_box.py",
+      "sha256": "727492968f232e9a2923c35c75d765f1b6d8f2791f6d790c87aa3d1f3fcd6f2e"
+    },
+    {
+      "repo": "InternRobotics/MesaTask",
+      "path": "inference.py",
+      "url": "https://github.com/InternRobotics/MesaTask/blob/0e9f0bb8e4f9790b55aac6dfd482dc51c90365b2/inference.py",
+      "sha256": "6985e413ce24ae09e37523fa38e23213ea42ec975ef848af66c9b73f308b6847"
+    }
+  ]
+}

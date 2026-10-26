@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-26",
+  "role": "Independent Agency Model QA Specialist",
+  "review_type": "Read-only cross-check; required factual corrections only. No business edits, simulation, model calls or broad new literature search.",
+  "files": [
+    "docs/task-to-room-literature-20261026.txt",
+    "ephemeral-cache:fastfill-task-to-room-root-20261026/root-evidence.json"
+  ],
+  "overall": "No HIGH error found in the stated success-rate values, denominator distinctions, task-input classification, current-code-versus-paper limits, companion provenance or novelty caveats. One exact source-location correction and one publication-status clarification below.",
+  "findings": [
+    {
+      "id": "Q1",
+      "severity": "Medium",
+      "category": "Factual source-location correction",
+      "must_change": true,
+      "locations": [
+        "docs/task-to-room-literature-20261026.txt:18",
+        "ephemeral-cache:fastfill-task-to-room-root-20261026/root-evidence.json papers[name=SAGE].evaluation",
+        "ephemeral-cache:fastfill-task-to-room-root-20261026/root-evidence.json papers[name=SAGE].source_sections"
+      ],
+      "observation": "The pinned SAGE v2 source uses Section4 Experiments and Section4.2 for the robot-learning evaluation. The document/root evidence currently cite5.2.",
+      "evidence": {
+        "url": "https://arxiv.org/html/2602.10116v2#S4.SS2",
+        "local_cached_source": "ephemeral-cache:fastfill-task-to-room-root-20261026/2602.10116v2.html",
+        "headings": [
+          "4 Experiments (#S4)",
+          "4.1 Scene Generation (#S4.SS1)",
+          "4.2.2 Policy Learning (#S4.SS2.SSS2)"
+        ],
+        "verified_contents": "Tables4–5 contain test policy rollout50.0%/46.0%, separate privileged-agent57.7%/52.8%; setup states mean across3held-out scenes with90random robot poses/object configurations each."
+      },
+      "required_change": "Change5.2→4.2 (or cite4.2.2/Table4 andTable5 explicitly) wherever claiming this pinnedv2. Keep the50.0/46.0 values and denominator caveats unchanged."
+    },
+    {
+      "id": "Q2",
+      "severity": "Low",
+      "category": "Publication-status factual clarification",
+      "must_change": true,
+      "locations": [
+        "docs/task-to-room-literature-20261026.txt:83"
+      ],
+      "observation": "STABLE is labeled only2026preprint even though primary metadata and author project identify ICML2026. In a catalogue that labels neighboring peer-reviewed venues, this understates verified publication status.",
+      "evidence": {
+        "paper": "https://arxiv.org/abs/2605.16137",
+        "version": "v2,19May2026",
+        "primary_metadata": "arXiv Comments:ICML2026;author project also namesICML2026.",
+        "project": "https://lan555.github.io/stable/",
+        "prior_audit": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026.json entries[name=STABLE]"
+      },
+      "required_change": "Use“STABLE｜ICML2026；arXiv2605.16137v2”rather than only“2026预印本”. No change to its metric/robot-rollout caveats."
+    }
+  ],
+  "critical_checks_passed": [
+    {
+      "topic": "SAGE task input and SR",
+      "result": "Task/robot/room inputs are genuine generation conditions. Current text correctly distinguishes50.0/46.0 conditional policy evaluation from all-request generation success; preserves3scenes×90conditions andseparates taskfamilies."
+    },
+    {
+      "topic": "SAGE current XY detector",
+      "result": "Current source detect_success_placement at3238–3360 checks targetXY against valid table cells/fallbackbounds. Text explicitly says this is a selected current implementation, not proof of original paper evaluation semantics; no mandatory correction."
+    },
+    {
+      "topic": "EmbodiedGenV2 companion",
+      "result": "150worlds83.3%manualacceptance and47.7±5.4min are distinct from companion realrobot21.7→75.0%; document avoids double-counting anddoesnotcallacceptancepolicySR."
+    },
+    {
+      "topic": "WEDGE priority and filtering",
+      "result": "Policy-failure-conditioned curriculum is correctly treated as priorart.2–3/5filter is trainingselection,notgeneratoroverallSR. Publicrepo scope remainslimited,notclaimedfullreproduction."
+    },
+    {
+      "topic": "RoomWright",
+      "result": "Roombrief/seed expansion and28prompt evaluation are correct;interactions/demo not conflated with episodeSR."
+    },
+    {
+      "topic": "SceneTeract",
+      "result": "Correctly a given-scene/agent/activityverifier. TaskSuccess is conjunction of verification checks,notrobotpolicyrollout; independentcheckeradaptation isproposed,nottested."
+    },
+    {
+      "topic": "STABLE evidence layers",
+      "result": "Correct taskconditionedtabletopinput;AwT/AwS/OC,rearrangement500samples andManipVQA50scenes are separated from robotgraspSR/policytraining."
+    },
+    {
+      "topic": "Exact-fit and unknown geometry",
+      "result": "Currentexact-fitnativebboxrisklimit and downstreamsupport/sweptvolume/distortionpriorities arebounded;noassertionnewstaticcollisionfromcontaineddisjointOBBshapechanges."
+    },
+    {
+      "topic": "Novelty/workflow/screenshots",
+      "result": "No global-first orprovennewinnovationclaim. Newworkflow notassumedimplemented;knownbugsnotattributedtoscreenshotrankings. StrongGPTone-shot andequalbudgetsolverremainrequiredcomparators."
+    }
+  ],
+  "not_reaudited": [
+    "Every paper in the broader new catalogue",
+    "All external links or complete source trees",
+    "Numerical results through model/simulator execution",
+    "Current code exact equivalence to original paper runs"
+  ],
+  "resolution": {
+    "Q1": "Corrected SAGE section citation to4.2/4.2.2inmainreportandarchivedroot-evidence.",
+    "Q2": "STABLE venue labeledICML2026inmainreport."
+  }
+}

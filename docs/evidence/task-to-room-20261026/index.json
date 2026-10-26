@@ -1,0 +1,285 @@
+{
+  "date": "2026-10-26",
+  "review_type": "scoping review of2024–2026task/activity/policy-conditioned room/simulation generation",
+  "total_entries": 30,
+  "distinct_names": 30,
+  "count_boundary": "30 entries across4groups;26newfocusedentries+4priorauditentries. Includes adjacent taskprograms/tabletop/humanrequirements/verifier/benchmarks, not30same-inputroomgenerators;SetItUpcontains2versionfamilies. Do not add count to earlier56catalog.",
+  "agent_roles": [
+    "Research Synthesist:directtask/environmentprograms",
+    "Code Reviewer:function/activityconditionedgeneration",
+    "Model QA Specialist:actualevaluationandcodeboundaries"
+  ],
+  "root_scope": "SAGE/EmbodiedGenV2/WEDGE/EnvDreamer/downstreamcompanion; synthesisandcross-review",
+  "sources": [
+    {
+      "input_name": "root-evidence.json",
+      "input_sha256": "06529f4cb6ddebdd81b58e5a1ebf2ffedabf0fb0b30d4a09d2a2c057250f7305",
+      "archive": "root-evidence.json",
+      "records": 5
+    },
+    {
+      "input_name": "fastfill-task-to-room-direct-20261026.json",
+      "input_sha256": "c2ed7f4b13b50c3a59a15ef09eca13ad6f8bd700246a3195cdd7b1889d7e0d39",
+      "archive": "direct-evidence.json",
+      "records": 8
+    },
+    {
+      "input_name": "fastfill-task-to-room-activity-20261026.json",
+      "input_sha256": "3e2f328a9c4dad6ddb75b8692f2a0a79f6223a4f4322fe4488caa55ee3300bb9",
+      "archive": "activity-evidence.json",
+      "records": 9
+    },
+    {
+      "input_name": "fastfill-task-to-room-evaluation-20261026.json",
+      "input_sha256": "16c20ec7f0fc59e663ccfd6f21479211a93705766a7e969b05e0ef4b73d7efcc",
+      "archive": "evaluation-evidence.json",
+      "records": 8
+    }
+  ],
+  "entries": [
+    {
+      "name": "SAGE",
+      "source_file": "root-evidence.json",
+      "index": 0,
+      "paper_url": "https://arxiv.org/html/2602.10116v2",
+      "repo_url": "https://github.com/NVlabs/sage",
+      "year_note": "2026; CVPR 2026"
+    },
+    {
+      "name": "EmbodiedGenV2",
+      "source_file": "root-evidence.json",
+      "index": 1,
+      "paper_url": "https://arxiv.org/html/2607.07459v3",
+      "repo_url": "https://github.com/HorizonRobotics/EmbodiedGen",
+      "year_note": "2026-07-08; inspectedv3 2026-08-18 preprint"
+    },
+    {
+      "name": "WEDGE",
+      "source_file": "root-evidence.json",
+      "index": 2,
+      "paper_url": "https://arxiv.org/html/2610.19420v1",
+      "repo_url": "https://github.com/zhangyuejoslin/WEDGE",
+      "year_note": "2026-10-14 preprintv1"
+    },
+    {
+      "name": "EnvDreamer",
+      "source_file": "root-evidence.json",
+      "index": 3,
+      "paper_url": "https://arxiv.org/html/2610.04301v1",
+      "repo_url": null,
+      "year_note": "2026-10-03 preprintv1"
+    },
+    {
+      "name": "ScalingSimToRealGenerativeWorlds",
+      "source_file": "root-evidence.json",
+      "index": 4,
+      "paper_url": "https://arxiv.org/html/2603.18532v1",
+      "repo_url": null,
+      "year_note": "2026-03 preprint"
+    },
+    {
+      "name": "RoboGen",
+      "source_file": "direct-evidence.json",
+      "index": 0,
+      "paper_url": "https://arxiv.org/abs/2311.01455",
+      "repo_url": "https://github.com/Genesis-Embodied-AI/RoboGen",
+      "year_note": "2023预印本；ICML2024，官方repo明示；旧项目别名Automated Robotic Skill Learning at Scale不另计一篇"
+    },
+    {
+      "name": "GenSim",
+      "source_file": "direct-evidence.json",
+      "index": 1,
+      "paper_url": "https://arxiv.org/abs/2310.01361",
+      "repo_url": "https://github.com/liruiw/GenSim",
+      "year_note": "2023预印本；ICLR2024 Spotlight；CoRL2023为workshop，不混为正式CoRL论文"
+    },
+    {
+      "name": "GenSim2",
+      "source_file": "direct-evidence.json",
+      "index": 2,
+      "paper_url": "https://arxiv.org/abs/2410.03645",
+      "repo_url": "https://github.com/GenSim2/GenSim2",
+      "year_note": "2024预印本；官方repo标Conference on Robot Learning2024；PMLR proceedings发布年份另记，不以此更改首发"
+    },
+    {
+      "name": "Gen2Sim",
+      "source_file": "direct-evidence.json",
+      "index": 3,
+      "paper_url": "https://arxiv.org/abs/2310.18308",
+      "repo_url": "https://github.com/pushkalkatara/Gen2Sim",
+      "year_note": "2023预印本；ICRA2024作者页确认"
+    },
+    {
+      "name": "ReGen",
+      "source_file": "direct-evidence.json",
+      "index": 4,
+      "paper_url": "https://openreview.net/forum?id=EbCUbPZjM1",
+      "repo_url": null,
+      "year_note": "ICLR2025，作者页/OpenReview确认；arXiv2511.04769于2025-11-06补挂，不能当首发仅11月"
+    },
+    {
+      "name": "MesaTask",
+      "source_file": "direct-evidence.json",
+      "index": 5,
+      "paper_url": "https://arxiv.org/abs/2509.22281",
+      "repo_url": "https://github.com/InternRobotics/MesaTask",
+      "year_note": "arXiv2509.22281,2025-09-26；NeurIPS2025 Spotlight作者页/repo确认"
+    },
+    {
+      "name": "TabletopGen",
+      "source_file": "direct-evidence.json",
+      "index": 6,
+      "paper_url": "https://arxiv.org/abs/2512.01204",
+      "repo_url": "https://github.com/D-Robotics-AI-Lab/TabletopGen",
+      "year_note": "2025-12首发；最新已读v4 2026-07-02；ECCV2026作者页/repo确认；v1旧题名Instance-Level Interactive...不同版本分开"
+    },
+    {
+      "name": "SR-Platform",
+      "source_file": "direct-evidence.json",
+      "index": 7,
+      "paper_url": "https://arxiv.org/abs/2605.14700",
+      "repo_url": null,
+      "year_note": "2026-05-14 arXiv2605.14700v1；本轮未核同行评审接收"
+    },
+    {
+      "name": "Nav2Scene",
+      "source_file": "activity-evidence.json",
+      "index": 0,
+      "paper_url": "https://doi.org/10.1016/j.gmod.2025.101287",
+      "repo_url": null,
+      "year_note": "Graphical Models141,101287,September2025"
+    },
+    {
+      "name": "Steerable Scene Generation",
+      "source_file": "activity-evidence.json",
+      "index": 1,
+      "paper_url": "https://arxiv.org/abs/2505.04831",
+      "repo_url": "https://github.com/nepfaff/steerable-scene-generation",
+      "year_note": "2025 preprint; author project labels CoRL2025"
+    },
+    {
+      "name": "Function2Scene",
+      "source_file": "activity-evidence.json",
+      "index": 2,
+      "paper_url": "https://arxiv.org/abs/2605.30819",
+      "repo_url": null,
+      "year_note": "First arXiv2026-05-29; no conference venue asserted"
+    },
+    {
+      "name": "FuncRoom-Agent",
+      "source_file": "activity-evidence.json",
+      "index": 3,
+      "paper_url": "https://arxiv.org/abs/2608.29519",
+      "repo_url": null,
+      "year_note": "2026-08-30v1;2026-09-17v2; no venue asserted"
+    },
+    {
+      "name": "FuncScene",
+      "source_file": "activity-evidence.json",
+      "index": 4,
+      "paper_url": "https://doi.org/10.1016/j.cagd.2024.102319",
+      "repo_url": "https://github.com/mwj2021/FuncScene",
+      "year_note": "Computer Aided Geometric Design111:102319,2024"
+    },
+    {
+      "name": "Behavior-Aware Anthropometric Scene Generation",
+      "source_file": "activity-evidence.json",
+      "index": 5,
+      "paper_url": "https://arxiv.org/abs/2603.02662",
+      "repo_url": null,
+      "year_note": "CHI2026; first arXiv2026-03-03"
+    },
+    {
+      "name": "Human-OperationalScene",
+      "source_file": "activity-evidence.json",
+      "index": 6,
+      "paper_url": "https://doi.org/10.1016/j.autcon.2026.106846",
+      "repo_url": "https://github.com/SeminJin/HumanOperationalScene",
+      "year_note": "Automation in Construction184:106846,April2026"
+    },
+    {
+      "name": "AccioScene (formerly Functional3DSceneSynthesis)",
+      "source_file": "activity-evidence.json",
+      "index": 7,
+      "paper_url": "https://arxiv.org/abs/2502.06819",
+      "repo_url": null,
+      "year_note": "2025-02-05v1;2026-06-08v2; author lab listsBMVC2026 (author-assertedvenue)"
+    },
+    {
+      "name": "SetItUp (RSS2024 / IJRR2025 lineage)",
+      "source_file": "activity-evidence.json",
+      "index": 8,
+      "paper_url": "https://arxiv.org/abs/2405.11928",
+      "repo_url": null,
+      "year_note": {
+        "conference": "RSS2024; arXiv first submitted 2024-05-20",
+        "journal_extension": "IJRR2025; separate arXiv first submitted 2025-08-04; publisher online date 2025-11-01"
+      }
+    },
+    {
+      "name": "Scene2Demo",
+      "source_file": "evaluation-evidence.json",
+      "index": 0,
+      "paper_url": "https://arxiv.org/abs/2602.12065",
+      "repo_url": null,
+      "year_note": null
+    },
+    {
+      "name": "STABLE",
+      "source_file": "evaluation-evidence.json",
+      "index": 1,
+      "paper_url": "https://arxiv.org/abs/2605.16137",
+      "repo_url": null,
+      "year_note": "v2,19May2026;ICML2026 perarXivcomment/project"
+    },
+    {
+      "name": "RoomWright",
+      "source_file": "evaluation-evidence.json",
+      "index": 2,
+      "paper_url": "https://arxiv.org/abs/2608.18840",
+      "repo_url": null,
+      "year_note": "v1,19August2026;preprint;noacceptedvenueasserted."
+    },
+    {
+      "name": "SceneTeract",
+      "source_file": "evaluation-evidence.json",
+      "index": 3,
+      "paper_url": "https://arxiv.org/abs/2603.29798",
+      "repo_url": "https://github.com/leopoldmaillard/sceneteract",
+      "year_note": "v2,17September2026;firstsubmitted31March2026"
+    },
+    {
+      "name": "SceneSmith",
+      "source_file": "evaluation-evidence.json",
+      "index": 4,
+      "paper_url": "https://arxiv.org/html/2602.09153",
+      "repo_url": "https://github.com/nepfaff/scenesmith",
+      "year_note": "Previouslypinnedpaper/mainrepo audit;seepriorrecord forfullversionboundary."
+    },
+    {
+      "name": "SceneCode",
+      "source_file": "evaluation-evidence.json",
+      "index": 5,
+      "paper_url": "https://arxiv.org/html/2605.19587",
+      "repo_url": "https://github.com/wangpuyi/SceneCode",
+      "year_note": "Previouslypinnedpaper/mainrepo audit;seepriorrecord forfullversionboundary."
+    },
+    {
+      "name": "RoboCasa365",
+      "source_file": "evaluation-evidence.json",
+      "index": 6,
+      "paper_url": "https://arxiv.org/html/2603.04356v1",
+      "repo_url": "https://github.com/robocasa/robocasa",
+      "year_note": "arXiv2603.04356v1,2026-03-04；作者正式PDF/README标ICLR2026"
+    },
+    {
+      "name": "GRUtopia / GRScenes (current InternUtopia)",
+      "source_file": "evaluation-evidence.json",
+      "index": 7,
+      "paper_url": "https://arxiv.org/abs/2407.10943",
+      "repo_url": "https://github.com/InternRobotics/InternUtopia",
+      "year_note": "2024-07-15 firstarXiv;currentplatformrenamedInternUtopia."
+    }
+  ],
+  "executed": "No simulation/policytraining/modelAPI or end-to-end benchmark executed; business code unchanged."
+}

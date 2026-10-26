@@ -1,6 +1,8 @@
 Room generation：文献全景、ScenePilot启发与FastFill可验证方向
 2026-10-26｜范围调研＋源码边界＋研究假设
 
+新增任务专题：docs/task-to-room-literature-20261026.txt；30组task/activity/policy相关方法、验证器及基准条目，含4组既有证据复用。SAGE、EmbodiedGen V2、Function2Scene、MesaTask、WEDGE等补充见该文；不与下述56项目录简单相加。
+
 先看结论
 
 本项目服务下游执行任务。主目标是：固定房间空壳和完整家具清单，在有限推理预算内产生能被下游消费、装配并实际使用的场景；美观与通用VLM观感评分只作辅助。

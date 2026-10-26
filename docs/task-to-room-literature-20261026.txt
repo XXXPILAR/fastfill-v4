@@ -1,0 +1,156 @@
+Task → Room / 可执行场景：2024–2026 专题
+检索截止：2026-10-26；范围调研，不宣称全球穷尽或逐篇完整复现。
+
+优先结论
+
+“为下游任务生成场景”已经有直接论文，不能当作新的问题定义。最需要对照的是 SAGE、EmbodiedGen V2、Function2Scene，以及任务驱动桌面生成 MesaTask/STABLE；导航侧另有 Nav2Scene 与策略失败驱动的 WEDGE。它们与单纯审美 text-to-room 的区别，在于任务是否实际改变生成过程，以及有没有独立的执行证据。
+
+我们当前任务仍是：固定房间空壳＋完整且必须保留的文字家具清单→预测尺寸/pose/支撑→RoomGenBench生成并装配资产→服务导航/操作任务。多数 task-to-scene 方法会自行选择物体、生成房间或安排机器人；不是这个输入协议下可直接照搬的基线。
+如果输入只有空壳和家具列表，具体机器人动作目标并不能唯一确定。应把已知的下游要求作为显式条件或独立冻结的评测任务，不能事后让模型选择最容易成功的任务。
+
+阅读次序：先看下面一至三节的直接近邻，再看四节评估含义，最后看五节研究切口。每篇精确版本、代码公开范围和来源定位存于 docs/evidence/task-to-room-20261026/。
+原56项通用room-generation目录仍保留；本专题是新增的任务视角补充，计数不与原目录简单相加。
+
+一、任务直接进入房间/环境生成：优先阅读
+
+SAGE｜CVPR 2026，arXiv 2602.10116v2
+输入：任务、机器人类型、房间类型；解析必须物体与pick/place/navigate阶段，生成房间和真实资产。视觉critic＋Isaac Sim物理critic；保留任务语义进行物体/布局增强。
+下游：确实训练并执行机器人策略。v2论文4.2/4.2.2节、表4：3个held-out场景，各90个随机起点/配置；pick-and-place测试SR50.0%，mobile manipulation46.0%。不是所有生成请求的端到端成功率；两种任务亦不可平均成通用room分数。
+代码：官方NVlabs/sage，生成与动作/rollout源文件存在，已核任务入口与一份当前成功判定代码；未运行。其对比使用在自身框架内模拟Holodeck/SceneWeaver组件的对照，不是原仓库直接统一复现。
+与我们差异：会生成空壳尺寸、补充物体；exact-ID清单与固定观测空壳需适配。所查当前placement detector只按目标XY与桌面网格/退化bbox判断，没有完整三维支撑目标；不能直接当我们的硬目标评测器，也未证明它等同论文运行版本。
+论文：https://arxiv.org/html/2602.10116v2
+代码：https://github.com/NVlabs/sage
+
+EmbodiedGen V2｜2026-07首发，核v3（2026-08-18）
+输入：自然语言任务→ROBOT/BACKGROUND/CONTEXT/TARGETS/DISTRACTORS场景树→生成资产→BFS放置、机器人可达区域和SAPIEN settling；另有Infinigen多房间背景。
+下游：3.3节150个task worlds，最终人工可用性验收83.3%，单RTX4090在线顺序生成47.7±5.4分钟/world。这是验收率。3.4节真实机器人21.7→75.0%来自其明确引用的companion study，不能当第二份独立实验。
+代码：HorizonRobotics/EmbodiedGen，task layout、room/router/export源码公开。当前room router把任务压成房间类型/House＋complexity；不是把所有动作谓词传给房间solver。room USD文档还明确需要补physics属性。
+与我们差异：选择所需物体和生成背景，不承诺固定shell/exact inventory。其统一资产/affordance/scene表示值得借鉴，但“统一接口”本身不是新贡献。
+论文：https://arxiv.org/html/2607.07459v3
+代码：https://github.com/HorizonRobotics/EmbodiedGen
+
+Function2Scene｜2026-05预印本，2605.30819
+输入：使用者persona、活动和设计brief→功能性房间内容、布局与尺寸；会推断家具，用pathfinding/reach/posture等工具检查。
+评估：30个专业case、10类房间；人类偏好及工具消融。报告的94.3%聚合偏好不是人/机器人完成任务的成功率；没有核到实际机器人rollout。
+公开范围：已核论文与作者项目/Viewer，未确认官方实现及评估GitHub。我们不能把Viewer当生成器源码。
+论文：https://arxiv.org/abs/2605.30819
+
+FuncRoom-Agent｜2026-08首发，核v2（2026-09-17），2608.29519
+输入：功能意图/活动、所需物体及可选图片→分阶段DSL生成；把昂贵agent过程压到专用模型，强调无需在线repair。
+评估：30个SceneEval prompts＋50个Function-Room prompts，FZC/FOC/FOP、几何、耗时、人类/VLM评审；功能标注人工校正并冻结。FOC包含预先允许的替代物，不能直接视为我们原始清单精确满足。
+公开范围：未定位官方可执行实现。未核到机器人任务rollout；论文所报25分钟/scene包含生成链，不能拿来与pose-only延迟比较。
+论文：https://arxiv.org/abs/2608.29519
+
+RoomWright｜2026-08预印本，2608.18840
+从room brief与seed objects推断anchor活动，按usage扩展物体集合；用代码和trigger–condition–effect规则表达状态交互。它比“有hinge就可交互”更进一步。
+评估以28个room prompts、SceneEval、交互覆盖和Isaac Sim实例为主；没有核到一组机器人episode的总任务SR。输入允许扩充seed，不能默认等于固定完整清单。
+论文：https://arxiv.org/abs/2608.18840
+
+二、功能目标与导航/策略效用进入生成
+
+Nav2Scene｜Graphical Models 141:101287，2025
+用导航效用微调场景生成，涉及PPS/ScoreNet、3D-FRONT generation/completion/re-arrangement。是“优化导航友好度”的直接前例。
+本次可访问的一手证据止于出版商摘要和作者记录；全文请求403。PPS精确planner/分母和实际robot rollout未核，不能写成已有SR/SPL机器人证据；官方实现未确认。
+论文：https://doi.org/10.1016/j.gmod.2025.101287
+
+Steerable Scene Generation with Post Training and Inference-Time Search｜CoRL 2025
+固定资产库与SE(3)场景先验，利用reward后训练、条件生成或推理搜索，控制clutter/feasibility等目标；有物理投影/仿真。
+公开训练/生成/metric源码。论文机器人部分为部分场景Drake＋mobile KUKA iiwa遥操作展示，不能扩成量化自主任务SR或训练迁移。资产几何和尺寸已知，信息多于我们的文字未知尺寸输入。
+项目：https://steerable-scene-generation.github.io/
+代码：https://github.com/nepfaff/steerable-scene-generation
+
+WEDGE｜2026-10-14预印本，2610.19420v1
+策略成功/失败日志→LLM提出可执行弱点特征→统计验证→改变目标位置/起点或生成新布局→5次rollout保留成功2–3次的可学习环境→继续训练并重新诊断。
+真实评估：Uni-NaVid两轮后ProcTHOR SR51.6→55.7，HM3D69.2→73.4；报告SR/SPL并匹配random/hard-mined的适配预算。各agent用RL/微调/ICL，不是同一种训练。
+当前官方仓库公开弱点发现代码和日志corpora；全树/README未见完整场景生成和策略适配实现。不要标“整套复现已公开”。只测ObjectNav，不覆盖操作。
+启发：优化生成场景的训练价值比单独提升审美更贴近目标；但“用policy失败闭环生成curriculum”也已有前例。2–3/5过滤是训练集选择，不能用筛选后的SR冒充生成器总体成功。
+论文：https://arxiv.org/html/2610.19420v1
+代码：https://github.com/zhangyuejoslin/WEDGE
+
+EnvDreamer｜2026-10-03预印本，2610.04301v1
+prompt/可选图片→UE5计划、程序、场景和任务→physics/playability/goal validators；论文声称发布20k场景与task programs。
+论文有ObjectNav SR/SPL、rearrangement、ArmPointNav预训练迁移；ED20k对P10k数据量不等，不能仅由主表分离算法收益；需看等规模消融。所查作者页和原文未确认实际可用代码/数据URL，发布声明不当作已核开源。
+论文：https://arxiv.org/html/2610.04301v1
+
+三、任务→桌面、任务环境程序和功能布局：相关但应分开
+
+MesaTask｜NeurIPS 2025 Spotlight，2509.22281
+任务→objects/relations/scene graph→桌面布局，Spatial Reasoning Chain＋DPO。与我们的“task→需要什么和怎么摆”密切相关，但只在tabletop。
+500个task-to-tabletop评测样本；FID、VLM/human布局指标。主表Success Rate是输出格式正确可解析且至少有1物体，不是完整清单或机器人完成任务。项目的操作视频也不能代替量化rollout。
+论文：https://arxiv.org/abs/2509.22281
+项目：https://mesatask.github.io/
+代码：https://github.com/InternRobotics/MesaTask
+
+STABLE｜ICML 2026，2605.16137
+任务真实进入生成；预测物体描述/尺寸，检索资产，以语义＋物理过程处理布局，物理校正只改pose。
+主要指标AwT/AwS为物体/关系召回、OC为mesh碰撞；500扰动样本重排用DistanceMoved/EMD/OC。附录E在50个复杂场景测试ManipVQA抓取区域检测，是视觉affordance下游，不是机器人抓取SR或policy训练收益。
+作者项目当前未核到可用官方Code链接；Robot Operation视频占位不能写成运行证据。
+论文：https://arxiv.org/abs/2605.16137
+
+SetItUp｜RSS 2024，2405.11928；另有IJRR 2025扩展版2508.02068
+欠明确的功能指令＋给定objects＋few-shot和任务family sketch→关系图→组合diffusion求pose。原RSS评测study desk/dining table/coffee table；扩展版增加bookshelf/bedroom，不把两版实验混写。
+它说明“给定物体集合，按用途生成关系再求位姿”已有早期直接前例。实际机器人摆放展示、布局功能性与物理可行性需分开报告，不能从展示推出通用room任务SR。
+论文：https://arxiv.org/abs/2405.11928
+扩展：https://arxiv.org/abs/2508.02068
+项目：https://setitup-rss.github.io/
+
+RoboGen / GenSim / GenSim2 / Gen2Sim / ReGen
+这组把任务/技能、仿真代码、环境/资产及监督联系起来，必须引用；大部分不是固定空房间家具填充。RoboGen的官方会议为ICML 2024；原文内部Genesis与公开PyBullet重实现的能力边界不同，不能默认软体全管线公开。
+GenSim：ICLR 2024，从target task或探索式提议生成任务/仿真程序；CLIPort桌面任务为主。
+GenSim2：CoRL 2024，articulated manipulation任务、solver与多任务policy；不是完整房间shell/layout生成。
+Gen2Sim：ICRA 2024，资产生成/感知到任务和奖励，不是把任意goal直接编成完整房间。
+ReGen：ICLR 2025作者记录，arXiv在2025-11补挂；行为/目标→因果图→符号场景逆设计，含驾驶与操作。不要只按arXiv时间误写首发。完整官方代码可用性本次未确认。
+各项精确input/eval/code记录见direct-evidence.json；不把异构task completion百分比拼成统一排行榜。
+RoboGen：https://generativesimulation.github.io/ ｜ https://github.com/Genesis-Embodied-AI/RoboGen
+GenSim：https://gen-sim.github.io/ ｜ https://github.com/liruiw/GenSim
+GenSim2：https://gensim2.github.io/ ｜ https://github.com/GenSim2/GenSim2
+Gen2Sim：https://gen2sim.github.io/
+ReGen：https://regen-sim.github.io/
+
+Scene2Demo / TabletopGen / SR-Platform
+Scene2Demo当前v3（2026-10-17）为单RGB scene＋user query→interactive reconstruction＋任务/动作流＋反馈修正；初版题名不同。它提供实际执行证据，但不能忽略已有scene图像条件，也不把primitive success、long-horizon subtask score与完整episode success混用。
+TabletopGen从图片/文字生成可交互桌面，最新版本有生成数据微调与sim/real任务测试；可参考资产→policy链，不能当作任务驱动完整room生成。
+SR-Platform以可运行环境生产和平台效率为主；可加载/部署并不自动证明策略任务成功。
+论文：https://arxiv.org/abs/2602.12065 ｜ https://arxiv.org/abs/2512.01204 ｜ https://arxiv.org/abs/2605.14700
+TabletopGen代码：https://github.com/D-Robotics-AI-Lab/TabletopGen
+
+功能组、人因和既有场景系统
+FuncScene（CAGD 2024）：room boundary→functional groups→layout；FI主要看组的物体组成，不是实际使用成功。关联GitHub当前只有README/teaser，无Python实现，不能标方法代码已公开。
+Behavior-Aware Anthropometric（CHI 2026）：behavior＋真实资产＋人体尺度→空间约束；有真人在重建office/lounge里完成任务，测时间/轨迹/操作空间，强于看图偏好，但不是机器人实验。
+Human-OperationalScene（AutCon 2026）：原子人类动作→人体空间规则；部分action/rule代码公开，不能当完整diffusion generator。AccioScene：interaction prior辅助生成，不是任意机器人goal输入。
+SceneSmith/SceneCode的生成与实际执行边界、PhyScene几何reachability、Holodeck及RoboCasa/GRUtopia/HSSD的task/transfer证据沿用既有审计；这里不将已有人居scene里的任务基准冒充新的task→room生成算法。
+对应来源和版本详见activity-evidence.json、evaluation-evidence.json、reused-evidence-index.json。
+
+四、评估中“成功”至少有五种不同含义
+
+1. 程序成功：JSON/DSL可解析、可执行。MesaTask的SR属于此层；不能直接说明有家具，更不能说明机器人成功。
+2. 场景要求与几何：对象/关系覆盖、无穿透、支撑、agent尺寸下可达。STABLE/PhyScene/SceneTeract各有这层；检查器应独立于生成器。
+3. 仿真实际执行：同一机器人/策略/目标/初始化/horizon下，逐episode全部硬目标达到。SAGE/SceneSmith等有真实rollout，现有success实现仍需审计。VLM平均分通过不等于所有目标均真。
+4. 训练效用：相同数据量、动作获取预算和训练计算，在独立未见场景/任务上SR/SPL等提升。SAGE、WEDGE、相关companion提供不同形式的证据；适配方法和数据量必须对齐。
+5. 人类实际使用：真人活动的时间/路径/操作空间。Behavior-Aware可参考，但不能迁移成robot SR。
+
+SceneTeract尤其适合参考独立checker：输入是给定scene＋agent profile＋activity，分解原子动作并验证几何/物理可行性；不是生成器。其“Task Success”是验证谓词的合取，不是robot policy rollout。冻结agent尺寸、交互部件和activity规范后，可用作分层诊断，不能直接替代最终策略评测。
+SceneTeract来源与当前官方CLI/实现范围见evaluation-evidence.json。
+论文：https://arxiv.org/abs/2603.29798 ｜ 代码：https://github.com/leopoldmaillard/sceneteract
+
+我们应保留一条完整分母链：所有输入请求→清单完整→资产生成/装配有效→任务可实例化→规划/执行→目标验证。每层都报告失败/未知/fallback；有效场景条件下SR与全部请求SR并列。策略curriculum可筛困难样本，固定benchmark不得用同样筛法删除失败。
+对nav和manip分别冻结任务难度：目标/起点、路径长度和遮挡；抓取/开合/放置目标、资产部件与关节、控制预算。防止靠变大房间、把物体放到机械臂身边、删家具或选简单任务提高分数。
+
+五、对我们创新选择的影响
+
+不宜作为主创新：task-conditioned本身、functional groups、affordance/人体clearance、agent＋critic、物理修复、DSL/stateful interaction、policy-failure curriculum。这些在上述论文里都有明确近邻。
+
+优先检验的具体切口：在固定观测空壳和不可删改request IDs下，让未知尺寸的计划经过RoomGenBench真实资产实现后，仍能保持任务所需接近位姿、操作空间、支撑与部件可用性；资产变化只触发必要的局部修正，并有独立检查器和失败归因。
+这只是研究假设。FirePlace/SceneCode/EmbodiedGen等已覆盖部分asset/interaction闭环，不能声称首创；需要证明“规划代理通过→真实装配/任务失败”足够常见，并在等预算下超过GPT一次生成＋简单solver/反馈修复。
+若RoomGenBench仍精确anisotropic fit，原生bbox尺寸风险会被吸收，应重点测支撑/交互面、开合扫掠体、接近可达和缩放畸变，而不是虚构bbox不确定性造成新静态碰撞。
+
+最小可验证对照：同一批shell/list和同一个强GPT初稿，比较无修复、确定性几何solver、任务checker引导局部修复；采用相同真实资产和计算预算，记录装配/任务失败、语义退化和每次修改。先做执行诊断，训练专用模型和重agent流程不应先行。
+训练价值作为第二条独立主张：等预算生成相同量场景，冻结任务难度分布，对held-out scenes/tasks测策略收益。WEDGE已有相关路径，因此必须指出我们在固定shell/inventory、资产交接或nav＋manip方面具体新增了什么。
+
+证据边界
+
+本轮使用Research Synthesist、Code Reviewer、Model QA Specialist三个Agency subagent并行核查；root补核SAGE/EmbodiedGen V2/WEDGE/EnvDreamer和companion来源。
+调研覆盖一手原文/作者页/官方仓库可访问范围，逐项标阅读深度。官方repo存在不等于完整方法、权重和论文评测全公开；代码审计不等于已经复现。
+未运行仿真、策略训练、付费模型API或新的RoomGenBench实验；未修改业务代码，未解释用户截图排名的真实成因。
+“Task2Room/Task2Scene” exact-name检索没有建立可计入本专题的准确一手记录，不据此断言这些名字永远不存在。
+原通用文献与既有代码问题：docs/roomgen-literature-research-20261026.txt。

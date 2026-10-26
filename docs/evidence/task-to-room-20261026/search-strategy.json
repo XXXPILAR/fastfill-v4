@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-26",
+  "question": "Which2024–2026methods use task/activity/functional goals/policy requirements to generate indoor room layouts or executable simulation environments, and what downstream evidence/code is available?",
+  "period_rule": "Firstpreprint OR venue in2024–2026; preserve firstpreprint and conference dates separately; late2026preprints included through2026-10-26. Related2023preprints with2024venues are tagged.",
+  "approach": "Scoping search and backward/forward citation/project chaining acrossarXiv/OpenReview/CVF/publishers/authorpages; prior56catalog used for overlap, not exhaustive systematic screening. ThreeAgencyroles independently inspect complementary families.",
+  "inclusion_groups": [
+    "directtask/activity→room/environment",
+    "task→tabletop/simulatorprogram/asset",
+    "navigationreward/policyweaknessconditionedgeneration",
+    "humanbehavior/function-conditionedlayout",
+    "independenttaskfeasibilityverifier and taskbenchmark references"
+  ],
+  "excluded_from_direct_room": [
+    "Taskplanning or affordancegrounding in an unchanged input scene",
+    "Video/action/worldmodels without persistent physical3Droomoutput",
+    "Ordinary aestheticprompt generation without explicit task/function condition",
+    "Unverified title or same-name code repositories"
+  ],
+  "queries": [
+    "task/activity/goal conditioned room scene generation2024 2025 2026",
+    "Task2Scene OR Task2Room",
+    "navigation driven scene generation task aware indoor scene",
+    "task oriented tabletop scene generation",
+    "policy conditioned environment generation navigation",
+    "Exacttitles + officialGitHub/project/evaluation"
+  ],
+  "checks": [
+    "actualconditionvsinferredfunctionvsjudge-only",
+    "exactinputinformation and room/tabletop scale",
+    "syntax/geometricproxy/manualacceptance/rollout/trainingtransfer distinct",
+    "authorprovenance, complete currenttree, selectedsource, commit",
+    "same-paper version/releaseclaim and implementation availability separate"
+  ],
+  "negative_name_check": "Task2Scene/Task2Room exactname searches did not establish a primary paper identity for inclusion; no nonexistence claim.",
+  "known_limits": [
+    "Nav2Scene fulltextblocked403; abstractlevelonly",
+    "No paywall bypass, paidAPI, GPUrun or modelinstallation",
+    "Not allsources linebyline; source depth recorded perentry",
+    "Unpublished implementations may exist; missing confirmed officialrepo doesnotprove noneexists",
+    "No all-method score ranking; input/task/controller/budgets differ"
+  ]
+}

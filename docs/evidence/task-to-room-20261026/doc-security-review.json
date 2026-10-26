@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-26",
+  "role": "Independent Agency Code Reviewer",
+  "scope": "Read-only final main document, activity nine-paper evidence, archive index/provenance and commit safety. No project files edited; no network/model/simulation execution.",
+  "verdict": "pass",
+  "findings": [],
+  "security": {
+    "private_key_headers": 0,
+    "token_like_matches": 0,
+    "credential_assignments": 0,
+    "private_home_paths": 0,
+    "absolute_tmp_paths": 0,
+    "dangerous_html_js_markers": 0,
+    "archive_file_count": 9,
+    "archive_bytes": 139654,
+    "file_types": [
+      ".json",
+      ".txt"
+    ],
+    "raw_full_papers_or_model_assets_archived": false,
+    "executable_code_added": false,
+    "note": "Pattern scan and manual inspection support no detected disclosure; not a proof against all possible secrets. Ephemeral-cache labels are metadata receipts and are explicitly disclaimed as archived dependencies.",
+    "latest_scan_counts": {
+      "private_key": 0,
+      "token_like": 0,
+      "private_home_path": 0,
+      "temp_path": 0,
+      "dangerous_html": 0,
+      "credential_assignment": 0
+    }
+  },
+  "claim_checks": [
+    {
+      "claim": "Function2Scene / FuncRoom-Agent function intent is a generation input, but no independently established robot rollouts or official complete implementation",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "Nav2Scene primary evidence limited to abstract and author record; PPS not equated to robot SR/SPL",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "Steerable public training/generation/metrics source exists; robotics is qualitative teleoperation rather than aggregate autonomous success",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "FuncScene repository pinned tree is presentation-only; FI evaluates functional object group content",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "BehaviorAware includes actual human activity experiments, not robot execution",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "Human-OperationalScene only partial action/rule code, AccioScene interaction prior not arbitrary robot goal input",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "SetItUp RSS2024 tabletop task families separated from IJRR2025 bedroom/bookshelf expansion and actual robot demos not treated as general room SR",
+      "result": "accurate_as_written"
+    },
+    {
+      "claim": "Official repositories and read-only audits are not declared full paper reproduction; unknown-size exact inventory condition differs from known-asset or expanding inventories",
+      "result": "explicitly_preserved"
+    }
+  ],
+  "provenance_checks": {
+    "activity_entries_equal_supplied_nine_entry_evidence": true,
+    "public_urls_and_versions": "Compared against previously inspected primary evidence and structured records; no fresh HTTP uptime test in this final local-only pass.",
+    "json_parse_all_passed": true,
+    "source_hashes_are_receipts_not_claimed_reproduction": true,
+    "full_reproduction_claim": false,
+    "main_same_input_comparisons": "Main text explicitly retains fixed shell/exact request IDs and warns against treating task-driven object selection as same-condition baseline."
+  },
+  "snapshot": [
+    {
+      "path": "docs/task-to-room-literature-20261026.txt",
+      "bytes": 17615,
+      "sha256": "e869a9bae40f9e1406c715601bf76f8a7b66ab68f885fc70937f6e7cda9c3430"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/activity-evidence.json",
+      "bytes": 35273,
+      "sha256": "0c4dac7d6d4443894bb3de3db0475ad8eddede141305f83110c911a0ae519b24"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/direct-evidence.json",
+      "bytes": 35338,
+      "sha256": "bd5962f4371dca11a0ac493aeb66ad0430c4437d16b946726f66e3e6eb4f1ede"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/direct-repo-receipts.json",
+      "bytes": 9556,
+      "sha256": "5aad6f0733994ced28e69c0b573c8f74bfd51d14a6684830d7f6ab956ef509eb"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/direct-selected-source-receipts.json",
+      "bytes": 1338,
+      "sha256": "8b220bcfd3e5b373cac4fef21a17e1f258ee6a7a3a4f33bf75d67deda7607580"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/evaluation-evidence.json",
+      "bytes": 29149,
+      "sha256": "2b8571fda3d1ae9d4db5227e6c1247e394a420c91f1405acc254c4b174dd31f8"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/index.json",
+      "bytes": 10701,
+      "sha256": "a27d914e261edc4b8a4d3a68a062cab6f18dd263e71cf39c7ef3102eb25f416a"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/reused-evidence-index.json",
+      "bytes": 1393,
+      "sha256": "31713350cf92a5541bc5ef14efec19618658acb19033aeb5722c7eae21c05632"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/root-evidence.json",
+      "bytes": 14339,
+      "sha256": "4e9681691c98709dab2f7057b81a0edc1064846fcccf2ab2499583163801c417"
+    },
+    {
+      "path": "docs/evidence/task-to-room-20261026/search-strategy.json",
+      "bytes": 2567,
+      "sha256": "02b54ea0d1ad2708c6a8bf6b1b012eb04577cca5fa5d4a7f4c126771a06bdbe4"
+    }
+  ],
+  "resolved_before_commit": [
+    {
+      "issue": "Main text referenced absent reused-evidence-index.json",
+      "resolution": "File now exists; all five prior_sources resolve and four entry indexes are checked against evaluation-evidence.json.",
+      "result": "pass"
+    },
+    {
+      "issue": "SAGE paragraph section reference",
+      "resolution": "Main text now cites v2 sections4.2/4.2.2 and table4; root-evidence updated by owner, confirmed final local text matches.",
+      "result": "pass"
+    },
+    {
+      "issue": "STABLE venue precision",
+      "resolution": "Main text updated from generic2026preprint toICML2026, matching QA primary-paper/project check in evaluation-evidence.",
+      "result": "pass"
+    }
+  ],
+  "additional_files_reviewed": [
+    "reused-evidence-index.json",
+    "search-strategy.json"
+  ]
+}

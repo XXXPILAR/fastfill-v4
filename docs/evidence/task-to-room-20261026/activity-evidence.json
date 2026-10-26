@@ -1,0 +1,523 @@
+{
+  "date": "2026-10-26",
+  "scope": "2024–2026 activity/function/task-conditioned indoor generation: 8 main/adjacent papers plus parent-requested SetItUp conference/journal lineage; primary-evidence read-only review.",
+  "target": "Activity/function/task requirements -> room layout and assets -> independent physical usability and robot evidence. Original FastFill exact textual furniture inventory/unknownsizes is a separate input regime that must be preserved in fair comparisons.",
+  "existing_catalog": "docs/evidence/roomgen-literature-landscape-20261026/paper-catalog.json",
+  "entries": [
+    {
+      "name": "Nav2Scene",
+      "priority": "main",
+      "title": "Nav2Scene: Navigation-driven fine-tuning for robot-friendly scene generation",
+      "paper_url": "https://doi.org/10.1016/j.gmod.2025.101287",
+      "primary_publisher": "https://www.sciencedirect.com/science/article/pii/S1524070325000347",
+      "author_proof": "https://sai.jlu.edu.cn/info/1094/3448.htm",
+      "date_venue": "Graphical Models141,101287,September2025",
+      "reading_tier": "Publisher primary abstract + author publication listing; full text request returned403. Detailed metric/algorithm implementation unverified.",
+      "actual_input": "Existing scene generator conditions are retained; navigation suitability is a training objective. No evidence of a user-supplied free-form activity/task specification as native input in accessible text.",
+      "method": "Compute Path Planning Score(PPS) from path-planning results, learn a ScoreNet predictor, and use predicted PPS to fine-tune existing scene generators.",
+      "functional_role": "objective_conditioning_not_only_VLM_judging",
+      "evaluation": {
+        "confirmed": "3D-FRONT generation/completion/re-arrangement; PPS/navigation compatibility and scene quality/diversity studied.",
+        "unverified": "Exact planner/PPS definition, scene splits, quality metric list, baseline configs unavailable from accessible primary abstract.",
+        "robot_rollout": "Not established. PPS from a path planner is geometric planning evidence, not an embodied policy success/SPL rollout.",
+        "manipulation": "Not established."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "Publisher and author pages plus targeted title/GitHub searches did not establish an official repo; publisher says data available on request.",
+        "not_claimed": "No claim no code exists anywhere."
+      },
+      "relation_to_fastfill": "Direct prior for learning/guiding layout generation with navigation utility. Need exact furniture-ID/size/source conditions, agent footprint and matched planner settings; no claim of direct unknown-size inventory compatibility.",
+      "innovation_excluded": [
+        "Navigation quality as a training/fine-tuning signal",
+        "Learned differentiable surrogate of geometry/planning utility"
+      ],
+      "safe_takeaway": "Test planner solvability and independent fixed-policy rollouts separately; avoid reporting predicted ScoreNet utility as actual task success.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "Steerable Scene Generation",
+      "priority": "main",
+      "title": "Steerable Scene Generation with Post Training and Inference-Time Search",
+      "paper_url": "https://arxiv.org/abs/2505.04831",
+      "primary_paper_html": "https://arxiv.org/html/2505.04831",
+      "project_url": "https://steerable-scene-generation.github.io/",
+      "date_venue": "2025 preprint; author project labels CoRL2025",
+      "actual_input": "Fixed known asset library with asset IDs and full SE(3) poses; text/structured inpainting can specify object counts/types; task reward steers clutter or feasibility.",
+      "method": "Procedural-data diffusion prior + conditional generation, RL post-training or MCTS inference-time search; nonlinear projection and simulation postprocess.",
+      "functional_role": "task_reward_or_structured_condition_is_generation_input",
+      "evaluation": {
+        "metrics": [
+          "FID/classifier accuracy on semantic renders",
+          "category KL",
+          "average prompt following for count/category",
+          "median total penetration before projection",
+          "clutter/feasibility objective"
+        ],
+        "robot_rollout": "Paper§3.4/project report Drake mobile KUKAiiwa teleoperated pick/place in a subset of scenes, qualitative simulation-readiness validation. No quantitative autonomous task success or policy learning benefit established here.",
+        "manipulation": "Actual teleoperation demonstration, not only loadability; limited evidence tier."
+      },
+      "code": {
+        "repo_url": "https://github.com/nepfaff/steerable-scene-generation",
+        "commit": "c564e4ef4343e982b89db1e693bb8abc091944ae",
+        "commit_date": "2025-10-11T13:43:02Z",
+        "tree_complete": true,
+        "status": "substantial_generation_training_and_quantitative_metric_code_public",
+        "provenance": "Author project explicitly links repo.",
+        "files": [
+          {
+            "url": "https://github.com/nepfaff/steerable-scene-generation/blob/c564e4ef4343e982b89db1e693bb8abc091944ae/scripts/evaluate_checkpoints.py#L235",
+            "observed": "Metric/generation driver; selected source read, not run."
+          },
+          {
+            "url": "https://github.com/nepfaff/steerable-scene-generation/blob/c564e4ef4343e982b89db1e693bb8abc091944ae/steerable_scene_generation/utils/prompt_following_metrics.py#L139",
+            "observed": "Count/category prompt evaluation, not arbitrary activity verification."
+          },
+          {
+            "url": "https://github.com/nepfaff/steerable-scene-generation/blob/c564e4ef4343e982b89db1e693bb8abc091944ae/steerable_scene_generation/utils/scene_metrics.py#L22",
+            "observed": "Drake penetration computation."
+          }
+        ]
+      },
+      "implementation_caveats": [
+        "Unparseable prompts get1in per-prompt arrays while aggregate excludes them; record identifiable denominator before reusing arbitrary functional prompts.",
+        "Signed-distance exception returns zero penetration at scene_metrics.py:64; require explicit failures when adapting."
+      ],
+      "relation_to_fastfill": "Useful task-steering prior but input already supplies real fixed-size asset geometry. Not the same unknown-size text inventory condition; candidate search/physics cost must be included.",
+      "innovation_excluded": [
+        "Reward-steered diffusion scene generation",
+        "RL post-training or MCTS to optimize scene task objectives",
+        "SE(3)physically feasible asset composition"
+      ],
+      "safe_takeaway": "Separate qualitative robot demo from a fixed-robot quantitative task benchmark.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "Function2Scene",
+      "priority": "main",
+      "title": "Function2Scene: 3D Indoor Scene Layout from Functional Specifications",
+      "paper_url": "https://arxiv.org/abs/2605.30819",
+      "primary_paper_html": "https://arxiv.org/html/2605.30819",
+      "project_url": "https://function2scene.github.io/",
+      "date_venue": "First arXiv2026-05-29; no conference venue asserted",
+      "actual_input": "Natural-language design brief specifying occupant personas and activities; initializes room structure for user verification, reformulates scene content, and refines object layouts/sizes.",
+      "method": "Parse17functional design criteria across spatial/ergonomic/activity/environmental categories;29geometry/LLM/VLM tools; six priority tiers with sequential check/repair.",
+      "functional_role": "explicit_function_persona_activity_requirements_as_native_input",
+      "evaluation": {
+        "confirmed": "30professionally written cases,10room types;30-person2AFC comparing functional and parsed prompts; reported94.3%aggregate preference. Grounded tool ablations.",
+        "scope": "Rendered-layout human preference and mixed geometric/contextual checks. Human participants judged layouts; they did not physically execute room activities in this study.",
+        "robot_rollout": "None established. pathfinding/reach/posture tools are not robot task rollouts."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "Author project exposes Paper/Viewer, no official implementation/evaluator repository link located. Matching-name GitHub account has no public repos in web listing, but account ownership was not used as official proof.",
+        "not_claimed": "No claim no code exists anywhere."
+      },
+      "relation_to_fastfill": "Direct function/task-to-room prior. It can infer/add furniture and resize; enforce exact supplied IDs and immutable observed shell for original FastFill main task. Independent task verification needed beyond self-selected tools.",
+      "innovation_excluded": [
+        "Persona/activity→custom constraint taxonomy",
+        "Grounded tool-assisted function-aware layout check/repair",
+        "Function-zone/workflow/circulation requirements as generation input"
+      ],
+      "safe_takeaway": "Adding function groups and another critic is insufficient novelty; evaluate actual task execution separately.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "FuncRoom-Agent",
+      "priority": "main",
+      "title": "FuncRoom-Agent: Sequential Feed-Forward 3D Functional Indoor Scene Generation",
+      "paper_url": "https://arxiv.org/abs/2608.29519",
+      "primary_paper_html": "https://arxiv.org/html/2608.29519v2",
+      "date_venue": "2026-08-30v1;2026-09-17v2; no venue asserted",
+      "version_note": "Audit uses v2; do not mix with mirroredv1 results.",
+      "actual_input": "Functional intent plus optional reference image; prompt specifies intended activities, required objects and appearance preferences. It generates room structure, major furniture and nested small objects as executable DSL stages.",
+      "method": "Recursive DSL + visual-context SFT distilled from verified multimodal construction traces + execution-grounded ScenePRM/GRPO; sequential feed-forward test-time controller without online repair/search.",
+      "functional_role": "explicit_functional_goal_is_native_generation_condition",
+      "evaluation": {
+        "benchmarks": "30SceneEval room prompts plus50Function-Room prompts excluded from training.",
+        "metrics": [
+          "Function Zone Coverage(FZC)",
+          "Functional Object Coverage(FOC), allowing frozen alternatives",
+          "Functional Object Precision(FOP), penalizing irrelevant/excessive objects",
+          "SceneEval geometry/usability metrics",
+          "wall-clock generation time",
+          "blinded15-person realism/aesthetics/functionality ratings"
+        ],
+        "verification": "LLM-proposed functional annotations are manually corrected and frozen; finalVLM evaluation uses GPT5.5, separate from training-timeGPT5.2ScenePRM. This separates judge identity but does not establish physical activity execution.",
+        "robot_rollout": "Not established; no robot task success metric reported in inspected experimental sections.",
+        "speed_boundary": "Paper reports25min scene generation and comparisons, not a millisecond pose-only model; includes asset generation/execution pipeline."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "No official project/repo link found in arXiv metadata/body or targeted exact-title search. Paper appendix contains DSL/executor/evaluator descriptions; that is not an executable code release.",
+        "not_claimed": "No claim no code exists anywhere."
+      },
+      "relation_to_fastfill": "Very close prior to distilling expensive activity-aware generation into a specialist with process rewards and noonline repair. Unknown-size exact-ID boundary still needs adaptation and implementation access.",
+      "innovation_excluded": [
+        "Function-room generation benchmark",
+        "Distill recursive scene-building traces into a compact sequential controller",
+        "Execution-grounded process reward and RL for scene construction",
+        "Moving repeated online checking into training"
+      ],
+      "safe_takeaway": "A lightweight task-aware FastFill claim must compare real latency/compute and independent executable-task success, not just controller size.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "FuncScene",
+      "priority": "adjacent",
+      "title": "FuncScene: Function-centric Indoor Scene Synthesis via a Variational AutoEncoder Framework",
+      "paper_url": "https://doi.org/10.1016/j.cagd.2024.102319",
+      "author_paper_pdf": "https://wutomwu.github.io/publications/2024-FuncScene/paper.pdf",
+      "author_page": "https://wutomwu.github.io/",
+      "date_venue": "Computer Aided Geometric Design111:102319,2024",
+      "actual_input": "Native room boundary; predicts/selects functional group types and layouts, then retrieves group instances. Function groups are a scene prior/control level, not an open-ended user activity interpreter.",
+      "method": "Functional-group VAE hierarchy: category/number prediction -> group generation -> group instantiation from3D-FRONT/FUTURE.",
+      "functional_role": "functional_group_representation_and_control_not_only_score",
+      "evaluation": {
+        "metrics": [
+          "FID",
+          "real-vs-generated classifier accuracy",
+          "generation time",
+          "Functional Integrity(FI)"
+        ],
+        "FI_definition": "Living-room presence of Dining/Reception/Entertainment groups; group present if its primary objects and at least one secondary-primary object exist, normalized0–1. Measures inventory composition, not physical usability.",
+        "human": "20trained university participants judging plausibility/functionality; no physical execution.",
+        "robot_rollout": "None established."
+      },
+      "code": {
+        "repo_url": "https://github.com/mwj2021/FuncScene",
+        "commit": "3e5155b2f8c84ad3e8366ec0f3ba60bb18974d04",
+        "commit_date": "2024-06-17T03:01:01Z",
+        "tree_complete": true,
+        "status": "presentation_only_in_pinned_current_tree",
+        "provenance": "Repository README self-identifies as accompanying paper code; author page confirms paper but direct repository linkage not independently established.",
+        "files": [
+          {
+            "url": "https://github.com/mwj2021/FuncScene/blob/3e5155b2f8c84ad3e8366ec0f3ba60bb18974d04/README.md#L1",
+            "observed": "README describes main.py/train/test, but complete current tree contains onlyREADME and teaser.png; noPython implementation."
+          }
+        ]
+      },
+      "relation_to_fastfill": "Functional zoning/group synthesis predates our work; fixed required furniture and unknown sizes need explicit adapter. FI can be gamed by adding group objects; not use as sole task success.",
+      "innovation_excluded": [
+        "Coarse-to-fine functional-group layout generation"
+      ],
+      "safe_takeaway": "Do not report it as runnable open-source baseline merely becauseREADME says code accompanies paper.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "Behavior-Aware Anthropometric Scene Generation",
+      "priority": "adjacent_strong_human_execution",
+      "title": "Behavior-Aware Anthropometric Scene Generation for Human-Usable 3D Layouts",
+      "paper_url": "https://arxiv.org/abs/2603.02662",
+      "primary_paper_html": "https://arxiv.org/html/2603.02662",
+      "project_url": "https://kindohyoku.github.io/BehaviorAware/",
+      "venue_primary": "https://doi.org/10.1145/3772318.3790341",
+      "date_venue": "CHI2026; first arXiv2026-03-03",
+      "actual_input": "Scene instructions and real assets plus behavior/person-specific anthropometry; infers group/interaction relations and operational clearance. Real asset dimensions are known.",
+      "method": "VLM semantic/behavior analysis -> human movement/reach clearance constraints -> LayoutVLM-style groupwise differentiable optimization.",
+      "functional_role": "behavior_and_anthropometry_condition_generation_not_only_judge",
+      "evaluation": {
+        "technical": "20scenes collision/in-boundary metrics and16-person perception study.",
+        "actual_human_execution": "Office/lounge with matched furniture sets and5.5×5.5×2.5m plan;20individual participants and18group participants physically perform tasks in recreated layouts, motion capture. Measures task completion time, trajectory count, action sequence labels and operational-volume usage.",
+        "robot_rollout": "None; actual human task execution is stronger than render-only usability but is not robot performance.",
+        "limits": "Small environments/population; mainly horizontal arrangements, no general vertical parametric asset optimization."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "Author project and article provide paper/video/appendix, no verified official generator/evaluator GitHub located. Do not substitute the separateHumanOperationalScene repository as full code for thisCHI paper.",
+        "not_claimed": "No claim no code exists anywhere."
+      },
+      "relation_to_fastfill": "Important independent evaluation model for user/robot-specific clearance. Known asset geometry and per-user body profile exceed original unknown-size inventory input.",
+      "innovation_excluded": [
+        "Activity/anthropometry-derived interaction volumes",
+        "Task-oriented clearance beyond walkable passage",
+        "Function-group optimization with actual human-use assessment"
+      ],
+      "safe_takeaway": "Distinguish body envelope/geometry checks from empirical user execution and from robot rollout.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "Human-OperationalScene",
+      "priority": "adjacent",
+      "title": "Human-operational 3D indoor layout generation with LLM-driven anthropometric simulation",
+      "paper_url": "https://doi.org/10.1016/j.autcon.2026.106846",
+      "project_url": "https://seminjin.github.io/HumanOperationalScene/",
+      "date_venue": "Automation in Construction184:106846,April2026",
+      "actual_input": "Scene topology/description and anthropometric settings; LLM predicts plausible object-linked atomic human actions, then derives spatial rules. Activities may be inferred from scene, not necessarily explicit external task instruction.",
+      "method": "Action predictor -> rule generator for clearance/access/alignment -> rules as scene-graph diffusion edge attributes during train/inference.",
+      "functional_role": "human_action_rule_conditioning_during_generation",
+      "evaluation": {
+        "confirmed": "3D-FRONT comparison against InstructScene; rule-violation/usability and coherence claims.",
+        "limits": "This audit uses publisher abstract/project and code description; complete generator evaluation/metric implementation not reviewed.",
+        "robot_rollout": "Not established. Anthropometric simulation/rule compliance is not an embodied rollout."
+      },
+      "code": {
+        "repo_url": "https://github.com/SeminJin/HumanOperationalScene",
+        "commit": "50031056126105cee21b4fde765c84c96304be91",
+        "commit_date": "2026-05-26T05:00:43Z",
+        "tree_complete": true,
+        "status": "partial_action_rule_code_and_data_public_not_complete_diffusion_generator",
+        "provenance": "Author project Dataset link resolves to repository.",
+        "files": [
+          {
+            "url": "https://github.com/SeminJin/HumanOperationalScene/blob/50031056126105cee21b4fde765c84c96304be91/data/action/action_predictor.py#L1",
+            "observed": "LLM action inference implementation exists."
+          },
+          {
+            "url": "https://github.com/SeminJin/HumanOperationalScene/blob/50031056126105cee21b4fde765c84c96304be91/data/rule/rule_generator.py#L1",
+            "observed": "Anthropometric rule generation implementation exists."
+          }
+        ]
+      },
+      "relation_to_fastfill": "Reusable source of explicit action-conditioned clearance rules; do not feedGTscene topology/relations to FastFill when baseline onlygets empty shell/inventory.",
+      "innovation_excluded": [
+        "LLM-generated anthropometric spatial rules as scene generator conditions"
+      ],
+      "safe_takeaway": "Open action/rule preprocessing does not establish released trained layout generator or full paper evaluator.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "AccioScene (formerly Functional3DSceneSynthesis)",
+      "priority": "adjacent_version_sensitive",
+      "title": "AccioScene: Compositional 3D Scene Generation via Graph Diffusion and Interaction-driven Critics",
+      "paper_url": "https://arxiv.org/abs/2502.06819",
+      "primary_paper_html": "https://arxiv.org/html/2502.06819v2",
+      "author_page": "https://visual-intelligence-bath.github.io/",
+      "date_venue": "2025-02-05v1;2026-06-08v2; author lab listsBMVC2026 (author-assertedvenue)",
+      "version_note": "v1 titleFunctional3DSceneSynthesis throughHuman-SceneOptimization;v2 renamedAccioScene and adds author. Count as onework lineage.",
+      "actual_input": "Partial text content -> graph diffusion -> layout; human interaction priors and critics enforce coherence. Not a native complete activity-program/robot-task specification.",
+      "method": "Scene graph generation + semantic/spatial critics + lightweight human-object priors for arrangement refinement.",
+      "functional_role": "interaction_prior_in_generation_not_arbitrary_activity_input",
+      "evaluation": {
+        "metrics": [
+          "iRecall",
+          "FID/CLIP-FID/KID",
+          "SCA",
+          "object/scene collision rates"
+        ],
+        "boundary": "Human body/interaction plausibility and collision reduction, no actual human action completion or robot task success established in inspectedv2experiment.",
+        "robot_rollout": "Not established."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "Current arXivbody/author lab listing and exact-title searches did not establish an official code repository.",
+        "not_claimed": "No claim no code exists anywhere."
+      },
+      "relation_to_fastfill": "Prior for human-aware functional refinement; generated extra objects are allowed in original partial-text protocol, unlike exact required-ID inventory.",
+      "innovation_excluded": [
+        "Semantic+spatial critics and interaction priors refining scene graphs/layouts"
+      ],
+      "safe_takeaway": "Human-aware scene synthesis should not be relabeled as robot-manipulation validated.",
+      "new_relative_to_existing56": true
+    },
+    {
+      "name": "SetItUp (RSS2024 / IJRR2025 lineage)",
+      "priority": "parent_requested_addendum",
+      "title": "“Set It Up!”: Functional Object Arrangement with Compositional Generative Models",
+      "paper_url": "https://arxiv.org/abs/2405.11928",
+      "journal_extension_url": "https://arxiv.org/abs/2508.02068",
+      "author_project": "https://setitup-rss.github.io/",
+      "primary_venue_pages": [
+        "https://www.roboticsproceedings.org/rss20/p095.html",
+        "https://journals.sagepub.com/doi/10.1177/02783649251378198"
+      ],
+      "date_venue": {
+        "conference": "RSS2024; arXiv first submitted 2024-05-20",
+        "journal_extension": "IJRR2025; separate arXiv first submitted 2025-08-04; publisher online date 2025-11-01"
+      },
+      "reading_tier": "Primary full arXiv HTML for each version and author project; source code not established.",
+      "actual_input": "Under-specified functional instruction plus a given set of object categories and known 2D shapes/bounding boxes. RSS2024 also uses a few training examples and human-defined task-family program sketch. Journal version uses structured natural-language task specifications and compositional program induction.",
+      "method": "LLM induces abstract spatial relations / grounding graph, then composes spatial-relation diffusion models to generate planar object poses. Functional activity requirements are a native generation input, rather than solely a post-hoc VLM score.",
+      "version_scope": {
+        "RSS2024": "Study desks, dining tables, coffee tables; tabletop 2D arrangement. Bedroom/bookshelf results must not be attributed to this conference paper.",
+        "IJRR2025": "Dining tables, bookshelves, bedroom layouts; expanded specification/program induction and robot reachability relations."
+      },
+      "functional_role": "explicit_functional_task_input",
+      "evaluation": {
+        "RSS2024_metrics": "Physical feasibility is proportion of collision-free objects via 2D collision detection. Basic functionality is manually defined functional-relation satisfaction, including reach from predetermined user positions, unobstructed access, intended use and handedness. Twenty graduate students each rate 30 scenes from 1 to 5 for functional/convenience/aesthetic criteria. PyBullet renders the resulting poses; 3D object models are not used to infer poses.",
+        "IJRR2025_metrics": "2D collision-free and container-bound feasibility; manually specified functional-relation satisfaction; human functionality and aesthetics ratings. Bedroom container is the room; window/door obstruction can enter manual functional rules. These are not autonomous robot-policy success rates.",
+        "RSS2024_robot_execution": "Appendix A-G reports real Franka Emika Panda + parallel gripper + RealSense D435 tabletop execution. Vision derives 2D object shapes with some human category labeling; direct placement-order search, scripted top-down grasp/reach/place and a motion planner execute layouts. No aggregate autonomous task success rate established in reviewed text.",
+        "IJRR2025_robot_execution": "Sections 6.6–6.7 introduce robot reachability predicates at 50/60/70 cm radii and report two Franka Research 3 arms arranging a six-diner buffet with more than 30 objects. Initial poses/types are known; standard scripted motion planning uses predefined grasp/approach sequences. This is actual robot demonstration, not merely geometric reachability. Aggregate autonomous task success / policy-transfer gains were not established here.",
+        "robot_limit": "Paper explicitly targets goal-level arrangement specifications; trajectory generation and online replanning belong to the downstream execution stack."
+      },
+      "code": {
+        "repo_url": null,
+        "status": "official_implementation_not_verified",
+        "scope": "Author project has a Code label with empty href in the checked HTML. The non-empty GitHub link is Nerfies website-template source, not SetItUp model code. Primary-paper appendix prompts are available; executable model/evaluator release was not established by inspected official surfaces and targeted title searches.",
+        "not_claimed": "No claim that no code exists anywhere."
+      },
+      "relation_to_fastfill": "Direct prior for under-specified functional instructions plus a fixed object inventory producing relational constraints and poses. Known object shapes/2D geometry differ from unknown-size inventory completion, and RSS2024 tabletop input differs from room-shell input. IJRR2025 bedroom task is closer but still requires matched geometry and condition adapters.",
+      "innovation_excluded": [
+        "Task instruction to object relations to object poses",
+        "Few-shot/program-sketch induction of functional arrangement rules",
+        "Compositional spatial-relation diffusion",
+        "Adding robot reachability as a relation constraint"
+      ],
+      "safe_takeaway": "Use this as functional-layout and goal-generation precedent. Keep conference versus journal scope separate, distinguish 2D relation metrics from robot execution, and report robot demonstrations separately from aggregate autonomous success.",
+      "new_relative_to_existing56": true
+    }
+  ],
+  "classification_summary": {
+    "direct_functional_specification_input": [
+      "Function2Scene",
+      "FuncRoom-Agent",
+      "SetItUp (RSS2024 / IJRR2025 lineage)"
+    ],
+    "task_objective_or_reward_for_generation": [
+      "Nav2Scene",
+      "Steerable Scene Generation"
+    ],
+    "functional_group_or_human_interaction_prior": [
+      "FuncScene",
+      "Human-OperationalScene",
+      "AccioScene"
+    ],
+    "behavior_and_measured_anthropometry_input": [
+      "Behavior-Aware Anthropometric Scene Generation"
+    ],
+    "real_human_task_execution": [
+      "Behavior-Aware Anthropometric Scene Generation"
+    ],
+    "limited_qualitative_robot_teleoperation": [
+      "Steerable Scene Generation"
+    ],
+    "quantitative_autonomous_robot_rollout_success_established_here": [],
+    "real_robot_demonstration_without_aggregate_autonomous_success_established": [
+      "SetItUp (RSS2024 / IJRR2025 lineage)"
+    ]
+  },
+  "key_limits": [
+    "AfunctionalityVLMscoreisnotproof theactivitywasagenerationinput.",
+    "Apathplanningorclearancescoreisnotrobotpolicyrollout.",
+    "Ateleoperatedsubsetdemonstrationisnotquantitativesuccess/generalizationevidence.",
+    "OpenREADME/repositoryexistenceisnotreleasedimplementation:FuncScenecurrenttreeonly2presentationfiles.",
+    "Tasks/personas canlegitimatelyexpandfurnitureinventory;fororiginalFastFillcomparisonfreezethesameIDsanddataaccess.",
+    "Function-awareplanning,groups,critics,RLanddistillationhavestrongpriorart;newclaimsneedmeasuredindependenttaskutilityatmatchedcost."
+  ],
+  "source_receipts": [
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/2502_06819.html",
+      "bytes": 272488,
+      "sha256": "da91d376ec6ab6d2c0e911b694edc4c033633fd7a46c07bf4a585ebbcb23920c"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/2505_04831.html",
+      "bytes": 308228,
+      "sha256": "6915a3108a2e525bc5b5a71930e430b3f586e5fc7e1ea985f8ac8c645ce1be84"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/2603_02662.html",
+      "bytes": 349658,
+      "sha256": "4496b7a20cc36ecab4f2110078e1a06030214017c00077306d991bc0010a1c92"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/2605_30819.html",
+      "bytes": 1989277,
+      "sha256": "cc20a6c012294055ade542f8d93957dfe05543d086a6791a2bcb7697ba3f7770"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/2608_29519.html",
+      "bytes": 730280,
+      "sha256": "1796f1ff164614ace699db2f3d0c772d2ec77f8a295ff4cc0da298f1290110c4"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/FuncScene.txt",
+      "bytes": 84599,
+      "sha256": "6d61ab1a72f863444b7bd2f66691a82e81f2fef943bdba506596b954445286fb"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/SeminJin__HumanOperationalScene-README.md",
+      "bytes": 5880,
+      "sha256": "df57a0649724091cf52d2deea9d4ee7ae7ce61b1a34718fe4fe54e8f3b81a783"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/SeminJin__HumanOperationalScene-snapshot.json",
+      "bytes": 14342,
+      "sha256": "c749e9aa07a11e1c1fbb8c3f9491cd0541213620f923ab4789abb1cf2a350d8c"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/function2scene_github_io.html",
+      "bytes": 806051,
+      "sha256": "0ae321c180e58c51db707871858d2ac7e6952e36bc0aaa53c499359aaa8cf9ef"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/kindohyoku_github_io.html",
+      "bytes": 30725,
+      "sha256": "2538bdc33fe315087454d7d82efb65a93d16ef0a235e3c911f9b6f0e875b4200"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/mwj2021__FuncScene-README.md",
+      "bytes": 1627,
+      "sha256": "206f128e42da956581ab5dc50ed2c7cfeed8799a2c6dbe7c7f4c6ba944704990"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/mwj2021__FuncScene-snapshot.json",
+      "bytes": 1254,
+      "sha256": "54024397df9c1d9b1388375149f84ffa6d11cc7b833dbc03c1f51e62740e13b1"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/nepfaff__steerable-scene-generation-README.md",
+      "bytes": 18561,
+      "sha256": "1c65e096076aadbaf3ed3c26569c242f45e9ca4131930765e43144af03cce6af"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/nepfaff__steerable-scene-generation-scripts_evaluate_checkpoints.py",
+      "bytes": 33414,
+      "sha256": "06d69525060fd362319fcae055689e1188af7521a524e31a3c3feb4ad3b46982"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/nepfaff__steerable-scene-generation-snapshot.json",
+      "bytes": 63409,
+      "sha256": "86f23ca560068c8388d3566f8a1203a40a0ecd01fcc090f4bd2ac4cf5f034d42"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/nepfaff__steerable-scene-generation-steerable_scene_generation_utils_prompt_following_metrics.py",
+      "bytes": 13885,
+      "sha256": "ecb9938a15b0345548825edf9e702cd5ece2a51ef96db9c1f11ea02ce4939188"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/nepfaff__steerable-scene-generation-steerable_scene_generation_utils_scene_metrics.py",
+      "bytes": 15659,
+      "sha256": "3eaecf3552981484729df006d520c2e06cb6d517d96b014f645f5e647eb3c146"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/paper_pdf.pdf",
+      "bytes": 10053351,
+      "sha256": "47f51e332c7a7567e48e4c2a788d0a0e9f9a6a15d27914809629c312c21c5886"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/repo-metadata.json",
+      "bytes": 1334,
+      "sha256": "81ec20f702f729ba8a61af88554ef57d9aa2efcd70ed2edc1806e8ece52fc54e"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/seminjin_github_io.html",
+      "bytes": 18931,
+      "sha256": "9c4e78a693c0115251e7e0ed6ce1574823d58913d6920c01d1a021a31861752f"
+    },
+    {
+      "path": "ephemeral-cache:fastfill-task-to-room-activity-20261026/source-receipts.json",
+      "bytes": 2402,
+      "sha256": "01e989b5f76de901da6a90f6d8985193aed6110a540b0a7a501ca2c3fdd98b95"
+    },
+    {
+      "url": "https://arxiv.org/html/2405.11928",
+      "sha256": "10aee55ce455dfe9214451f35fdbbd55aa7d01e65e76b5ae9ad67bfe77f1f7b0"
+    },
+    {
+      "url": "https://arxiv.org/html/2508.02068",
+      "sha256": "c7ed501867fa2af24166a889f2d9160478c4205ec9978f7cf320825fb85e98c8"
+    },
+    {
+      "url": "https://setitup-rss.github.io/",
+      "sha256": "72fc96a426091da5b40833c0739393fb02ac162d877b06d81dec2f9a1f1f957e"
+    }
+  ],
+  "archive_note": "Original source-cache paths are ephemeral receipts, not archived dependencies. Public URLs and pinned commits are the replay references. Paper PDF/HTML full texts and model assets are excluded."
+}

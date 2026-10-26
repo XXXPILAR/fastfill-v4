@@ -1,0 +1,28 @@
+{
+  "total_dois": 2,
+  "verified": [
+    "10.1016/j.gmod.2025.101287",
+    "10.1145/3772318.3790341"
+  ],
+  "failed": [],
+  "metadata": {
+    "10.1016/j.gmod.2025.101287": {
+      "title": "Nav2Scene: Navigation-driven fine-tuning for robot-friendly scene generation",
+      "authors": "Jiang, B., Bai, T., Zheng, P., et al.",
+      "year": "2025",
+      "journal": "Graphical Models",
+      "volume": "141",
+      "pages": "101287",
+      "doi": "10.1016/j.gmod.2025.101287"
+    },
+    "10.1145/3772318.3790341": {
+      "title": "Behavior-Aware Anthropometric Scene Generation for Human-Usable 3D Layouts",
+      "authors": "Jin, S., Kim, D., Ryu, J., et al.",
+      "year": "2026",
+      "journal": "Proceedings of the 2026 CHI Conference on Human Factors in Computing Systems",
+      "volume": "",
+      "pages": "1-20",
+      "doi": "10.1145/3772318.3790341"
+    }
+  }
+}

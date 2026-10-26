@@ -1,0 +1,394 @@
+{
+  "date": "2026-10-26",
+  "scope": "Eight selected primary-source entries focused on task conditioning and evaluation, not an exhaustive task-to-world review. New targeted reading: Scene2Demo,STABLE,RoomWright,SceneTeract. Reused independent prior audits: SceneSmith,SceneCode,RoboCasa365,GRUtopia.",
+  "task_contract": "Fixed observed room shell and openings + exact furniture text inventory, sizes/poses unknown -> RoomGenBench assets/assembly -> navigation or manipulation task evaluation. Both downstream layers matter; aesthetics is auxiliary.",
+  "execution_boundary": "Only paper/project text, GitHub metadata/recursive trees and selected tiny source files inspected. No model,assets,simulator,policy,VLMjudge,training orpaidAPI executed. No business source modified.",
+  "name_checks": {
+    "Task2Scene": "Exact-name queries did not establish a relevant primary robot/room generation paper or official repository. Do not invent a citation; this is a bounded search result, not proof none exists.",
+    "Task2Room": "Same: no relevant primary publication/official code established in this targeted search.",
+    "queries": [
+      "\"Task2Scene\" robot scene generation arxiv",
+      "\"Task2Room\" scene room generation paper"
+    ],
+    "homonyms_excluded": [
+      "Commercial roomwright.app is not the RoomWright paper.",
+      "Third-party STABLE reproduction spaces are not official authors code.",
+      "Anonymous/public Scene2Demo project is linked by named arXiv authors; do not mix with unrelated same-name projects."
+    ]
+  },
+  "entries": [
+    {
+      "name": "Scene2Demo",
+      "canonical_abs_title": "Scene2Demo: Self-Evolving Embodied Data Generation via Object-Action Graph",
+      "paper": "https://arxiv.org/abs/2602.12065",
+      "read_version": "v3,17October2026;firstsubmitted12February2026",
+      "html_read": "https://arxiv.org/html/2602.12065v3",
+      "html_h1": "Scene2Demo: Automated Embodied Data Generation for Robot Policy Learning",
+      "version_caveat": "当前摘要页题名为 Self-Evolving…，但所取 v3 HTML 的 h1 为 Automated Embodied Data Generation for Robot Policy Learning；记录两者并固定 v3，不跨版本混用。",
+      "project": "https://scene2demo-anon.github.io/",
+      "role": "单张 RGB 场景重建，再生成任务配置、动作与训练数据；不是纯任务输入的新房间布局生成。",
+      "conditioning": {
+        "scene_input": "§3.1 由 RGB 图像 X0 重建 S0，即 S0 ~ p(S | X0)。",
+        "task_input": "用户 query 条件化 object-action graph、BDDL 任务配置、动作序列及后续修正；没有证据说明任务驱动重设计固定房间布局。",
+        "geometry_information": "先重建/检索可交互资产；机器人统一缩放至 0.7，操纵物会按夹爪调整尺寸，不是不可变几何协议。"
+      },
+      "evaluation": {
+        "actual_rollouts": "§4.1：34 张生成 RGB 图 × 3 资产变体 = 102 primitive pairs；Open/Close 24/36，Pick/Place 49/66，总计 73/102 = 71.6%。",
+        "long_horizon": "4 类长程任务。附录 B.4 明确每类只有 1 个固定 scene-task episode，重复 10 或 20 次 demos；不能称为 10/20 个独立房间。完整成功要求全部子任务完成。",
+        "downstream_learning": "§4.5：每个 BC policy 用 100 demonstrations 训练；Open Refrigerator 24/25，Pick Up Glass 23/25。是两个合成任务上的学习效用，不是实机迁移或跨房间泛化。",
+        "success_definition": "BDDL 风格目标谓词及长程任务全部子任务完成；SR 对全部 rollout 平均。",
+        "confounds": "各原生 baseline 的动作/修正预算及 episode 数不同；机器人和物体缩放会改变可解性，不能将这些任务提升全部归于布局。"
+      },
+      "official_code": {
+        "repo": null,
+        "status": "作者项目可访问，但所取页面没有 GitHub 代码链接；未建立官方实现、权重或 evaluator commit。",
+        "source_receipts": [
+          "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/Scene2Demo-links.json",
+          "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/Scene2DemoProject.html"
+        ]
+      },
+      "primary_loci": [
+        "#S3.SS1",
+        "#S4.SS1",
+        "#S4.SS5",
+        "#A2.SS4",
+        "#A2.SS5.SSS4",
+        "#A2.SS8"
+      ],
+      "fastfill_gap": "需将图像重建改为观测空壳与精确 IDs，固定资产/机器人缩放和任务定义，再配对相同 controller、seed 与预算。可作下游数据效用近邻，不能直接作为同协议布局基线。"
+    },
+    {
+      "name": "STABLE",
+      "title": "STABLE: Simulation-Ready Tabletop Layout Generation via a Semantics–Physics Dual System",
+      "paper": "https://arxiv.org/abs/2605.16137",
+      "html_read": "https://arxiv.org/html/2605.16137v2",
+      "version": "v2,19May2026;ICML2026 perarXivcomment/project",
+      "project": "https://lan555.github.io/stable/",
+      "role": "真实以任务指令为输入的 tabletop layout 生成。",
+      "conditioning": {
+        "task_input": true,
+        "input": "任务指令 + 桌面尺寸；共同预测物体位置、yaw、尺寸、描述，再检索资产。",
+        "method": "微调 Semantic Reasoner 与 geometry-aware flow Physics Corrector；从任务关键物体逐步补入背景物体，PC 只改 pose。",
+        "inventory": "会生成和扩展物体集合，而非原生接收完整不可变 IDs；对象是桌面，不是有门窗的房间。"
+      },
+      "evaluation": {
+        "main": "§4.1：以 MesaTask-10K 训练。FID/GPT-score；AwT 为必需任务物体召回，AwS 为关系匹配，OC 为 mesh 碰撞对数/全部无序对。均不等于执行操作 SR。",
+        "rearrangement": "§4.4/附录 B.3：500 个扰动场景，translation/yaw 高斯噪声 std=0.1，测 Distance Moved、EMD to GT、OC；是几何恢复，不是机器人执行重排。",
+        "affordance_detection": "附录 E：50 个复杂场景，ManipVQA 检测 kettle/fork handle 的可抓区域 bbox；这是感知迁移检查，不是实际抓取或 BC 训练。",
+        "not_found": "所读原文未建立 robot rollout SR 或 robot policy 训练迁移。主生成测试 N 未独立明确，不套用 500 个重排样本。",
+        "limitations": "yaw-only、固定三阶段、仅桌面；完整 6D、关节状态与多支撑面留作未来工作。"
+      },
+      "official_code": {
+        "repo": null,
+        "status": "作者项目 Code 文本没有实际仓库链接；Robot Operation Video 是空占位。所查作者页只链接 paper/project，未建立官方实现或 evaluation commit。",
+        "source_receipts": [
+          "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/STABLEProject.html",
+          "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/STABLEProject-links.json"
+        ]
+      },
+      "primary_loci": [
+        "#S3.SS1",
+        "#S4.SS1",
+        "#S4.SS4",
+        "#A2.SS1",
+        "#A2.SS3",
+        "#A5",
+        "#A7"
+      ],
+      "fastfill_gap": "是任务语义 + 学习几何修复的直接近邻；仍需固定空壳、完整清单、多个支撑面和真实任务执行。AwT/AwS/OC 不能替代导航/操作 SR。"
+    },
+    {
+      "name": "RoomWright",
+      "title": "Beyond Placement and Articulation: Usage-Driven Code Scenes for Embodied Interaction",
+      "paper": "https://arxiv.org/abs/2608.18840",
+      "html_read": "https://arxiv.org/html/2608.18840v1",
+      "version": "v1,19August2026;preprint;noacceptedvenueasserted.",
+      "role": "从 room brief 推断 anchor 用途并扩展场景/资产/程序，不是固定机器人任务约束下的精确清单布局。",
+      "conditioning": {
+        "input": "Room description 和显式 seed objects。",
+        "task_input": "围绕 anchor 推断活动并补足 companion objects/affordances，不是给定明确 robot goal 后生成布局的同一协议。",
+        "inventory": "方法定义 O 包含 O_seed，允许增加物体；要用于不可变清单必须关闭该扩展。",
+        "method": "Support forest、interaction graph、trigger-condition-effect 规则，生成 parts/joints/state updates，并按用途决定朝向。"
+      },
+      "evaluation": {
+        "scale": "28 个 room prompts；interaction topology 统计只分析 23 个 easy/medium 场景。",
+        "metrics": "SceneEval fidelity/plausibility，加 interactive/articulated objects、复杂非铰链交互、多部件协调计数；这些计数不是执行成功率。",
+        "robot": "Isaac Sim 操作演示含 interaction manifest/runtime。所读实验未报告 episode 数、聚合任务 SR 或 policy 训练迁移。",
+        "boundary": "可执行状态反馈比静态 mesh 更强，但不证明一般机器人任务完成。"
+      },
+      "official_code": {
+        "repo": null,
+        "status": "原文 HTML 未找到项目/GitHub 链接；定向题名检索未建立官方仓库。不据此断言代码不存在。"
+      },
+      "primary_loci": [
+        "#Sx3.SSx3",
+        "#Sx3.SSx4",
+        "#Sx4.SSx5.SSS0.Px2",
+        "#Sx4.SSx5.SSS0.Px3",
+        "#Sx4.SSx3",
+        "#Sx10"
+      ],
+      "fastfill_gap": "与用途驱动物体组成和因果交互资产相关。精确清单若缺少任务物件，应报 task applicability/缺失要求，不能悄悄添加。"
+    },
+    {
+      "name": "SceneTeract",
+      "title": "SceneTeract: Probing and Improving Agent-Aware Activity Reasoning in 3D Indoor Scenes",
+      "paper": "https://arxiv.org/abs/2603.29798",
+      "html_read": "https://arxiv.org/html/2603.29798v2",
+      "version": "v2,17September2026;firstsubmitted31March2026",
+      "project": "https://sceneteract.github.io/",
+      "role": "Scene-task-agent verifier 与 VLM reasoning benchmark/reward engine；不是 scene generator。",
+      "conditioning": {
+        "input": "既有 3D scene + agent profile + activity text。",
+        "task_is_scene_generation_input": false,
+        "method": "VLM 分解 atomic steps，几何检查导航、可达、可操作性、净空和可见性；步骤通过要求相应属性 conjunction 成立。"
+      },
+      "evaluation": {
+        "scene_audit": "3,396 次 scene-task-agent verification，覆盖 Adult、Child、Wheelchair。文中 Task Success 是 verifier 判定的计划可行率，不是执行 robot policy 的 SR。",
+        "human_validation": "100 条完整 traces：planning logical soundness 97%，overall human agreement 91%，454 个 checks 上 96.3%。",
+        "training": "GRPO 训练 VLM 预测 verifier feasibility labels；真实 ScanNet++ 上测判断准确率，不是 robot control 迁移。",
+        "limits": "语义分解、交互区域/部件感知与几何近似均可错；不是物理执行成功证书。"
+      },
+      "official_code": {
+        "repo": "https://github.com/leopoldmaillard/sceneteract",
+        "commit": "03922d997ab97d6dab68e4490d040204181c3cbf",
+        "tree_entries": 206,
+        "tree_truncated": false,
+        "verified_scope": "读取当前 README、完整 tree、verify/eval CLI 和 metrics utility；未逐行审完所有几何/物理 checker。",
+        "verify_entry": "https://github.com/leopoldmaillard/sceneteract/blob/03922d997ab97d6dab68e4490d040204181c3cbf/src/sceneteract/cli/verify.py#L52",
+        "eval_entry": "https://github.com/leopoldmaillard/sceneteract/blob/03922d997ab97d6dab68e4490d040204181c3cbf/src/sceneteract/cli/evaluate.py#L22",
+        "metric_utility": "https://github.com/leopoldmaillard/sceneteract/blob/03922d997ab97d6dab68e4490d040204181c3cbf/src/sceneteract/eval/metrics.py#L1",
+        "documented_command": "sceneteract-verify scene.data=<scene_id> task=\"<activity>\" agent=adult_wheelchair",
+        "evaluation_command": "sceneteract-eval task <benchmark_dir> ; sceneteract-eval action <benchmark_dir>",
+        "code_evidence": "verify CLI 调用 run_pipeline；eval CLI 按 task/action/scannet 评模型预测相对几何标签。HF traces/renders 有官方链接，未下载。"
+      },
+      "primary_loci": [
+        "#S3.SS1",
+        "#S3.SS2",
+        "#S4.SS1",
+        "#S4.SS2",
+        "#S4.SS4",
+        "#A1.SS3"
+      ],
+      "fastfill_gap": "最直接的 task-aware 评估适配候选，但当前数据面向 3D-FRONT；需 RoomGen mesh/ID/坐标/语义 front 映射。可作实际 rollout 前的中间 proxy，不能替代实际执行。"
+    },
+    {
+      "name": "SceneSmith",
+      "paper": "https://arxiv.org/html/2602.09153",
+      "version": "Previouslypinnedpaper/mainrepo audit;seepriorrecord forfullversionboundary.",
+      "role": "Task→scene-prompt generation +robot-policytesting;open-setscenes.",
+      "task_is_generation_input": "Yes:taskdescriptionsinducerequiredobjectandnon-goalinitialstateprompts. Not fixed user inventory or observed-shell generation.",
+      "evaluation": "100generated scenes across4pick-place tasks,25each;standard16/100 vsdegraded12/100. Successagentusesfinalstate+vision;299/300labelsmanuallyagree. Actualrollout evidence,notgenerator-vs-generator task-success comparison.",
+      "limits": "House-leveltaskincludesmobilitybutnotstandardObjectNavbenchmark;currentrequirement-average>=0.9validatornotstrictall-goalconjunction.",
+      "official_code": {
+        "repo": "https://github.com/nepfaff/scenesmith",
+        "commit": "67cc408fd38334b4a926efef45e284302ed5055b",
+        "validate_entry": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scripts/robot_eval/validate.py#L38",
+        "validator_logic": "https://github.com/nepfaff/scenesmith/blob/67cc408fd38334b4a926efef45e284302ed5055b/scenesmith/robot_eval/success_validation/validator_agent.py#L80",
+        "documented_call": "python scripts/robot_eval/validate.py --scene-state <metadata.json> --dmd <final_robot_poses.dmd.yaml> --scene-dir <scene> --task \"<task>\"",
+        "verified_code_definition": "Current validator maps requirements to0/0.5/1, averages them, and overall_success is average>=0.9. This is not equivalent to requiring every mandatory goal predicate true.",
+        "other_interfaces": "Public scripts generate_prompts.py and policy_interface.py support task→scene prompts and goal bindings/pose targets. Their presence does not independently certify the entire paper KUKA execution pipeline or100-scene artifacts are reproducible.",
+        "executed": false
+      },
+      "primary_loci": [
+        "Section4.3",
+        "Section4.4",
+        "AppendixL.1–L.4/Table12",
+        "AppendixM.2.1"
+      ],
+      "prior_audit": "ephemeral-cache:fastfill-downstream-generation-task-evidence-20261026.json",
+      "fastfill_gap": "Open-setinventory/assetsandtasksemanticinterfacesneedadaptation;sharedshell,exactIDs,assetphysics,robot,policyandbudgetrequired."
+    },
+    {
+      "name": "SceneCode",
+      "paper": "https://arxiv.org/html/2605.19587",
+      "version": "Previouslypinnedpaper/mainrepo audit;seepriorrecord forfullversionboundary.",
+      "role": "Roombrief→scene/assetcode withinteraction-readyjoints;notdemonstratedexplicitrobotgoal→layout.",
+      "task_is_generation_input": "Noexplicittaskconditionedroomgeneration established;roombriefandassetaffordancesareinputs.",
+      "evaluation": "30scene-promptSceneEval/assetusabilityevaluation;MuJoCocontactopen/slidequalitativedemo. No taskepisodecount/SR orpolicytrainingtransferestablished.",
+      "limits": "Publicrobotvalidationutilitydoesnotupgradepaperdemotoquantitativepolicybenchmark.",
+      "official_code": {
+        "repo": "https://github.com/wangpuyi/SceneCode",
+        "commit": "1c8e972d24c960a319b5df936ae552ad410beb85",
+        "validate_entry": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scripts/robot_eval/validate.py#L38",
+        "validator_logic": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scenecode/robot_eval/success_validation/validator_agent.py#L81",
+        "exporter_tree_path": "https://github.com/wangpuyi/SceneCode/blob/1c8e972d24c960a319b5df936ae552ad410beb85/scripts/export_scene_to_mujoco.py#L1",
+        "verified_scope": "Read current robotvalidate wrapper andsuccessscorelogic this turn: state/DMD/task inputs andmeanrequirement score>=0.9. Exporter exists in pinned complete tree; its body was not audited here.",
+        "critical_boundary": "Public robot_eval utility does not upgrade the paper qualitativeMuJoCodemo to a reported quantitative task benchmark. No demo reproduction executed."
+      },
+      "primary_loci": [
+        "Section3.3",
+        "Section4.1",
+        "Section4.4/Figure5"
+      ],
+      "prior_audit": "ephemeral-cache:fastfill-downstream-generation-task-evidence-20261026.json",
+      "fastfill_gap": "Open-setinventory/assetsandtasksemanticinterfacesneedadaptation;sharedshell,exactIDs,assetphysics,robot,policyandbudgetrequired."
+    },
+    {
+      "name": "RoboCasa365",
+      "title": "RoboCasa365: A Large-Scale Simulation Framework for Training and Benchmarking Generalist Robots",
+      "paper": "https://arxiv.org/html/2603.04356v1",
+      "version": "arXiv2603.04356v1,2026-03-04；作者正式PDF/README标ICLR2026",
+      "role": "Kitchenrobot-taskbenchmark andtask-conditionedprogrammaticreset/sampling,notfree-formtask→arbitrarynewroomlayout.",
+      "task_is_generation_input": "TaskIDconfiguresfixtures,objectsandinitialconditionsinprebuiltkitchenlayouts/styles;nottextbrief→novelarchitectureandexactinventorygeneration.",
+      "evaluation": {
+        "scope": "365厨房任务（65 atomic、300 composite），其中220需mobile manipulation；2500 pretraining厨房由50layout×50style组成，另10个target厨房。主评测选50任务：18 atomic、16 composite-seen、16 composite-unseen。",
+        "success": "原文AppendixG.2：每任务30trials，任务特定horizon内任何时刻满足该任务二元成功谓词即成功，随后报告跨任务平均成功率。当前官方docs为每任务随机50scenarios，不能与原文30trial协议混写。",
+        "split_caveat": "当前1.0.1于2026-05-12把所有任务horizon增至1.5×。需固定RoboCasa/robosuite/MuJoCo版本、horizon、trial数与task/split；旧论文30trial与当前50scenario结果不直接合榜。",
+        "not_visual_judge": true
+      },
+      "official_code": {
+        "repo": "https://github.com/robocasa/robocasa",
+        "commit": "2ce1aecdd76e29b52d32fdb160436c5a3e230b07",
+        "selected_success_code": [
+          {
+            "name": "NavigateKitchen",
+            "definition": "目标是EnvUtils计算的fixture前机器人base目标位姿；不是家具中心或任意可见点。成功要求base平面位置距目标≤0.20m，且cos(yaw_error)≥0.98（等价约11.48°以内，角度值为推算）。",
+            "sources": [
+              {
+                "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/environments/kitchen/atomic/kitchen_navigate.py#L109",
+                "location": "L109-113 target pose; L124-140 success",
+                "read_level": "一手；选定正文/源码已读"
+              }
+            ],
+            "caveat": "这是当前1.0.1选定源码；不是NAV最大连通面积，也没有在该成功谓词内直接检查SPL或无碰撞。episode其它终止/碰撞统计本轮未核。"
+          },
+          {
+            "name": "PickPlaceCounterToCabinet",
+            "definition": "object_inside_cabinet AND gripper_obj_far；不仅对象目标XY距离。",
+            "sources": [
+              {
+                "url": "https://github.com/robocasa/robocasa/blob/2ce1aecdd76e29b52d32fdb160436c5a3e230b07/robocasa/environments/kitchen/atomic/kitchen_pick_place.py#L127",
+                "location": "L127-137",
+                "read_level": "一手；选定正文/源码已读"
+              }
+            ],
+            "caveat": "只举一个实际任务成功谓词，不代表所有操作成功统一判定；obj_inside_of/gripper距离helper阈值本轮未进一步审读。"
+          }
+        ],
+        "verified_scope": "Reusedpriorselecteddocs/task-successsourceaudit;notall365predicatesorpolicyforks."
+      },
+      "primary_loci": [
+        "Sections3.2–3.4,4.1–4.2",
+        "AppendixG.2"
+      ],
+      "prior_audit": "ephemeral-cache:fastfill-downstream-robocasa-evidence-20261026.json",
+      "fastfill_gap": "Requireskitchenfixture/joint/receptacle/semanticmapping;RoomGenGLBsnotdirect365episodeinputs. Goodtaskpredicate/versionreference,notdirectlayoutqualityleaderboard."
+    },
+    {
+      "name": "GRUtopia / GRScenes (current InternUtopia)",
+      "title": "GRUtopia: Dream General Robots in a City at Scale",
+      "paper": "https://arxiv.org/abs/2407.10943",
+      "version": "2024-07-15 firstarXiv;currentplatformrenamedInternUtopia.",
+      "role": "Existinginteractivescene/robotplatform andGRBench;nottext-taskconditionedfixedinventoryroomgenerator.",
+      "task_is_generation_input": "Tasks select goals/conditions insideprovidedsceneassets;NPC/socialcontextconditional,notempty-shelllayout generation.",
+      "evaluation": {
+        "navigation": {
+          "status": "paper_reports_actual_task_trials_not_only_USD_loading",
+          "paper_section": "https://arxiv.org/html/2407.10943#S4",
+          "tasks": [
+            "Object Loco-Navigation",
+            "Social Loco-Navigation"
+          ],
+          "embodiment": "UnitreeH1 RGB-D humanoid; explicit locomotion/fall-reset control.",
+          "metrics": [
+            "SR",
+            "PL",
+            "SPL",
+            "RT(reset count)",
+            "ECR for social ambiguity resolution"
+          ],
+          "success": "Target inFOV and<3m,agentSTOPwithin14,400physical simulation steps.",
+          "episodes": "300per benchmark:100validation+200test in paper.",
+          "boundary": "Paper locomotion uses explicit fall/reset mechanism; navigation success without reset statistics can hide physical failures."
+        },
+        "manipulation": {
+          "status": "paper_reports_actual_Loco_Manipulation_trials_and_failure_analysis",
+          "task": "AlienGo mobile base + UnitreeZ1 arm picks handheld object and places in target receptacle satisfying up to2conditions; multiple valid placements allowed.",
+          "metrics": [
+            "SR",
+            "SCR(satisfied-condition ratio)",
+            "PL",
+            "RT"
+          ],
+          "reported_result": "Paper§4.4 reports Loco-Manipulation SR=0 for studied baselines, with collision/locomotion/planning failures; existence of evaluation is not proof reliable manipulation.",
+          "extra_control_experiment": "PaperTable3 separately compares flat vs furnished environments and reports manipulation controller success drop100%->8%; distinct from end-to-endGRBench0%.",
+          "boundary": "Do not merge controller and full-task results or call scene loading successful manipulation."
+        },
+        "dataset_caveat": "Paper claims100k scene prototypes across89categories. Current official released GRScenes data card states99environments (69home+30commercial). Do not claim100kpublic downloadable full scenes."
+      },
+      "official_code": {
+        "repo": "https://github.com/InternRobotics/InternUtopia",
+        "commit": "b0a9520c586317c2743023c153cbf7c4f04f4732",
+        "selected_code": [
+          {
+            "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L29",
+            "observed": "Current platform links separate InternNav and InternManip benchmark documentation."
+          },
+          {
+            "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L69",
+            "observed": "Pinned README requires IsaacSim4.5.0 and NVIDIA runtime."
+          },
+          {
+            "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/README.md#L103",
+            "observed": "GRScenes-100 distribution; not full100kclaim."
+          },
+          {
+            "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/internutopia_extension/metrics/traveled_distance_metric.py#L34",
+            "observed": "Actual current distance metric calc implementation."
+          },
+          {
+            "url": "https://github.com/InternRobotics/InternUtopia/blob/b0a9520c586317c2743023c153cbf7c4f04f4732/internutopia_extension/tasks/manipulation_task.py#L20",
+            "observed": "Current manipulation task delegates episode finish and configured metric calculation; this is not a complete paper SR/SCR evaluator by itself."
+          }
+        ],
+        "boundary": "Complete current platform tree and selected tiny task/metric files checked. Current README delegates benchmarks to InternNav/InternManip; their complete evaluators and exact correspondence to2024paper runs were not audited. Do not assert full original benchmark reproduction."
+      },
+      "primary_loci": [
+        "PaperSection4/GRBench/Table3"
+      ],
+      "prior_audit": "ephemeral-cache:fastfill-downstream-hssd-grscenes-evidence-20261026.json",
+      "fastfill_gap": "MayserveastaskbackendonlyafterUSD/physics/robot/taskadapters. Current99releasedenvironments≠100kfullyreleasedscenes;raw/nav/interactionvariantsnotinterchangeable."
+    }
+  ],
+  "cross_entry_findings": {
+    "genuine_task_to_layout": "STABLE 以 task instruction 生成桌面布局；SceneSmith 以 task 生成 scene prompts 再生成开放清单场景；RoomWright 从 room brief 推断用途并扩展组成。三者均不同于固定空壳与完整不可变 IDs。",
+    "image_to_task": "Scene2Demo 先重建图像场景，再生成/执行 query 对应任务；其 BC 成功不能描述为纯 task→room layout 生成。",
+    "evaluation_not_generation": "SceneTeract 验证 scene+agent+task；RoboCasa365/GRUtopia 提供实际机器人任务和既有环境，不是同协议自由布局生成器。",
+    "physical_vs_execution": "OC、AwT/AwS、SceneEval NAV/ACC、verifier plan pass、交互计数、模拟器加载均不等于执行 policy SR；已报告 rollout 的工作也有不同控制器和协议。",
+    "task2_names": "本次未确认 Task2Scene/Task2Room 的准确一手文献身份，不作为已存在方法引用。",
+    "remaining_combination": "本次条目未证明同时覆盖：固定观测空壳/门窗、完整不可变 IDs、无 GT mesh 的未知尺寸、共享 RoomGen 实现，以及同预算导航/操作 policy SR。这是本次证据选择中的缺口，不是全球首创证明。"
+  },
+  "recommended_evaluation_contract": [
+    "在完整清单之外冻结明确目标、任务必需物/affordance 和非目标初始状态；缺必需物时报告不适用，不静默补物。",
+    "分别报告全请求资产/装配有效率和全预定 episode 的任务 SR；仅在有效装配上的 conditional SR 是诊断。",
+    "所有布局方法共享机器人尺寸、夹爪、资产 fit、物性、控制器、起终点、horizon、seed 和预算；不得未披露地缩小对象或机器人使任务变易。",
+    "SceneTeract 式可行性是中间层；真实任务端点需冻结 policy 和成功谓词后执行。",
+    "区分 task/object/layout/style 未见与真实世界迁移；Scene2Demo 两个 BC 任务、SceneTeract ScanNet 判断迁移都比一般 robot transfer 更窄。",
+    "保留胜出的 GPT one-shot，采用同资产/task backend 与修复预算。",
+    "记录生成、装配、物性、导入、goal 构造、未知支撑和 timeout 失败，禁止幸存样本排行。",
+    "统计按 house/source 聚类；同房间的资产与 policy seeds 属嵌套重复。Scene2Demo 长程重复 demos 不是独立房间。"
+  ],
+  "receipts": {
+    "new_primary_fetch_manifest": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/fetch-receipts.json",
+    "SceneTeract_repo_snapshot": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/SceneTeract-repo.json",
+    "source_files": [
+      {
+        "file": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/SceneTeract-src__sceneteract__eval__metrics.py",
+        "sha256": "5764c49c3ae7705b2e627399466bd96230a76cdb38ba23c08bf4a3a78e0c680a",
+        "bytes": 7909
+      },
+      {
+        "file": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/SceneTeract-src__sceneteract__cli__evaluate.py",
+        "sha256": "3e4213f3983d8c48a5bea34115e9bbb07eaebf436ab6de1b0c6a4d4ffc20c33a",
+        "bytes": 3189
+      },
+      {
+        "file": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026/SceneTeract-src__sceneteract__cli__verify.py",
+        "sha256": "25ec8d8bd048abaf5466927a4eb0c1f2d964cace5104a8c910eaab51e60ae645",
+        "bytes": 2106
+      }
+    ]
+  },
+  "archive_note": "Original source-cache paths are ephemeral receipts, not archived dependencies. Public URLs and pinned commits are the replay references. Paper PDF/HTML full texts and model assets are excluded."
+}

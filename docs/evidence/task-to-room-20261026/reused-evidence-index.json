@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-26",
+  "note": "Four prior entries are already among30focusedentries in evaluation-evidence.json. Additional older context is cited here without adding new focused-entry counts. Existing56catalog retains its own count.",
+  "entries": [
+    {
+      "name": "SceneSmith",
+      "file": "evaluation-evidence.json",
+      "index": 4
+    },
+    {
+      "name": "SceneCode",
+      "file": "evaluation-evidence.json",
+      "index": 5
+    },
+    {
+      "name": "RoboCasa365",
+      "file": "evaluation-evidence.json",
+      "index": 6
+    },
+    {
+      "name": "GRUtopia / GRScenes (current InternUtopia)",
+      "file": "evaluation-evidence.json",
+      "index": 7
+    }
+  ],
+  "prior_sources": [
+    "../roomgen-literature-landscape-20261026/downstream-evidence-index.json",
+    "../roomgen-literature-landscape-20261026/downstream-generation-task-evidence.json",
+    "../roomgen-literature-landscape-20261026/downstream-hssd-grscenes-evidence.json",
+    "../roomgen-literature-landscape-20261026/downstream-robocasa-evidence.json",
+    "../fastfill-paper-evaluation-code-survey-20261026/survey-index.json"
+  ],
+  "background_names": [
+    "Holodeck",
+    "PhyScene",
+    "HSSD",
+    "RoboCasa",
+    "Infinigen Indoors",
+    "FirePlace"
+  ],
+  "boundary": "Background papers reused from prior audit; not reclassified as native fixed-shell/exact-inventory task generators."
+}

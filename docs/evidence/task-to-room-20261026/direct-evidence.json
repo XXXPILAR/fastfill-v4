@@ -1,0 +1,556 @@
+{
+  "title": "Task/activity/goal→可执行scene：直接生成方向一手证据补核",
+  "date": "2026-10-26",
+  "scope": "8项选定工作，覆盖2024–2026正式发表/预印本；其中GenSim/RoboGen/Gen2Sim首发2023、正式2024，单列说明。不是全量系统综述。只读公开原文/项目/代码文本，不运行API/GPU/学习/仿真，不改项目。",
+  "research_question": "任务/目标是否实际决定房间、对象、关系、物理和交互配置，还是只在已给场景中定义task/生成policy？哪些成功指标是format/execution/physics/robot任务？",
+  "inclusion": "原始方法论文+作者官方项目/链接repo；与task-conditioned scenes、task/asset code generation或simulator-loadable scene generation直接相关。",
+  "exclusions": "不纳入纯aesthetic text-to-room、通用VLA/RL架构或只报告policy进步而不生成scene/task内容的论文。RoboTwin2等通用数据/随机化框架未扩展深入；Scene2Demo由并行QA负责，避免重复。",
+  "search_queries": [
+    "RoboGen generative simulation official project task generation scene success CoRL2024",
+    "GenSim GenSim2 robot simulation generation official paper github task success",
+    "2025 2026 task conditioned scene generation executable robot simulation environment generation room",
+    "ReGen Generative Robot Simulation via Inverse Design official github",
+    "Gen2Sim ICRA2024 official project github scene task generation",
+    "SR-Platform2605.14700 github",
+    "TabletopGen task generation",
+    "MesaTask2509.22281 task driven tabletop success rate"
+  ],
+  "sources": [
+    "arXiv selected original HTML versions",
+    "author project pages",
+    "OpenReview formal ReGen titlepage",
+    "author-linked official GitHub full recursive trees,READMEs,and4 selected source files"
+  ],
+  "evidence_policy": "论文数字均author-reported；repository public、selected source inspected、complete evaluator reproduced三者分离。正文未给精确trial/denominator或代码未核写unknown；不合并跨任务指标成排名。",
+  "papers": [
+    {
+      "name": "RoboGen",
+      "title": "RoboGen: Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation",
+      "year_note": "2023预印本；ICML2024，官方repo明示；旧项目别名Automated Robotic Skill Learning at Scale不另计一篇",
+      "paper_url": "https://arxiv.org/abs/2311.01455",
+      "paper_version_read": "https://arxiv.org/html/2311.01455v2",
+      "project_url": "https://robogen-ai.github.io/",
+      "repo": {
+        "url": "https://github.com/Genesis-Embodied-AI/RoboGen",
+        "commit": "486612cd0baa40857b561419c5a42fbb7e67724f",
+        "tree_entries": 987,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/Genesis-Embodied-AI/RoboGen/blob/486612cd0baa40857b561419c5a42fbb7e67724f/readme.md"
+      },
+      "task_input": "robot类型、采样资产/示例引导task proposal；亦公开文字task输入接口。",
+      "generated_content": "任务相关物体+背景干扰物、尺寸、位姿、初始关节角、子任务、reward/技能学习配置。",
+      "scope_class": "直接task→局部可执行场景；覆盖操作/locomotion/soft body研究，非固定壳完整房间benchmark。",
+      "method": "LLM提出task→检索/生成asset→按任务核尺寸及配置→分解task；组合RL、motion planning、trajectory optimization。",
+      "evaluation": {
+        "task_diversity": "106生成task的Self-BLEU与embedding similarity；低值表示文字任务更多样。",
+        "scene_validity": "retrieved对象render与描述的BLIP-2分数；不是全房间可操作成功率。",
+        "skill_learning": "每task4随机seed，报告task return均值/标准差；评价所用LLM reward经人工核查。主系统还展示100余技能视频，不能改写成统一端到端100%成功。"
+      },
+      "public_code_scope": "当前官方README明确为PyBullet重实现，含rigid manipulation和locomotion；论文内部Genesis/soft-body全管线并非此repo完整公开版本。已选读adjust_size_v2。",
+      "eval_source_scope": "未完整定位/核验论文全部指标runner，不以仓库公开代替完整复现。",
+      "cost": "论文每RL subtask1M environment steps；非轻量单次布局推断。",
+      "fit_to_fastfill": "任务条件下预测尺寸、补背景、设关节初始状态已有前例；需额外固定shell/完整inventory，并把任务可行性作为布局独立评价。",
+      "uncertainties": [
+        "所读为2023v2及当前2026repo，未认证对应ICML最终实验commit。",
+        "新增/缩放物体允许度与FastFill严格清单协议不同。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2311.01455v2",
+          "locus": "§3.1–3.4；§4.1–4.2，web lines79–107,150–165",
+          "read_depth": "方法/实验正文选段",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/Genesis-Embodied-AI/RoboGen/blob/486612cd0baa40857b561419c5a42fbb7e67724f/readme.md",
+          "locus": "L31–32 public scope；L109–119 task-description generation",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/Genesis-Embodied-AI/RoboGen/blob/486612cd0baa40857b561419c5a42fbb7e67724f/gpt_4/adjust_size.py#L8",
+          "locus": "adjust_size_v2(task_description,yaml_string...)，L8–70",
+          "read_depth": "选定源码",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/Genesis-Embodied-AI/RoboGen",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "task diversity",
+        "asset semantic match",
+        "reward return",
+        "qualitative learned skills"
+      ]
+    },
+    {
+      "name": "GenSim",
+      "title": "GenSim: Generating Robotic Simulation Tasks via Large Language Models",
+      "year_note": "2023预印本；ICLR2024 Spotlight；CoRL2023为workshop，不混为正式CoRL论文",
+      "paper_url": "https://arxiv.org/abs/2310.01361",
+      "paper_version_read": "https://arxiv.org/html/2310.01361v1",
+      "project_url": "https://gen-sim.github.io/",
+      "repo": {
+        "url": "https://github.com/liruiw/GenSim",
+        "commit": "1a203b7259ac8af840e8db8f17a69ec8a1cd255c",
+        "tree_entries": 558,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/liruiw/GenSim/blob/1a203b7259ac8af840e8db8f17a69ec8a1cd255c/README.md"
+      },
+      "task_input": "target-task文字+参考task code/library，或bottom-up探索既有task生成新组合。",
+      "generated_content": "CLIPort桌面环境Python、物体/位置、语言goal、oracle示范与任务库。",
+      "scope_class": "goal→桌面task+scene code；非完整房间/导航生成。",
+      "method": "目标课程或探索式proposal→分开写description/code→编译与oracle执行验证→加入task memory。",
+      "evaluation": {
+        "generation": "§3.1逐级syntax-correct、runtime-verified、task-completed pass rates；最后检查pick/place oracle能否完成，不能检查全部语言-行为一致性。",
+        "policy": "生成task上的single/multitask成功；v1真实实验为9任务各10trial，不把项目页概述10 real tasks当同一表分母。",
+        "actual_task_done": "公开Task.done(): goals为空 或累计_rewards>0.99；具体几何阈值由每task goal/reward定义。"
+      },
+      "public_code_scope": "公开task generation、generated task library、CLIport demos/train/eval。README明示train/val/test dataset与checkpoint选择流程。",
+      "eval_source_scope": "选读task.done与README评估路径；未全核code-generation pass率聚合脚本。",
+      "cost": "生成调用GPT-4/API、可重试；示范与policy训练另算。",
+      "fit_to_fastfill": "目标→需要的objects/relations及可执行goal代码不是新空白；room壳、未知家具尺寸与全清单ID约束需新增协议。",
+      "uncertainties": [
+        "只读v1选段与当前repo，未将论文所有版本结果并为一个数字。",
+        "oracle完成与冻结机器人policy rollout成功不同。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2310.01361v1",
+          "locus": "§2,§3.1–3.4；Table1，web lines106–110,128–146",
+          "read_depth": "方法/实验选段",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://gen-sim.github.io/",
+          "locus": "venue、两种生成模式",
+          "read_depth": "作者页",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/liruiw/GenSim/blob/1a203b7259ac8af840e8db8f17a69ec8a1cd255c/README.md",
+          "locus": "L23–48 generation与evaluation workflow",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/liruiw/GenSim/blob/1a203b7259ac8af840e8db8f17a69ec8a1cd255c/cliport/tasks/task.py#L278",
+          "locus": "done() L278–284；bounds L39–41",
+          "read_depth": "选定源码",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/liruiw/GenSim",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "syntax/runtime/oracle completion",
+        "sim policy success",
+        "small real transfer"
+      ]
+    },
+    {
+      "name": "GenSim2",
+      "title": "GenSim2: Scaling Robot Data Generation with Multi-modal and Reasoning LLMs",
+      "year_note": "2024预印本；官方repo标Conference on Robot Learning2024；PMLR proceedings发布年份另记，不以此更改首发",
+      "paper_url": "https://arxiv.org/abs/2410.03645",
+      "paper_version_read": "https://arxiv.org/html/2410.03645v1",
+      "project_url": "https://gensim2.github.io/",
+      "repo": {
+        "url": "https://github.com/GenSim2/GenSim2",
+        "commit": "4c3a5da3b515a9e772e73a93f0a315732af1c937",
+        "tree_entries": 37938,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/GenSim2/GenSim2/blob/4c3a5da3b515a9e772e73a93f0a315732af1c937/README.md"
+      },
+      "task_input": "固定可交互asset library、手工task examples；top-down task/decomposition或bottom-up组合。solver还需render/keypoints。",
+      "generated_content": "桌面关节/刚体task code、kPAM constraints/actuation-motion configs或RL rewards、demonstrations。",
+      "scope_class": "task→桌面/对象级交互场景与solver；不是全屋布局。",
+      "method": "MLLM生成task与solver，视觉反馈、多轮reject sampling，物体/空间随机化放大示范，训练PPT policy。",
+      "evaluation": {
+        "generation": "Execution=全pipeline无syntax/runtime错误；Solution=生成task被solver解决。Table1两者分开；重试budget会影响solution。",
+        "demo_robustness": "24单步+15长程任务；每task5run×50episodes，报告5run均值/标准差；含空间/对象随机化。",
+        "policy": "sim每task20episodes；real主表8tasks各10episodes。OpenBox源码成功类别articulated_open，reward openness fraction=1/threshold0.05；不能把reward阈值直接代所有task成功。"
+      },
+      "public_code_scope": "公开pipeline、task库、solver/RL与policy代码/教程。",
+      "eval_source_scope": "选读OpenBox及完整目录/README；未逐一核全成功criteria helper与论文聚合。",
+      "cost": "并非全无人标注：原文A.4说明keypoint标注与solver reject有人参与；部分复杂long-horizon示范为teleoperation。",
+      "fit_to_fastfill": "可借鉴成功分层和按task规划approach/actuation；不能把其object-heldout成功当room-heldout布局成功。",
+      "uncertainties": [
+        "库的资产物理/关键点先给，不等同未知家具尺寸预测。",
+        "全自动/轻量描述须排除人工solver验证和额外数据生成成本。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2410.03645v1",
+          "locus": "§3.1–3.3,§4–5,AppendixA.3–A.5；lines89–104,115–151,257–276",
+          "read_depth": "方法/实验/人工参与边界选段",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/GenSim2/GenSim2/blob/4c3a5da3b515a9e772e73a93f0a315732af1c937/README.md",
+          "locus": "generation与solver_trials/max_regeneration参数",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/GenSim2/GenSim2/blob/4c3a5da3b515a9e772e73a93f0a315732af1c937/gensim2/env/task/origin_tasks/open_box.py#L15",
+          "locus": "success_criteria与get_reward",
+          "read_depth": "选定源码",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/GenSim2/GenSim2",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "pipeline execution",
+        "solver solution",
+        "demo collection success",
+        "sim/real policy success"
+      ]
+    },
+    {
+      "name": "Gen2Sim",
+      "title": "Gen2Sim: Scaling up Robot Learning in Simulation with Generative Models",
+      "year_note": "2023预印本；ICRA2024作者页确认",
+      "paper_url": "https://arxiv.org/abs/2310.18308",
+      "paper_version_read": "https://arxiv.org/html/2310.18308v1",
+      "project_url": "https://gen2sim.github.io/",
+      "repo": {
+        "url": "https://github.com/pushkalkatara/Gen2Sim",
+        "commit": "0c64a6b67903ea218c2fd4bc0d829acceee7a54e",
+        "tree_entries": 207,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/pushkalkatara/Gen2Sim/blob/0c64a6b67903ea218c2fd4bc0d829acceee7a54e/README.md"
+      },
+      "task_input": "起点多为资产：图像→3D/已有URDF资产组合，抽取links/joints/limits后生成可做task。",
+      "generated_content": "3D mesh、尺寸/质量/惯量/URDF、task/decomposition、Python reward+success predicates；IsaacGym训练skill。",
+      "scope_class": "asset/已有配置→task+reward；不是固定goal驱动完整room重新布置。",
+      "method": "生成/检索asset→解析URDF→LLM提出任务和分解→顺序PPO，衔接subtask终末状态。",
+      "evaluation": {
+        "success_example": "原文OpenMicrowaveDoor示例：|joint_state−upper_limit|<0.1为success；生成reward另含到handle距离。",
+        "reported_validation": "所读v1 §IV主要展示assets、learned policy与sim2real视频；未建立统一完整任务成功率/试验数统计，不能填造总SR。",
+        "transfer": "原文§IV-D明确真实试验转移的是sim优化的open-loop trajectories，非验证closed-loop vision policy泛化。"
+      },
+      "public_code_scope": "官方repo公开asset-gen、task-gen、IsaacGym训练和eval.sh；README需要GPT-4 API、IsaacGym及外部资产。",
+      "eval_source_scope": "本轮核README/tree，未细读全部ppo/eval聚合；不认证所有论文指标。",
+      "cost": "每task学习PPO，非训练free布局。",
+      "fit_to_fastfill": "可用task-specific success code思路；输入方向与room generator不同，不可当直接同榜对手。",
+      "uncertainties": [
+        "本文v1不足以给可比的room-level success denominator。",
+        "API推断质量/尺寸未等同实测physical calibration。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2310.18308v1",
+          "locus": "§III-B–C, §IV-B–D；lines111–114,220–248,276–289",
+          "read_depth": "方法/成功示例/实验边界选段",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://gen2sim.github.io/",
+          "locus": "Accepted ICRA2024；Code链接",
+          "read_depth": "作者页",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/pushkalkatara/Gen2Sim/blob/0c64a6b67903ea218c2fd4bc0d829acceee7a54e/README.md",
+          "locus": "IsaacGym install、task/reward generation、eval.sh",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/pushkalkatara/Gen2Sim",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "qualitative asset/task/reward validity",
+        "learned policy videos",
+        "open-loop real transfer"
+      ]
+    },
+    {
+      "name": "ReGen",
+      "title": "ReGen: Generative Robot Simulation via Inverse Design",
+      "year_note": "ICLR2025，作者页/OpenReview确认；arXiv2511.04769于2025-11-06补挂，不能当首发仅11月",
+      "paper_url": "https://openreview.net/forum?id=EbCUbPZjM1",
+      "paper_version_read": "https://arxiv.org/html/2511.04769v1",
+      "project_url": "https://regen-sim.github.io/",
+      "repo": null,
+      "task_input": "已知ego behavior/轨迹或objective function + 文字描述，反推哪些环境会导致该行为。",
+      "generated_content": "因果场景图、相关actor/object、precondition/transition/terminal FSM约束、对象位置与场景程序。",
+      "scope_class": "behavior/goal→contextual executable scenarios；驾驶+局部操作，非完整room-shell装配。",
+      "method": "因果图扩展→symbolic program/FSM verifier→CP-SAT grounding；重用RoboGen操作reward，CARLA/PyBullet执行。",
+      "evaluation": {
+        "diversity": "text/embedding与SelfBLEU类多样性；不是robot success。",
+        "generation": "驾驶场景生成报告80%；操作10reward×5variants。正文同时写78%和38个有效environment，两者与50次尝试不完全算术一致，保留此不确定性。",
+        "limitations": "操作背景大量是非关节mesh静态上下文；温度等效果不模拟，不将场景目的语义当真实可执行物理效果。"
+      },
+      "public_code_scope": "作者项目Paper有OpenReview链接，但Code(TBU)为占位链接；定向查询未建立可验证官方repo。不能推断全网无代码。",
+      "eval_source_scope": "未核任何公开实现或评分源码。",
+      "cost": "LLM graph/search+constraint grounding；部分操作SAC训练，非单次布局。",
+      "fit_to_fastfill": "“从任务行为逆推场景条件、因果关系图/约束”已有直接前例；可争取的仍是完整壳、固定inventory、未知尺寸与统一下游的联合可行性。",
+      "uncertainties": [
+        "原文scenario generation success不等于冻结policy在新房间task success。",
+        "38/50与78%不一致；无源码不能确定哪个统计对象不同。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2511.04769v1",
+          "locus": "§2.1–2.2,§3.1–3.3；lines139–155,189–197",
+          "read_depth": "方法/实验正文选段",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://regen-sim.github.io/",
+          "locus": "ICLR2025，Paper/Code(TBU)",
+          "read_depth": "作者页",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://openreview.net/pdf?id=EbCUbPZjM1",
+          "locus": "正式ICLR2025题名页",
+          "read_depth": "正式论文元信息",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": null,
+      "reading_depth": "原文方法/实验选段 + 作者入口/定向code查询；代码未核",
+      "method_code_public": false,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "scenario generation satisfiability",
+        "scenario diversity",
+        "VLM behavior reasoning"
+      ]
+    },
+    {
+      "name": "MesaTask",
+      "title": "MesaTask: Towards Task-Driven Tabletop Scene Generation via 3D Spatial Reasoning",
+      "year_note": "arXiv2509.22281,2025-09-26；NeurIPS2025 Spotlight作者页/repo确认",
+      "paper_url": "https://arxiv.org/abs/2509.22281",
+      "paper_version_read": "https://arxiv.org/html/2509.22281v1",
+      "project_url": "https://mesatask.github.io/",
+      "repo": {
+        "url": "https://github.com/InternRobotics/MesaTask",
+        "commit": "0e9f0bb8e4f9790b55aac6dfd482dc51c90365b2",
+        "tree_entries": 30,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/InternRobotics/MesaTask/blob/0e9f0bb8e4f9790b55aac6dfd482dc51c90365b2/Readme.md"
+      },
+      "task_input": "高层操作/活动指令+桌类型，推断需要的object composition；默认可补object，不是不可变完整用户inventory。",
+      "generated_content": "物体列表、语义关系/scene graph、尺寸/布局、检索asset后GLB场景；stacking/containment。",
+      "scope_class": "直接task→tabletop layout；强相关生成器，但非full-room/nav benchmark。",
+      "method": "SpatialReasoningChain:object inference→relations→scene graph→layout；Qwen3-8B全参SFT+DPO。数据先生成coarse scenes，再人工校尺寸/位置/朝向/删冗余。",
+      "evaluation": {
+        "generation_success": "C.2严格定义：格式符合且至少1个valid object的response / all test cases；不是机器人任务完成，不要求完整指定inventory。",
+        "other_metrics": "主实验每方法500task→tabletop scenes；FID、GPT五维1–10(CwT,OSR,PPI,LCR,OV)，127人human rating。机器人demo不构成统一大规模rollout SR。",
+        "format_warning": "v1摘要约10700场景、figure1写11708；本卡不把不同数字当已核统一dataset size。"
+      },
+      "public_code_scope": "固定commit树30entries：inference、asset retrieval/render与可选Drake优化公开；README training code/data、sim-ready pipeline未勾选，当前GLB-only，URDF版将发布。",
+      "eval_source_scope": "本轮完整tree未定位专用论文metric runner；选读inference.py不认证所有评估。",
+      "cost": "论文8×A800 fullparameter SFT+DPO；推理API task-info+本地model，非无需训练pipeline。",
+      "fit_to_fastfill": "任务推导布局、关系chain、SFT/DPO与缺物体负例已有前人；可借鉴representation/负例，创新须超过“加task prompt”。",
+      "uncertainties": [
+        "无冻结robot policy广泛成功率证据；sim-ready URDF公开范围不能由论文示范补足。",
+        "该任务自由物体组合与FastFill完整inventory、真实房间边界不同。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2509.22281v1",
+          "locus": "§3–5,AppendixC.2–C.3；lines121–129,165–190,420–473",
+          "read_depth": "方法/实验/指标精确定义",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://mesatask.github.io/",
+          "locus": "NeurIPS2025Spotlight，task-to-scene与manipulation demos",
+          "read_depth": "作者页",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/InternRobotics/MesaTask/blob/0e9f0bb8e4f9790b55aac6dfd482dc51c90365b2/Readme.md",
+          "locus": "L52–56TODO,L92–94GLB/URDF状态",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/InternRobotics/MesaTask/blob/0e9f0bb8e4f9790b55aac6dfd482dc51c90365b2/inference.py#L136",
+          "locus": "生成、process、可选Drake及render stages",
+          "read_depth": "选定源码",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/InternRobotics/MesaTask",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "format parse success with at least1object",
+        "image FID",
+        "VLM/human task-scene ratings"
+      ]
+    },
+    {
+      "name": "TabletopGen",
+      "title": "TabletopGen: Tabletop Scene Generation and Interactive Simulation for Robotic Manipulation",
+      "year_note": "2025-12首发；最新已读v4 2026-07-02；ECCV2026作者页/repo确认；v1旧题名Instance-Level Interactive...不同版本分开",
+      "paper_url": "https://arxiv.org/abs/2512.01204",
+      "paper_version_read": "https://arxiv.org/html/2512.01204v4",
+      "project_url": "https://d-robotics-ai-lab.github.io/TabletopGen.project/",
+      "repo": {
+        "url": "https://github.com/D-Robotics-AI-Lab/TabletopGen",
+        "commit": "2f23f76f446649804a4441e96055469f05e57e98",
+        "tree_entries": 1193,
+        "tree_truncated": false,
+        "readme_url": "https://github.com/D-Robotics-AI-Lab/TabletopGen/blob/2f23f76f446649804a4441e96055469f05e57e98/README.md"
+      },
+      "task_input": "文字场景描述→参考图，或单张图；生成scene后手工/LLM采样操作任务，不是以任务成功驱动先设计完整房间。",
+      "generated_content": "独立3D实例/桌体、scale/rotation/translation、convex-decomposition collision；IsaacSim物理场景与操作轨迹。",
+      "scope_class": "text/image→tabletop→task/data；相邻参照，不能当goal→full-room同协议baseline。",
+      "method": "instance extraction/completion→image-to-3D→DRO姿态与topview anchor尺度对齐→物理装配/运动规划。",
+      "evaluation": {
+        "scene": "78图样本：LPIPS/DINOv2/CLIP；Col_O为碰撞对象对占比、Col_S为有碰撞scene占比；VLM1–7与human。30文字场景另用text/GPT维度，不能混同有reference的视觉分数。",
+        "downstream": "v4 §4.4：三任务各2000合成轨迹微调π0.5，sim和原real scene各50trials；pick mango→plate、strawberry→mug、stack2blocks。",
+        "unknown": "具体task判定阈值/每次是否独立reset及图6数值未在本轮完整核验，不填写总成功数字。"
+      },
+      "public_code_scope": "官方scene-generation源码/README与HF assets/demo链接已核。源码依赖感知/3D模型和外部API；未下载demo/model。",
+      "eval_source_scope": "本轮仅README/tree，未把第三方segmentation评测目录误作论文完整scene/robot评估代码。",
+      "cost": "training-free指scene generator，不等于下游π0.5不训练；资产生成与姿态优化预算另算。",
+      "fit_to_fastfill": "可借鉴真实mesh装配到robot data的检查层；核心是桌面photo reconstruction，必须另测任务条件对scene设计的贡献。",
+      "uncertainties": [
+        "v1无相同完整policy-transfer段，使用v4证据。",
+        "相同真实桌面与多房间heldout泛化不同；不据三个task推断一般household capability。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2512.01204v4",
+          "locus": "§3.2–3.3,§4.1–4.4；lines157–180,203,235–242",
+          "read_depth": "最新方法/实验/transfer段落",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://d-robotics-ai-lab.github.io/TabletopGen.project/",
+          "locus": "ECCV2026、Code链接",
+          "read_depth": "作者页",
+          "tier": "作者一手；结果未独立复现"
+        },
+        {
+          "url": "https://github.com/D-Robotics-AI-Lab/TabletopGen/blob/2f23f76f446649804a4441e96055469f05e57e98/README.md",
+          "locus": "L53–77公开scope；运行API/weights依赖",
+          "read_depth": "README+完整tree",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": "https://github.com/D-Robotics-AI-Lab/TabletopGen",
+      "reading_depth": "原文方法/实验选段 + 作者官方README/完整tree",
+      "method_code_public": true,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "reference-image perceptual",
+        "mesh collision pairs/scenes",
+        "VLM/human",
+        "3-task sim/real policy transfer"
+      ]
+    },
+    {
+      "name": "SR-Platform",
+      "title": "SR-Platform: An Agentic Pipeline for Natural Language-Driven Robot Simulation Environment Synthesis",
+      "year_note": "2026-05-14 arXiv2605.14700v1；本轮未核同行评审接收",
+      "paper_url": "https://arxiv.org/abs/2605.14700",
+      "paper_version_read": "https://arxiv.org/html/2605.14700v1",
+      "project_url": "https://strikerobot.ai/",
+      "repo": null,
+      "task_input": "自然语言workspace/scene要求+robot model选择；可表达工业功能约束。",
+      "generated_content": "检索/LLM-to-CadQuery geometry、scene plan、物体pose、collision/layout checks、合并robot的MJCF。示例含classroom/kitchen/lab。",
+      "scope_class": "workspace→可加载MuJoCo scene系统；未证activity→task-success驱动布局。",
+      "method": "orchestrator→cache/asset forge→layout architect→MJCF bridge；9服务生产stack。",
+      "evaluation": {
+        "telemetry": "30天611次successful LLM calls；不是611个scene总尝试的成功率分母。",
+        "latency": "5objects约50秒E2E为按call分布和pipeline结构估计，非直接实测wallclock；全cache约30–40秒，同样估算。",
+        "reliability": "300次首次asset calls有34次retry(11.3%)；多次失败回退简化geometry维持MJCF装配，不能当语义/robot-task均成功。",
+        "robot_task": "已读实验无冻结policy统一任务完成benchmark；主要latency/cache/retry与定性scenes。"
+      },
+      "public_code_scope": "原文链接公司项目；定向搜索未建立作者官方公开GitHub，不把同名SR机器人sim当本项目。",
+      "eval_source_scope": "实现/公开metric runner未核。",
+      "cost": "多服务+LLM/CAD调用；没有证据可称FastFill轻量等预算比较。",
+      "fit_to_fastfill": "提示→MJCF+robot merge已有系统前例；真正任务成功需另外执行，适合提醒装配成功和任务成功分开。",
+      "uncertainties": [
+        "生产数据只有successful call cohort，不能推出端到端场景成功率。",
+        "所宣称industrial constraints未在此轮源码验证或完整quantitative physical benchmark确认。"
+      ],
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2605.14700v1",
+          "locus": "§3,§4.1–4.5,§6.4–6.5；lines62–65,139–185",
+          "read_depth": "方法/实验/measurement limitations选段",
+          "tier": "作者一手；结果未独立复现"
+        }
+      ],
+      "repo_url": null,
+      "reading_depth": "原文方法/实验选段 + 作者入口/定向code查询；代码未核",
+      "method_code_public": false,
+      "paper_all_eval_metrics_reproduced": false,
+      "evaluation_category": [
+        "successful LLM-call telemetry",
+        "estimated E2E latency",
+        "asset retry fraction",
+        "qualitative simulator loadability"
+      ]
+    }
+  ],
+  "cross_checked_related": {
+    "name": "Scene2Demo",
+    "paper_url": "https://arxiv.org/abs/2602.12065",
+    "owner": "/root/agency_model_qa",
+    "local_audit": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026.json",
+    "status": "由并行QA深入，不重复计入本8篇。v1/v3/abs有题名变化；它主要从RGB重建scene substrate后生成任务/数据，不是task-driven room-layout redesign。数值及源码状态以QA文件为准。"
+  },
+  "synthesis": {
+    "well_supported": "任务推导对象/尺寸/初始状态、关系图、程序生成、执行反馈、物理约束和solver/policy验证均有2024–2026前例，不能单独称首次。MesaTask与RoboGen是最直接的task→scene先例，但主要局部/桌面。",
+    "observed_gap_not_global_novelty": "这8篇中未建立与FastFill完全同条件的统一benchmark：真实观测空壳/门窗+不可变完整文字inventory+未知尺寸→完整房间→共同actual-asset装配→机器人导航/操作成功。这里只说明本组未覆盖，不能据此声称全球首次。",
+    "success_layers": "生成格式合法/至少1物体 ≠ 程序无错 ≠ scene可加载/无碰撞 ≠ solver可解 ≠ 冻结policy完成任务 ≠ real-world transfer。每层应有独立分母。",
+    "recommendation": "按同shell/inventory/task/seeds/asset-provider/robot/solver预算生成场景；先测必要对象与关系、approach/support/articulation/clearance的几何可行，再测统一frozen policy或planner成功。不可通过删掉难物体、改尺寸超约束或只保留成功场景提分。",
+    "confidence": "Moderate-to-high for input/metric boundary because primary sources explicit; lower for implementation equivalence and complete replication because no experiments/model/assets run."
+  },
+  "repo_receipts_file": "ephemeral-cache:fastfill-task-to-room-repo-receipts-20261026.json",
+  "code_excerpts_file": "ephemeral-cache:fastfill-task-to-room-code-excerpts-20261026.json",
+  "read_scope_counts": {
+    "included": 8,
+    "public_repo_pinned": 6,
+    "public_repo_not_established": 2,
+    "selected_source_files_read": 4,
+    "paper_results_reproduced": 0
+  },
+  "no_project_edits": true,
+  "no_paid_api_training_gpu_sim_runs": true,
+  "unknowns": [
+    "未对8篇做完整引用/所有版本/每行代码审计。",
+    "未独立复现成功率、未下载checkpoint或assets。",
+    "ReGen公开code仍TBU的判断仅限核查的作者入口/定向查询。"
+  ],
+  "excluded_or_parallel": [
+    {
+      "name": "Scene2Demo",
+      "reason": "并行QA详细审核，避免重复计数",
+      "audit": "ephemeral-cache:fastfill-task-to-room-evaluation-20261026.json",
+      "selector": "entries[0]"
+    },
+    {
+      "name": "RoboTwin2",
+      "reason": "检索命中但本轮未细读；桌面双臂数据合成/随机化邻域，不再扩检",
+      "official_project": "https://robotwin-platform.github.io/"
+    },
+    {
+      "name": "SAGE / EmbodiedGenV2 / WEDGE / EnvDreamer",
+      "reason": "根agent负责的并行专题，不重复；此文件不声称读完这些工作"
+    }
+  ],
+  "archive_note": "Original source-cache paths are ephemeral receipts, not archived dependencies. Public URLs and pinned commits are the replay references. Paper PDF/HTML full texts and model assets are excluded."
+}
