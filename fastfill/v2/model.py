@@ -73,6 +73,8 @@ class ModelConfig:
     pose_conditioning: bool = False
     # Support pointer head: per slot, logits over floor | wall | every slot (``support_logits``, b x n x 2 + n).
     support_head: bool = False
+    # Recompute backbone activations in the backward pass: needed to fit 27B-class backbones at 8192 tokens.
+    gradient_checkpointing: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.backbone, str) or not self.backbone.strip():
@@ -89,7 +91,7 @@ class ModelConfig:
             value = getattr(self, key)
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 1:
                 raise ValueError(f"{key} must be finite and in [0,1]")
-        for key in ("train_backbone", "local_files_only", "pose_conditioning", "support_head"):
+        for key in ("train_backbone", "local_files_only", "pose_conditioning", "support_head", "gradient_checkpointing"):
             if not isinstance(getattr(self, key), bool):
                 raise ValueError(f"{key} must be a boolean")
         if (not isinstance(self.lora_target_modules, (list, tuple)) or not self.lora_target_modules or
@@ -134,6 +136,12 @@ class TinyConditionBackbone(nn.Module):
         return SimpleNamespace(last_hidden_state=memory)
 
 
+def _hidden_size(config) -> int:
+    """Width of the text model's last hidden state; multimodal checkpoints (e.g. Qwen3.5) keep it in ``text_config``."""
+    text = getattr(config, "text_config", None)
+    return (text if text is not None else config).hidden_size
+
+
 def _qwen_backbone(config: ModelConfig) -> nn.Module:
     from transformers import AutoConfig, AutoModel
     pretrained_config = AutoConfig.from_pretrained(config.backbone, local_files_only=config.local_files_only)
@@ -142,6 +150,8 @@ def _qwen_backbone(config: ModelConfig) -> nn.Module:
     backbone = AutoModel.from_pretrained(config.backbone, config=pretrained_config,
         torch_dtype=getattr(torch, config.backbone_dtype), local_files_only=config.local_files_only)
     backbone.config.use_cache = False
+    if config.gradient_checkpointing:
+        backbone.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
     if config.lora_rank:
         from peft import LoraConfig, TaskType, get_peft_model
         backbone = get_peft_model(backbone, LoraConfig(task_type=TaskType.FEATURE_EXTRACTION,
@@ -157,7 +167,7 @@ class StructuredFastFillModel(nn.Module):
         super().__init__()
         self.config = config
         self.backbone = backbone
-        self.memory_projection = nn.Linear(backbone.config.hidden_size, config.decoder_dim)
+        self.memory_projection = nn.Linear(_hidden_size(backbone.config), config.decoder_dim)
         self.slot_seed = nn.Embedding(config.max_objects, config.decoder_dim)
         layer = nn.TransformerDecoderLayer(config.decoder_dim, config.decoder_heads,
             dim_feedforward=config.decoder_dim * config.decoder_ffn_multiplier,

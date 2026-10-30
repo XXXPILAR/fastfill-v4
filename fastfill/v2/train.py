@@ -274,7 +274,7 @@ DEFAULT_AUGMENTATION = AUGMENT_DEFAULTS
 DEFAULT_VALIDATION = {"exclude_flags": ["oob_objects", "fixed_collision", "overlapping_furniture"]}
 CONFIG_SECTIONS = ("model", "loss", "training", "optimizer", "augmentation", "validation")
 # Fields added after runs were launched: left out of the resume digest at their defaults, so those runs still resume.
-DIGEST_LATER_DEFAULTS = {"model": {"pose_conditioning": False, "support_head": False},
+DIGEST_LATER_DEFAULTS = {"model": {"pose_conditioning": False, "support_head": False, "gradient_checkpointing": False},
                          "loss": {"expected_geometry": 0., "door_clearance_m": .8, "support": 0.},
                          "augmentation": {"given_pose_p": 0., "given_pose_corrupt_p": 0., "given_pose_noise_m": 0.,
                                           "given_pose_yaw_noise_deg": 0., "given_pose_size_noise": 0.}}
