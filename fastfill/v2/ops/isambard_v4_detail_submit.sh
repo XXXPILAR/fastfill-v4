@@ -7,7 +7,8 @@
 # Without runs/isambard/v4-setup-1.7b.ok the Qwen3-1.7B setup job runs first (its GPU smoke trains the full fine-tuning
 # configuration). Without data/v4detail/manifest.json a one-GPU job cuts it from data/v4fixed (make_source_subset.py) and
 # checks it against fastfill/v2/ops/v4detail.sha256 (the local build); the arms wait for both (afterok) and get one
-# continuation job each (afternotok).
+# continuation job each (afternotok, and afterok on the same prerequisite: Slurm counts a job cancelled for a failed
+# prerequisite as not ok, so afternotok alone would start the continuation then).
 #   fastfill/v2/ops/isambard_v4_detail_submit.sh                  # both arms
 #   FASTFILL_ARMS=full fastfill/v2/ops/isambard_v4_detail_submit.sh  # one arm
 # Status: runs/autorun-v4-detail-1.7b-<arm>/STATUS.json; the run is runs/main4-cell05-v4detail-e5-1.7b-<arm>.
@@ -15,19 +16,19 @@ set -euo pipefail
 cd "$(dirname "$0")/../../.."
 mkdir -p runs/isambard
 export FASTFILL_BACKBONE=Qwen3-1.7B FASTFILL_DATA=data/v4detail
-after=()
+dep=  # afterok:<job> the arms wait for, when setup or the subset still has to run
 if [ ! -f runs/isambard/v4-setup-1.7b.ok ]; then
   setup=$(sbatch --parsable --time=03:00:00 --job-name=ff4-setup-1.7b fastfill/v2/ops/isambard_v4_setup.sbatch)
-  after=(--dependency=afterok:$setup)
+  dep=afterok:$setup
   echo "setup=$setup ($FASTFILL_BACKBONE)"
 fi
 if [ ! -f data/v4detail/manifest.json ]; then
   rm -rf data/v4detail.tmp
   subset=$(sbatch --parsable --job-name=ff4-subset-detail --nodes=1 --gpus=1 --time=00:30:00 \
-    --output=runs/isambard/%x-%j.out "${after[@]}" --wrap "set -e; export PYTHONPATH=\$PWD
+    --output=runs/isambard/%x-%j.out ${dep:+--dependency=$dep} --wrap "set -e; export PYTHONPATH=\$PWD
 env/bin/python fastfill/v2/ops/make_source_subset.py --data data/v4fixed --output data/v4detail
 cd data/v4detail && sha256sum -c ../../fastfill/v2/ops/v4detail.sha256")
-  after=(--dependency=afterok:$subset)
+  dep=afterok:$subset
   echo "subset=$subset (data/v4detail)"
 fi
 for arm in ${FASTFILL_ARMS:-full lora}; do
@@ -37,8 +38,8 @@ for arm in ${FASTFILL_ARMS:-full lora}; do
   esac
   args=(fastfill/v2/ops/isambard_v4_autorun.sbatch autorun-v4-detail-1.7b-$arm fastfill/v2/configs/$config.json
         --name-suffix=-1.7b-$arm --global-batch=32)
-  first=$(sbatch --parsable --job-name=ff4-detail-$arm "${after[@]}" "${args[@]}")
-  resume=$(sbatch --parsable --job-name=ff4-detail-$arm-resume --dependency=afternotok:$first "${args[@]}")
+  first=$(sbatch --parsable --job-name=ff4-detail-$arm ${dep:+--dependency=$dep} "${args[@]}")
+  resume=$(sbatch --parsable --job-name=ff4-detail-$arm-resume --dependency=${dep:+$dep,}afternotok:$first "${args[@]}")
   echo "$arm: train=$first resume=$resume  status: runs/autorun-v4-detail-1.7b-$arm/STATUS.json"
 done
 squeue --me

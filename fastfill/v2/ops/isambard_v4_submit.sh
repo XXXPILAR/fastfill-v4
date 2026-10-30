@@ -4,7 +4,8 @@
 #   D     main7-cell05-D-fixed-noise-e5   + masked training with given poses and pose noise
 #   E     main7-cell05-E-support-e5       D + support head
 # Without runs/isambard/v4-setup.ok the setup job is submitted first and the arms wait for it (afterok). Each arm gets a
-# continuation job (afternotok) that resumes it once if the first job fails or reaches the 24 h limit.
+# continuation job (afternotok) that resumes it once if the first job fails or reaches the 24 h limit; continuations also
+# wait afterok on the setup, since Slurm counts a job cancelled for a failed setup as not ok.
 #
 # Same three arms on Qwen3.5-27B (configs *-27b.json, status runs/autorun-v4-27b-<arm>, own setup marker):
 #   FASTFILL_BACKBONE=Qwen3.5-27B fastfill/v2/ops/isambard_v4_submit.sh
@@ -31,10 +32,10 @@ case ${FASTFILL_FT:-lora} in
   lora) ft=;; full) ft=-full;;
   *) echo "unknown FASTFILL_FT $FASTFILL_FT (lora or full)"; exit 1;;
 esac
-after=()
+dep=  # afterok:<setup job> while the setup still has to run
 if [ ! -f runs/isambard/v4-setup$tag.ok ]; then
   setup=$(sbatch --parsable --time=$setup_time --job-name=ff4-setup$tag fastfill/v2/ops/isambard_v4_setup.sbatch)
-  after=(--dependency=afterok:$setup)
+  dep=afterok:$setup
   echo "setup=$setup ($FASTFILL_BACKBONE)"
 fi
 for name in ${FASTFILL_ARMS:-base D E}; do
@@ -45,10 +46,10 @@ for name in ${FASTFILL_ARMS:-base D E}; do
   config=fastfill/v2/configs/$config$tag$ft.json
   [ -f "$config" ] || { echo "no configuration $config for this backbone, arm and FASTFILL_FT"; exit 1; }
   args=(fastfill/v2/ops/isambard_v4_autorun.sbatch autorun-v4$tag$ft-$name $config --name-suffix=$tag$ft-$name)
-  first=$(sbatch --parsable --job-name=ff4$tag$ft-$name "${after[@]}" "${args[@]}")
+  first=$(sbatch --parsable --job-name=ff4$tag$ft-$name ${dep:+--dependency=$dep} "${args[@]}")
   chain=$first
   for _ in $(seq $resumes); do
-    chain=$(sbatch --parsable --job-name=ff4$tag$ft-$name-resume --dependency=afternotok:$chain "${args[@]}")
+    chain=$(sbatch --parsable --job-name=ff4$tag$ft-$name-resume --dependency=${dep:+$dep,}afternotok:$chain "${args[@]}")
   done
   echo "$name: train=$first resumes up to $chain  status: runs/autorun-v4$tag$ft-$name/STATUS.json"
 done

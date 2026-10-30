@@ -119,8 +119,10 @@ $T --output $S
 $T --output $S-resume --resume $S/state-step-2
 env/bin/python -m fastfill.v2.evaluate --checkpoint $S-resume/model-step-4 --data $D/validation.jsonl \
   --max-samples 20 --projection minimal --device cuda --grid-decode spread --output $S-eval
+# remasking over several rounds needs pose conditioning (D/E configs); a base-config smoke decodes argmax only
+modes=$(env/bin/python -c "import json, sys; print('argmax remask4LX' if json.load(open(sys.argv[1]))['model'].get('pose_conditioning') else 'argmax')" runs/isambard/v4-smoke$TAG.json)
 env/bin/python -m fastfill.v2.ops.remask_ablation --checkpoint $S-resume/model-step-4 --data $D/validation.jsonl \
-  --output $S-remask --modes argmax remask4LX --max-samples 5 --strip-support --device cuda
+  --output $S-remask --modes $modes --max-samples 5 --strip-support --device cuda
 kill $monitor
 grep -h '"step": 4,' $S/train.log $S-resume/train.log | cut -c1-90  # uninterrupted vs resumed step 4: about the same loss
 sort -n $S-memory.csv | tail -1 | awk -F', ' '{print "smoke peak GPU memory", $1, "of", $2, "MiB"}'
