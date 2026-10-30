@@ -5,7 +5,7 @@
 # fixed-object data from Hugging Face (sha256-pinned), RoomGenBench requests, the CPU test suite, then a GPU smoke of the
 # E configuration (pose conditioning + support head, max_objects 256): train, resume, evaluate, remasking decode.
 # Writes runs/isambard/v4-setup.ok on success. Rerunning skips what is already in place.
-# FASTFILL_BACKBONE=Qwen3.5-27B (default Qwen3-8B) sets up that backbone instead: downloads it, installs
+# FASTFILL_BACKBONE=Qwen3.5-27B, Qwen3-1.7B, Qwen2.5-3B or Qwen3-4B (default Qwen3-8B) sets up that backbone instead: downloads it, installs
 # flash-linear-attention (its Gated DeltaNet kernels) into the env, smokes the 27B E config, writes v4-setup-27b.ok.
 #SBATCH --job-name=ff4-setup
 #SBATCH --nodes=1
@@ -26,7 +26,14 @@ case $BACKBONE in
             TAG= SMOKE_CONFIG=main7-cell05-E-support-e5.json;;
   Qwen3.5-27B) REV=fc05daec18b0a78c049392ed2e771dde82bdf654 CONFIG_SHA=f8d190c5b89c1521220f935d2567a587d6e291ed69066a45a106560b05a2174c
                TAG=-27b SMOKE_CONFIG=main7-cell05-E-support-e5-27b.json;;
-  *) echo "unknown FASTFILL_BACKBONE $BACKBONE (Qwen3-8B or Qwen3.5-27B)"; exit 1;;
+  # the backbone-size sweep (base arm only); the 1.7B smoke runs the full fine-tuning configuration, the new code path
+  Qwen3-1.7B) REV=70d244cc86ccca08cf5af4e1e306ecf908b1ad5e CONFIG_SHA=1ddb5b89ebc90dcb417a45c213d818577e65976454d29385c8f6140771d95197
+              TAG=-1.7b SMOKE_CONFIG=main7-cell05-main-o256-e5-1.7b-full.json;;
+  Qwen2.5-3B) REV=3aab1f1954e9cc14eb9509a215f9e5ca08227a9b CONFIG_SHA=27467e2fc311a7656c09a43ae9c3d408211e1f212bbddbc93c8596a06423826f
+              TAG=-3b SMOKE_CONFIG=main7-cell05-main-o256-e5-3b.json;;
+  Qwen3-4B) REV=1cfa9a7208912126459214e8b04321603b3df60c CONFIG_SHA=8ba006f74fecfaaeb392872a60f4a480e7ec9860153d2e1b769ec81f9a147f8a
+            TAG=-4b SMOKE_CONFIG=main7-cell05-main-o256-e5-4b.json;;
+  *) echo "unknown FASTFILL_BACKBONE $BACKBONE (Qwen3-8B, Qwen3.5-27B, Qwen3-1.7B, Qwen2.5-3B or Qwen3-4B)"; exit 1;;
 esac
 rm -f runs/isambard/v4-setup$TAG.ok
 uname -m; nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv

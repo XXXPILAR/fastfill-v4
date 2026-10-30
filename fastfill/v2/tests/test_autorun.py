@@ -83,6 +83,9 @@ def test_next_config_keeps_the_model_and_loss_and_rescales_to_seven_or_four_gpus
     assert json.loads(json.dumps(config))["training"]["steps"] == 3887  # input untouched
     four = next_config(config, world_size=4, train_rows=124584, epochs=5)["training"]
     assert four["gradient_accumulation_steps"] == 24 and four["steps"] == 6489  # global batch 96
+    detail = next_config(config, world_size=4, train_rows=29611, epochs=5, global_batch=32)  # the v4detail arms
+    assert detail["training"]["gradient_accumulation_steps"] == 8 and detail["training"]["steps"] == 4627
+    assert detail["optimizer"]["warmup_steps"] == 139
 
 
 def test_adopt_restores_the_resume_chain(tmp_path):

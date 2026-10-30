@@ -8,7 +8,7 @@ Phases (state in <runs>/autorun/STATUS.json, log in <runs>/autorun/autorun.log):
   C  select the winner (``score``), export its RoomGenBench hand-off for the five benchmark rooms (CPU)
   D  wait for <data root>/NEXT_DATA.json (written after a rebuild is uploaded to Hugging Face) at most
      ``--data-wait-h`` hours; download and verify it and pull the matching code, else stop (phase failed)
-  E  train the winner's configuration on all GPUs for ``--epochs`` epochs (same global batch), with the
+  E  train the winner's configuration on all GPUs for ``--epochs`` epochs (global batch ``--global-batch``), with the
      same crash-resume rule as A
   F  evaluate its newest checkpoints on the whole validation set, select, upload the best model directory to
      a private Hugging Face model repository (an upload error is a recorded failure), evaluate the best on the
@@ -505,7 +505,8 @@ class Autopilot:
             run_dir = Path(winner["checkpoint"]).parent
             config = json.loads((run_dir / "run_manifest_start.json").read_text())["config"]
         rows, world = sum(1 for _ in open(f"{self.data}/train.jsonl")), len(self.gpus)
-        config = next_config(config, world_size=world, train_rows=rows, epochs=self.a.epochs)
+        config = next_config(config, world_size=world, train_rows=rows, epochs=self.a.epochs,
+                             global_batch=getattr(self.a, "global_batch", 96))
         for assignment in getattr(self.a, "set", None) or ():  # explicit, logged departures from the winner's configuration
             override(config, assignment)
             self.log("config override", set=assignment)
@@ -593,6 +594,7 @@ def main(argv=None):
     p.add_argument("--data-root", default="/home/jovyan/shanliantian/fastfill/data")
     p.add_argument("--data-wait-h", type=float, default=2.)
     p.add_argument("--epochs", type=int, default=5)
+    p.add_argument("--global-batch", type=int, default=96, help="rows per update in phase E (batch 1 per GPU)")
     p.add_argument("--name-suffix", default="", help="appended to the next run's name, e.g. -yawcls05")
     p.add_argument("--set", action="append", metavar="KEY=JSON",
                    help="override a key of the next run's config, e.g. model.max_objects=256 (repeatable)")
