@@ -16,7 +16,8 @@
 # Those 1.7B configurations leave out the rooms over 8192 tokens or 256 objects (363 train, 21 validation, 19 test rooms,
 # all SAGE-10k) and 8 train rooms with a size below the size head's range. FASTFILL_VARIANT=all trains and evaluates every
 # room: configurations *-all*.json (max_length 32768 = Qwen3's context window, max_objects 512, size_log_limit 12, and
-# training.skip_rejected_rows false, so a room the preflight would leave out stops the run); each arm first gets a two-GPU
+# training.skip_rejected_rows false, so a room the preflight would leave out stops the run; category_only_description_p 0,
+# since real requests always carry descriptions, so every training row keeps them); each arm first gets a two-GPU
 # smoke on the longest rooms (isambard_v4_detail_smoke.sbatch), so an arm that does not fit does not hold up the other.
 # Status runs/autorun-v4-detail-<tag>-all-<arm>; Qwen3-4B has only the every-room configurations:
 #   FASTFILL_VARIANT=all fastfill/v2/ops/isambard_v4_detail_submit.sh
@@ -57,12 +58,22 @@ for arm in "${arms[@]}"; do
   configs+=("$config")
 done
 dep=  # afterok:<job> the arms wait for, when setup or the subset still has to run
+queued_job() { squeue --me -h -n "$1" -o %i | awk 'NR == 1'; }  # a setup or subset job from an earlier submission
 if [ ! -f runs/isambard/v4-setup-$tag.ok ]; then
-  setup=$(sbatch --parsable --time=03:00:00 --job-name=ff4-setup-$tag fastfill/v2/ops/isambard_v4_setup.sbatch)
+  setup=$(queued_job ff4-setup-$tag)
+  if [ -n "$setup" ]; then
+    echo "setup=$setup ($FASTFILL_BACKBONE, already queued or running)"
+  else
+    setup=$(sbatch --parsable --time=03:00:00 --job-name=ff4-setup-$tag fastfill/v2/ops/isambard_v4_setup.sbatch)
+    echo "setup=$setup ($FASTFILL_BACKBONE)"
+  fi
   dep=afterok:$setup
-  echo "setup=$setup ($FASTFILL_BACKBONE)"
 fi
-if [ ! -f data/v4detail/manifest.json ]; then
+subset=$(queued_job ff4-subset-detail)
+if [ -n "$subset" ]; then
+  dep=afterok:$subset
+  echo "subset=$subset (data/v4detail, already queued or running)"
+elif [ ! -f data/v4detail/manifest.json ]; then
   rm -rf data/v4detail.tmp
   subset=$(sbatch --parsable --job-name=ff4-subset-detail --nodes=1 --gpus=1 --time=00:30:00 \
     --output=runs/isambard/%x-%j.out ${dep:+--dependency=$dep} --wrap "set -e; export PYTHONPATH=\$PWD

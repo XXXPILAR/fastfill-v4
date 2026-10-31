@@ -79,7 +79,7 @@
         "shuffle_objects": true,
         "drop_constraints_p": 0.3,
         "drop_support_p": 0.2,
-        "category_only_description_p": 0.2,
+        "category_only_description_p": 0.0,
         "minimal_form_p": 0.5
     },
     "validation": {
