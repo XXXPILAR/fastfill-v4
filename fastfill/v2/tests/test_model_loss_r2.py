@@ -235,11 +235,13 @@ def resolve(path):
 TRAINING_CONFIGS = sorted(p for p in CONFIGS.glob("*.json") if p.name != "direct_request.json")
 QWEN_CONFIGS = [p for p in TRAINING_CONFIGS if "qwen" in json.loads(p.read_text())["model"]["backbone"].lower()]
 FORMAL = {"qwen3_8b_main_4gpu_regression.json": (4, "regression"), "qwen3_8b_main_3gpu_grid.json": (3, "grid_residual")}
+# every-room configurations (training.skip_rejected_rows false): Qwen3's 32768-token window, so no room is left out
+EVERY_ROOM = {p for p in QWEN_CONFIGS if json.loads(p.read_text())["training"].get("skip_rejected_rows") is False}
 
 
 @pytest.mark.parametrize("path", QWEN_CONFIGS, ids=[p.name for p in QWEN_CONFIGS])
 def test_every_qwen_config_loads_with_8192_context(path):
-    assert resolve(path)[3]["max_length"] == 8192
+    assert resolve(path)[3]["max_length"] == (32768 if path in EVERY_ROOM else 8192)
 
 
 @pytest.mark.parametrize("name", sorted(FORMAL))

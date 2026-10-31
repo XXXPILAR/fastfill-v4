@@ -57,6 +57,7 @@ itself is unchanged.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import contextlib
 from dataclasses import asdict
 from functools import partial
@@ -267,7 +268,10 @@ DEFAULT_TRAINING = {"steps": 1000, "batch_size": 2, "learning_rate": 1e-4,
                     "gradient_accumulation_steps": 1, "max_length": 4096, "seed": 42,
                     "clip_grad_norm": 1., "mixed_precision": "no", "cpu": False, "cpu_threads": 2,
                     "checkpoint_every": 100, "validate_every": 100,
-                    "resume": None, "export_model_every_checkpoint": True}
+                    "resume": None, "export_model_every_checkpoint": True,
+                    # False: a training or validation row the preflight would leave out (context/object budget, size
+                    # target outside the model's range, no active objective) stops the run instead of being skipped
+                    "skip_rejected_rows": True}
 # warmup_steps None -> 3% of steps; decoder_lr None -> training.learning_rate (which trains LoRA/backbone).
 DEFAULT_OPTIMIZER = {"warmup_steps": None, "schedule": "cosine", "decoder_lr": None}
 DEFAULT_AUGMENTATION = AUGMENT_DEFAULTS
@@ -276,6 +280,7 @@ CONFIG_SECTIONS = ("model", "loss", "training", "optimizer", "augmentation", "va
 # Fields added after runs were launched: left out of the resume digest at their defaults, so those runs still resume.
 DIGEST_LATER_DEFAULTS = {"model": {"pose_conditioning": False, "support_head": False, "gradient_checkpointing": False},
                          "loss": {"expected_geometry": 0., "door_clearance_m": .8, "support": 0.},
+                         "training": {"skip_rejected_rows": True},
                          "augmentation": {"given_pose_p": 0., "given_pose_corrupt_p": 0., "given_pose_noise_m": 0.,
                                           "given_pose_yaw_noise_deg": 0., "given_pose_size_noise": 0.}}
 
@@ -307,7 +312,7 @@ def _training_config(config):
     for key in ("checkpoint_every", "validate_every", "seed"):
         if isinstance(cfg[key], bool) or not isinstance(cfg[key], int) or cfg[key] < 0:
             raise ValueError(f"{key} must be a nonnegative integer")
-    for key in ("cpu", "export_model_every_checkpoint"):
+    for key in ("cpu", "export_model_every_checkpoint", "skip_rejected_rows"):
         if not isinstance(cfg[key], bool):
             raise ValueError(f"{key} must be a boolean")
     for key in ("learning_rate", "clip_grad_norm"):
@@ -599,6 +604,10 @@ def run_training(config, data, output, *, validation=None, dry_run=False, max_sa
     tokenizer = load_tokenizer(model_config.backbone, local_files_only=model_config.local_files_only)
     samples, rejected = _preflight(samples, tokenizer, model_config, training, loss_config)
     validation_samples, validation_rejected = _preflight(heldout, tokenizer, model_config, training, loss_config) if heldout else ([], [])
+    if not training["skip_rejected_rows"] and (rejected or validation_rejected):
+        counts = Counter(f"{r['reason']} ({r['provenance'].get('source')})" for r in rejected + validation_rejected)
+        raise ValueError(f"training.skip_rejected_rows is false: the preflight would leave out {len(rejected)} training and "
+                         f"{len(validation_rejected)} validation rows {dict(counts)}; first: {(rejected + validation_rejected)[0]}")
     collate = partial(collate_samples, tokenizer=tokenizer, max_length=training["max_length"], max_objects=model_config.max_objects,
                       cell_costs=_cell_cost_options(model_config, loss_config))
     rows = _Rows(samples, augmentation, training["seed"], tokenizer, training["max_length"])

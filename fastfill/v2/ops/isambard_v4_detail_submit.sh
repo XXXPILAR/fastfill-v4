@@ -12,10 +12,27 @@
 #   fastfill/v2/ops/isambard_v4_detail_submit.sh                  # both arms
 #   FASTFILL_ARMS=full fastfill/v2/ops/isambard_v4_detail_submit.sh  # one arm
 # Status: runs/autorun-v4-detail-1.7b-<arm>/STATUS.json; the run is runs/main4-cell05-v4detail-e5-1.7b-<arm>.
+# Those configurations leave out the rooms over 8192 tokens or 256 objects (363 train, 21 validation, 19 test rooms, all
+# SAGE-10k) and 8 train rooms with a size below the size head's range. FASTFILL_VARIANT=all trains and evaluates every room:
+# configurations *-all*.json (max_length 32768 = Qwen3's context window, max_objects 512, size_log_limit 12, and
+# training.skip_rejected_rows false, so a room the preflight would leave out stops the run); a one-GPU smoke on the longest
+# rooms (isambard_v4_detail_smoke.sbatch) runs before the arms. Status runs/autorun-v4-detail-1.7b-all-<arm>:
+#   FASTFILL_VARIANT=all fastfill/v2/ops/isambard_v4_detail_submit.sh
 set -euo pipefail
 cd "$(dirname "$0")/../../.."
 mkdir -p runs/isambard
 export FASTFILL_BACKBONE=Qwen3-1.7B FASTFILL_DATA=data/v4detail
+case ${FASTFILL_VARIANT:-} in
+  "") v=;; all) v=-all;;
+  *) echo "unknown FASTFILL_VARIANT $FASTFILL_VARIANT (empty or all)"; exit 1;;
+esac
+configs=()
+for arm in ${FASTFILL_ARMS:-full lora}; do
+  case $arm in
+    full) configs+=(fastfill/v2/configs/main7-cell05-detail-1.7b$v-full.json);; lora) configs+=(fastfill/v2/configs/main7-cell05-detail-1.7b$v.json);;
+    *) echo "unknown arm $arm (full or lora)"; exit 1;;
+  esac
+done
 dep=  # afterok:<job> the arms wait for, when setup or the subset still has to run
 if [ ! -f runs/isambard/v4-setup-1.7b.ok ]; then
   setup=$(sbatch --parsable --time=03:00:00 --job-name=ff4-setup-1.7b fastfill/v2/ops/isambard_v4_setup.sbatch)
@@ -31,15 +48,18 @@ cd data/v4detail && sha256sum -c ../../fastfill/v2/ops/v4detail.sha256")
   dep=afterok:$subset
   echo "subset=$subset (data/v4detail)"
 fi
-for arm in ${FASTFILL_ARMS:-full lora}; do
-  case $arm in
-    full) config=main7-cell05-detail-1.7b-full;; lora) config=main7-cell05-detail-1.7b;;
-    *) echo "unknown arm $arm (full or lora)"; exit 1;;
-  esac
-  args=(fastfill/v2/ops/isambard_v4_autorun.sbatch autorun-v4-detail-1.7b-$arm fastfill/v2/configs/$config.json
-        --name-suffix=-1.7b-$arm --global-batch=32)
-  first=$(sbatch --parsable --job-name=ff4-detail-$arm ${dep:+--dependency=$dep} "${args[@]}")
-  resume=$(sbatch --parsable --job-name=ff4-detail-$arm-resume --dependency=${dep:+$dep,}afternotok:$first "${args[@]}")
-  echo "$arm: train=$first resume=$resume  status: runs/autorun-v4-detail-1.7b-$arm/STATUS.json"
+if [ -n "$v" ]; then
+  smoke=$(sbatch --parsable ${dep:+--dependency=$dep} fastfill/v2/ops/isambard_v4_detail_smoke.sbatch "${configs[@]}")
+  dep=afterok:$smoke
+  echo "smoke=$smoke (the longest rooms)"
+fi
+arms=(${FASTFILL_ARMS:-full lora})
+for i in "${!arms[@]}"; do
+  arm=${arms[$i]}
+  args=(fastfill/v2/ops/isambard_v4_autorun.sbatch autorun-v4-detail-1.7b$v-$arm ${configs[$i]}
+        --name-suffix=-1.7b$v-$arm --global-batch=32)
+  first=$(sbatch --parsable --job-name=ff4-detail$v-$arm ${dep:+--dependency=$dep} "${args[@]}")
+  resume=$(sbatch --parsable --job-name=ff4-detail$v-$arm-resume --dependency=${dep:+$dep,}afternotok:$first "${args[@]}")
+  echo "$arm: train=$first resume=$resume  status: runs/autorun-v4-detail-1.7b$v-$arm/STATUS.json"
 done
 squeue --me
